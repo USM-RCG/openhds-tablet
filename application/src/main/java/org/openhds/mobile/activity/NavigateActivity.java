@@ -472,7 +472,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             String appVersionNumber = Integer.toString(getAppVersionNumber(this));
 
             if(!formInstance.getFormVersion().equals(appVersionNumber)){
-                showShortToast(this, "Warning: Version difference between OpenHDS ("+appVersionNumber+") and ODK ("+formInstance.getFormVersion()+").");
+                showShortToast(this, "Warning: Version difference between CIMS ("+appVersionNumber+") and ODK ("+formInstance.getFormVersion()+").");
             }
 
             Intent intent = formHelper.buildEditFormInstanceIntent();

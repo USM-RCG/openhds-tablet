@@ -3,7 +3,7 @@
 
     <EditTextPreference
         android:defaultValue="@string/default_openhds_server_url"
-        android:dialogTitle="Enter your OpenHDS Server URL"
+        android:dialogTitle="Enter your CIMS Server URL"
         android:inputType="textUri"
         android:key="@string/openhds_server_url_key"
         android:summary="@string/openhds_server_url_default_summary"
