@@ -35,8 +35,8 @@
             <type>apk</type>
         </dependency>
         <dependency>
-            <groupId>org.openhds</groupId>
-            <artifactId>openhds-tablet</artifactId>
+            <groupId>com.github.cims-bioko</groupId>
+            <artifactId>cims-tablet</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
             <type>jar</type>
