@@ -100,6 +100,13 @@ public class RepositoryUtils {
         return columnName + " " + operator + " " + WHERE_PLACEHOLDER;
     }
 
+    /*
+     * This is a poor way to do scrolling. It will be slower the deeper you get into results and
+     * it will consume far more power than it should. The right way to do this is to compare keys
+     * on an indexed field.
+     *
+     * For details, see: http://www.sqlite.org/cvstrac/wiki?p=ScrollingCursor
+     */
     public static String buildRangeStatement(int start, int maxResults) {
         return LIMIT + " " + maxResults + " " + OFFSET + " " + start;
     }
