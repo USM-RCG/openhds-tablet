@@ -17,13 +17,19 @@ public class HttpTaskRequest {
     private final String userName;
     private final String password;
     private final String accept;
+    private final String eTag;
 
     public HttpTaskRequest(int titleId, String url, String accept, String userName, String password) {
+        this(titleId, url, accept, userName, password, null);
+    }
+
+    public HttpTaskRequest(int titleId, String url, String accept, String userName, String password, String eTag) {
         this.titleId = titleId;
         this.url = url;
         this.accept = accept;
         this.userName = userName;
         this.password = password;
+        this.eTag = eTag;
     }
 
     public int getTitleId() {
@@ -44,5 +50,9 @@ public class HttpTaskRequest {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getETag() {
+        return eTag;
     }
 }

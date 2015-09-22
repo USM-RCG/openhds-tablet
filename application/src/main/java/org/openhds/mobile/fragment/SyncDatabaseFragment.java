@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import org.apache.http.HttpStatus;
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.OpeningActivity;
 import org.openhds.mobile.repository.GatewayRegistry;
@@ -29,6 +31,16 @@ import org.openhds.mobile.task.parsing.entities.RelationshipParser;
 import org.openhds.mobile.task.parsing.entities.SocialGroupParser;
 import org.openhds.mobile.task.parsing.entities.VisitParser;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +61,8 @@ import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
  * BSH
  */
 public class SyncDatabaseFragment extends Fragment {
+
+    private static final String TAG = SyncDatabaseFragment.class.getName();
 
     // placeholder for integer value to ignore
     private static final int IGNORE = -1;
@@ -237,6 +251,7 @@ public class SyncDatabaseFragment extends Fragment {
         ParseEntityTaskRequest parseEntityTaskRequest = allParseTaskRequests.get(currentEntityId);
         parseEntityTaskRequest.setInputStream(httpTaskResponse.getInputStream());
 
+        setContentHash(currentEntityId, httpTaskResponse.getETag());
         parseEntityTaskRequest.getGateway().deleteAll(getActivity().getContentResolver());
         parseEntityTask.execute(parseEntityTaskRequest);
     }
@@ -342,7 +357,61 @@ public class SyncDatabaseFragment extends Fragment {
         String openHdsBaseUrl = getPreferenceString(getActivity(), R.string.openhds_server_url_key, "");
         String path = getResourceString(getActivity(), allResourcePaths.get(entityId));
         String url = openHdsBaseUrl + path;
-        return new HttpTaskRequest(entityId, url, "application/xml", userName, password);
+
+        return new HttpTaskRequest(entityId, url, "application/xml", userName, password, getContentHash(entityId));
+    }
+
+    private File getHashFile(int entityId) {
+        return new File(getActivity().getFilesDir(), "fingerprint-" + entityId);
+    }
+
+    private String getContentHash(int entityId) {
+        String contentHash = null;
+        File contentHashFile = getHashFile(entityId);
+        if (contentHashFile.exists() && contentHashFile.canRead()) {
+            try {
+                InputStream in = new FileInputStream(contentHashFile);
+                BufferedReader buf = new BufferedReader(new InputStreamReader(in));
+                try {
+                    contentHash = buf.readLine();
+                } finally {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        Log.w(TAG, "failed to close hash file", e);
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                Log.w(TAG, "hash file not found", e);
+            } catch (IOException e) {
+                Log.w(TAG, "failed to read hash file", e);
+            }
+        }
+        return contentHash;
+    }
+
+    private void setContentHash(int entityId, String hash) {
+        File hashFile = getHashFile(entityId);
+        if (!hashFile.exists() || (hashFile.exists() && hashFile.canWrite())) {
+            try {
+                OutputStream out = new FileOutputStream(hashFile);
+                try {
+                    PrintWriter writer = new PrintWriter(out);
+                    writer.println(hash == null? "": hash);
+                    writer.flush();
+                } finally {
+                    try {
+                        out.close();
+                    } catch (IOException e) {
+                        Log.w(TAG, "failed to close hash file", e);
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                Log.w(TAG, "hash file not found", e);
+            } catch (IOException e) {
+                Log.w(TAG, "failed to read hash file", e);
+            }
+        }
     }
 
     // Respond to "sync all" button.
@@ -386,12 +455,15 @@ public class SyncDatabaseFragment extends Fragment {
     private class HttpResponseHandler implements HttpTask.HttpTaskResponseHandler {
         @Override
         public void handleHttpTaskResponse(HttpTaskResponse httpTaskResponse) {
-            if (!httpTaskResponse.isSuccess()) {
+            if (httpTaskResponse.isSuccess()) {
+                httpResultToParser(httpTaskResponse);
+            } else if (httpTaskResponse.getHttpStatus() == HttpStatus.SC_NOT_MODIFIED) {
+                showProgressMessage(currentEntityId, httpTaskResponse.getMessage());
+                terminateSync(false);
+            } else {
                 showError(currentEntityId, httpTaskResponse.getHttpStatus(), httpTaskResponse.getMessage());
                 terminateSync(true);
-                return;
             }
-            httpResultToParser(httpTaskResponse);
         }
     }
 
@@ -409,6 +481,7 @@ public class SyncDatabaseFragment extends Fragment {
             allErrorCounts.put(currentEntityId, errorCount);
             updateTableRow(currentEntityId, IGNORE, errorCount, IGNORE);
             showError(currentEntityId, 0, e.getMessage());
+            setContentHash(currentEntityId, null);
         }
 
         @Override

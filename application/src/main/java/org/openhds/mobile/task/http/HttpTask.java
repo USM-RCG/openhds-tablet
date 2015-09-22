@@ -28,6 +28,7 @@ import java.net.*;
  */
 public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse> {
     public static final String MESSAGE_SUCCESS = "Request successful";
+    public static final String MESSAGE_NOT_MODIFIED = "Content not modified";
     public static final String MESSAGE_NO_REQUEST = "No request given";
     public static final String MESSAGE_CLIENT_ERROR = "Client error";
     public static final String MESSAGE_BAD_URL = "Bad URL";
@@ -53,6 +54,7 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
 
         String rawCredentials = httpTaskRequest.getUserName()+":"+httpTaskRequest.getPassword();
         String basicAuthHeader = "Basic "+ Base64.encodeToString(rawCredentials.getBytes(), Base64.DEFAULT);
+        String eTag = httpTaskRequest.getETag();
 
         HttpURLConnection urlConnection;
         InputStream responseStream;
@@ -64,14 +66,22 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
                 urlConnection.setRequestProperty("Accept", httpTaskRequest.getAccept());
             }
             urlConnection.setRequestProperty("Authorization", basicAuthHeader);
+            if (eTag != null) {
+                urlConnection.setRequestProperty("If-None-Match", eTag);
+            }
             responseStream = urlConnection.getInputStream();
             statusCode = urlConnection.getResponseCode();
+            eTag = urlConnection.getHeaderField("ETag");
         } catch (Exception e) {
             return new HttpTaskResponse(false, MESSAGE_BAD_URL, 0, null);
         }
 
         if (HttpStatus.SC_OK == statusCode) {
-            return new HttpTaskResponse(true, MESSAGE_SUCCESS, statusCode, responseStream);
+            return new HttpTaskResponse(true, MESSAGE_SUCCESS, statusCode, responseStream, eTag);
+        }
+
+        if (HttpStatus.SC_NOT_MODIFIED == statusCode) {
+            return new HttpTaskResponse(false, MESSAGE_NOT_MODIFIED, statusCode, responseStream);
         }
 
         if (statusCode < HttpStatus.SC_INTERNAL_SERVER_ERROR) {
@@ -79,8 +89,6 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
         }
 
         return new HttpTaskResponse(false, MESSAGE_SERVER_ERROR, statusCode, responseStream);
-
-
     }
 
     // Forward the Http response to the handler.
