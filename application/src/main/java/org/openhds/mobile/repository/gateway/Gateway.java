@@ -182,14 +182,4 @@ public abstract class Gateway<T> {
         }
         return allContentValues.toArray(new ContentValues[allContentValues.size()]);
     }
-
-    /**
-     * Returns a semi-unique fingerprint for any content source that populated this with entities.
-     * It is intended to be used as a mechanism for cache control, to prevent having to download
-     * large amounts of content just to repopulate the same (or stale) data.
-     * @return a semi-unique content hash or null if not applicable.
-     */
-    protected String getSourceFingerprint() {
-        return null;
-    }
 }
