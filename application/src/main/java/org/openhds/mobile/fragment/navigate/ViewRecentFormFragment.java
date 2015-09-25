@@ -9,19 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.openhds.mobile.R;
 import org.openhds.mobile.adapter.FormInstanceAdapter;
-import org.openhds.mobile.fragment.ChecklistFragment;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.utilities.EncryptionHelper;
 import org.openhds.mobile.utilities.OdkCollectHelper;
-
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 
@@ -29,10 +27,14 @@ public class ViewRecentFormFragment extends Fragment implements View.OnClickList
 {
     Button recentForm;
     private List<FormInstance> recentformInstances;
-    String currentModuleName;
+    private List<FormInstance> recentformInstancesCategorized ;
 
-     private ListView recentFormInstanceView;
-    private  FrameLayout recentFormInstanceView1;
+    String currentModuleName;
+    private ListView recentFormInstanceView;
+
+    public void setCurrentModuleName(String currentModuleName) {
+        this.currentModuleName = currentModuleName;
+    }
 
 
     @Override
@@ -42,7 +44,6 @@ public class ViewRecentFormFragment extends Fragment implements View.OnClickList
         View view = inflater.inflate(R.layout.view_form_fragment, container, false);
         recentForm = (Button) view.findViewById(R.id.viewRecentFormButton);
         recentForm.setOnClickListener(this);
-      //  recentForm.setOnClickListener();
         return view;
     }
 
@@ -51,61 +52,57 @@ public class ViewRecentFormFragment extends Fragment implements View.OnClickList
 
         populateRecentFormInstanceListView();
     }
-    //Smita: added this since the portal activity have private method. and also we can add additiona logic to  display specific form
+
+
     public void populateRecentFormInstanceListView() {
 
         recentformInstances = OdkCollectHelper.getAllUnsentFormInstances(getActivity().getContentResolver());
-        recentFormInstanceView =  (ListView) getActivity().findViewById(R.id.view_right_column);
-        //TODO: parse the recent from instances by the activity type and name
- /*
-        checkRecentFormByName(recentformInstances);
-
-  */
+        recentFormInstanceView =  (ListView) getActivity().findViewById(R.id.view_recent_form_right_column);
 
         if (null == recentformInstances ||recentformInstances.isEmpty()) {
             return;
         }
 
-        FormInstanceAdapter adapter = new FormInstanceAdapter(
-                getActivity().getApplicationContext(), R.id.form_instance_list_item, recentformInstances.toArray());
+        recentformInstancesCategorized=checkRecentFormByName(recentformInstances, currentModuleName);
 
-       recentFormInstanceView.setAdapter(adapter);
-       recentFormInstanceView.setOnItemClickListener(new RecentFormInstanceClickListener());
+        FormInstanceAdapter adapter = new FormInstanceAdapter(
+                getActivity().getApplicationContext(), R.id.form_instance_list_item, recentformInstancesCategorized.toArray());
+
+        recentFormInstanceView.setAdapter(adapter);
+        recentFormInstanceView.setOnItemClickListener(new RecentFormInstanceClickListener());
     }
 
-//Smita: it checks the form instances by name and populate it based on which activity get launched
+//checks the form instances by name and populate it based on the current module
 
-    public static void  checkRecentFormByName(List<FormInstance> recentformInstances, String currentModuleName)
+    public static List<FormInstance>checkRecentFormByName(List<FormInstance> recentformInstances, String currentModuleName)
     {
-        List recentFormInstanceCatagorized = null;
+          List <FormInstance> recentformInstancesCatagorized = new ArrayList<FormInstance>();
 
-        for (FormInstance instance : recentformInstances) {
+          Iterator<FormInstance> iterator = recentformInstances.iterator();
+          while(iterator.hasNext())
+          {
+              FormInstance instance = iterator.next();
 
-            if (currentModuleName.equals("CensusActivityModule")) {
-                if (instance.getFileName().equals("Location_evaluation") || instance.getFileName().equals("Individual")) {
+              if ((currentModuleName.equals("CensusActivityModule")) && ((instance.getFormName().equals("location") ||
+                      instance.getFileName().equals("individual")))) {
+                  recentformInstancesCatagorized.add(instance);
+              }
 
-                    recentFormInstanceCatagorized.add(instance);
+              else if ((currentModuleName.equals("BiokoActivityModule")) && ((instance.getFormName().equals("bed_net") ||
+                      instance.getFormName().equals("spraying") || instance.getFormName().equals("super_ojo")))){
+
+                       recentformInstancesCatagorized.add(instance);
+              }
+              else if ((currentModuleName.equals("UpdateActivityModule")) && (instance.getFormName().equals("visit") ||
+                        instance.getFormName().equals("pregnancy_observation")|| instance.getFormName().equals("in_migration")||
+                        instance.getFormName().equals("out_migration")|| instance.getFormName().equals("pregnancy_outcome")))
+                {
+                      recentformInstancesCatagorized.add(instance);
+
                 }
-            } else if (currentModuleName.equals("BiokoActivityModule")) {
+          }
 
-                if (instance.getFileName().equals("Bed_net") ||
-                        instance.getFileName().equals("spraying") ||
-                        instance.getFileName().equals("super_ojo")) {
-
-                    recentFormInstanceCatagorized.add(instance);
-                }
-            } else if (currentModuleName.equals("UpdateActivityModule")) {
-
-                if (instance.getFileName().equals("Visit") ||
-                        instance.getFileName().equals("Pregnancy_observation") ||
-                        instance.getFileName().equals("Location")) {
-
-                    recentFormInstanceCatagorized.add(instance);
-                }
-
-            }
-
-        }
+        return recentformInstancesCatagorized;
     }
 
 // Launch an intent for ODK Collect when user clicks on a form instance.
@@ -114,8 +111,8 @@ public class ViewRecentFormFragment extends Fragment implements View.OnClickList
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            if (position > 0 && position <= recentformInstances.size()) {
-                FormInstance selected = recentformInstances.get(position - 1);
+            if (position >= 0 && position < recentformInstancesCategorized.size()) {
+                FormInstance selected = recentformInstancesCategorized.get(position);
                 Uri uri = Uri.parse(selected.getUriString());
 
                 File selectedFile = new File(selected.getFilePath());
@@ -125,15 +122,6 @@ public class ViewRecentFormFragment extends Fragment implements View.OnClickList
                 showShortToast(getActivity().getApplicationContext(), R.string.launching_odk_collect);
                 startActivityForResult(intent, 0);
             }
-        }
-    }
-
-    private class
-            RecentFormButtonClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            Integer tag = (Integer) v.getTag();
-
         }
     }
 

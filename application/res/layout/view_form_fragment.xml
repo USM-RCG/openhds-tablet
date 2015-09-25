@@ -16,7 +16,7 @@
         android:background="@drawable/gray_button_selector"
         android:textAppearance="@android:style/TextAppearance.Large" />
     <ListView
-        android:id="@+id/view_right_column"
+        android:id="@+id/view_recent_form_right_column"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="4"

@@ -139,7 +139,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             visitFragment = new VisitFragment();
             visitFragment.setNavigateActivity(this);
             viewRecentFormFragment = new ViewRecentFormFragment();
-
+            viewRecentFormFragment.setCurrentModuleName(currentModuleName);
 
 
             getFragmentManager().beginTransaction()
@@ -166,6 +166,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             defaultDetailFragment = new DefaultDetailFragment();
             valueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
             viewRecentFormFragment = (ViewRecentFormFragment) fragmentManager.findFragmentByTag(VIEW_RECENT_FORM_TAG);
+            viewRecentFormFragment.setCurrentModuleName(currentModuleName);
 
             // draw details if valuefrag is null, the drawing of valuefrag is
             // handled in onResume().
