@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.openhds.mobile.R;
@@ -76,7 +77,7 @@ public class ViewRecentFormFragment extends Fragment implements View.OnClickList
 
     public static List<FormInstance>checkRecentFormByName(List<FormInstance> recentformInstances, String currentModuleName)
     {
-          List <FormInstance> recentformInstancesCatagorized = new ArrayList<FormInstance>();
+          List <FormInstance> recentformInstancesCategorized = new ArrayList<FormInstance>();
 
           Iterator<FormInstance> iterator = recentformInstances.iterator();
           while(iterator.hasNext())
@@ -85,25 +86,29 @@ public class ViewRecentFormFragment extends Fragment implements View.OnClickList
 
               if ((currentModuleName.equals("CensusActivityModule")) && ((instance.getFormName().equals("location") ||
                       instance.getFileName().equals("individual")))) {
-                  recentformInstancesCatagorized.add(instance);
+                  recentformInstancesCategorized.add(instance);
               }
 
               else if ((currentModuleName.equals("BiokoActivityModule")) && ((instance.getFormName().equals("bed_net") ||
                       instance.getFormName().equals("spraying") || instance.getFormName().equals("super_ojo")))){
 
-                       recentformInstancesCatagorized.add(instance);
+                       recentformInstancesCategorized.add(instance);
               }
               else if ((currentModuleName.equals("UpdateActivityModule")) && (instance.getFormName().equals("visit") ||
                         instance.getFormName().equals("pregnancy_observation")|| instance.getFormName().equals("in_migration")||
                         instance.getFormName().equals("out_migration")|| instance.getFormName().equals("pregnancy_outcome")))
                 {
-                      recentformInstancesCatagorized.add(instance);
+                      recentformInstancesCategorized.add(instance);
 
                 }
           }
 
-        return recentformInstancesCatagorized;
+        Collections.reverse(recentformInstancesCategorized);
+        return recentformInstancesCategorized;
+
     }
+
+    //Sort the list in
 
 // Launch an intent for ODK Collect when user clicks on a form instance.
     private class RecentFormInstanceClickListener implements AdapterView.OnItemClickListener {
