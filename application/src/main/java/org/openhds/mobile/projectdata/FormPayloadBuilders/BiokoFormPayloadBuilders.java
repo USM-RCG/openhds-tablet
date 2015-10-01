@@ -5,7 +5,6 @@ import org.openhds.mobile.activity.NavigateActivity;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.model.core.Location;
-import org.openhds.mobile.projectdata.ProjectActivityBuilder;
 import org.openhds.mobile.projectdata.ProjectFormFields;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
@@ -15,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+
+import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
 
 public class BiokoFormPayloadBuilders {
 
@@ -31,9 +32,9 @@ public class BiokoFormPayloadBuilders {
             formPayload.put(ProjectFormFields.General.DISTRIBUTION_DATE_TIME, distributionDateTime);
 
             String locationExtId = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getExtId();
+                    .get(HOUSEHOLD_STATE).getExtId();
             String locationUuid = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getUuid();
+                    .get(HOUSEHOLD_STATE).getUuid();
             formPayload.put(ProjectFormFields.BedNet.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.BedNet.LOCATION_UUID, locationUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
@@ -81,9 +82,9 @@ public class BiokoFormPayloadBuilders {
 
 
             String locationExtId = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getExtId();
+                    .get(HOUSEHOLD_STATE).getExtId();
             String locationUuid = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getUuid();
+                    .get(HOUSEHOLD_STATE).getUuid();
             formPayload.put(ProjectFormFields.BedNet.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.BedNet.LOCATION_UUID, locationUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
@@ -108,9 +109,9 @@ public class BiokoFormPayloadBuilders {
 
 
             String locationExtId = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getExtId();
+                    .get(HOUSEHOLD_STATE).getExtId();
             String locationUuid = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getUuid();
+                    .get(HOUSEHOLD_STATE).getUuid();
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);

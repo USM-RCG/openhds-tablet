@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
+
 public class ProjectActivityBuilder {
 
     public static final String ACTIVITY_MODULE_EXTRA = "ACTIVITY_MODULE_EXTRA";
@@ -56,71 +58,9 @@ public class ProjectActivityBuilder {
 
     }
 
-    // This class defines the "hierarchy" for the PluginModules
-    // The "hierarchy" is simply the list of state names, state labels (for UI), and state sequence.
-    public static class BiokoHierarchy implements HierarchyInfo {
-
-        public static final String HIERARCHY_NAME = "biokoHierarchy";
-
-        public static final String REGION_STATE = "region";
-        public static final String PROVINCE_STATE = "province";
-        public static final String DISTRICT_STATE = "district";
-        public static final String SUB_DISTRICT_STATE = "subDistrict";
-        public static final String LOCALITY_STATE = "locality";
-        public static final String MAP_AREA_STATE = "mapArea";
-        public static final String SECTOR_STATE = "sector";
-        public static final String HOUSEHOLD_STATE = "household";
-        public static final String INDIVIDUAL_STATE = "individual";
-        public static final String BOTTOM_STATE = "bottom";
-
-        private static final Map<String, Integer> stateLabels = new HashMap<String, Integer>();
-        private static final List<String> stateSequence = new ArrayList<String>();
-
-        static {
-
-            stateLabels.put(REGION_STATE, R.string.region_label);
-            stateLabels.put(PROVINCE_STATE, R.string.province_label);
-            stateLabels.put(DISTRICT_STATE, R.string.district_label);
-            stateLabels.put(SUB_DISTRICT_STATE, R.string.sub_district_label);
-            stateLabels.put(LOCALITY_STATE, R.string.locality_label);
-            stateLabels.put(MAP_AREA_STATE, R.string.map_area_label);
-            stateLabels.put(SECTOR_STATE, R.string.sector_label);
-            stateLabels.put(HOUSEHOLD_STATE, R.string.household_label);
-            stateLabels.put(INDIVIDUAL_STATE, R.string.individual_label);
-            stateLabels.put(BOTTOM_STATE, R.string.bottom_label);
-
-            stateSequence.add(REGION_STATE);
-            stateSequence.add(PROVINCE_STATE);
-            stateSequence.add(DISTRICT_STATE);
-            stateSequence.add(SUB_DISTRICT_STATE);
-            stateSequence.add(LOCALITY_STATE);
-            stateSequence.add(MAP_AREA_STATE);
-            stateSequence.add(SECTOR_STATE);
-            stateSequence.add(HOUSEHOLD_STATE);
-            stateSequence.add(INDIVIDUAL_STATE);
-            stateSequence.add(BOTTOM_STATE);
-        }
-
-        @Override
-        public Map<String, Integer> getStateLabels() {
-            return stateLabels;
-        }
-
-        @Override
-        public List<String> getStateSequence() {
-            return stateSequence;
-        }
-
-        @Override
-        public String getHierarchyName(){
-            return HIERARCHY_NAME;
-        }
-    }
-
     // These modules are passed to NavigateActivity and inject it project specific data and hierarchy information
     public static class BiokoActivityModule implements NavigatePluginModule {
 
-        private static final BiokoHierarchy biokoHierarchy = new BiokoHierarchy();
         private static final Map<String, List<FormBehaviour>> formsForStates = new HashMap<String, List<FormBehaviour>>();
         private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<String, DetailFragment>();
         public static class BiokoUiHelper implements ModuleUiHelper {
@@ -198,29 +138,29 @@ public class ProjectActivityBuilder {
                     new BiokoFormPayloadBuilders.SuperOjo(),
                     new BiokoFormPayloadConsumers.SuperOjo()));
 
-            formsForStates.put(biokoHierarchy.REGION_STATE, regionFormList);
-            formsForStates.put(biokoHierarchy.PROVINCE_STATE, provinceFormList);
-            formsForStates.put(biokoHierarchy.DISTRICT_STATE, districtFormList);
-            formsForStates.put(biokoHierarchy.SUB_DISTRICT_STATE, subDistrictFormList);
-            formsForStates.put(biokoHierarchy.LOCALITY_STATE, localityFormList);
-            formsForStates.put(biokoHierarchy.MAP_AREA_STATE, mapAreaFormList);
-            formsForStates.put(biokoHierarchy.SECTOR_STATE, sectorFormList);
-            formsForStates.put(biokoHierarchy.HOUSEHOLD_STATE, householdFormList);
-            formsForStates.put(biokoHierarchy.INDIVIDUAL_STATE, individualFormList);
-            formsForStates.put(biokoHierarchy.BOTTOM_STATE, bottomFormList);
+            formsForStates.put(REGION_STATE, regionFormList);
+            formsForStates.put(PROVINCE_STATE, provinceFormList);
+            formsForStates.put(DISTRICT_STATE, districtFormList);
+            formsForStates.put(SUB_DISTRICT_STATE, subDistrictFormList);
+            formsForStates.put(LOCALITY_STATE, localityFormList);
+            formsForStates.put(MAP_AREA_STATE, mapAreaFormList);
+            formsForStates.put(SECTOR_STATE, sectorFormList);
+            formsForStates.put(HOUSEHOLD_STATE, householdFormList);
+            formsForStates.put(INDIVIDUAL_STATE, individualFormList);
+            formsForStates.put(BOTTOM_STATE, bottomFormList);
 
             // these details are off by 1: details for an individual should be
             // shown when you click a specific individual which is technically
             // in the bottom state.
-            detailFragsForStates.put(biokoHierarchy.REGION_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.PROVINCE_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.DISTRICT_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.SUB_DISTRICT_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.MAP_AREA_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.SECTOR_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.HOUSEHOLD_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.INDIVIDUAL_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.BOTTOM_STATE,  new IndividualDetailFragment());
+            detailFragsForStates.put(REGION_STATE, null);
+            detailFragsForStates.put(PROVINCE_STATE, null);
+            detailFragsForStates.put(DISTRICT_STATE, null);
+            detailFragsForStates.put(SUB_DISTRICT_STATE, null);
+            detailFragsForStates.put(MAP_AREA_STATE, null);
+            detailFragsForStates.put(SECTOR_STATE, null);
+            detailFragsForStates.put(HOUSEHOLD_STATE, null);
+            detailFragsForStates.put(INDIVIDUAL_STATE, null);
+            detailFragsForStates.put(BOTTOM_STATE,  new IndividualDetailFragment());
 
         }
 
@@ -236,7 +176,7 @@ public class ProjectActivityBuilder {
 
         @Override
         public HierarchyInfo getHierarchyInfo() {
-            return biokoHierarchy;
+            return BiokoHierarchy.INSTANCE;
         }
 
         @Override
@@ -255,7 +195,6 @@ public class ProjectActivityBuilder {
 
     public static class CensusActivityModule implements NavigatePluginModule {
 
-        private static final BiokoHierarchy biokoHierarchy = new BiokoHierarchy();
         private static final Map<String, List<FormBehaviour>> formsForStates = new HashMap<String, List<FormBehaviour>>();
         private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<String, DetailFragment>();
         public static class CensusUiHelper implements ModuleUiHelper {
@@ -360,29 +299,29 @@ public class ProjectActivityBuilder {
 
 
 
-            formsForStates.put(biokoHierarchy.REGION_STATE, regionFormList);
-            formsForStates.put(biokoHierarchy.PROVINCE_STATE, provinceFormList);
-            formsForStates.put(biokoHierarchy.DISTRICT_STATE, districtFormList);
-            formsForStates.put(biokoHierarchy.SUB_DISTRICT_STATE, subDistrictFormList);
-            formsForStates.put(biokoHierarchy.LOCALITY_STATE, localityFormList);
-            formsForStates.put(biokoHierarchy.MAP_AREA_STATE, mapAreaFormList);
-            formsForStates.put(biokoHierarchy.SECTOR_STATE, sectorFormList);
-            formsForStates.put(biokoHierarchy.HOUSEHOLD_STATE, householdFormList);
-            formsForStates.put(biokoHierarchy.INDIVIDUAL_STATE, individualFormList);
-            formsForStates.put(biokoHierarchy.BOTTOM_STATE, bottomFormList);
+            formsForStates.put(REGION_STATE, regionFormList);
+            formsForStates.put(PROVINCE_STATE, provinceFormList);
+            formsForStates.put(DISTRICT_STATE, districtFormList);
+            formsForStates.put(SUB_DISTRICT_STATE, subDistrictFormList);
+            formsForStates.put(LOCALITY_STATE, localityFormList);
+            formsForStates.put(MAP_AREA_STATE, mapAreaFormList);
+            formsForStates.put(SECTOR_STATE, sectorFormList);
+            formsForStates.put(HOUSEHOLD_STATE, householdFormList);
+            formsForStates.put(INDIVIDUAL_STATE, individualFormList);
+            formsForStates.put(BOTTOM_STATE, bottomFormList);
 
             // these details are off by 1: details for an individual should be
             // shown when you click a specific individual which is technically
             // in the bottom state.
-            detailFragsForStates.put(biokoHierarchy.REGION_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.PROVINCE_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.DISTRICT_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.SUB_DISTRICT_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.MAP_AREA_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.SECTOR_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.HOUSEHOLD_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.INDIVIDUAL_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.BOTTOM_STATE,
+            detailFragsForStates.put(REGION_STATE, null);
+            detailFragsForStates.put(PROVINCE_STATE, null);
+            detailFragsForStates.put(DISTRICT_STATE, null);
+            detailFragsForStates.put(SUB_DISTRICT_STATE, null);
+            detailFragsForStates.put(MAP_AREA_STATE, null);
+            detailFragsForStates.put(SECTOR_STATE, null);
+            detailFragsForStates.put(HOUSEHOLD_STATE, null);
+            detailFragsForStates.put(INDIVIDUAL_STATE, null);
+            detailFragsForStates.put(BOTTOM_STATE,
                     new IndividualDetailFragment());
 
         }
@@ -410,13 +349,12 @@ public class ProjectActivityBuilder {
 
         @Override
         public HierarchyInfo getHierarchyInfo() {
-            return biokoHierarchy;
+            return BiokoHierarchy.INSTANCE;
         }
     }
 
     public static class UpdateActivityModule implements NavigatePluginModule {
 
-        private static final BiokoHierarchy biokoHierarchy = new BiokoHierarchy();
         private static final Map<String, List<FormBehaviour>> formsForStates = new HashMap<String, List<FormBehaviour>>();
         private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<String, DetailFragment>();
         public static class UpdateUiHelper implements ModuleUiHelper {
@@ -543,29 +481,29 @@ public class ProjectActivityBuilder {
                     null,
                     daddySearch));
 
-            formsForStates.put(biokoHierarchy.REGION_STATE, regionFormList);
-            formsForStates.put(biokoHierarchy.PROVINCE_STATE, provinceFormList);
-            formsForStates.put(biokoHierarchy.DISTRICT_STATE, districtFormList);
-            formsForStates.put(biokoHierarchy.SUB_DISTRICT_STATE, subDistrictFormList);
-            formsForStates.put(biokoHierarchy.LOCALITY_STATE, localityFormList);
-            formsForStates.put(biokoHierarchy.MAP_AREA_STATE, mapAreaFormList);
-            formsForStates.put(biokoHierarchy.SECTOR_STATE, sectorFormList);
-            formsForStates.put(biokoHierarchy.HOUSEHOLD_STATE, householdFormList);
-            formsForStates.put(biokoHierarchy.INDIVIDUAL_STATE, individualFormList);
-            formsForStates.put(biokoHierarchy.BOTTOM_STATE, bottomFormList);
+            formsForStates.put(REGION_STATE, regionFormList);
+            formsForStates.put(PROVINCE_STATE, provinceFormList);
+            formsForStates.put(DISTRICT_STATE, districtFormList);
+            formsForStates.put(SUB_DISTRICT_STATE, subDistrictFormList);
+            formsForStates.put(LOCALITY_STATE, localityFormList);
+            formsForStates.put(MAP_AREA_STATE, mapAreaFormList);
+            formsForStates.put(SECTOR_STATE, sectorFormList);
+            formsForStates.put(HOUSEHOLD_STATE, householdFormList);
+            formsForStates.put(INDIVIDUAL_STATE, individualFormList);
+            formsForStates.put(BOTTOM_STATE, bottomFormList);
 
             // these details are off by 1: details for an individual should be
             // shown when you click a specific individual which is technically
             // in the bottom state.
-            detailFragsForStates.put(biokoHierarchy.REGION_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.PROVINCE_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.DISTRICT_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.SUB_DISTRICT_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.MAP_AREA_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.SECTOR_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.HOUSEHOLD_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.INDIVIDUAL_STATE, null);
-            detailFragsForStates.put(biokoHierarchy.BOTTOM_STATE,
+            detailFragsForStates.put(REGION_STATE, null);
+            detailFragsForStates.put(PROVINCE_STATE, null);
+            detailFragsForStates.put(DISTRICT_STATE, null);
+            detailFragsForStates.put(SUB_DISTRICT_STATE, null);
+            detailFragsForStates.put(MAP_AREA_STATE, null);
+            detailFragsForStates.put(SECTOR_STATE, null);
+            detailFragsForStates.put(HOUSEHOLD_STATE, null);
+            detailFragsForStates.put(INDIVIDUAL_STATE, null);
+            detailFragsForStates.put(BOTTOM_STATE,
                     new IndividualDetailFragment());
 
         }
@@ -593,7 +531,7 @@ public class ProjectActivityBuilder {
 
         @Override
         public HierarchyInfo getHierarchyInfo() {
-            return biokoHierarchy;
+            return BiokoHierarchy.INSTANCE;
         }
 
     }

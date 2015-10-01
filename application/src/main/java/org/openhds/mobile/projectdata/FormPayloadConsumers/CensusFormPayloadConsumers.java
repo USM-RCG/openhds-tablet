@@ -29,6 +29,8 @@ import org.openhds.mobile.utilities.IdHelper;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
+
 public class CensusFormPayloadConsumers {
 
     private static Location insertOrUpdateLocation(
@@ -81,7 +83,7 @@ public class CensusFormPayloadConsumers {
                 sector.setParentUuid(mapArea.getUuid());
                 sector.setExtId(sectorExtId);
                 sector.setName(sectorName);
-                sector.setLevel(ProjectActivityBuilder.BiokoHierarchy.SECTOR_STATE);
+                sector.setLevel(SECTOR_STATE);
                 locationHierarchyGateway.insertOrUpdate(contentResolver,sector);
 
                 formPayload.put(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NEEDS_REVIEW);
@@ -134,7 +136,7 @@ public class CensusFormPayloadConsumers {
             Map<String, DataWrapper> hierarchyPath = navigateActivity
                     .getHierarchyPath();
             DataWrapper selectedLocation = hierarchyPath
-                    .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE);
+                    .get(HOUSEHOLD_STATE);
 
             String relationshipType = formPayload
                     .get(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD);
@@ -190,7 +192,7 @@ public class CensusFormPayloadConsumers {
             Map<String, DataWrapper> hierarchyPath = navigateActivity
                     .getHierarchyPath();
             DataWrapper selectedLocation = hierarchyPath
-                    .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE);
+                    .get(HOUSEHOLD_STATE);
 
             // head of the household is always "self" to the head of household
             String relationshipType = "1";

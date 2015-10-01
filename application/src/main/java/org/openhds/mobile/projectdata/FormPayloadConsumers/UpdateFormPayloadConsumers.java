@@ -9,6 +9,7 @@ import org.openhds.mobile.model.core.Membership;
 import org.openhds.mobile.model.core.Relationship;
 import org.openhds.mobile.model.core.SocialGroup;
 import org.openhds.mobile.model.update.Visit;
+
 import org.openhds.mobile.projectdata.FormAdapters.IndividualFormAdapter;
 import org.openhds.mobile.projectdata.FormAdapters.VisitFormAdapter;
 import org.openhds.mobile.projectdata.ProjectActivityBuilder;
@@ -25,6 +26,8 @@ import org.openhds.mobile.repository.gateway.VisitGateway;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
 
 public class UpdateFormPayloadConsumers {
 
@@ -139,7 +142,7 @@ public class UpdateFormPayloadConsumers {
             Map<String, DataWrapper> hierarchyPath = navigateActivity
                     .getHierarchyPath();
             DataWrapper selectedLocation = hierarchyPath
-                    .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE);
+                    .get(HOUSEHOLD_STATE);
 
             ContentResolver contentResolver = navigateActivity.getContentResolver();
 

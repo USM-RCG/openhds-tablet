@@ -3,12 +3,13 @@ package org.openhds.mobile.projectdata.FormFilters;
 import org.openhds.mobile.activity.NavigateActivity;
 import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.repository.DataWrapper;
-import org.openhds.mobile.projectdata.ProjectActivityBuilder;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.LocationGateway;
 import org.openhds.mobile.repository.gateway.SocialGroupGateway;
 
 import java.util.Map;
+
+import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
 
 // These are not necessarily 1 to 1 with the form types, 
 // but instead filter when a form's behaviour may or may not be appropriate
@@ -20,9 +21,7 @@ public class CensusFormFilters {
 			NavigateActivity navigateActivity,
 			Map<String, DataWrapper> hierarchyPath) {
 
-		String locationUuid = hierarchyPath.get(
-				ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE)
-				.getUuid();
+		String locationUuid = hierarchyPath.get(HOUSEHOLD_STATE).getUuid();
 
         SocialGroupGateway socialGroupGateway = GatewayRegistry.getSocialGroupGateway();
         return null != socialGroupGateway.getFirst(navigateActivity.getContentResolver(),socialGroupGateway.findByLocationUuid(locationUuid));

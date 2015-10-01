@@ -2,11 +2,12 @@ package org.openhds.mobile.projectdata.FormFilters;
 
 import org.openhds.mobile.activity.NavigateActivity;
 import org.openhds.mobile.model.core.Individual;
-import org.openhds.mobile.projectdata.ProjectActivityBuilder;
 import org.openhds.mobile.projectdata.ProjectResources;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
+
+import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
 
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class UpdateFormFilters {
                 return false;
             }
 
-            String locationKey = ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE;
+            String locationKey = HOUSEHOLD_STATE;
             Map<String, DataWrapper> hierarchyPath = navigateActivity.getHierarchyPath();
             if (hierarchyPath.containsKey(locationKey) && null != hierarchyPath.get(locationKey)) {
                 return true;
@@ -126,7 +127,7 @@ public class UpdateFormFilters {
 
         Map<String, DataWrapper> hierarchyPath = navigateActivity.getHierarchyPath();
         String individualExtId =
-                hierarchyPath.get(ProjectActivityBuilder.BiokoHierarchy.INDIVIDUAL_STATE).getExtId();
+                hierarchyPath.get(INDIVIDUAL_STATE).getExtId();
         IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
 
         return individualGateway.getFirst(navigateActivity.getContentResolver(),

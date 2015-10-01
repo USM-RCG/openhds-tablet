@@ -5,6 +5,8 @@ import org.openhds.mobile.OpenHDS;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
+
 public class ProjectFormFields {
 
     public static final class General {
@@ -34,37 +36,16 @@ public class ProjectFormFields {
         private static final Map<String, String> stateFieldNames = new HashMap<String, String>();
 
         static {
-            stateFieldNames.put(
-                    ProjectActivityBuilder.BiokoHierarchy.REGION_STATE,
-                    REGION_STATE_FIELD_NAME);
-            stateFieldNames.put(
-                    ProjectActivityBuilder.BiokoHierarchy.PROVINCE_STATE,
-                    PROVINCE_STATE_FIELD_NAME);
-            stateFieldNames.put(
-                    ProjectActivityBuilder.BiokoHierarchy.DISTRICT_STATE,
-                    DISTRICT_STATE_FIELD_NAME);
-            stateFieldNames.put(
-                    ProjectActivityBuilder.BiokoHierarchy.SUB_DISTRICT_STATE,
-                    SUB_DISTRICT_STATE_FIELD_NAME);
-            stateFieldNames.put(
-                    ProjectActivityBuilder.BiokoHierarchy.LOCALITY_STATE,
-                    LOCALITY_STATE_FIELD_NAME);
-            stateFieldNames.put(
-                    ProjectActivityBuilder.BiokoHierarchy.MAP_AREA_STATE,
-                    MAP_AREA_STATE_FIELD_NAME);
-            stateFieldNames.put(
-                    ProjectActivityBuilder.BiokoHierarchy.SECTOR_STATE,
-                    SECTOR_STATE_FIELD_NAME);
-            stateFieldNames
-                    .put(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE,
-                            HOUSEHOLD_STATE_FIELD_NAME);
-            stateFieldNames
-                    .put(ProjectActivityBuilder.BiokoHierarchy.INDIVIDUAL_STATE,
-                            INDIVIDUAL_STATE_FIELD_NAME);
-            stateFieldNames.put(
-                    ProjectActivityBuilder.BiokoHierarchy.BOTTOM_STATE,
-                    BOTTOM_STATE_FIELD_NAME);
-
+            stateFieldNames.put(REGION_STATE, REGION_STATE_FIELD_NAME);
+            stateFieldNames.put(PROVINCE_STATE, PROVINCE_STATE_FIELD_NAME);
+            stateFieldNames.put(DISTRICT_STATE, DISTRICT_STATE_FIELD_NAME);
+            stateFieldNames.put(SUB_DISTRICT_STATE, SUB_DISTRICT_STATE_FIELD_NAME);
+            stateFieldNames.put(LOCALITY_STATE, LOCALITY_STATE_FIELD_NAME);
+            stateFieldNames.put(MAP_AREA_STATE, MAP_AREA_STATE_FIELD_NAME);
+            stateFieldNames.put(SECTOR_STATE, SECTOR_STATE_FIELD_NAME);
+            stateFieldNames.put(HOUSEHOLD_STATE, HOUSEHOLD_STATE_FIELD_NAME);
+            stateFieldNames.put(INDIVIDUAL_STATE, INDIVIDUAL_STATE_FIELD_NAME);
+            stateFieldNames.put(BOTTOM_STATE, BOTTOM_STATE_FIELD_NAME);
         }
 
         public static String getExtIdFieldNameFromState(String state) {

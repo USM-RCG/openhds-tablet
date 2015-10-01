@@ -5,8 +5,6 @@ import org.openhds.mobile.activity.NavigateActivity;
 import org.openhds.mobile.model.core.*;
 import org.openhds.mobile.projectdata.FormAdapters.IndividualFormAdapter;
 import org.openhds.mobile.repository.DataWrapper;
-import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
-import org.openhds.mobile.projectdata.ProjectActivityBuilder;
 import org.openhds.mobile.projectdata.ProjectFormFields;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.*;
@@ -14,6 +12,8 @@ import org.openhds.mobile.utilities.IdHelper;
 
 import java.util.Iterator;
 import java.util.Map;
+
+import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
 
 import static org.openhds.mobile.repository.RepositoryUtils.LIKE_WILD_CARD;
 
@@ -30,7 +30,7 @@ public class CensusFormPayloadBuilders {
             Map<String, String> formPayload, NavigateActivity navigateActivity) {
 
         DataWrapper sectorDataWrapper =
-                navigateActivity.getHierarchyPath().get(ProjectActivityBuilder.BiokoHierarchy.SECTOR_STATE);
+                navigateActivity.getHierarchyPath().get(SECTOR_STATE);
         ContentResolver contentResolver = navigateActivity.getContentResolver();
 
         // sector extid is <hierarchyExtId>
@@ -82,7 +82,7 @@ public class CensusFormPayloadBuilders {
     private static void addNewIndividualPayload(
             Map<String, String> formPayload, NavigateActivity navigateActivity) {
 
-        DataWrapper locationDataWrapper = navigateActivity.getHierarchyPath().get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE);
+        DataWrapper locationDataWrapper = navigateActivity.getHierarchyPath().get(HOUSEHOLD_STATE);
 
         String individualExtId = IdHelper.generateIndividualExtId(navigateActivity.getContentResolver(), locationDataWrapper);
 
@@ -127,9 +127,9 @@ public class CensusFormPayloadBuilders {
             PayloadTools.flagForReview(formPayload, false);
 
             String locationExtId = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getExtId();
+                    .get(HOUSEHOLD_STATE).getExtId();
             String locationUuid = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getUuid();
+                    .get(HOUSEHOLD_STATE).getUuid();
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
@@ -215,12 +215,8 @@ public class CensusFormPayloadBuilders {
             Map<String, DataWrapper> hierarchyPath = navigateActivity
                     .getHierarchyPath();
 
-            String individualUuid = hierarchyPath
-                    .get(ProjectActivityBuilder.BiokoHierarchy.INDIVIDUAL_STATE)
-                    .getUuid();
-            String householdUuid = hierarchyPath
-                    .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE)
-                    .getUuid();
+            String individualUuid = hierarchyPath.get(INDIVIDUAL_STATE).getUuid();
+            String householdUuid = hierarchyPath.get(HOUSEHOLD_STATE).getUuid();
 
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
             ContentResolver contentResolver = navigateActivity.getContentResolver();

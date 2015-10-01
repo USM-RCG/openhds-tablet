@@ -4,7 +4,6 @@ import android.content.ContentResolver;
 
 import org.openhds.mobile.activity.NavigateActivity;
 import org.openhds.mobile.model.core.SocialGroup;
-import org.openhds.mobile.projectdata.ProjectActivityBuilder;
 import org.openhds.mobile.projectdata.ProjectFormFields;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.gateway.SocialGroupGateway;
@@ -13,6 +12,8 @@ import org.openhds.mobile.utilities.IdHelper;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
+
+import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
 
 public class UpdateFormPayloadBuilders {
 
@@ -34,9 +35,9 @@ public class UpdateFormPayloadBuilders {
             String visitDate = new SimpleDateFormat("yyyy-MM-dd").format(
                     Calendar.getInstance().getTime()).toString();
             String locationExtId = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getExtId();
+                    .get(HOUSEHOLD_STATE).getExtId();
             String locationUuid= navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getUuid();
+                    .get(HOUSEHOLD_STATE).getUuid();
             String visitExtId = visitDate + "_" + locationExtId;
 
 
@@ -65,8 +66,8 @@ public class UpdateFormPayloadBuilders {
             formPayload.put(ProjectFormFields.Visits.VISIT_EXTID, navigateActivity.getCurrentVisit().getExtId());
             formPayload.put(ProjectFormFields.Visits.VISIT_UUID, navigateActivity.getCurrentVisit().getUuid());
 
-            String locationExtId = navigateActivity.getHierarchyPath().get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getExtId();
-            String locationUuid = navigateActivity.getHierarchyPath().get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getUuid();
+            String locationExtId = navigateActivity.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
+            String locationUuid = navigateActivity.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
 
@@ -89,8 +90,8 @@ public class UpdateFormPayloadBuilders {
             formPayload.put(ProjectFormFields.Visits.VISIT_EXTID, navigateActivity.getCurrentVisit().getExtId());
             formPayload.put(ProjectFormFields.Visits.VISIT_UUID, navigateActivity.getCurrentVisit().getUuid());
 
-            String locationExtId = navigateActivity.getHierarchyPath().get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getExtId();
-            String locationUuid = navigateActivity.getHierarchyPath().get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getUuid();
+            String locationExtId = navigateActivity.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
+            String locationUuid = navigateActivity.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
 
@@ -117,9 +118,9 @@ public class UpdateFormPayloadBuilders {
                     Calendar.getInstance().getTime()).toString();
 
             String individualExtId = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.INDIVIDUAL_STATE).getExtId();
+                    .get(INDIVIDUAL_STATE).getExtId();
             String individualUuid = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.INDIVIDUAL_STATE).getUuid();
+                    .get(INDIVIDUAL_STATE).getUuid();
 
             formPayload.put(ProjectFormFields.OutMigrations.OUT_MIGRATION_DATE, outMigrationDate);
 
@@ -151,7 +152,7 @@ public class UpdateFormPayloadBuilders {
             String individualExtId;
             String individualUuid;
             DataWrapper dataWrapper = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.INDIVIDUAL_STATE);
+                    .get(INDIVIDUAL_STATE);
             if (null != dataWrapper) {
                 individualExtId = dataWrapper.getExtId();
                 individualUuid = dataWrapper.getUuid();
@@ -181,7 +182,7 @@ public class UpdateFormPayloadBuilders {
             String individualExtId;
             String individualUuid;
             DataWrapper dataWrapper = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.INDIVIDUAL_STATE);
+                    .get(INDIVIDUAL_STATE);
             if (null == dataWrapper) {
                 individualExtId = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID);
                 individualUuid = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID);
@@ -215,12 +216,12 @@ public class UpdateFormPayloadBuilders {
             SocialGroupGateway socialGroupGateway = new SocialGroupGateway();
             SocialGroup socialGroup = socialGroupGateway.getFirst(navigateActivity.getContentResolver(),
                     socialGroupGateway.findByLocationUuid(navigateActivity.getHierarchyPath()
-                            .get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE).getUuid()));
+                            .get(HOUSEHOLD_STATE).getUuid()));
 
             String motherExtId = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.INDIVIDUAL_STATE).getExtId();
+                    .get(INDIVIDUAL_STATE).getExtId();
             String motherUuid = navigateActivity.getHierarchyPath()
-                    .get(ProjectActivityBuilder.BiokoHierarchy.INDIVIDUAL_STATE).getUuid();
+                    .get(INDIVIDUAL_STATE).getUuid();
 
             formPayload.put(ProjectFormFields.PregnancyOutcome.MOTHER_UUID, motherUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, motherUuid);
@@ -241,7 +242,7 @@ public class UpdateFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, navigateActivity);
             PayloadTools.flagForReview(formPayload, false);
 
-            DataWrapper locationDataWrapper = navigateActivity.getHierarchyPath().get(ProjectActivityBuilder.BiokoHierarchy.HOUSEHOLD_STATE);
+            DataWrapper locationDataWrapper = navigateActivity.getHierarchyPath().get(HOUSEHOLD_STATE);
 
             String individualExtId = IdHelper.generateIndividualExtId(navigateActivity.getContentResolver(), locationDataWrapper);
 
