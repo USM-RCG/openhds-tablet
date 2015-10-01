@@ -58,6 +58,7 @@ public class ProjectFormFields {
     }
 
     public static final class Locations {
+
         public static final String HIERERCHY_PARENT_UUID = "hierarchyParentUuid";
         public static final String HIERERCHY_UUID = "hierarchyUuid";
         public static final String HIERERCHY_EXTID = "hierarchyExtId";
@@ -110,9 +111,6 @@ public class ProjectFormFields {
             columnsToFieldNames.put(
                     OpenHDS.Locations.COLUMN_LOCATION_UUID,
                     General.ENTITY_UUID);
-
-
-
         }
 
         public static String getFieldNameFromColumn(String column) {
@@ -125,9 +123,6 @@ public class ProjectFormFields {
     }
 
     public static final class Individuals {
-
-
-
 
         // for individuals table
         public static final String INDIVIDUAL_EXTID = "individualExtId";
@@ -216,7 +211,6 @@ public class ProjectFormFields {
             columnsToFieldNames.put(
                     OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID,
                     General.ENTITY_UUID);
-
         }
 
         public static String getFieldNameFromColumn(String column) {
@@ -303,8 +297,6 @@ public class ProjectFormFields {
 
     public static final class SuperOjo {
         public static final String OJO_DATE = "ojo_date";
-
-
     }
 
 }
