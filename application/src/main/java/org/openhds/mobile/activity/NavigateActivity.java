@@ -3,26 +3,19 @@ package org.openhds.mobile.activity;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import org.openhds.mobile.R;
-import org.openhds.mobile.adapter.FormInstanceAdapter;
 import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
 import org.openhds.mobile.fragment.FormSelectionFragment;
 import org.openhds.mobile.fragment.DataSelectionFragment;
 import org.openhds.mobile.fragment.navigate.DetailToggleFragment;
 import org.openhds.mobile.fragment.navigate.HierarchyButtonFragment;
-import org.openhds.mobile.fragment.navigate.ViewRecentFormFragment;
+import org.openhds.mobile.fragment.navigate.ViewPathFormsFragment;
 import org.openhds.mobile.fragment.navigate.VisitFragment;
 import org.openhds.mobile.fragment.navigate.detail.DefaultDetailFragment;
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
@@ -30,6 +23,7 @@ import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.form.FormBehaviour;
 import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
+import org.openhds.mobile.projectdata.ProjectFormFields;
 import org.openhds.mobile.utilities.StateMachine;
 import org.openhds.mobile.utilities.StateMachine.StateListener;
 import org.openhds.mobile.model.update.Visit;
@@ -43,12 +37,13 @@ import org.openhds.mobile.repository.search.FormSearchPluginModule;
 import org.openhds.mobile.utilities.EncryptionHelper;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.openhds.mobile.utilities.ConfigUtils.getAppVersionNumber;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
@@ -66,7 +61,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     private DetailFragment defaultDetailFragment;
     private DetailFragment detailFragment;
     private VisitFragment visitFragment;
-    private ViewRecentFormFragment viewRecentFormFragment;
+    private ViewPathFormsFragment viewPathFormsFragment;
 
     private static final String HIERARCHY_BUTTON_FRAGMENT_TAG = "hierarchyButtonFragment";
     private static final String VALUE_FRAGMENT_TAG = "hierarchyValueFragment";
@@ -74,7 +69,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     private static final String TOGGLE_FRAGMENT_TAG = "hierarchyToggleFragment";
     private static final String DETAIL_FRAGMENT_TAG = "hierarchyDetailFragment";
     private static final String VISIT_FRAGMENT_TAG = "hierarchyVisitFragment";
-    private static final String VIEW_RECENT_FORM_TAG="viewRecentFormFragment";
+    private static final String VIEW_RECENT_FORM_TAG="viewPathFormsFragment";
     private static final String VISIT_KEY = "visitKey";
     private static final String HIERARCHY_PATH_KEYS = "hierarchyPathKeys";
     private static final String HIERARCHY_PATH_VALUES = "hierarchyPathValues";
@@ -138,8 +133,8 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             defaultDetailFragment = new DefaultDetailFragment();
             visitFragment = new VisitFragment();
             visitFragment.setNavigateActivity(this);
-            viewRecentFormFragment = new ViewRecentFormFragment();
-            viewRecentFormFragment.setCurrentModuleName(currentModuleName);
+            viewPathFormsFragment = new ViewPathFormsFragment();
+            viewPathFormsFragment.setCurrentModuleName(currentModuleName);
 
 
             getFragmentManager().beginTransaction()
@@ -148,7 +143,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
                      .add(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG)
                      .add(R.id.right_column_top, formFragment, FORM_FRAGMENT_TAG)
                      .add(R.id.right_column_bottom, visitFragment, VISIT_FRAGMENT_TAG)
-                     .add(R.id.view_column_bottom, viewRecentFormFragment, VIEW_RECENT_FORM_TAG)
+                     .add(R.id.view_column_bottom, viewPathFormsFragment, VIEW_RECENT_FORM_TAG)
                     .commit();
        } else {
 
@@ -165,14 +160,14 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
 
             defaultDetailFragment = new DefaultDetailFragment();
             valueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
-            viewRecentFormFragment = (ViewRecentFormFragment) fragmentManager.findFragmentByTag(VIEW_RECENT_FORM_TAG);
-            viewRecentFormFragment.setCurrentModuleName(currentModuleName);
+            viewPathFormsFragment = (ViewPathFormsFragment) fragmentManager.findFragmentByTag(VIEW_RECENT_FORM_TAG);
+            viewPathFormsFragment.setCurrentModuleName(currentModuleName);
 
             // draw details if valuefrag is null, the drawing of valuefrag is
             // handled in onResume().
             if (null == valueFragment) {
                 valueFragment = new DataSelectionFragment();
-                viewRecentFormFragment = (ViewRecentFormFragment) fragmentManager.findFragmentByTag(VIEW_RECENT_FORM_TAG);
+                viewPathFormsFragment = (ViewPathFormsFragment) fragmentManager.findFragmentByTag(VIEW_RECENT_FORM_TAG);
                 detailFragment = (DetailFragment) fragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG);
                 detailFragment.setNavigateActivity(this);
             }
@@ -338,9 +333,15 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             detailToggleFragment.setButtonHighlighted(true);
         }
 
+        populateFormsForPath();
+
         if(null != getCurrentVisit()){
             visitFragment.setButtonEnabled(true);
         }
+    }
+
+    private void populateFormsForPath() {
+        viewPathFormsFragment.populateRecentFormInstanceListView(hierPathInstances.get(currentHierarchyPath()));
     }
 
     public Map<String, DataWrapper> getHierarchyPath() {
@@ -577,20 +578,49 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
         }
     }
 
+    private Map<String, Set<String>> hierPathInstances = new HashMap<>();
+
+    private String currentHierarchyPath() {
+        String SEP = "/";
+        StringBuilder b = new StringBuilder(SEP);
+        List<String> stateSequence = getStateSequence();
+        Map<String, DataWrapper> hierarchyPath = getHierarchyPath();
+        for (String state : stateSequence) {
+            DataWrapper pathData = hierarchyPath.get(state);
+            if (pathData != null) {
+                b.append(pathData.getExtId());
+                b.append("/");
+            }
+        }
+        return b.toString();
+    }
+
+    private void associateFormToPath(String formId) {
+        String path = currentHierarchyPath();
+        Set<String> formIds = hierPathInstances.get(path);
+        if (formIds == null) {
+            formIds = new LinkedHashSet<>();
+            hierPathInstances.put(path, formIds);
+        }
+        formIds.add(formId);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (RESULT_OK == resultCode) {
-
             switch (requestCode) {
                 case ODK_ACTIVITY_REQUEST_CODE:
                     // consume form data that the user entered with ODK
                     FormBehaviour formBehaviour = formHelper.getFormBehaviour();
                     formHelper.checkFormInstanceStatus();
-                    if (null != formHelper.getFinalizedFormFilePath()) {
-                        FormPayloadConsumer consumer = formBehaviour.getFormPayloadConsumer();
-                        if (null != consumer) {
+                    if (formHelper.getFinalizedFormFilePath() != null) {
 
+                        // Tie the form instance to the hierarchy path
+                        associateFormToPath(formHelper.getFinalizedFormFilePath());
+
+                        FormPayloadConsumer consumer = formBehaviour.getFormPayloadConsumer();
+                        if (consumer != null) {
                             previousConsumerResults = consumer.consumeFormPayload(formHelper.fetchFormInstanceData(), this);
                             if (previousConsumerResults.needsPostfill()) {
                                 consumer.postFillFormPayload(formHelper.getFormFieldData());
@@ -700,6 +730,8 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
                     validForms.add(form);
                 }
             }
+
+            populateFormsForPath();
 
             if (shouldShowDetailFragment()) {
                 showDetailFragment();

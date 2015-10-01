@@ -1,6 +1,7 @@
 package org.openhds.mobile.fragment.navigate;
 
 import android.app.Fragment;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,11 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -24,53 +25,44 @@ import org.openhds.mobile.utilities.OdkCollectHelper;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 
-public class ViewRecentFormFragment extends Fragment implements View.OnClickListener
+public class ViewPathFormsFragment extends Fragment
 {
-    Button recentForm;
-    private List<FormInstance> recentformInstances;
-    private List<FormInstance> recentformInstancesCategorized ;
+    private List<FormInstance> formsForPath;
 
     String currentModuleName;
-    private ListView recentFormInstanceView;
+    private ListView formInstanceView;
 
     public void setCurrentModuleName(String currentModuleName) {
         this.currentModuleName = currentModuleName;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.view_form_fragment, container, false);
-        recentForm = (Button) view.findViewById(R.id.viewRecentFormButton);
-        recentForm.setOnClickListener(this);
         return view;
     }
 
+    public void populateRecentFormInstanceListView(Collection<String> ids) {
 
-    public void onClick(View view) {
+        formInstanceView =  (ListView) getActivity().findViewById(R.id.path_forms_form_right_column);
 
-        populateRecentFormInstanceListView();
-    }
-
-
-    public void populateRecentFormInstanceListView() {
-
-        recentformInstances = OdkCollectHelper.getAllUnsentFormInstances(getActivity().getContentResolver());
-        recentFormInstanceView =  (ListView) getActivity().findViewById(R.id.view_recent_form_right_column);
-
-        if (null == recentformInstances ||recentformInstances.isEmpty()) {
-            return;
+        if (ids == null) {
+            formsForPath = Collections.EMPTY_LIST;
+        } else {
+            ContentResolver resolver = getActivity().getContentResolver();
+            formsForPath = OdkCollectHelper.getFormInstancesByPath(resolver, ids);
+            if (formsForPath == null) {
+                formsForPath = Collections.EMPTY_LIST;
+            }
         }
 
-        recentformInstancesCategorized=checkRecentFormByName(recentformInstances, currentModuleName);
-
         FormInstanceAdapter adapter = new FormInstanceAdapter(
-                getActivity().getApplicationContext(), R.id.form_instance_list_item, recentformInstancesCategorized.toArray());
-
-        recentFormInstanceView.setAdapter(adapter);
-        recentFormInstanceView.setOnItemClickListener(new RecentFormInstanceClickListener());
+                getActivity().getApplicationContext(),
+                R.id.form_instance_list_item, formsForPath.toArray());
+        formInstanceView.setAdapter(adapter);
+        formInstanceView.setOnItemClickListener(new RecentFormInstanceClickListener());
     }
 
 //checks the form instances by name and populate it based on the current module
@@ -116,8 +108,8 @@ public class ViewRecentFormFragment extends Fragment implements View.OnClickList
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            if (position >= 0 && position < recentformInstancesCategorized.size()) {
-                FormInstance selected = recentformInstancesCategorized.get(position);
+            if (position >= 0 && position < formsForPath.size()) {
+                FormInstance selected = formsForPath.get(position);
                 Uri uri = Uri.parse(selected.getUriString());
 
                 File selectedFile = new File(selected.getFilePath());

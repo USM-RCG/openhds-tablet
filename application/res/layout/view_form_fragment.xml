@@ -7,16 +7,8 @@
     android:layout_marginRight="15dp"
     android:visibility="visible">
 
-    <Button
-        android:id="@+id/viewRecentFormButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="@string/view_recent_form_btn"
-        android:background="@drawable/gray_button_selector"
-        android:textAppearance="@android:style/TextAppearance.Large" />
     <ListView
-        android:id="@+id/view_recent_form_right_column"
+        android:id="@+id/path_forms_form_right_column"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="4"
@@ -26,6 +18,6 @@
         android:listSelector="@android:color/transparent"
         android:divider="@android:color/transparent"
         android:dividerHeight="15dp"
-        android:paddingTop="20dp"/>
+        android:paddingTop="5dp"/>
 
 </LinearLayout>
