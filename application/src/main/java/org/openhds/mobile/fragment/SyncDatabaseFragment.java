@@ -251,7 +251,7 @@ public class SyncDatabaseFragment extends Fragment {
         ParseEntityTaskRequest parseEntityTaskRequest = allParseTaskRequests.get(currentEntityId);
         parseEntityTaskRequest.setInputStream(httpTaskResponse.getInputStream());
 
-        setContentHash(currentEntityId, httpTaskResponse.getETag());
+        storeContentHash(currentEntityId, httpTaskResponse.getETag());
         parseEntityTaskRequest.getGateway().deleteAll(getActivity().getContentResolver());
         parseEntityTask.execute(parseEntityTaskRequest);
     }
@@ -358,14 +358,14 @@ public class SyncDatabaseFragment extends Fragment {
         String path = getResourceString(getActivity(), allResourcePaths.get(entityId));
         String url = openHdsBaseUrl + path;
 
-        return new HttpTaskRequest(entityId, url, "application/xml", userName, password, getContentHash(entityId));
+        return new HttpTaskRequest(entityId, url, "application/xml", userName, password, loadContentHash(entityId));
     }
 
     private File getHashFile(int entityId) {
         return new File(getActivity().getFilesDir(), "fingerprint-" + entityId);
     }
 
-    private String getContentHash(int entityId) {
+    private String loadContentHash(int entityId) {
         String contentHash = null;
         File contentHashFile = getHashFile(entityId);
         if (contentHashFile.exists() && contentHashFile.canRead()) {
@@ -390,7 +390,7 @@ public class SyncDatabaseFragment extends Fragment {
         return contentHash;
     }
 
-    private void setContentHash(int entityId, String hash) {
+    private void storeContentHash(int entityId, String hash) {
         File hashFile = getHashFile(entityId);
         if (!hashFile.exists() || (hashFile.exists() && hashFile.canWrite())) {
             try {
@@ -481,7 +481,7 @@ public class SyncDatabaseFragment extends Fragment {
             allErrorCounts.put(currentEntityId, errorCount);
             updateTableRow(currentEntityId, IGNORE, errorCount, IGNORE);
             showError(currentEntityId, 0, e.getMessage());
-            setContentHash(currentEntityId, null);
+            storeContentHash(currentEntityId, null);
         }
 
         @Override
