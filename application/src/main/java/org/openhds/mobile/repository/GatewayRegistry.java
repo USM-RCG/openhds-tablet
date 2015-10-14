@@ -1,5 +1,7 @@
 package org.openhds.mobile.repository;
 
+import android.util.Log;
+
 import org.openhds.mobile.repository.gateway.FieldWorkerGateway;
 import org.openhds.mobile.repository.gateway.Gateway;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
@@ -14,86 +16,69 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Well know location for accessing entity-specific gateway instances.
+ * Well known location for accessing type-specific gateway instances.
  */
 public class GatewayRegistry {
 
-    private static Map<String, Gateway> allGateways;
+    private static final String TAG = GatewayRegistry.class.getName();
+
+    private static final Map<String, Gateway> SINGLETONS;
 
     static {
-        allGateways = new HashMap<>();
+        SINGLETONS = new HashMap<>();
     }
 
     private GatewayRegistry () {};
 
-    public static FieldWorkerGateway getFieldWorkerGateway() {
-        final String gatewayName = FieldWorkerGateway.class.getName();
-        if (!allGateways.containsKey(gatewayName)) {
-            allGateways.put(gatewayName, new FieldWorkerGateway());
+    /**
+     * Creates lazy-loaded singletons by creating on first access and then
+     * returning the same value for subsequent access.
+     */
+    private static <T extends Gateway> T lazy(Class<T> gatewayClass) {
+        final String gatewayName = gatewayClass.getName();
+        if (!SINGLETONS.containsKey(gatewayName)) {
+            try {
+                SINGLETONS.put(gatewayName, gatewayClass.newInstance());
+            } catch (Exception e) {
+                Log.w(TAG, "failed to create gateway " + gatewayName, e);
+            }
         }
-        return (FieldWorkerGateway) allGateways.get(gatewayName);
+        return (T)SINGLETONS.get(gatewayName);
+    }
+
+    public static FieldWorkerGateway getFieldWorkerGateway() {
+        return lazy(FieldWorkerGateway.class);
     }
 
     public static IndividualGateway getIndividualGateway() {
-        final String gatewayName = IndividualGateway.class.getName();
-        if (!allGateways.containsKey(gatewayName)) {
-            allGateways.put(gatewayName, new IndividualGateway());
-        }
-        return (IndividualGateway) allGateways.get(gatewayName);
+        return lazy(IndividualGateway.class);
     }
 
     public static LocationGateway getLocationGateway() {
-        final String gatewayName = LocationGateway.class.getName();
-        if (!allGateways.containsKey(gatewayName)) {
-            allGateways.put(gatewayName, new LocationGateway());
-        }
-        return (LocationGateway) allGateways.get(gatewayName);
+        return lazy(LocationGateway.class);
     }
 
     public static LocationHierarchyGateway getLocationHierarchyGateway() {
-        final String gatewayName = LocationHierarchyGateway.class.getName();
-        if (!allGateways.containsKey(gatewayName)) {
-            allGateways.put(gatewayName, new LocationHierarchyGateway());
-        }
-        return (LocationHierarchyGateway) allGateways.get(gatewayName);
+        return lazy(LocationHierarchyGateway.class);
     }
 
     public static MembershipGateway getMembershipGateway() {
-        final String gatewayName = MembershipGateway.class.getName();
-        if (!allGateways.containsKey(gatewayName)) {
-            allGateways.put(gatewayName, new MembershipGateway());
-        }
-        return (MembershipGateway) allGateways.get(gatewayName);
+        return lazy(MembershipGateway.class);
     }
 
     public static RelationshipGateway getRelationshipGateway() {
-        final String gatewayName = RelationshipGateway.class.getName();
-        if (!allGateways.containsKey(gatewayName)) {
-            allGateways.put(gatewayName, new RelationshipGateway());
-        }
-        return (RelationshipGateway) allGateways.get(gatewayName);
+        return lazy(RelationshipGateway.class);
     }
 
     public static SocialGroupGateway getSocialGroupGateway() {
-        final String gatewayName = SocialGroupGateway.class.getName();
-        if (!allGateways.containsKey(gatewayName)) {
-            allGateways.put(gatewayName, new SocialGroupGateway());
-        }
-        return (SocialGroupGateway) allGateways.get(gatewayName);
+        return lazy(SocialGroupGateway.class);
     }
 
     public static VisitGateway getVisitGateway() {
-        final String gatewayName = VisitGateway.class.getName();
-        if (!allGateways.containsKey(gatewayName)) {
-            allGateways.put(gatewayName, new VisitGateway());
-        }
-        return (VisitGateway) allGateways.get(gatewayName);
+        return lazy(VisitGateway.class);
     }
 
-    public static Gateway getGatewayByName(String gatewayName) {
-        if (allGateways.containsKey(gatewayName)) {
-            return allGateways.get(gatewayName);
-        }
-        return null;
+    public static Gateway getGatewayByName(String name) {
+        return SINGLETONS.get(name);
     }
 }
