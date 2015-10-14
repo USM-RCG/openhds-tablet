@@ -95,42 +95,34 @@ public class SyncDatabaseFragment extends Fragment {
         allParseTaskRequests = new HashMap<>();
         allParseTaskRequests.put(R.string.sync_database_label_field_workers, new ParseEntityTaskRequest<>(
                 R.string.sync_database_label_field_workers,
-                null,
                 new FieldWorkerParser(),
                 GatewayRegistry.getFieldWorkerGateway()));
         allParseTaskRequests.put(R.string.sync_database_label_individuals, new ParseEntityTaskRequest<>(
                 R.string.sync_database_label_individuals,
-                null,
                 new IndividualParser(),
                 GatewayRegistry.getIndividualGateway()));
         allParseTaskRequests.put(R.string.sync_database_label_locations, new ParseEntityTaskRequest<>(
                 R.string.sync_database_label_locations,
-                null,
                 new LocationParser(),
                 GatewayRegistry.getLocationGateway()));
         allParseTaskRequests.put(R.string.sync_database_label_location_hierarchies, new ParseEntityTaskRequest<>(
                 R.string.sync_database_label_location_hierarchies,
-                null,
                 new LocationHierarchyParser(),
                 GatewayRegistry.getLocationHierarchyGateway()));
         allParseTaskRequests.put(R.string.sync_database_label_memberships, new ParseEntityTaskRequest<>(
                 R.string.sync_database_label_memberships,
-                null,
                 new MembershipParser(),
                 GatewayRegistry.getMembershipGateway()));
         allParseTaskRequests.put(R.string.sync_database_label_relationships, new ParseEntityTaskRequest<>(
                 R.string.sync_database_label_relationships,
-                null,
                 new RelationshipParser(),
                 GatewayRegistry.getRelationshipGateway()));
         allParseTaskRequests.put(R.string.sync_database_label_social_groups, new ParseEntityTaskRequest<>(
                 R.string.sync_database_label_social_groups,
-                null,
                 new SocialGroupParser(),
                 GatewayRegistry.getSocialGroupGateway()));
         allParseTaskRequests.put(R.string.sync_database_label_visits, new ParseEntityTaskRequest<>(
                 R.string.sync_database_label_visits,
-                null,
                 new VisitParser(),
                 GatewayRegistry.getVisitGateway()));
     }

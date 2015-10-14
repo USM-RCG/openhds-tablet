@@ -94,13 +94,12 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
 
     public void testProcessFieldWorkerXml() throws Exception {
         String fileName = "testXml/field-workers.xml";
-        InputStream inputStream = getContext().getAssets().open(fileName);
         FieldWorkerGateway gateway = GatewayRegistry.getFieldWorkerGateway();
         ParseEntityTaskRequest<FieldWorker> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
                 0,
-                inputStream,
                 new FieldWorkerParser(),
                 gateway);
+        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseEntityTask.execute(parseEntityTaskRequest);
@@ -113,13 +112,12 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
 
     public void testProcessIndividualXml() throws Exception {
         String fileName = "testXml/individuals.xml";
-        InputStream inputStream = getContext().getAssets().open(fileName);
         IndividualGateway gateway = GatewayRegistry.getIndividualGateway();
         ParseEntityTaskRequest<Individual> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
                 0,
-                inputStream,
                 new IndividualParser(),
                 gateway);
+        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseEntityTask.execute(parseEntityTaskRequest);
@@ -132,13 +130,12 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
 
     public void testProcessLocationHierarchyXml() throws Exception {
         String fileName = "testXml/location-hierarchies.xml";
-        InputStream inputStream = getContext().getAssets().open(fileName);
         LocationHierarchyGateway gateway = GatewayRegistry.getLocationHierarchyGateway();
         ParseEntityTaskRequest<LocationHierarchy> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
                 0,
-                inputStream,
                 new LocationHierarchyParser(),
                 gateway);
+        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseEntityTask.execute(parseEntityTaskRequest);
@@ -151,13 +148,12 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
 
     public void testProcessLocationXml() throws Exception {
         String fileName = "testXml/locations.xml";
-        InputStream inputStream = getContext().getAssets().open(fileName);
         LocationGateway gateway = GatewayRegistry.getLocationGateway();
         ParseEntityTaskRequest<Location> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
                 0,
-                inputStream,
                 new LocationParser(),
                 gateway);
+        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseEntityTask.execute(parseEntityTaskRequest);
@@ -170,13 +166,12 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
 
     public void testProcessRelationshipXml() throws Exception {
         String fileName = "testXml/relationships.xml";
-        InputStream inputStream = getContext().getAssets().open(fileName);
         RelationshipGateway gateway = GatewayRegistry.getRelationshipGateway();
         ParseEntityTaskRequest<Relationship> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
                 0,
-                inputStream,
                 new RelationshipParser(),
                 gateway);
+        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseEntityTask.execute(parseEntityTaskRequest);
@@ -189,13 +184,12 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
 
     public void testProcessSocialGroupXml() throws Exception {
         String fileName = "testXml/social-groups.xml";
-        InputStream inputStream = getContext().getAssets().open(fileName);
         SocialGroupGateway gateway = GatewayRegistry.getSocialGroupGateway();
         ParseEntityTaskRequest<SocialGroup> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
                 0,
-                inputStream,
                 new SocialGroupParser(),
                 gateway);
+        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseEntityTask.execute(parseEntityTaskRequest);
@@ -208,13 +202,12 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
 
     public void testProcessVisitXml() throws Exception {
         String fileName = "testXml/visits.xml";
-        InputStream inputStream = getContext().getAssets().open(fileName);
         VisitGateway gateway = GatewayRegistry.getVisitGateway();
         ParseEntityTaskRequest<Visit> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
                 0,
-                inputStream,
                 new VisitParser(),
                 gateway);
+        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseEntityTask.execute(parseEntityTaskRequest);
@@ -227,13 +220,12 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
 
     public void testProcessMembershipXml() throws Exception {
         String fileName = "testXml/memberships.xml";
-        InputStream inputStream = getContext().getAssets().open(fileName);
         MembershipGateway gateway = GatewayRegistry.getMembershipGateway();
         ParseEntityTaskRequest<Membership> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
                 0,
-                inputStream,
                 new MembershipParser(),
                 gateway);
+        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseEntityTask.execute(parseEntityTaskRequest);

@@ -19,14 +19,14 @@ import java.io.InputStream;
  *  BSH
  */
 public class ParseEntityTaskRequest<T> {
+
     private final int titleId;
     private InputStream inputStream;
     private final EntityParser<T> entityParser;
     private final Gateway<T> gateway;
 
-    public ParseEntityTaskRequest(int titleId, InputStream inputStream, EntityParser<T> entityParser, Gateway<T> gateway) {
+    public ParseEntityTaskRequest(int titleId, EntityParser<T> entityParser, Gateway<T> gateway) {
         this.titleId = titleId;
-        this.inputStream = inputStream;
         this.entityParser = entityParser;
         this.gateway = gateway;
     }
