@@ -78,6 +78,7 @@ public class GatewayRegistry {
         return lazy(VisitGateway.class);
     }
 
+    // FIXME: doesn't work unless something else initializes prior!
     public static Gateway getGatewayByName(String name) {
         return SINGLETONS.get(name);
     }
