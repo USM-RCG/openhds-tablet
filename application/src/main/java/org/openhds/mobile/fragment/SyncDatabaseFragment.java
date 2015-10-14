@@ -31,16 +31,7 @@ import org.openhds.mobile.task.parsing.entities.RelationshipParser;
 import org.openhds.mobile.task.parsing.entities.SocialGroupParser;
 import org.openhds.mobile.task.parsing.entities.VisitParser;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,6 +42,9 @@ import java.util.Queue;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
+import static org.openhds.mobile.utilities.SyncUtils.hashFilename;
+import static org.openhds.mobile.utilities.SyncUtils.loadHash;
+import static org.openhds.mobile.utilities.SyncUtils.storeHash;
 
 /**
  * Allow user to sync tables with the server.
@@ -61,8 +55,6 @@ import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
  * BSH
  */
 public class SyncDatabaseFragment extends Fragment {
-
-    private static final String TAG = SyncDatabaseFragment.class.getName();
 
     // placeholder for integer value to ignore
     private static final int IGNORE = -1;
@@ -361,57 +353,16 @@ public class SyncDatabaseFragment extends Fragment {
         return new HttpTaskRequest(entityId, url, "application/xml", userName, password, loadContentHash(entityId));
     }
 
-    private File getHashFile(int entityId) {
-        return new File(getActivity().getFilesDir(), "fingerprint-" + entityId);
+    private File getAppFile(String file) {
+        return new File(getActivity().getFilesDir(), file);
     }
 
     private String loadContentHash(int entityId) {
-        String contentHash = null;
-        File contentHashFile = getHashFile(entityId);
-        if (contentHashFile.exists() && contentHashFile.canRead()) {
-            try {
-                InputStream in = new FileInputStream(contentHashFile);
-                BufferedReader buf = new BufferedReader(new InputStreamReader(in));
-                try {
-                    contentHash = buf.readLine();
-                } finally {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        Log.w(TAG, "failed to close hash file", e);
-                    }
-                }
-            } catch (FileNotFoundException e) {
-                Log.w(TAG, "hash file not found", e);
-            } catch (IOException e) {
-                Log.w(TAG, "failed to read hash file", e);
-            }
-        }
-        return contentHash;
+        return loadHash(getAppFile(hashFilename(entityId)));
     }
 
-    private void storeContentHash(int entityId, String hash) {
-        File hashFile = getHashFile(entityId);
-        if (!hashFile.exists() || (hashFile.exists() && hashFile.canWrite())) {
-            try {
-                OutputStream out = new FileOutputStream(hashFile);
-                try {
-                    PrintWriter writer = new PrintWriter(out);
-                    writer.println(hash == null? "": hash);
-                    writer.flush();
-                } finally {
-                    try {
-                        out.close();
-                    } catch (IOException e) {
-                        Log.w(TAG, "failed to close hash file", e);
-                    }
-                }
-            } catch (FileNotFoundException e) {
-                Log.w(TAG, "hash file not found", e);
-            } catch (IOException e) {
-                Log.w(TAG, "failed to read hash file", e);
-            }
-        }
+    private void storeContentHash(int currentEntityId, String hash) {
+        storeHash(getAppFile(hashFilename(currentEntityId)), hash);
     }
 
     // Respond to "sync all" button.
