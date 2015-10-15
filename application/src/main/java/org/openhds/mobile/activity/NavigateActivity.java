@@ -3,6 +3,9 @@ package org.openhds.mobile.activity;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,10 +23,12 @@ import org.openhds.mobile.fragment.navigate.VisitFragment;
 import org.openhds.mobile.fragment.navigate.detail.DefaultDetailFragment;
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
 import org.openhds.mobile.model.core.FieldWorker;
+import org.openhds.mobile.model.core.Supervisor;
 import org.openhds.mobile.model.form.FormBehaviour;
 import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.projectdata.ProjectFormFields;
+import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.utilities.StateMachine;
 import org.openhds.mobile.utilities.StateMachine.StateListener;
 import org.openhds.mobile.model.update.Visit;
@@ -38,8 +43,10 @@ import org.openhds.mobile.utilities.EncryptionHelper;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -208,9 +215,9 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
         for (String key : hierarchyPathKeys) {
             savedInstanceState.putParcelable(key + HIERARCHY_PATH_VALUES, hierarchyPath.get(key));
         }
-        savedInstanceState.putStringArrayList(HIERARCHY_PATH_KEYS,hierarchyPathKeys);
+        savedInstanceState.putStringArrayList(HIERARCHY_PATH_KEYS, hierarchyPathKeys);
 
-        savedInstanceState.putParcelableArrayList(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>)currentResults);
+        savedInstanceState.putParcelableArrayList(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
         savedInstanceState.putSerializable(VISIT_KEY, getCurrentVisit());
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -341,8 +348,28 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     }
 
     private void populateFormsForPath() {
-        viewPathFormsFragment.populateRecentFormInstanceListView(hierPathInstances.get(currentHierarchyPath()));
+
+        DatabaseAdapter dbAdpt = new DatabaseAdapter(this);
+        Collection forms = dbAdpt.findformByPath(currentHierarchyPath());
+        if (!forms.isEmpty()){
+        viewPathFormsFragment.populateRecentFormInstanceListView(forms);}
     }
+
+
+
+// check if recent form database exists
+   private boolean checkDataBase() {
+        SQLiteDatabase checkDB = null;
+        try {
+            checkDB = SQLiteDatabase.openDatabase("/data/data/org.openhds.mobile/databases/entityData", null,
+                    SQLiteDatabase.OPEN_READONLY);
+            checkDB.close();
+        } catch (SQLiteException e) {
+            // database doesn't exist yet.
+        }
+        return checkDB != null;
+    }
+
 
     public Map<String, DataWrapper> getHierarchyPath() {
         return hierarchyPath;
@@ -597,13 +624,11 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
 
     private void associateFormToPath(String formId) {
         String path = currentHierarchyPath();
-        Set<String> formIds = hierPathInstances.get(path);
-        if (formIds == null) {
-            formIds = new LinkedHashSet<>();
-            hierPathInstances.put(path, formIds);
+        DatabaseAdapter dbadper = new DatabaseAdapter(this);
+        if (formId != null) {
+                dbadper.addHierarchyPath(path, formId);
         }
-        formIds.add(formId);
-    }
+     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

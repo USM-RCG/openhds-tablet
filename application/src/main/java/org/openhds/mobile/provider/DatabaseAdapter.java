@@ -9,11 +9,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
+
+import org.openhds.mobile.OpenHDS;
+import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.model.form.FormSubmissionRecord;
 import org.openhds.mobile.model.core.Supervisor;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.openhds.mobile.provider.InstanceProviderAPI.InstanceColumns.CONTENT_URI;
 
 public class DatabaseAdapter {
 	private static final String DATABASE_NAME = "entityData";
@@ -22,7 +30,8 @@ public class DatabaseAdapter {
 
 	private static final String KEY_ID = "_id";
 
-	private static final String FORM_TABLE_NAME = "formsubmission";
+
+
 	public static final String KEY_REMOTE_ID = "remote_id";
 	public static final String KEY_FORMOWNER_ID = "form_owner_id";
 	public static final String KEY_FORM_TYPE = "form_type";
@@ -41,6 +50,16 @@ public class DatabaseAdapter {
 	public static final String KEY_SUPERVISOR_NAME = "username";
 	public static final String KEY_SUPERVISOR_PASS = "password";
 
+	//Recent form  table used for saving recent form instances based on Location hierarchy
+	private static final String FORM_TABLE_NAME = "formsubmission";
+
+	private static final String RECENT_FORM_TABLE = "recent_forms";
+	public static final String  KEY_PATH_ID = "path_id";
+	public static final String  KEY_HIERARCHY_PATH = "hierarchyPath";
+	public static final String  KEY_RECENT_FORM_PATH = "recentFormFilePath";
+
+
+
 	private static final String FORM_DB_CREATE = "CREATE TABLE "
 			+ FORM_TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY, "
 			+ KEY_FORMOWNER_ID + " TEXT, " + KEY_FORM_TYPE + " TEXT, "
@@ -56,6 +75,18 @@ public class DatabaseAdapter {
 	private static final String USER_DB_CREATE = "CREATE TABLE "
 			+ SUPERVISOR_TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY, "
 			+ KEY_SUPERVISOR_NAME + " TEXT, " + KEY_SUPERVISOR_PASS + " TEXT)";
+
+	/*private static final String RECENT_DB_FORMS = "CREATE TABLE "
+			+ RECENT_FORM_TABLE + " (" + KEY_PATH_ID + " INTEGER PRIMARY KEY, "
+			+ KEY_HIERARCHY_PATH + " TEXT, " + KEY_RECENT_FORM_PATH + " TEXT)";
+*/
+
+	private static final String RECENT_DB_FORMS = "CREATE TABLE "
+			+ RECENT_FORM_TABLE + " (" + KEY_HIERARCHY_PATH + " TEXT, " + KEY_RECENT_FORM_PATH + " TEXT, CONSTRAINT "
+			+ KEY_PATH_ID + " UNIQUE (" + KEY_HIERARCHY_PATH +", " +KEY_RECENT_FORM_PATH +" ) )" ;
+
+
+
 
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd_HH_mm_ss_SSS");
@@ -176,7 +207,7 @@ public class DatabaseAdapter {
 		db.beginTransaction();
 		try {
 			rowCount = db.delete(SUPERVISOR_TABLE_NAME, KEY_SUPERVISOR_NAME
-					+ " = ?", new String[] { u.getName() });
+					+ " = ?", new String[]{u.getName()});
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
@@ -255,6 +286,60 @@ public class DatabaseAdapter {
 		updateFormSubmission(id, cv);
 	}
 
+//add hierarchy Path in recentForm Tabe
+	public long addHierarchyPath (String hierarchyPath, String filePath ) {
+		long id = -1;
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		db.beginTransaction();
+		try {
+			ContentValues cv = new ContentValues();
+			//cv.put(KEY_PATH_ID, 1);
+			cv.put(KEY_HIERARCHY_PATH, hierarchyPath);
+			cv.put(KEY_RECENT_FORM_PATH, filePath);
+			id = db.insertOrThrow(RECENT_FORM_TABLE, null, cv);
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		db.close();
+        return id;
+	}
+
+	//add hierarchy Path in recentForm Tabe
+	public Collection findformByPath (String hierarchyPath) {
+		Set<String> formpaths = new HashSet<>();
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		Cursor cursor = null;
+		try {
+
+			cursor = db.query(RECENT_FORM_TABLE, new String[]{ KEY_RECENT_FORM_PATH },
+					KEY_HIERARCHY_PATH + "= ?", new String[]{ hierarchyPath }, null, null, null);
+
+			if (cursor == null) {
+				return null;
+			}
+
+		/*	boolean found = cursor.moveToNext();
+			if (!found) {
+				cursor.close();
+				return null;
+			} else{
+*/
+
+			while (cursor.moveToNext()) {
+				String formPath;
+				formPath = cursor.getString(cursor.getColumnIndex(KEY_RECENT_FORM_PATH));
+				formpaths.add(formPath);
+			}
+			cursor.close();
+
+		} catch (Exception e) {
+			Log.w("findUserByUsername", e.getMessage());
+		}
+		return formpaths;
+	}
+
+
 	public void deleteSubmission(long id) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
@@ -289,6 +374,7 @@ public class DatabaseAdapter {
 			db.execSQL(FORM_DB_CREATE);
 			db.execSQL(MESSAGE_DB_CREATE);
 			db.execSQL(USER_DB_CREATE);
+			db.execSQL(RECENT_DB_FORMS);  // for saving recent form instaces
 		}
 
 		@Override

@@ -3,6 +3,7 @@ package org.openhds.mobile.fragment.navigate;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -45,6 +46,8 @@ public class ViewPathFormsFragment extends Fragment
     }
 
     public void populateRecentFormInstanceListView(Collection<String> ids) {
+
+
 
         formInstanceView =  (ListView) getActivity().findViewById(R.id.path_forms_form_right_column);
 

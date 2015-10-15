@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.List;
 
 import android.content.ContentValues;
+
+import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.provider.InstanceProviderAPI;
 import org.openhds.mobile.model.form.FormInstance;
 
@@ -176,7 +178,7 @@ public class OdkCollectHelper {
                         InstanceProviderAPI.InstanceColumns.JR_FORM_ID,
                         InstanceProviderAPI.InstanceColumns.DISPLAY_NAME,
                         InstanceProviderAPI.InstanceColumns.STATUS},
-                InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH
+                        InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH
                         + " IN (" + makePlaceholders(ids.size()) + ")",
                 ids.toArray(new String[]{}), null);
 
@@ -221,4 +223,10 @@ public class OdkCollectHelper {
         cursor.close();
         return formInstances;
     }
+
+
+
+
+
+
 }
