@@ -66,21 +66,13 @@ public class FieldWorkerLoginFragment extends Fragment implements
         if (null == fieldWorker || !BCrypt.checkpw(password,fieldWorker.getPasswordHash())) {
             showLongToast(getActivity(), R.string.field_worker_bad_credentials);
         } else {
-            launchCensusActivity(fieldWorker);
+            launchPortalActivity(fieldWorker);
         }
     }
 
-    private void launchCensusActivity(FieldWorker fieldWorker) {
-
+    private void launchPortalActivity(FieldWorker fieldWorker) {
         Intent intent = new Intent(getActivity(), PortalActivity.class);
-
-        // TODO: get a new instance of CensusActivityBuilder and put it into the
-        // intent and send'er'over to skeletor
-
         intent.putExtra(FIELD_WORKER_EXTRA, fieldWorker);
-//		intent.putExtra(ProjectActivityBuilder.ACTIVITY_MODULE_EXTRA,
-//				ProjectActivityBuilder.getActivityModuleNames().get(0));
-
         startActivity(intent);
     }
 
