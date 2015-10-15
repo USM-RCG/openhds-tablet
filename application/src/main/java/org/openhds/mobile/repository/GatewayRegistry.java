@@ -78,8 +78,11 @@ public class GatewayRegistry {
         return lazy(VisitGateway.class);
     }
 
-    // FIXME: doesn't work unless something else initializes prior!
     public static Gateway getGatewayByName(String name) {
-        return SINGLETONS.get(name);
+        try {
+            return lazy((Class<Gateway>) Class.forName(name));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("failed to load gateway class " + name);
+        }
     }
 }
