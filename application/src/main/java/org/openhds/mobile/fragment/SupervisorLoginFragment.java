@@ -3,8 +3,10 @@ package org.openhds.mobile.fragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -26,7 +28,7 @@ import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
 import static org.openhds.mobile.utilities.UrlUtils.buildServerUrl;
 
 public class SupervisorLoginFragment extends Fragment implements
-        OnClickListener {
+        OnClickListener, OnKeyListener {
 
     private EditText usernameEditText;
     private EditText passwordEditText;
@@ -41,11 +43,25 @@ public class SupervisorLoginFragment extends Fragment implements
 
         usernameEditText = (EditText) v.findViewById(R.id.usernameEditText);
         passwordEditText = (EditText) v.findViewById(R.id.passwordEditText);
+        usernameEditText.setOnKeyListener(this);
+        passwordEditText.setOnKeyListener(this);
         loginButton = (Button) v.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
         databaseAdapter = new DatabaseAdapter(getActivity());
 
         return v;
+    }
+
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_ENTER:
+                    authenticateSupervisor();
+            }
+        }
+        return false;
     }
 
     public void onClick(View view) {
