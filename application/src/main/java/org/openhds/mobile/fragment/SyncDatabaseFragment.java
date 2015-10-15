@@ -163,9 +163,8 @@ public class SyncDatabaseFragment extends Fragment {
 
     // Refresh a table with stored data and ready to sync.
     private void resetTableRow(SyncEntity entity) {
-        int records = queryRecordCount(entity);
         int errors = allErrorCounts.containsKey(entity) ? allErrorCounts.get(entity) : UNKNOWN;
-        updateTableRow(entity, records, errors, R.string.sync_database_button_sync);
+        updateTableRow(entity, queryRecordCount(entity), errors, R.string.sync_database_button_sync);
     }
 
     // Query the database for entity record counts.
@@ -319,8 +318,9 @@ public class SyncDatabaseFragment extends Fragment {
     // Create an http task request for fetching data from the server.
     private HttpTaskRequest buildHttpTaskRequest(SyncEntity entity) {
 
-        String userName = (String) getActivity().getIntent().getExtras().get(OpeningActivity.USERNAME_KEY);
-        String password = (String) getActivity().getIntent().getExtras().get(OpeningActivity.PASSWORD_KEY);
+        Bundle extras = getActivity().getIntent().getExtras();
+        String userName = (String) extras.get(OpeningActivity.USERNAME_KEY);
+        String password = (String) extras.get(OpeningActivity.PASSWORD_KEY);
 
         String openHdsBaseUrl = getPreferenceString(getActivity(), R.string.openhds_server_url_key, "");
         String path = getResourceString(getActivity(), entity.pathId);
@@ -337,8 +337,8 @@ public class SyncDatabaseFragment extends Fragment {
         return loadHash(getAppFile(hashFilename(entity.labelId)));
     }
 
-    private void storeContentHash(SyncEntity currentEntity, String hash) {
-        storeHash(getAppFile(hashFilename(currentEntity.labelId)), hash);
+    private void storeContentHash(SyncEntity entity, String hash) {
+        storeHash(getAppFile(hashFilename(entity.labelId)), hash);
     }
 
     // Respond to "sync all" button.
