@@ -2,6 +2,8 @@ package org.openhds.mobile.utilities;
 
 import android.util.Log;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,7 +23,11 @@ public class SyncUtils {
     private static final String TAG = SyncUtils.class.getName();
 
     public static String hashFilename(String entityName) {
-        return String.format("fingerprint-%s", entityName);
+        return String.format("%s.etag", entityName);
+    }
+
+    public static String entityFilename(String entityName) {
+        return String.format("%s.xml", entityName);
     }
 
     public static String loadHash(File hashFile) {
@@ -68,6 +74,19 @@ public class SyncUtils {
             } catch (IOException e) {
                 Log.w(TAG, "failed to read hash file", e);
             }
+        }
+    }
+
+    public static void streamToFile(InputStream in, File f) throws IOException {
+        OutputStream out = new BufferedOutputStream(new FileOutputStream(f));
+        try {
+            byte[] buf = new byte[4096];
+            int read;
+            while ((read = in.read(buf)) >= 0) {
+                out.write(buf, 0, read);
+            }
+        } finally {
+            out.close();
         }
     }
 }

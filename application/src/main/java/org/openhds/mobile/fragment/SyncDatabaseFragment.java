@@ -41,6 +41,7 @@ import java.util.Queue;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
+import static org.openhds.mobile.utilities.SyncUtils.entityFilename;
 import static org.openhds.mobile.utilities.SyncUtils.hashFilename;
 import static org.openhds.mobile.utilities.SyncUtils.loadHash;
 import static org.openhds.mobile.utilities.SyncUtils.storeHash;
@@ -343,7 +344,9 @@ public class SyncDatabaseFragment extends Fragment {
         String path = getResourceString(getActivity(), entity.pathId);
         String url = openHdsBaseUrl + path;
 
-        return new HttpTaskRequest(entity.labelId, url, "application/xml", userName, password, loadContentHash(entity));
+        return new HttpTaskRequest(entity.labelId, url, "application/xml",
+                userName, password, loadContentHash(entity),
+                getAppFile(entityFilename(entity.name())));
     }
 
     private File getAppFile(String file) {

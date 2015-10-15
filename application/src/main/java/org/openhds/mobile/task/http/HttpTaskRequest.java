@@ -1,5 +1,7 @@
 package org.openhds.mobile.task.http;
 
+import java.io.File;
+
 /**
  * Url and credentials for an HTTP request.
  *
@@ -12,24 +14,31 @@ package org.openhds.mobile.task.http;
  * BSH
  */
 public class HttpTaskRequest {
+
     private final int titleId;
     private final String url;
     private final String userName;
     private final String password;
     private final String accept;
     private final String eTag;
+    private final File file;
 
     public HttpTaskRequest(int titleId, String url, String accept, String userName, String password) {
         this(titleId, url, accept, userName, password, null);
     }
 
     public HttpTaskRequest(int titleId, String url, String accept, String userName, String password, String eTag) {
+        this(titleId, url, accept, userName, password, eTag, null);
+    }
+
+    public HttpTaskRequest(int titleId, String url, String accept, String userName, String password, String eTag, File saveTo) {
         this.titleId = titleId;
         this.url = url;
         this.accept = accept;
         this.userName = userName;
         this.password = password;
         this.eTag = eTag;
+        file = saveTo;
     }
 
     public int getTitleId() {
@@ -54,5 +63,9 @@ public class HttpTaskRequest {
 
     public String getETag() {
         return eTag;
+    }
+
+    public File getFile() {
+        return file;
     }
 }

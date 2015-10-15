@@ -15,9 +15,14 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
+
+import static org.openhds.mobile.utilities.SyncUtils.streamToFile;
 
 /**
  * Carry out an HttpTaskRequest.
@@ -27,12 +32,14 @@ import java.net.*;
  * BSH
  */
 public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse> {
+
     public static final String MESSAGE_SUCCESS = "Request successful";
     public static final String MESSAGE_NOT_MODIFIED = "Content not modified";
     public static final String MESSAGE_NO_REQUEST = "No request given";
     public static final String MESSAGE_CLIENT_ERROR = "Client error";
     public static final String MESSAGE_BAD_URL = "Bad URL";
     public static final String MESSAGE_SERVER_ERROR = "Server error";
+    public static final String MESSAGE_SAVE_ERROR = "Save failed";
 
     private HttpTaskResponseHandler httpTaskResponseHandler;
 
@@ -77,6 +84,15 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
         }
 
         if (HttpStatus.SC_OK == statusCode) {
+            File saveFile = httpTaskRequest.getFile();
+            if (saveFile != null) {
+                try {
+                    streamToFile(responseStream, saveFile);
+                    responseStream = new BufferedInputStream(new FileInputStream(saveFile));
+                } catch (IOException e) {
+                    return new HttpTaskResponse(false, MESSAGE_SAVE_ERROR, statusCode, responseStream, eTag);
+                }
+            }
             return new HttpTaskResponse(true, MESSAGE_SUCCESS, statusCode, responseStream, eTag);
         }
 

@@ -5,6 +5,8 @@ import android.content.ContentResolver;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -16,6 +18,8 @@ import java.util.List;
  * BSH
  */
 public class ParseEntityTask extends AsyncTask<ParseEntityTaskRequest, Integer, Integer> {
+
+    private static final String TAG = ParseEntityTask.class.getName();
 
     private static final int BATCH_SIZE = 100;
 
@@ -48,11 +52,18 @@ public class ParseEntityTask extends AsyncTask<ParseEntityTaskRequest, Integer, 
         xmlPageParser.setPageErrorHandler(new EntityErrorHandler());
 
         // pass input stream to page parser
+        InputStream input = parseEntityTaskRequest.getInputStream();
         try {
-            xmlPageParser.parsePages(parseEntityTaskRequest.getInputStream());
+            xmlPageParser.parsePages(input);
         } catch (Exception e) {
             Log.e(getClass().getName(), e.getMessage(), e);
             return -1;
+        } finally {
+            try {
+                input.close();
+            } catch (IOException e) {
+                Log.d(TAG, "failed to close input", e);
+            }
         }
 
         persistBatch();
