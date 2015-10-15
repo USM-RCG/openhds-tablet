@@ -28,7 +28,8 @@ public class GatewayRegistry {
         SINGLETONS = new HashMap<>();
     }
 
-    private GatewayRegistry () {};
+    private GatewayRegistry() {
+    }
 
     /**
      * Creates lazy-loaded singletons by creating on first access and then
@@ -43,7 +44,7 @@ public class GatewayRegistry {
                 Log.w(TAG, "failed to create gateway " + gatewayName, e);
             }
         }
-        return (T)SINGLETONS.get(gatewayName);
+        return (T) SINGLETONS.get(gatewayName);
     }
 
     public static FieldWorkerGateway getFieldWorkerGateway() {
