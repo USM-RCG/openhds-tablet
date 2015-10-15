@@ -118,7 +118,6 @@ public class SyncDatabaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         queuedEntityIds = new ArrayDeque<>();
         allErrorCounts = new HashMap<>();
         currentEntity = null;
@@ -334,11 +333,11 @@ public class SyncDatabaseFragment extends Fragment {
     }
 
     private String loadContentHash(SyncEntity entity) {
-        return loadHash(getAppFile(hashFilename(entity.labelId)));
+        return loadHash(getAppFile(hashFilename(entity.name())));
     }
 
     private void storeContentHash(SyncEntity entity, String hash) {
-        storeHash(getAppFile(hashFilename(entity.labelId)), hash);
+        storeHash(getAppFile(hashFilename(entity.name())), hash);
     }
 
     // Respond to "sync all" button.

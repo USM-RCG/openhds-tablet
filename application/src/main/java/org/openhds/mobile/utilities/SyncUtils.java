@@ -20,8 +20,8 @@ public class SyncUtils {
 
     private static final String TAG = SyncUtils.class.getName();
 
-    public static String hashFilename(int entityId) {
-        return String.format("fingerprint-%s", entityId);
+    public static String hashFilename(String entityName) {
+        return String.format("fingerprint-%s", entityName);
     }
 
     public static String loadHash(File hashFile) {
