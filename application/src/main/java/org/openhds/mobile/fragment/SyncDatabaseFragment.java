@@ -110,7 +110,7 @@ public class SyncDatabaseFragment extends Fragment {
     private static final String UNKNOWN_TEXT = "-";
 
     private HttpTask httpTask;
-    private ParseEntityTask parseEntityTask;
+    private ParseEntityTask parseTask;
     private Queue<SyncEntity> syncQueue;
     private SyncEntity syncEntity;
     private Map<SyncEntity, Integer> errorCounts;
@@ -208,15 +208,15 @@ public class SyncDatabaseFragment extends Fragment {
     // Pass http data stream to the entity parser.
     private void httpResultToParser(HttpTaskResponse httpTaskResponse) {
 
-        parseEntityTask = new ParseEntityTask(getActivity().getContentResolver());
-        parseEntityTask.setProgressListener(new ParseProgressListener());
+        parseTask = new ParseEntityTask(getActivity().getContentResolver());
+        parseTask.setProgressListener(new ParseProgressListener());
 
         ParseEntityTaskRequest parseEntityTaskRequest = syncEntity.taskRequest;
         parseEntityTaskRequest.setInputStream(httpTaskResponse.getInputStream());
 
         storeContentHash(syncEntity, httpTaskResponse.getETag());
         parseEntityTaskRequest.getGateway().deleteAll(getActivity().getContentResolver());
-        parseEntityTask.execute(parseEntityTaskRequest);
+        parseTask.execute(parseEntityTaskRequest);
     }
 
     // Clean up after the entity parser is all done.
@@ -252,9 +252,9 @@ public class SyncDatabaseFragment extends Fragment {
             httpTask = null;
         }
 
-        if (parseEntityTask != null) {
-            parseEntityTask.cancel(true);
-            parseEntityTask = null;
+        if (parseTask != null) {
+            parseTask.cancel(true);
+            parseTask = null;
         }
 
         // proceed to the next entity if any
