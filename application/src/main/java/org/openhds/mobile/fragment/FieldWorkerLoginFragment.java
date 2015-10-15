@@ -55,6 +55,7 @@ public class FieldWorkerLoginFragment extends Fragment implements
             switch (keyCode) {
                 case KeyEvent.KEYCODE_ENTER:
                     authenticateFieldWorker();
+                    return true;
             }
         }
         return false;

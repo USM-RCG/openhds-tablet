@@ -58,6 +58,7 @@ public class SupervisorLoginFragment extends Fragment implements
             switch (keyCode) {
                 case KeyEvent.KEYCODE_ENTER:
                     authenticateSupervisor();
+                    return true;
             }
         }
         return false;
