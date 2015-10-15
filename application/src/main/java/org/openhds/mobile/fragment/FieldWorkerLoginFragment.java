@@ -4,9 +4,11 @@ import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +23,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
 
 public class FieldWorkerLoginFragment extends Fragment implements
-        OnClickListener {
+        OnClickListener, OnKeyListener {
 
     public static final String FIELD_WORKER_EXTRA = "FieldWorker";
 
@@ -40,9 +42,22 @@ public class FieldWorkerLoginFragment extends Fragment implements
 
         usernameEditText = (EditText) v.findViewById(R.id.usernameEditText);
         passwordEditText = (EditText) v.findViewById(R.id.passwordEditText);
+        usernameEditText.setOnKeyListener(this);
+        passwordEditText.setOnKeyListener(this);
         loginButton = (Button) v.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
         return v;
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_ENTER:
+                    authenticateFieldWorker();
+            }
+        }
+        return false;
     }
 
     public void onClick(View view) {
@@ -75,5 +90,4 @@ public class FieldWorkerLoginFragment extends Fragment implements
         intent.putExtra(FIELD_WORKER_EXTRA, fieldWorker);
         startActivity(intent);
     }
-
 }

@@ -52,7 +52,6 @@ public class SupervisorLoginFragment extends Fragment implements
         return v;
     }
 
-
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
