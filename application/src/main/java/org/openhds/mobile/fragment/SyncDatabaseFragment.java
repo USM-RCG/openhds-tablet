@@ -111,16 +111,16 @@ public class SyncDatabaseFragment extends Fragment {
 
     private HttpTask httpTask;
     private ParseEntityTask parseEntityTask;
-    private Queue<SyncEntity> queuedEntityIds;
-    private SyncEntity currentEntity;
-    private Map<SyncEntity, Integer> allErrorCounts;
+    private Queue<SyncEntity> syncQueue;
+    private SyncEntity syncEntity;
+    private Map<SyncEntity, Integer> errorCounts;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        queuedEntityIds = new ArrayDeque<>();
-        allErrorCounts = new HashMap<>();
-        currentEntity = null;
+        syncQueue = new ArrayDeque<>();
+        errorCounts = new HashMap<>();
+        syncEntity = null;
     }
 
     @Override
@@ -162,7 +162,7 @@ public class SyncDatabaseFragment extends Fragment {
 
     // Refresh a table with stored data and ready to sync.
     private void resetTableRow(SyncEntity entity) {
-        int errors = allErrorCounts.containsKey(entity) ? allErrorCounts.get(entity) : UNKNOWN;
+        int errors = errorCounts.containsKey(entity) ? errorCounts.get(entity) : UNKNOWN;
         updateTableRow(entity, queryRecordCount(entity), errors, R.string.sync_database_button_sync);
     }
 
@@ -174,7 +174,7 @@ public class SyncDatabaseFragment extends Fragment {
     // Add an entity to the queue to be synced.
     private void enqueueEntity(SyncEntity entity) {
 
-        if (currentEntity == entity || queuedEntityIds.contains(entity)) {
+        if (syncEntity == entity || syncQueue.contains(entity)) {
             return;
         }
 
@@ -182,26 +182,26 @@ public class SyncDatabaseFragment extends Fragment {
         updateTableRow(entity, UNKNOWN, UNKNOWN, R.string.sync_database_button_waiting);
 
         // add this entity to the queue and run it if ready
-        queuedEntityIds.add(entity);
+        syncQueue.add(entity);
         startNextEntity();
     }
 
     // Take the next entity off the queue and start the sync process.
     private void startNextEntity() {
 
-        if (currentEntity != null || queuedEntityIds.isEmpty()) {
+        if (syncEntity != null || syncQueue.isEmpty()) {
             return;
         }
 
-        currentEntity = queuedEntityIds.remove(); // next entity to sync
+        syncEntity = syncQueue.remove(); // next entity to sync
 
         // reset the table row
-        allErrorCounts.put(currentEntity, 0);
-        updateTableRow(currentEntity, UNKNOWN, 0, R.string.sync_database_button_cancel);
+        errorCounts.put(syncEntity, 0);
+        updateTableRow(syncEntity, UNKNOWN, 0, R.string.sync_database_button_cancel);
 
         // start the http task
         httpTask = new HttpTask(new HttpResponseHandler());
-        HttpTaskRequest httpTaskRequest = buildHttpTaskRequest(currentEntity);
+        HttpTaskRequest httpTaskRequest = buildHttpTaskRequest(syncEntity);
         httpTask.execute(httpTaskRequest);
     }
 
@@ -211,41 +211,41 @@ public class SyncDatabaseFragment extends Fragment {
         parseEntityTask = new ParseEntityTask(getActivity().getContentResolver());
         parseEntityTask.setProgressListener(new ParseProgressListener());
 
-        ParseEntityTaskRequest parseEntityTaskRequest = currentEntity.taskRequest;
+        ParseEntityTaskRequest parseEntityTaskRequest = syncEntity.taskRequest;
         parseEntityTaskRequest.setInputStream(httpTaskResponse.getInputStream());
 
-        storeContentHash(currentEntity, httpTaskResponse.getETag());
+        storeContentHash(syncEntity, httpTaskResponse.getETag());
         parseEntityTaskRequest.getGateway().deleteAll(getActivity().getContentResolver());
         parseEntityTask.execute(parseEntityTaskRequest);
     }
 
     // Clean up after the entity parser is all done.
     private void finishEntity() {
-        int records = queryRecordCount(currentEntity);
-        updateTableRow(currentEntity, records, allErrorCounts.get(currentEntity), R.string.sync_database_button_sync);
-        showProgressMessage(currentEntity, Integer.toString(records));
+        int records = queryRecordCount(syncEntity);
+        updateTableRow(syncEntity, records, errorCounts.get(syncEntity), R.string.sync_database_button_sync);
+        showProgressMessage(syncEntity, Integer.toString(records));
         terminateSync(false);
     }
 
     // Clean up tasks.  If a isError is true, counts as an error for the running task.
     private void terminateSync(boolean isError) {
 
-        if (currentEntity != null) {
+        if (syncEntity != null) {
 
-            int errorCount = allErrorCounts.get(currentEntity);
+            int errorCount = errorCounts.get(syncEntity);
 
             if (isError) {
                 errorCount++;
-                allErrorCounts.put(currentEntity, errorCount);
+                errorCounts.put(syncEntity, errorCount);
             }
-            updateTableRow(currentEntity, IGNORE, errorCount, R.string.sync_database_button_sync);
+            updateTableRow(syncEntity, IGNORE, errorCount, R.string.sync_database_button_sync);
 
             // unhook the parse entity task request from the http input stream
-            ParseEntityTaskRequest parseEntityTaskRequest = currentEntity.taskRequest;
+            ParseEntityTaskRequest parseEntityTaskRequest = syncEntity.taskRequest;
             parseEntityTaskRequest.setInputStream(null);
         }
 
-        currentEntity = null;
+        syncEntity = null;
 
         if (httpTask != null) {
             httpTask.cancel(true);
@@ -360,14 +360,14 @@ public class SyncDatabaseFragment extends Fragment {
                 return;
             }
 
-            if (entity == currentEntity) {
+            if (entity == syncEntity) {
                 // button should change from "cancel" to "sync"
                 terminateSync(true);
                 showProgressMessage(entity, getResourceString(getActivity(), R.string.sync_database_canceled));
 
-            } else if (queuedEntityIds.contains(entity)) {
+            } else if (syncQueue.contains(entity)) {
                 // button should change "waiting" to "sync"
-                queuedEntityIds.remove(entity);
+                syncQueue.remove(entity);
                 resetTableRow(entity);
 
             } else {
@@ -384,10 +384,10 @@ public class SyncDatabaseFragment extends Fragment {
             if (httpTaskResponse.isSuccess()) {
                 httpResultToParser(httpTaskResponse);
             } else if (httpTaskResponse.getHttpStatus() == HttpStatus.SC_NOT_MODIFIED) {
-                showProgressMessage(currentEntity, httpTaskResponse.getMessage());
+                showProgressMessage(syncEntity, httpTaskResponse.getMessage());
                 terminateSync(false);
             } else {
-                showError(currentEntity, httpTaskResponse.getHttpStatus(), httpTaskResponse.getMessage());
+                showError(syncEntity, httpTaskResponse.getHttpStatus(), httpTaskResponse.getMessage());
                 terminateSync(true);
             }
         }
@@ -397,17 +397,17 @@ public class SyncDatabaseFragment extends Fragment {
     private class ParseProgressListener implements ParseEntityTask.ProgressListener {
         @Override
         public void onProgressReport(int progress) {
-            updateTableRow(currentEntity, progress, IGNORE, IGNORE);
+            updateTableRow(syncEntity, progress, IGNORE, IGNORE);
         }
 
         @Override
         public void onError(DataPage dataPage, Exception e) {
-            int errorCount = allErrorCounts.get(currentEntity);
+            int errorCount = errorCounts.get(syncEntity);
             errorCount++;
-            allErrorCounts.put(currentEntity, errorCount);
-            updateTableRow(currentEntity, IGNORE, errorCount, IGNORE);
-            showError(currentEntity, 0, e.getMessage());
-            storeContentHash(currentEntity, null);
+            errorCounts.put(syncEntity, errorCount);
+            updateTableRow(syncEntity, IGNORE, errorCount, IGNORE);
+            showError(syncEntity, 0, e.getMessage());
+            storeContentHash(syncEntity, null);
         }
 
         @Override
