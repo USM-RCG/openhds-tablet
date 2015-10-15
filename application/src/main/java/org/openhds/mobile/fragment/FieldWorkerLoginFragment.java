@@ -49,21 +49,15 @@ public class FieldWorkerLoginFragment extends Fragment implements
         authenticateFieldWorker();
     }
 
-    private String getUsernameFromEditText() {
-        String username = usernameEditText.getText().toString();
-        return username;
-    }
-
-    private String getPasswordFromEditText() {
-        String password = passwordEditText.getText().toString();
-        return password;
+    private String getTextString(EditText text) {
+        return text.getText().toString();
     }
 
     private void authenticateFieldWorker() {
 
         // current implementation does not require password
-        String password = getPasswordFromEditText();
-        String username = getUsernameFromEditText();
+        String password = getTextString(passwordEditText);
+        String username = getTextString(usernameEditText);
 
         FieldWorkerGateway fieldWorkerGateway = GatewayRegistry.getFieldWorkerGateway();
         ContentResolver contentResolver = getActivity().getContentResolver();
