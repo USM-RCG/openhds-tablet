@@ -22,6 +22,7 @@ import org.openhds.mobile.task.http.HttpTaskResponse;
 import org.openhds.mobile.task.parsing.DataPage;
 import org.openhds.mobile.task.parsing.ParseEntityTask;
 import org.openhds.mobile.task.parsing.ParseEntityTaskRequest;
+import org.openhds.mobile.task.parsing.entities.EntityParser;
 import org.openhds.mobile.task.parsing.entities.FieldWorkerParser;
 import org.openhds.mobile.task.parsing.entities.IndividualParser;
 import org.openhds.mobile.task.parsing.entities.LocationHierarchyParser;
@@ -33,9 +34,7 @@ import org.openhds.mobile.task.parsing.entities.VisitParser;
 
 import java.io.File;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
@@ -56,82 +55,65 @@ import static org.openhds.mobile.utilities.SyncUtils.storeHash;
  */
 public class SyncDatabaseFragment extends Fragment {
 
+    public enum SyncEntity {
+
+        FIELD_WORKER(R.string.sync_database_label_field_workers,
+                R.string.sync_field_workers_path,
+                new FieldWorkerParser(),
+                GatewayRegistry.getFieldWorkerGateway()),
+        VISIT(R.string.sync_database_label_visits,
+                R.string.sync_visits_path,
+                new VisitParser(),
+                GatewayRegistry.getVisitGateway()),
+        INDIVIDUAL(R.string.sync_database_label_individuals,
+                R.string.sync_individuals_path,
+                new IndividualParser(),
+                GatewayRegistry.getIndividualGateway()),
+        RELATIONSHIP(R.string.sync_database_label_relationships,
+                R.string.sync_relationships_path,
+                new RelationshipParser(),
+                GatewayRegistry.getRelationshipGateway()),
+        MEMBERSHIP(R.string.sync_database_label_memberships,
+                R.string.sync_memberships_path,
+                new MembershipParser(),
+                GatewayRegistry.getMembershipGateway()),
+        SOCIAL_GROUP(R.string.sync_database_label_social_groups,
+                R.string.sync_social_groups_path,
+                new SocialGroupParser(),
+                GatewayRegistry.getSocialGroupGateway()),
+        LOCATION_HIERARCHY(R.string.sync_database_label_location_hierarchies,
+                R.string.sync_location_hierarchies_path,
+                new LocationHierarchyParser(),
+                GatewayRegistry.getLocationHierarchyGateway()),
+        LOCATION(R.string.sync_database_label_locations,
+                R.string.sync_locations_path,
+                new LocationParser(),
+                GatewayRegistry.getLocationGateway());
+
+        Integer labelId, pathId;
+        EntityParser<?> parser;
+        Gateway gateway;
+        ParseEntityTaskRequest taskRequest; // mutated, see usage below
+
+        SyncEntity(Integer labelId, Integer pathId, EntityParser<?> parser, Gateway<?> gateway) {
+            this.labelId = labelId;
+            this.pathId = pathId;
+            this.parser = parser;
+            this.gateway = gateway;
+            this.taskRequest = new ParseEntityTaskRequest(labelId, parser, gateway);
+        }
+    }
+
     // placeholder for integer value to ignore
     private static final int IGNORE = -1;
     private static final int UNKNOWN = -2;
     private static final String UNKNOWN_TEXT = "-";
 
-    // list of entities for "sync all"
-    private static final List<Integer> allEntityIds;
-
-    // http paths associated with entities
-    private static final Map<Integer, Integer> allResourcePaths;
-
-    // parsing requests associated entities
-    private static final Map<Integer, ParseEntityTaskRequest> allParseTaskRequests;
-
-    // one-time wiring up of labels, http paths, and parser stuff
-    static {
-        allEntityIds = new ArrayList<>();
-        allEntityIds.add(R.string.sync_database_label_field_workers);
-        allEntityIds.add(R.string.sync_database_label_visits);
-        allEntityIds.add(R.string.sync_database_label_individuals);
-        allEntityIds.add(R.string.sync_database_label_relationships);
-        allEntityIds.add(R.string.sync_database_label_memberships);
-        allEntityIds.add(R.string.sync_database_label_social_groups);
-        allEntityIds.add(R.string.sync_database_label_location_hierarchies);
-        allEntityIds.add(R.string.sync_database_label_locations);
-
-        allResourcePaths = new HashMap<>();
-        allResourcePaths.put(R.string.sync_database_label_field_workers, R.string.sync_field_workers_path);
-        allResourcePaths.put(R.string.sync_database_label_individuals, R.string.sync_individuals_path);
-        allResourcePaths.put(R.string.sync_database_label_locations, R.string.sync_locations_path);
-        allResourcePaths.put(R.string.sync_database_label_location_hierarchies, R.string.sync_location_hierarchies_path);
-        allResourcePaths.put(R.string.sync_database_label_memberships, R.string.sync_memberships_path);
-        allResourcePaths.put(R.string.sync_database_label_relationships, R.string.sync_relationships_path);
-        allResourcePaths.put(R.string.sync_database_label_social_groups, R.string.sync_social_groups_path);
-        allResourcePaths.put(R.string.sync_database_label_visits, R.string.sync_visits_path);
-
-        allParseTaskRequests = new HashMap<>();
-        allParseTaskRequests.put(R.string.sync_database_label_field_workers, new ParseEntityTaskRequest<>(
-                R.string.sync_database_label_field_workers,
-                new FieldWorkerParser(),
-                GatewayRegistry.getFieldWorkerGateway()));
-        allParseTaskRequests.put(R.string.sync_database_label_individuals, new ParseEntityTaskRequest<>(
-                R.string.sync_database_label_individuals,
-                new IndividualParser(),
-                GatewayRegistry.getIndividualGateway()));
-        allParseTaskRequests.put(R.string.sync_database_label_locations, new ParseEntityTaskRequest<>(
-                R.string.sync_database_label_locations,
-                new LocationParser(),
-                GatewayRegistry.getLocationGateway()));
-        allParseTaskRequests.put(R.string.sync_database_label_location_hierarchies, new ParseEntityTaskRequest<>(
-                R.string.sync_database_label_location_hierarchies,
-                new LocationHierarchyParser(),
-                GatewayRegistry.getLocationHierarchyGateway()));
-        allParseTaskRequests.put(R.string.sync_database_label_memberships, new ParseEntityTaskRequest<>(
-                R.string.sync_database_label_memberships,
-                new MembershipParser(),
-                GatewayRegistry.getMembershipGateway()));
-        allParseTaskRequests.put(R.string.sync_database_label_relationships, new ParseEntityTaskRequest<>(
-                R.string.sync_database_label_relationships,
-                new RelationshipParser(),
-                GatewayRegistry.getRelationshipGateway()));
-        allParseTaskRequests.put(R.string.sync_database_label_social_groups, new ParseEntityTaskRequest<>(
-                R.string.sync_database_label_social_groups,
-                new SocialGroupParser(),
-                GatewayRegistry.getSocialGroupGateway()));
-        allParseTaskRequests.put(R.string.sync_database_label_visits, new ParseEntityTaskRequest<>(
-                R.string.sync_database_label_visits,
-                new VisitParser(),
-                GatewayRegistry.getVisitGateway()));
-    }
-
     private HttpTask httpTask;
     private ParseEntityTask parseEntityTask;
-    private Queue<Integer> queuedEntityIds;
-    private int currentEntityId;
-    private Map<Integer, Integer> allErrorCounts;
+    private Queue<SyncEntity> queuedEntityIds;
+    private SyncEntity currentEntity;
+    private Map<SyncEntity, Integer> allErrorCounts;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -139,23 +121,24 @@ public class SyncDatabaseFragment extends Fragment {
 
         queuedEntityIds = new ArrayDeque<>();
         allErrorCounts = new HashMap<>();
-        currentEntityId = 0;
+        currentEntity = null;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.sync_database_fragment, container, false);
 
+        View view = inflater.inflate(R.layout.sync_database_fragment, container, false);
         TableLayout tableLayout = (TableLayout) view.findViewById(R.id.sync_summary_table);
         View.OnClickListener actionButtonListener = new ActionButtonListener();
-        for (int entityId : allEntityIds) {
+
+        for (SyncEntity entity : SyncEntity.values()) {
             TableRow tableRow = (TableRow) inflater.inflate(R.layout.sync_database_row, container, false);
-            tableRow.setTag(entityId);
+            tableRow.setTag(entity);
             tableLayout.addView(tableRow);
 
             Button actionButton = (Button) tableRow.findViewById(R.id.action_column);
             actionButton.setOnClickListener(actionButtonListener);
-            actionButton.setTag(entityId);
+            actionButton.setTag(entity);
         }
 
         Button syncAllButton = (Button) view.findViewById(R.id.sync_all_button);
@@ -167,10 +150,8 @@ public class SyncDatabaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        // update entity record counts directly from the database
-        for (int entityId : allEntityIds) {
-            resetTableRow(entityId);
+        for (SyncEntity entity : SyncEntity.values()) {
+            resetTableRow(entity);
         }
     }
 
@@ -181,135 +162,137 @@ public class SyncDatabaseFragment extends Fragment {
     }
 
     // Refresh a table with stored data and ready to sync.
-    private void resetTableRow(int entityId) {
-        int records = queryRecordCount(entityId);
-        int errors = allErrorCounts.containsKey(entityId) ? allErrorCounts.get(entityId) : UNKNOWN;
-        updateTableRow(entityId, records, errors, R.string.sync_database_button_sync);
+    private void resetTableRow(SyncEntity entity) {
+        int records = queryRecordCount(entity);
+        int errors = allErrorCounts.containsKey(entity) ? allErrorCounts.get(entity) : UNKNOWN;
+        updateTableRow(entity, records, errors, R.string.sync_database_button_sync);
     }
 
     // Query the database for entity record counts.
-    private int queryRecordCount(int entityId) {
-        ParseEntityTaskRequest parseEntityTaskRequest = allParseTaskRequests.get(entityId);
-        Gateway gateway = parseEntityTaskRequest.getGateway();
-        return gateway.countAll(getActivity().getContentResolver());
+    private int queryRecordCount(SyncEntity entity) {
+        return entity.gateway.countAll(getActivity().getContentResolver());
     }
 
     // Add an entity to the queue to be synced.
-    private void enqueueEntity(int entityId) {
-        if (currentEntityId == entityId || queuedEntityIds.contains(entityId)) {
+    private void enqueueEntity(SyncEntity entity) {
+
+        if (currentEntity == entity || queuedEntityIds.contains(entity)) {
             return;
         }
 
         // mark the table row for this entity as "waiting"
-        updateTableRow(entityId, UNKNOWN, UNKNOWN, R.string.sync_database_button_waiting);
+        updateTableRow(entity, UNKNOWN, UNKNOWN, R.string.sync_database_button_waiting);
 
         // add this entity to the queue and run it if ready
-        queuedEntityIds.add(entityId);
+        queuedEntityIds.add(entity);
         startNextEntity();
     }
 
     // Take the next entity off the queue and start the sync process.
     private void startNextEntity() {
-        if (0 < currentEntityId || queuedEntityIds.isEmpty()) {
+
+        if (currentEntity != null || queuedEntityIds.isEmpty()) {
             return;
         }
 
-        // choose the next entity to sync
-        currentEntityId = queuedEntityIds.remove();
+        currentEntity = queuedEntityIds.remove(); // next entity to sync
 
-        // reset the table row for this entity
-        allErrorCounts.put(currentEntityId, 0);
-        updateTableRow(currentEntityId, UNKNOWN, 0, R.string.sync_database_button_cancel);
+        // reset the table row
+        allErrorCounts.put(currentEntity, 0);
+        updateTableRow(currentEntity, UNKNOWN, 0, R.string.sync_database_button_cancel);
 
-        // start an http task for this entity
+        // start the http task
         httpTask = new HttpTask(new HttpResponseHandler());
-        HttpTaskRequest httpTaskRequest = buildHttpTaskRequest(currentEntityId);
+        HttpTaskRequest httpTaskRequest = buildHttpTaskRequest(currentEntity);
         httpTask.execute(httpTaskRequest);
     }
 
     // Pass http data stream to the entity parser.
     private void httpResultToParser(HttpTaskResponse httpTaskResponse) {
+
         parseEntityTask = new ParseEntityTask(getActivity().getContentResolver());
         parseEntityTask.setProgressListener(new ParseProgressListener());
 
-        ParseEntityTaskRequest parseEntityTaskRequest = allParseTaskRequests.get(currentEntityId);
+        ParseEntityTaskRequest parseEntityTaskRequest = currentEntity.taskRequest;
         parseEntityTaskRequest.setInputStream(httpTaskResponse.getInputStream());
 
-        storeContentHash(currentEntityId, httpTaskResponse.getETag());
+        storeContentHash(currentEntity, httpTaskResponse.getETag());
         parseEntityTaskRequest.getGateway().deleteAll(getActivity().getContentResolver());
         parseEntityTask.execute(parseEntityTaskRequest);
     }
 
     // Clean up after the entity parser is all done.
     private void finishEntity() {
-        int records = queryRecordCount(currentEntityId);
-        updateTableRow(currentEntityId, records, allErrorCounts.get(currentEntityId), R.string.sync_database_button_sync);
-        showProgressMessage(currentEntityId, Integer.toString(records));
+        int records = queryRecordCount(currentEntity);
+        updateTableRow(currentEntity, records, allErrorCounts.get(currentEntity), R.string.sync_database_button_sync);
+        showProgressMessage(currentEntity, Integer.toString(records));
         terminateSync(false);
     }
 
     // Clean up tasks.  If a isError is true, counts as an error for the running task.
     private void terminateSync(boolean isError) {
-        if (0 < currentEntityId) {
-            // a task is currently running
 
-            // refresh the error count
-            int errorCount = allErrorCounts.get(currentEntityId);
+        if (currentEntity != null) {
+
+            int errorCount = allErrorCounts.get(currentEntity);
+
             if (isError) {
                 errorCount++;
-                allErrorCounts.put(currentEntityId, errorCount);
+                allErrorCounts.put(currentEntity, errorCount);
             }
-            updateTableRow(currentEntityId, IGNORE, errorCount, R.string.sync_database_button_sync);
+            updateTableRow(currentEntity, IGNORE, errorCount, R.string.sync_database_button_sync);
 
             // unhook the parse entity task request from the http input stream
-            ParseEntityTaskRequest parseEntityTaskRequest = allParseTaskRequests.get(currentEntityId);
+            ParseEntityTaskRequest parseEntityTaskRequest = currentEntity.taskRequest;
             parseEntityTaskRequest.setInputStream(null);
         }
-        currentEntityId = 0;
 
-        if (null != httpTask) {
+        currentEntity = null;
+
+        if (httpTask != null) {
             httpTask.cancel(true);
+            httpTask = null;
         }
-        httpTask = null;
 
-        if (null != parseEntityTask) {
+        if (parseEntityTask != null) {
             parseEntityTask.cancel(true);
+            parseEntityTask = null;
         }
-        parseEntityTask = null;
 
         // proceed to the next entity if any
         startNextEntity();
     }
 
     // Show an error by logging, and toasting.
-    private void showError(int entityId, int errorCode, String errorMessage) {
-        String entityName = getResourceString(getActivity(), entityId);
+    private void showError(SyncEntity entity, int errorCode, String errorMessage) {
+        String entityName = getResourceString(getActivity(), entity.labelId);
         String message = "Error syncing " + entityName + " (" + Integer.toString(errorCode) + "):" + errorMessage;
         Log.e(entityName, message);
         showLongToast(getActivity(), message);
     }
 
     // Show progress by toasting.
-    private void showProgressMessage(int entityId, String progressMessage) {
-        String entityName = getResourceString(getActivity(), entityId);
+    private void showProgressMessage(SyncEntity entity, String progressMessage) {
+        String entityName = getResourceString(getActivity(), entity.labelId);
         String message = entityName + ": " + progressMessage;
         showLongToast(getActivity(), message);
     }
 
     // Update column values and button status.
-    private void updateTableRow(int entityId, int records, int errors, int actionId) {
+    private void updateTableRow(SyncEntity entity, int records, int errors, int actionId) {
+
         View view = getView();
         if (null == view) {
             return;
         }
 
-        TableRow tableRow = (TableRow) view.findViewWithTag(entityId);
+        TableRow tableRow = (TableRow) view.findViewWithTag(entity);
         TextView entityText = (TextView) tableRow.findViewById(R.id.entity_column);
         TextView recordsText = (TextView) tableRow.findViewById(R.id.records_column);
         TextView errorsText = (TextView) tableRow.findViewById(R.id.errors_column);
         Button actionButton = (Button) tableRow.findViewById(R.id.action_column);
 
-        entityText.setText(entityId);
+        entityText.setText(entity.labelId);
 
         if (IGNORE != records) {
             if (UNKNOWN == records) {
@@ -329,40 +312,41 @@ public class SyncDatabaseFragment extends Fragment {
 
         if (IGNORE != actionId) {
             actionButton.setText(actionId);
-            actionButton.setTag(entityId);
+            actionButton.setTag(entity);
         }
     }
 
     // Create an http task request for fetching data from the server.
-    private HttpTaskRequest buildHttpTaskRequest(int entityId) {
+    private HttpTaskRequest buildHttpTaskRequest(SyncEntity entity) {
+
         String userName = (String) getActivity().getIntent().getExtras().get(OpeningActivity.USERNAME_KEY);
         String password = (String) getActivity().getIntent().getExtras().get(OpeningActivity.PASSWORD_KEY);
 
         String openHdsBaseUrl = getPreferenceString(getActivity(), R.string.openhds_server_url_key, "");
-        String path = getResourceString(getActivity(), allResourcePaths.get(entityId));
+        String path = getResourceString(getActivity(), entity.pathId);
         String url = openHdsBaseUrl + path;
 
-        return new HttpTaskRequest(entityId, url, "application/xml", userName, password, loadContentHash(entityId));
+        return new HttpTaskRequest(entity.labelId, url, "application/xml", userName, password, loadContentHash(entity));
     }
 
     private File getAppFile(String file) {
         return new File(getActivity().getFilesDir(), file);
     }
 
-    private String loadContentHash(int entityId) {
-        return loadHash(getAppFile(hashFilename(entityId)));
+    private String loadContentHash(SyncEntity entity) {
+        return loadHash(getAppFile(hashFilename(entity.labelId)));
     }
 
-    private void storeContentHash(int currentEntityId, String hash) {
-        storeHash(getAppFile(hashFilename(currentEntityId)), hash);
+    private void storeContentHash(SyncEntity currentEntity, String hash) {
+        storeHash(getAppFile(hashFilename(currentEntity.labelId)), hash);
     }
 
     // Respond to "sync all" button.
     private class SyncAllButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            for (int entityId : allEntityIds) {
-                enqueueEntity(entityId);
+            for (SyncEntity entity : SyncEntity.values()) {
+                enqueueEntity(entity);
             }
         }
     }
@@ -372,24 +356,24 @@ public class SyncDatabaseFragment extends Fragment {
         @Override
         public void onClick(View view) {
             // which button is this?
-            int entityId = (int) view.getTag();
-            if (!allEntityIds.contains(entityId)) {
+            SyncEntity entity = (SyncEntity) view.getTag();
+            if (entity == null) {
                 return;
             }
 
-            if (entityId == currentEntityId) {
+            if (entity == currentEntity) {
                 // button should change from "cancel" to "sync"
                 terminateSync(true);
-                showProgressMessage(entityId, getResourceString(getActivity(), R.string.sync_database_canceled));
+                showProgressMessage(entity, getResourceString(getActivity(), R.string.sync_database_canceled));
 
-            } else if (queuedEntityIds.contains(entityId)) {
+            } else if (queuedEntityIds.contains(entity)) {
                 // button should change "waiting" to "sync"
-                queuedEntityIds.remove(entityId);
-                resetTableRow(entityId);
+                queuedEntityIds.remove(entity);
+                resetTableRow(entity);
 
             } else {
                 // button should change from "sync" to "waiting"
-                enqueueEntity(entityId);
+                enqueueEntity(entity);
             }
         }
     }
@@ -401,10 +385,10 @@ public class SyncDatabaseFragment extends Fragment {
             if (httpTaskResponse.isSuccess()) {
                 httpResultToParser(httpTaskResponse);
             } else if (httpTaskResponse.getHttpStatus() == HttpStatus.SC_NOT_MODIFIED) {
-                showProgressMessage(currentEntityId, httpTaskResponse.getMessage());
+                showProgressMessage(currentEntity, httpTaskResponse.getMessage());
                 terminateSync(false);
             } else {
-                showError(currentEntityId, httpTaskResponse.getHttpStatus(), httpTaskResponse.getMessage());
+                showError(currentEntity, httpTaskResponse.getHttpStatus(), httpTaskResponse.getMessage());
                 terminateSync(true);
             }
         }
@@ -414,17 +398,17 @@ public class SyncDatabaseFragment extends Fragment {
     private class ParseProgressListener implements ParseEntityTask.ProgressListener {
         @Override
         public void onProgressReport(int progress) {
-            updateTableRow(currentEntityId, progress, IGNORE, IGNORE);
+            updateTableRow(currentEntity, progress, IGNORE, IGNORE);
         }
 
         @Override
         public void onError(DataPage dataPage, Exception e) {
-            int errorCount = allErrorCounts.get(currentEntityId);
+            int errorCount = allErrorCounts.get(currentEntity);
             errorCount++;
-            allErrorCounts.put(currentEntityId, errorCount);
-            updateTableRow(currentEntityId, IGNORE, errorCount, IGNORE);
-            showError(currentEntityId, 0, e.getMessage());
-            storeContentHash(currentEntityId, null);
+            allErrorCounts.put(currentEntity, errorCount);
+            updateTableRow(currentEntity, IGNORE, errorCount, IGNORE);
+            showError(currentEntity, 0, e.getMessage());
+            storeContentHash(currentEntity, null);
         }
 
         @Override
