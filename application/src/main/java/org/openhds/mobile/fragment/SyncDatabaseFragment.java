@@ -172,7 +172,7 @@ public class SyncDatabaseFragment extends Fragment {
     }
 
     // Add an entity to the queue to be synced.
-    private void enqueueEntity(SyncEntity entity) {
+    private void queueSync(SyncEntity entity) {
 
         if (syncEntity == entity || syncQueue.contains(entity)) {
             return;
@@ -345,39 +345,52 @@ public class SyncDatabaseFragment extends Fragment {
         @Override
         public void onClick(View view) {
             for (SyncEntity entity : SyncEntity.values()) {
-                enqueueEntity(entity);
+                queueSync(entity);
             }
         }
     }
 
-    // Respond to individual entity "sync" buttons.
+    /**
+     * Handles click of an individual entity "sync" button.
+     */
     private class ActionButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            // which button is this?
             SyncEntity entity = (SyncEntity) view.getTag();
-            if (entity == null) {
-                return;
+            if (entity != null) {
+                if (isSyncing(entity)) {
+                    cancelCurrentSync();
+                } else if (isQueued(entity)) {
+                    cancelQueuedSync(entity);
+                } else {
+                    queueSync(entity);
+                }
             }
+        }
 
-            if (entity == syncEntity) {
-                // button should change from "cancel" to "sync"
-                terminateSync(true);
-                showProgressMessage(entity, getResourceString(getActivity(), R.string.sync_database_canceled));
+        private boolean isSyncing(SyncEntity entity) {
+            return entity == syncEntity;
+        }
 
-            } else if (syncQueue.contains(entity)) {
-                // button should change "waiting" to "sync"
-                syncQueue.remove(entity);
-                resetTableRow(entity);
+        private void cancelCurrentSync() {
+            terminateSync(true);
+            showProgressMessage(syncEntity, getResourceString(getActivity(), R.string.sync_database_canceled));
+        }
 
-            } else {
-                // button should change from "sync" to "waiting"
-                enqueueEntity(entity);
-            }
+        private boolean isQueued(SyncEntity entity) {
+            return syncQueue.contains(entity);
+        }
+
+        private void cancelQueuedSync(SyncEntity entity) {
+            syncQueue.remove(entity);
+            resetTableRow(entity);
         }
     }
 
-    // Receive http response from server, or error data.
+    /**
+     * Considers outcome of the http fetch, updating UI and kicking off
+     * additional work, if appropriate.
+     */
     private class HttpResponseHandler implements HttpTask.HttpTaskResponseHandler {
         @Override
         public void handleHttpTaskResponse(HttpTaskResponse httpTaskResponse) {
@@ -393,7 +406,9 @@ public class SyncDatabaseFragment extends Fragment {
         }
     }
 
-    // Receive progress reports from parser, or error data.
+    /**
+     * Handles updates from parse task and updates UI/model state accordingly.
+     */
     private class ParseProgressListener implements ParseEntityTask.ProgressListener {
         @Override
         public void onProgressReport(int progress) {
@@ -402,8 +417,7 @@ public class SyncDatabaseFragment extends Fragment {
 
         @Override
         public void onError(DataPage dataPage, Exception e) {
-            int errorCount = errorCounts.get(syncEntity);
-            errorCount++;
+            int errorCount = errorCounts.get(syncEntity) + 1;
             errorCounts.put(syncEntity, errorCount);
             updateTableRow(syncEntity, IGNORE, errorCount, IGNORE);
             showError(syncEntity, 0, e.getMessage());
