@@ -188,10 +188,7 @@ public class OdkCollectHelper {
                                 + " IN (" + makePlaceholders(ids.size()) + ")",
                         ids.toArray(new String[]{}), null);
 
-
-
-
-    if (null == cursor) {
+        if (null == cursor) {
             return null;
         }
 
@@ -249,23 +246,17 @@ public class OdkCollectHelper {
                 return null;
             }
 
-          //  while (cursor.moveToNext()) {
             if (cursor.moveToFirst()){
                 String sentFilePaths;
                 sentFilePaths = cursor
                         .getString(cursor
                                 .getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
 
-
                 subforms.add(sentFilePaths);
-         }
+            }
             cursor.close();
-
-
         }
-
         return subforms;
-
     }
 
 }

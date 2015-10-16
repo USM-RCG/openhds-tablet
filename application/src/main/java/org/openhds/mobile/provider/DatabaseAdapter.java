@@ -76,11 +76,6 @@ public class DatabaseAdapter {
 			+ SUPERVISOR_TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY, "
 			+ KEY_SUPERVISOR_NAME + " TEXT, " + KEY_SUPERVISOR_PASS + " TEXT)";
 
-	/*private static final String RECENT_DB_FORMS = "CREATE TABLE "
-			+ RECENT_FORM_TABLE + " (" + KEY_PATH_ID + " INTEGER PRIMARY KEY, "
-			+ KEY_HIERARCHY_PATH + " TEXT, " + KEY_RECENT_FORM_PATH + " TEXT)";
-*/
-
 	private static final String RECENT_DB_FORMS = "CREATE TABLE "
 			+ RECENT_FORM_TABLE + " (" + KEY_HIERARCHY_PATH + " TEXT, " + KEY_RECENT_FORM_PATH + " TEXT, CONSTRAINT "
 			+ KEY_PATH_ID + " UNIQUE (" + KEY_HIERARCHY_PATH +", " +KEY_RECENT_FORM_PATH +" ) )" ;
@@ -286,14 +281,13 @@ public class DatabaseAdapter {
 		updateFormSubmission(id, cv);
 	}
 
-//add hierarchy Path in recentForm Tabe
+//add recent forms path
 	public long addHierarchyPath (String hierarchyPath, String filePath ) {
 		long id = -1;
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
 		try {
 			ContentValues cv = new ContentValues();
-			//cv.put(KEY_PATH_ID, 1);
 			cv.put(KEY_HIERARCHY_PATH, hierarchyPath);
 			cv.put(KEY_RECENT_FORM_PATH, filePath);
 			id = db.insertOrThrow(RECENT_FORM_TABLE, null, cv);
@@ -305,8 +299,8 @@ public class DatabaseAdapter {
         return id;
 	}
 
-	//add hierarchy Path in recentForm Table
-	public Collection findformByPath (String hierarchyPath) {
+	//Finds recentForms by current hierarchy
+	public Collection findFormByPath (String hierarchyPath) {
 		Set<String> formpaths = new HashSet<>();
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor cursor = null;
@@ -333,8 +327,8 @@ public class DatabaseAdapter {
 	}
 
 
-	//delete hierarchy Path of submitted formsrecentForm Table
-	public Collection findAllformPaths () {
+	//Find all recent forms paths
+	public Collection findAllFormPaths () {
 
 		Set<String> allformpaths = new HashSet<>();
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -360,7 +354,7 @@ public class DatabaseAdapter {
 		}
 		return allformpaths;
 	}
-//delete submitted forms
+//delete submitted formsPaths
 	public void deleteSubmitForms(String sentFilepath) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
@@ -406,7 +400,7 @@ public class DatabaseAdapter {
 			db.execSQL(FORM_DB_CREATE);
 			db.execSQL(MESSAGE_DB_CREATE);
 			db.execSQL(USER_DB_CREATE);
-			db.execSQL(RECENT_DB_FORMS);  // for saving recent form instaces
+			db.execSQL(RECENT_DB_FORMS);  // for saving recent form instances
 		}
 
 		@Override
