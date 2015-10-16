@@ -44,6 +44,7 @@ import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -350,24 +351,25 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     private void populateFormsForPath() {
 
         DatabaseAdapter dbAdpt = new DatabaseAdapter(this);
+
+        //get all the existing recent form paths
+        Collection<String> formstodelete=  dbAdpt.findAllformPaths();
+
+        //find if any of the form is submitted
+        List <String> submitForms  = OdkCollectHelper.getSentFormPaths(getContentResolver(), formstodelete);
+
+        //if submitted, delete those paths from Recent_form_DB
+        if(!submitForms.isEmpty()) {
+
+
+            for (String sf : submitForms) {
+                dbAdpt.deleteSubmitForms(sf);
+            }
+        }
+        //display all recent forms for the current hierarchy path
         Collection forms = dbAdpt.findformByPath(currentHierarchyPath());
         if (!forms.isEmpty()){
         viewPathFormsFragment.populateRecentFormInstanceListView(forms);}
-    }
-
-
-
-// check if recent form database exists
-   private boolean checkDataBase() {
-        SQLiteDatabase checkDB = null;
-        try {
-            checkDB = SQLiteDatabase.openDatabase("/data/data/org.openhds.mobile/databases/entityData", null,
-                    SQLiteDatabase.OPEN_READONLY);
-            checkDB.close();
-        } catch (SQLiteException e) {
-            // database doesn't exist yet.
-        }
-        return checkDB != null;
     }
 
 
@@ -440,6 +442,8 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             currentResults = builder.getQueryHelper().getChildren(getContentResolver(), previousSelection, targetState);
         }
         stateMachine.transitionTo(targetState);
+      //smita
+        populateFormsForPath();
     }
 
     @Override
@@ -624,9 +628,9 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
 
     private void associateFormToPath(String formId) {
         String path = currentHierarchyPath();
-        DatabaseAdapter dbadper = new DatabaseAdapter(this);
+        DatabaseAdapter dbadpter = new DatabaseAdapter(this);
         if (formId != null) {
-                dbadper.addHierarchyPath(path, formId);
+                dbadpter.addHierarchyPath(path, formId);
         }
      }
 

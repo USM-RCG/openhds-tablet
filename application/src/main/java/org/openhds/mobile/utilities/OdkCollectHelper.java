@@ -1,6 +1,8 @@
 package org.openhds.mobile.utilities;
 
 import static org.openhds.mobile.provider.InstanceProviderAPI.InstanceColumns.CONTENT_URI;
+import static org.openhds.mobile.provider.InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH;
+import static org.openhds.mobile.provider.InstanceProviderAPI.InstanceColumns.STATUS;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,10 +14,14 @@ import android.content.ContentValues;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.provider.InstanceProviderAPI;
 import org.openhds.mobile.model.form.FormInstance;
+import org.openhds.mobile.repository.Query;
+import org.openhds.mobile.repository.RepositoryUtils;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
+
+import javax.naming.Context;
 
 public class OdkCollectHelper {
 
@@ -179,10 +185,13 @@ public class OdkCollectHelper {
                         InstanceProviderAPI.InstanceColumns.DISPLAY_NAME,
                         InstanceProviderAPI.InstanceColumns.STATUS},
                         InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH
-                        + " IN (" + makePlaceholders(ids.size()) + ")",
-                ids.toArray(new String[]{}), null);
+                                + " IN (" + makePlaceholders(ids.size()) + ")",
+                        ids.toArray(new String[]{}), null);
 
-        if (null == cursor) {
+
+
+
+    if (null == cursor) {
             return null;
         }
 
@@ -226,7 +235,37 @@ public class OdkCollectHelper {
 
 
 
+    public static List<String> getSentFormPaths(ContentResolver resolver, Collection<String> ids) {
+
+        ArrayList<String> subforms = new ArrayList<String>();
+
+        for (String path:ids)
+        {
+            String[] selection= new String[]{InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, InstanceProviderAPI.InstanceColumns.STATUS};
+            String[] values = new String[]{path,InstanceProviderAPI.STATUS_SUBMITTED };
+            Query query = new Query(CONTENT_URI,selection,values,null,"=");
+            Cursor cursor = query.select(resolver);
+            if (null == cursor) {
+                return null;
+            }
+
+          //  while (cursor.moveToNext()) {
+            if (cursor.moveToFirst()){
+                String sentFilePaths;
+                sentFilePaths = cursor
+                        .getString(cursor
+                                .getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
 
 
+                subforms.add(sentFilePaths);
+         }
+            cursor.close();
+
+
+        }
+
+        return subforms;
+
+    }
 
 }

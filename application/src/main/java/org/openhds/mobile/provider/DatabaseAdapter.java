@@ -305,7 +305,7 @@ public class DatabaseAdapter {
         return id;
 	}
 
-	//add hierarchy Path in recentForm Tabe
+	//add hierarchy Path in recentForm Table
 	public Collection findformByPath (String hierarchyPath) {
 		Set<String> formpaths = new HashSet<>();
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -319,13 +319,6 @@ public class DatabaseAdapter {
 				return null;
 			}
 
-		/*	boolean found = cursor.moveToNext();
-			if (!found) {
-				cursor.close();
-				return null;
-			} else{
-*/
-
 			while (cursor.moveToNext()) {
 				String formPath;
 				formPath = cursor.getString(cursor.getColumnIndex(KEY_RECENT_FORM_PATH));
@@ -338,6 +331,45 @@ public class DatabaseAdapter {
 		}
 		return formpaths;
 	}
+
+
+	//delete hierarchy Path of submitted formsrecentForm Table
+	public Collection findAllformPaths () {
+
+		Set<String> allformpaths = new HashSet<>();
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		Cursor cursor = null;
+		try {
+
+			cursor = db.query(RECENT_FORM_TABLE, new String[]{ KEY_RECENT_FORM_PATH },
+					null, null, null, null, null);
+
+			if (cursor == null) {
+				return null;
+			}
+
+			while (cursor.moveToNext()) {
+				String allformPath;
+				allformPath = cursor.getString(cursor.getColumnIndex(KEY_RECENT_FORM_PATH));
+				allformpaths.add(allformPath);
+			}
+			cursor.close();
+
+		} catch (Exception e) {
+			Log.w("findUserByUsername", e.getMessage());
+		}
+		return allformpaths;
+	}
+//delete submitted forms
+	public void deleteSubmitForms(String sentFilepath) {
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		db.beginTransaction();
+		db.delete(RECENT_FORM_TABLE, KEY_RECENT_FORM_PATH + " = ?", new String[] { "" + sentFilepath });
+		db.setTransactionSuccessful();
+		db.endTransaction();
+		db.close();
+	}
+
 
 
 	public void deleteSubmission(long id) {

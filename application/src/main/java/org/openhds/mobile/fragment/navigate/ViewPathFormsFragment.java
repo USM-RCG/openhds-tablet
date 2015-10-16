@@ -21,6 +21,7 @@ import java.util.List;
 import org.openhds.mobile.R;
 import org.openhds.mobile.adapter.FormInstanceAdapter;
 import org.openhds.mobile.model.form.FormInstance;
+import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.utilities.EncryptionHelper;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
@@ -47,19 +48,19 @@ public class ViewPathFormsFragment extends Fragment
 
     public void populateRecentFormInstanceListView(Collection<String> ids) {
 
-
+        ContentResolver resolver = getActivity().getContentResolver();
 
         formInstanceView =  (ListView) getActivity().findViewById(R.id.path_forms_form_right_column);
+     if (ids==null){
+         formsForPath = Collections.EMPTY_LIST;
+     }else {
 
-        if (ids == null) {
-            formsForPath = Collections.EMPTY_LIST;
-        } else {
-            ContentResolver resolver = getActivity().getContentResolver();
-            formsForPath = OdkCollectHelper.getFormInstancesByPath(resolver, ids);
-            if (formsForPath == null) {
-                formsForPath = Collections.EMPTY_LIST;
-            }
-        }
+         formsForPath = OdkCollectHelper.getFormInstancesByPath(resolver, ids);
+         if (formsForPath == null) {
+             formsForPath = Collections.EMPTY_LIST;
+         }
+     }
+
 
         FormInstanceAdapter adapter = new FormInstanceAdapter(
                 getActivity().getApplicationContext(),
