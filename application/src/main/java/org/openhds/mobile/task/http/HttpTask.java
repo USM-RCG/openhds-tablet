@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.openhds.mobile.utilities.HttpUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
 
+import static org.openhds.mobile.utilities.HttpUtils.basicAuth;
 import static org.openhds.mobile.utilities.SyncUtils.streamToFile;
 
 /**
@@ -58,9 +60,7 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
             return new HttpTaskResponse(false, MESSAGE_NO_REQUEST, 0, null);
         }
         final HttpTaskRequest httpTaskRequest = httpTaskRequests[0];
-
-        String rawCredentials = httpTaskRequest.getUserName()+":"+httpTaskRequest.getPassword();
-        String basicAuthHeader = "Basic "+ Base64.encodeToString(rawCredentials.getBytes(), Base64.DEFAULT);
+        String auth = basicAuth(httpTaskRequest.getUserName(), httpTaskRequest.getPassword());
         String eTag = httpTaskRequest.getETag();
         String contentType;
 
@@ -73,7 +73,7 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
             if (httpTaskRequest.getAccept() != null) {
                 urlConnection.setRequestProperty("Accept", httpTaskRequest.getAccept());
             }
-            urlConnection.setRequestProperty("Authorization", basicAuthHeader);
+            urlConnection.setRequestProperty("Authorization", auth);
             if (eTag != null) {
                 urlConnection.setRequestProperty("If-None-Match", eTag);
             }
