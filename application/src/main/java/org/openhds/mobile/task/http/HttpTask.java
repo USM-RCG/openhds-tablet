@@ -62,6 +62,7 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
         String rawCredentials = httpTaskRequest.getUserName()+":"+httpTaskRequest.getPassword();
         String basicAuthHeader = "Basic "+ Base64.encodeToString(rawCredentials.getBytes(), Base64.DEFAULT);
         String eTag = httpTaskRequest.getETag();
+        String contentType;
 
         HttpURLConnection urlConnection;
         InputStream responseStream;
@@ -79,6 +80,7 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
             responseStream = urlConnection.getInputStream();
             statusCode = urlConnection.getResponseCode();
             eTag = urlConnection.getHeaderField("ETag");
+            contentType = urlConnection.getContentType();
         } catch (Exception e) {
             return new HttpTaskResponse(false, MESSAGE_BAD_URL, 0, null);
         }
@@ -90,10 +92,10 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
                     streamToFile(responseStream, saveFile);
                     responseStream = new BufferedInputStream(new FileInputStream(saveFile));
                 } catch (IOException e) {
-                    return new HttpTaskResponse(false, MESSAGE_SAVE_ERROR, statusCode, responseStream, eTag);
+                    return new HttpTaskResponse(false, MESSAGE_SAVE_ERROR, statusCode, responseStream, eTag, contentType);
                 }
             }
-            return new HttpTaskResponse(true, MESSAGE_SUCCESS, statusCode, responseStream, eTag);
+            return new HttpTaskResponse(true, MESSAGE_SUCCESS, statusCode, responseStream, eTag, contentType);
         }
 
         if (HttpStatus.SC_NOT_MODIFIED == statusCode) {

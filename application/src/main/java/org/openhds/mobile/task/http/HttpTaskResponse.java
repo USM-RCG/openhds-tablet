@@ -11,22 +11,29 @@ import java.io.InputStream;
  * BSH
  */
 public class HttpTaskResponse {
+
     private final boolean isSuccess;
     private final String message;
     private final int httpStatus;
     private final InputStream inputStream;
     private final String eTag;
+    private final String contentType;
 
     public HttpTaskResponse(boolean isSuccess, String message, int httpStatus, InputStream inputStream) {
         this(isSuccess, message, httpStatus, inputStream, null);
     }
 
     public HttpTaskResponse(boolean isSuccess, String message, int httpStatus, InputStream inputStream, String eTag) {
+        this(isSuccess, message, httpStatus, inputStream, eTag, null);
+    }
+
+    public HttpTaskResponse(boolean isSuccess, String message, int httpStatus, InputStream inputStream, String eTag, String contentType) {
         this.isSuccess = isSuccess;
         this.message = message;
         this.httpStatus = httpStatus;
         this.inputStream = inputStream;
         this.eTag = eTag;
+        this.contentType = contentType;
     }
 
     public boolean isSuccess() {
@@ -47,5 +54,9 @@ public class HttpTaskResponse {
 
     public String getETag() {
         return eTag;
+    }
+
+    public String getContentType() {
+        return contentType;
     }
 }
