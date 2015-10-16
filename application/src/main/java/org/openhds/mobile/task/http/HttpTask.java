@@ -54,7 +54,7 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
      */
     @Override
     protected HttpTaskResponse doInBackground(HttpTaskRequest... httpTaskRequests) {
-        if (null == httpTaskRequests || 0 == httpTaskRequests.length) {
+        if (httpTaskRequests == null || httpTaskRequests.length == 0) {
             return new HttpTaskResponse(false, MESSAGE_NO_REQUEST, 0, null);
         }
         final HttpTaskRequest httpTaskRequest = httpTaskRequests[0];
