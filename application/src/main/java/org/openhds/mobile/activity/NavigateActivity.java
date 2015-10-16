@@ -2,6 +2,7 @@ package org.openhds.mobile.activity;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -142,7 +143,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             visitFragment = new VisitFragment();
             visitFragment.setNavigateActivity(this);
             viewPathFormsFragment = new ViewPathFormsFragment();
-            viewPathFormsFragment.setCurrentModuleName(currentModuleName);
+
 
 
             getFragmentManager().beginTransaction()
@@ -169,7 +170,6 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             defaultDetailFragment = new DefaultDetailFragment();
             valueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
             viewPathFormsFragment = (ViewPathFormsFragment) fragmentManager.findFragmentByTag(VIEW_RECENT_FORM_TAG);
-            viewPathFormsFragment.setCurrentModuleName(currentModuleName);
 
             // draw details if valuefrag is null, the drawing of valuefrag is
             // handled in onResume().
@@ -340,7 +340,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             showDetailFragment();
             detailToggleFragment.setButtonHighlighted(true);
         }
-
+        //populate recent forms
         populateFormsForPath();
 
         if(null != getCurrentVisit()){
@@ -350,26 +350,35 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
 
     private void populateFormsForPath() {
 
+        List<FormInstance> recforms;
+        ContentResolver reslovr = this.getContentResolver();
         DatabaseAdapter dbAdpt = new DatabaseAdapter(this);
 
         //get all the existing recent form paths
-        Collection<String> formstodelete=  dbAdpt.findAllformPaths();
+        Collection<String> formsdel=  dbAdpt.findAllFormPaths();
 
         //find if any of the form is submitted
-        List <String> submitForms  = OdkCollectHelper.getSentFormPaths(getContentResolver(), formstodelete);
+        List <String> submitForms  = OdkCollectHelper.getSentFormPaths(getContentResolver(), formsdel);
 
         //if submitted, delete those paths from Recent_form_DB
         if(!submitForms.isEmpty()) {
-
-
-            for (String sf : submitForms) {
+           for (String sf : submitForms) {
                 dbAdpt.deleteSubmitForms(sf);
             }
         }
+
         //display all recent forms for the current hierarchy path
-        Collection forms = dbAdpt.findformByPath(currentHierarchyPath());
-        if (!forms.isEmpty()){
-        viewPathFormsFragment.populateRecentFormInstanceListView(forms);}
+        Collection forms = dbAdpt.findFormByPath(currentHierarchyPath());
+
+        if (!forms.isEmpty()) {
+            //get forms instances from ODK
+            recforms = OdkCollectHelper.getFormInstancesByPath(reslovr, forms);
+            viewPathFormsFragment.populateRecentFormInstanceListView(recforms);
+        }
+        else {
+            recforms = Collections.EMPTY_LIST;
+            viewPathFormsFragment.populateRecentFormInstanceListView(recforms);
+        }
     }
 
 
@@ -442,8 +451,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             currentResults = builder.getQueryHelper().getChildren(getContentResolver(), previousSelection, targetState);
         }
         stateMachine.transitionTo(targetState);
-      //smita
-        populateFormsForPath();
+
     }
 
     @Override
@@ -759,7 +767,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
                     validForms.add(form);
                 }
             }
-
+            //populate recent forms
             populateFormsForPath();
 
             if (shouldShowDetailFragment()) {

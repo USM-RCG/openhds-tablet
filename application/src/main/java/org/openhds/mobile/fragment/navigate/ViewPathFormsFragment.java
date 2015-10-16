@@ -30,13 +30,8 @@ import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 public class ViewPathFormsFragment extends Fragment
 {
     private List<FormInstance> formsForPath;
-
-    String currentModuleName;
     private ListView formInstanceView;
 
-    public void setCurrentModuleName(String currentModuleName) {
-        this.currentModuleName = currentModuleName;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,65 +41,15 @@ public class ViewPathFormsFragment extends Fragment
         return view;
     }
 
-    public void populateRecentFormInstanceListView(Collection<String> ids) {
-
-        ContentResolver resolver = getActivity().getContentResolver();
+    public void populateRecentFormInstanceListView(List<FormInstance>  formsForPath) {
 
         formInstanceView =  (ListView) getActivity().findViewById(R.id.path_forms_form_right_column);
-     if (ids==null){
-         formsForPath = Collections.EMPTY_LIST;
-     }else {
-
-         formsForPath = OdkCollectHelper.getFormInstancesByPath(resolver, ids);
-         if (formsForPath == null) {
-             formsForPath = Collections.EMPTY_LIST;
-         }
-     }
-
-
         FormInstanceAdapter adapter = new FormInstanceAdapter(
                 getActivity().getApplicationContext(),
                 R.id.form_instance_list_item, formsForPath.toArray());
         formInstanceView.setAdapter(adapter);
         formInstanceView.setOnItemClickListener(new RecentFormInstanceClickListener());
     }
-
-//checks the form instances by name and populate it based on the current module
-
-    public static List<FormInstance>checkRecentFormByName(List<FormInstance> recentformInstances, String currentModuleName)
-    {
-          List <FormInstance> recentformInstancesCategorized = new ArrayList<FormInstance>();
-
-          Iterator<FormInstance> iterator = recentformInstances.iterator();
-          while(iterator.hasNext())
-          {
-              FormInstance instance = iterator.next();
-
-              if ((currentModuleName.equals("CensusActivityModule")) && ((instance.getFormName().equals("location") ||
-                      instance.getFileName().equals("individual")))) {
-                  recentformInstancesCategorized.add(instance);
-              }
-
-              else if ((currentModuleName.equals("BiokoActivityModule")) && ((instance.getFormName().equals("bed_net") ||
-                      instance.getFormName().equals("spraying") || instance.getFormName().equals("super_ojo")))){
-
-                       recentformInstancesCategorized.add(instance);
-              }
-              else if ((currentModuleName.equals("UpdateActivityModule")) && (instance.getFormName().equals("visit") ||
-                        instance.getFormName().equals("pregnancy_observation")|| instance.getFormName().equals("in_migration")||
-                        instance.getFormName().equals("out_migration")|| instance.getFormName().equals("pregnancy_outcome")))
-                {
-                      recentformInstancesCategorized.add(instance);
-
-                }
-          }
-
-        Collections.reverse(recentformInstancesCategorized);
-        return recentformInstancesCategorized;
-
-    }
-
-    //Sort the list in
 
 // Launch an intent for ODK Collect when user clicks on a form instance.
     private class RecentFormInstanceClickListener implements AdapterView.OnItemClickListener {
