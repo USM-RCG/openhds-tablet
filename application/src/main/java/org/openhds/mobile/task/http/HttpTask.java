@@ -1,19 +1,7 @@
 package org.openhds.mobile.task.http;
 
 import android.os.AsyncTask;
-import android.util.Base64;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.AuthenticationException;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.openhds.mobile.utilities.HttpUtils;
 
 import java.io.BufferedInputStream;
@@ -56,37 +44,30 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
      */
     @Override
     protected HttpTaskResponse doInBackground(HttpTaskRequest... httpTaskRequests) {
+
         if (httpTaskRequests == null || httpTaskRequests.length == 0) {
             return new HttpTaskResponse(false, MESSAGE_NO_REQUEST, 0, null);
         }
-        final HttpTaskRequest httpTaskRequest = httpTaskRequests[0];
-        String auth = basicAuth(httpTaskRequest.getUserName(), httpTaskRequest.getPassword());
-        String eTag = httpTaskRequest.getETag();
-        String contentType;
 
-        HttpURLConnection urlConnection;
+        final HttpTaskRequest req = httpTaskRequests[0];
+
         InputStream responseStream;
         int statusCode;
+        String contentType, eTag;
         try {
-            URL url = new URL(httpTaskRequest.getUrl());
-            urlConnection = (HttpURLConnection) url.openConnection();
-            if (httpTaskRequest.getAccept() != null) {
-                urlConnection.setRequestProperty("Accept", httpTaskRequest.getAccept());
-            }
-            urlConnection.setRequestProperty("Authorization", auth);
-            if (eTag != null) {
-                urlConnection.setRequestProperty("If-None-Match", eTag);
-            }
-            responseStream = urlConnection.getInputStream();
-            statusCode = urlConnection.getResponseCode();
-            eTag = urlConnection.getHeaderField("ETag");
-            contentType = urlConnection.getContentType();
+            URL url = new URL(req.getUrl());
+            String auth = basicAuth(req.getUserName(), req.getPassword());
+            HttpURLConnection conn = HttpUtils.get(url, req.getAccept(), auth, req.getETag());
+            responseStream = conn.getInputStream();
+            statusCode = conn.getResponseCode();
+            eTag = conn.getHeaderField("ETag");
+            contentType = conn.getContentType();
         } catch (Exception e) {
             return new HttpTaskResponse(false, MESSAGE_BAD_URL, 0, null);
         }
 
         if (HttpStatus.SC_OK == statusCode) {
-            File saveFile = httpTaskRequest.getFile();
+            File saveFile = req.getFile();
             if (saveFile != null) {
                 try {
                     streamToFile(responseStream, saveFile);
