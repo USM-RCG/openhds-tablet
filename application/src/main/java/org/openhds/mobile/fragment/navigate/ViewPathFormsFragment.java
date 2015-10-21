@@ -70,6 +70,4 @@ public class ViewPathFormsFragment extends Fragment
             }
         }
     }
-
-
 }

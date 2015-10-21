@@ -281,8 +281,8 @@ public class DatabaseAdapter {
 		updateFormSubmission(id, cv);
 	}
 
-//add recent forms path
-	public long addHierarchyPath (String hierarchyPath, String filePath ) {
+	//add recent forms paths
+	public long addHierarchyPath(String hierarchyPath, String filePath) {
 		long id = -1;
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
@@ -296,18 +296,18 @@ public class DatabaseAdapter {
 			db.endTransaction();
 		}
 		db.close();
-        return id;
+		return id;
 	}
 
 	//Finds recentForms by current hierarchy
-	public Collection findFormByPath (String hierarchyPath) {
+	public Collection findFormByPath(String hierarchyPath) {
 		Set<String> formpaths = new HashSet<>();
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor cursor = null;
 		try {
 
-			cursor = db.query(RECENT_FORM_TABLE, new String[]{ KEY_RECENT_FORM_PATH },
-					KEY_HIERARCHY_PATH + "= ?", new String[]{ hierarchyPath }, null, null, null);
+			cursor = db.query(RECENT_FORM_TABLE, new String[]{KEY_RECENT_FORM_PATH},
+					KEY_HIERARCHY_PATH + "= ?", new String[]{hierarchyPath}, null, null, null);
 
 			if (cursor == null) {
 				return null;

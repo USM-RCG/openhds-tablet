@@ -178,15 +178,15 @@ public class OdkCollectHelper {
 
         ArrayList<FormInstance> formInstances = new ArrayList<FormInstance>();
 
-        Cursor cursor = resolver.query(CONTENT_URI, new String[] {
+        Cursor cursor = resolver.query(CONTENT_URI, new String[]{
                         InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH,
                         InstanceProviderAPI.InstanceColumns._ID,
                         InstanceProviderAPI.InstanceColumns.JR_FORM_ID,
                         InstanceProviderAPI.InstanceColumns.DISPLAY_NAME,
                         InstanceProviderAPI.InstanceColumns.STATUS},
-                        InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH
-                                + " IN (" + makePlaceholders(ids.size()) + ")",
-                        ids.toArray(new String[]{}), null);
+                InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH
+                        + " IN (" + makePlaceholders(ids.size()) + ")",
+                ids.toArray(new String[]{}), null);
 
         if (null == cursor) {
             return null;
@@ -222,15 +222,12 @@ public class OdkCollectHelper {
             formInstance.setUriString(uri.toString());
             formInstance.setFormName(formName);
             formInstance.setFileName(fileName);
-
             formInstances.add(formInstance);
 
         }
         cursor.close();
         return formInstances;
     }
-
-
 
     public static List<String> getSentFormPaths(ContentResolver resolver, Collection<String> ids) {
 

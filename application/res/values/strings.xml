@@ -299,6 +299,5 @@
     <string name="uuid">UUID</string>
     <string name="db_val_age_not_applicable">n/a</string>
     <string name="super_ojo">Super Ojo</string>
-    <string name="view_recent_form_btn">Recent Forms</string>
 
 </resources>

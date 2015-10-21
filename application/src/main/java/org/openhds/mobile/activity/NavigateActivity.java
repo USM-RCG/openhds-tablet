@@ -340,7 +340,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             showDetailFragment();
             detailToggleFragment.setButtonHighlighted(true);
         }
-        //populate recent forms
+        deleteSubFormPaths();
         populateFormsForPath();
 
         if(null != getCurrentVisit()){
@@ -348,37 +348,30 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
         }
     }
 
+    private void deleteSubFormPaths() {
+        DatabaseAdapter dbadter = new DatabaseAdapter(this);
+        Collection<String> formsdel = dbadter.findAllFormPaths();
+        List<String> submitForms = OdkCollectHelper.getSentFormPaths(getContentResolver(), formsdel);
+        if (!submitForms.isEmpty()) {
+            for (String sf : submitForms) {
+                dbadter.deleteSubmitForms(sf);
+            }
+        }
+    }
+
     private void populateFormsForPath() {
 
         List<FormInstance> recforms;
-        ContentResolver reslovr = this.getContentResolver();
+        ContentResolver reslovr = getContentResolver();
         DatabaseAdapter dbAdpt = new DatabaseAdapter(this);
+        Collection recFormpaths = dbAdpt.findFormByPath(currentHierarchyPath());
 
-        //get all the existing recent form paths
-        Collection<String> formsdel=  dbAdpt.findAllFormPaths();
-
-        //find if any of the form is submitted
-        List <String> submitForms  = OdkCollectHelper.getSentFormPaths(getContentResolver(), formsdel);
-
-        //if submitted, delete those paths from Recent_form_DB
-        if(!submitForms.isEmpty()) {
-           for (String sf : submitForms) {
-                dbAdpt.deleteSubmitForms(sf);
-            }
-        }
-
-        //display all recent forms for the current hierarchy path
-        Collection forms = dbAdpt.findFormByPath(currentHierarchyPath());
-
-        if (!forms.isEmpty()) {
-            //get forms instances from ODK
-            recforms = OdkCollectHelper.getFormInstancesByPath(reslovr, forms);
-            viewPathFormsFragment.populateRecentFormInstanceListView(recforms);
-        }
-        else {
+        if (!recFormpaths.isEmpty()) {
+            recforms = OdkCollectHelper.getFormInstancesByPath(reslovr, recFormpaths);
+        } else {
             recforms = Collections.EMPTY_LIST;
-            viewPathFormsFragment.populateRecentFormInstanceListView(recforms);
         }
+        viewPathFormsFragment.populateRecentFormInstanceListView(recforms);
     }
 
 
@@ -767,7 +760,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
                     validForms.add(form);
                 }
             }
-            //populate recent forms
+            deleteSubFormPaths();
             populateFormsForPath();
 
             if (shouldShowDetailFragment()) {
