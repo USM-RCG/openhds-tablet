@@ -8,9 +8,10 @@
             android:id="@+id/sync_description"
             android:text="@string/sync_database_description"
             android:padding="5dip"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <TableLayout
             android:id="@+id/sync_summary_table"
@@ -19,10 +20,11 @@
             android:stretchColumns="1"
             android:shrinkColumns="1">
 
-        <TableRow
-                android:id="@+id/sync_summary_header">
-            <TextView
-                    android:id="@+id/entity_column_header"
+        <TableRow android:id="@+id/sync_summary_header"
+                  android:background="@color/GrayMiddleColumnFill"
+                  android:layout_marginBottom="10dp">
+
+            <TextView android:id="@+id/entity_column_header"
                     android:text="@string/sync_database_column_entity"
                     android:layout_column="1"
                     android:padding="5dip"
@@ -30,51 +32,70 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <TextView
-                    android:id="@+id/records_column_header"
+            <TextView android:id="@+id/records_column_header"
                     android:text="@string/sync_database_column_records"
                     android:layout_column="2"
                     android:padding="5dip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <TextView
-                    android:id="@+id/errors_column_header"
+            <TextView android:id="@+id/errors_column_header"
                     android:text="@string/sync_database_column_errors"
                     android:layout_column="3"
                     android:padding="5dip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <TextView
-                    android:id="@+id/action_column_header"
+            <TextView android:id="@+id/action_column_header"
                     android:text="@string/sync_database_column_action"
                     android:layout_column="4"
                     android:padding="5dip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
+
         </TableRow>
 
     </TableLayout>
 
-    <Button
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:background="@color/GrayMiddleColumnFill"
+        android:padding="10dp">
+
+        <Button
             android:id="@+id/sync_all_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/gray_button_selector"
             android:padding="10dp"
             android:text="@string/sync_database_button_sync_all"
-            android:background="@drawable/gray_button_selector"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-    <ListView
-            android:id="@+id/sync_error_list_view"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="15dp" >
-    </ListView>
+            android:layout_marginLeft="10dp"
+            android:gravity="right">
+
+            <Button android:id="@+id/clear_cache_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/gray_button_selector"
+                android:padding="10dp"
+                android:text="@string/sync_database_button_clear_cache"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

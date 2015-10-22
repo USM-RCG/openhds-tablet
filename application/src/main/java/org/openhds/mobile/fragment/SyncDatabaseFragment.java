@@ -41,6 +41,7 @@ import java.util.Queue;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
+import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 import static org.openhds.mobile.utilities.SyncUtils.hashFilename;
 import static org.openhds.mobile.utilities.SyncUtils.loadHash;
 import static org.openhds.mobile.utilities.SyncUtils.storeHash;
@@ -114,6 +115,7 @@ public class SyncDatabaseFragment extends Fragment {
     private Queue<SyncEntity> syncQueue;
     private SyncEntity syncEntity;
     private Map<SyncEntity, Integer> errorCounts;
+    private String contentHash;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,10 +133,14 @@ public class SyncDatabaseFragment extends Fragment {
         View.OnClickListener actionButtonListener = new ActionButtonListener();
 
         for (SyncEntity entity : SyncEntity.values()) {
+
+            // Add a row for sychronizable entity
             TableRow tableRow = (TableRow) inflater.inflate(R.layout.sync_database_row, container, false);
             tableRow.setTag(entity);
+            tableRow.setPadding(0, 0, 0, 5);
             tableLayout.addView(tableRow);
 
+            // Hookup sync/cancel button
             Button actionButton = (Button) tableRow.findViewById(R.id.action_column);
             actionButton.setOnClickListener(actionButtonListener);
             actionButton.setTag(entity);
@@ -142,6 +148,9 @@ public class SyncDatabaseFragment extends Fragment {
 
         Button syncAllButton = (Button) view.findViewById(R.id.sync_all_button);
         syncAllButton.setOnClickListener(new SyncAllButtonListener());
+
+        Button clearCacheButton = (Button) view.findViewById(R.id.clear_cache_button);
+        clearCacheButton.setOnClickListener(new ClearCacheButtonListener());
 
         return view;
     }
@@ -214,17 +223,27 @@ public class SyncDatabaseFragment extends Fragment {
         ParseEntityTaskRequest parseEntityTaskRequest = syncEntity.taskRequest;
         parseEntityTaskRequest.setInputStream(httpTaskResponse.getInputStream());
 
-        storeContentHash(syncEntity, httpTaskResponse.getETag());
+        contentHash = httpTaskResponse.getETag();  // Store after parse finishes
+
         parseEntityTaskRequest.getGateway().deleteAll(getActivity().getContentResolver());
         parseTask.execute(parseEntityTaskRequest);
     }
 
     // Clean up after the entity parser is all done.
-    private void finishEntity() {
+    private void entityComplete() {
         int records = queryRecordCount(syncEntity);
         updateTableRow(syncEntity, records, errorCounts.get(syncEntity), R.string.sync_database_button_sync);
         showProgressMessage(syncEntity, Integer.toString(records));
+        storeContentHash(syncEntity, contentHash);  // Next call changes entity
         terminateSync(false);
+    }
+
+    private void entityError(Exception e) {
+        int errorCount = errorCounts.get(syncEntity) + 1;
+        errorCounts.put(syncEntity, errorCount);
+        updateTableRow(syncEntity, IGNORE, errorCount, IGNORE);
+        showError(syncEntity, 0, e.getMessage());
+        storeContentHash(syncEntity, null);
     }
 
     // Clean up tasks.  If a isError is true, counts as an error for the running task.
@@ -340,6 +359,12 @@ public class SyncDatabaseFragment extends Fragment {
         storeHash(getAppFile(hashFilename(entity.name())), hash);
     }
 
+    private void clearContentHashes() {
+        for (SyncEntity entity : SyncEntity.values()) {
+            storeHash(getAppFile(hashFilename(entity.name())), null);
+        }
+    }
+
     // Respond to "sync all" button.
     private class SyncAllButtonListener implements View.OnClickListener {
         @Override
@@ -347,6 +372,14 @@ public class SyncDatabaseFragment extends Fragment {
             for (SyncEntity entity : SyncEntity.values()) {
                 queueSync(entity);
             }
+        }
+    }
+
+    private class ClearCacheButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            clearContentHashes();
+            showShortToast(getActivity(), R.string.sync_database_cache_cleared);
         }
     }
 
@@ -417,16 +450,12 @@ public class SyncDatabaseFragment extends Fragment {
 
         @Override
         public void onError(DataPage dataPage, Exception e) {
-            int errorCount = errorCounts.get(syncEntity) + 1;
-            errorCounts.put(syncEntity, errorCount);
-            updateTableRow(syncEntity, IGNORE, errorCount, IGNORE);
-            showError(syncEntity, 0, e.getMessage());
-            storeContentHash(syncEntity, null);
+            entityError(e);
         }
 
         @Override
         public void onComplete(int progress) {
-            finishEntity();
+            entityComplete();
         }
     }
 }
