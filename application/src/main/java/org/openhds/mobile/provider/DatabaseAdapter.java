@@ -25,13 +25,10 @@ import static org.openhds.mobile.provider.InstanceProviderAPI.InstanceColumns.CO
 
 public class DatabaseAdapter {
 	private static final String DATABASE_NAME = "entityData";
-
 	private static final int DATABASE_VERSION = 16;
 
+	private static final String FORM_TABLE_NAME = "formsubmission";
 	private static final String KEY_ID = "_id";
-
-
-
 	public static final String KEY_REMOTE_ID = "remote_id";
 	public static final String KEY_FORMOWNER_ID = "form_owner_id";
 	public static final String KEY_FORM_TYPE = "form_type";
@@ -50,15 +47,10 @@ public class DatabaseAdapter {
 	public static final String KEY_SUPERVISOR_NAME = "username";
 	public static final String KEY_SUPERVISOR_PASS = "password";
 
-	//Recent form  table used for saving recent form instances based on Location hierarchy
-	private static final String FORM_TABLE_NAME = "formsubmission";
-
-	private static final String RECENT_FORM_TABLE = "recent_forms";
+	private static final String PATH_FORM_TABLE = "path_forms";
 	public static final String  KEY_PATH_ID = "path_id";
-	public static final String  KEY_HIERARCHY_PATH = "hierarchyPath";
-	public static final String  KEY_RECENT_FORM_PATH = "recentFormFilePath";
-
-
+	public static final String  KEY_PATH = "hierarchyPath";
+	public static final String  KEY_FORM_PATH = "linked_formPath";
 
 	private static final String FORM_DB_CREATE = "CREATE TABLE "
 			+ FORM_TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY, "
@@ -76,12 +68,9 @@ public class DatabaseAdapter {
 			+ SUPERVISOR_TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY, "
 			+ KEY_SUPERVISOR_NAME + " TEXT, " + KEY_SUPERVISOR_PASS + " TEXT)";
 
-	private static final String RECENT_DB_FORMS = "CREATE TABLE "
-			+ RECENT_FORM_TABLE + " (" + KEY_HIERARCHY_PATH + " TEXT, " + KEY_RECENT_FORM_PATH + " TEXT, CONSTRAINT "
-			+ KEY_PATH_ID + " UNIQUE (" + KEY_HIERARCHY_PATH +", " +KEY_RECENT_FORM_PATH +" ) )" ;
-
-
-
+	private static final String ASSOCIATION_DB_CREATE = "CREATE TABLE "
+			+ PATH_FORM_TABLE + " (" + KEY_PATH + " TEXT, " + KEY_FORM_PATH + " TEXT, CONSTRAINT "
+			+ KEY_PATH_ID + " UNIQUE (" + KEY_PATH+", " +KEY_FORM_PATH +" ) )" ;
 
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd_HH_mm_ss_SSS");
@@ -281,90 +270,73 @@ public class DatabaseAdapter {
 		updateFormSubmission(id, cv);
 	}
 
-	//add recent forms paths
-	public long addHierarchyPath(String hierarchyPath, String filePath) {
+	public long createAssociation(String hierarchyPath, String filePath) {
 		long id = -1;
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
 		try {
 			ContentValues cv = new ContentValues();
-			cv.put(KEY_HIERARCHY_PATH, hierarchyPath);
-			cv.put(KEY_RECENT_FORM_PATH, filePath);
-			id = db.insertOrThrow(RECENT_FORM_TABLE, null, cv);
+			cv.put(KEY_PATH, hierarchyPath);
+			cv.put(KEY_FORM_PATH, filePath);
+			id = db.insertOrThrow(PATH_FORM_TABLE, null, cv);
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
+			db.close();
 		}
-		db.close();
 		return id;
 	}
 
-	//Finds recentForms by current hierarchy
-	public Collection findFormByPath(String hierarchyPath) {
-		Set<String> formpaths = new HashSet<>();
+	public Collection<String> findAssociatedPath(String hierarchyPath) {
+		Set<String> formPaths = new HashSet<>();
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		Cursor cursor = null;
 		try {
-
-			cursor = db.query(RECENT_FORM_TABLE, new String[]{KEY_RECENT_FORM_PATH},
-					KEY_HIERARCHY_PATH + "= ?", new String[]{hierarchyPath}, null, null, null);
-
+			Cursor cursor = db.query(PATH_FORM_TABLE, new String[]{KEY_FORM_PATH},
+					KEY_PATH + "= ?", new String[]{hierarchyPath}, null, null, null);
 			if (cursor == null) {
 				return null;
 			}
-
 			while (cursor.moveToNext()) {
 				String formPath;
-				formPath = cursor.getString(cursor.getColumnIndex(KEY_RECENT_FORM_PATH));
-				formpaths.add(formPath);
+				formPath = cursor.getString(cursor.getColumnIndex(KEY_FORM_PATH));
+				formPaths.add(formPath);
 			}
 			cursor.close();
-
 		} catch (Exception e) {
 			Log.w("findUserByUsername", e.getMessage());
 		}
-		return formpaths;
+		return formPaths;
 	}
 
-
-	//Find all recent forms paths
-	public Collection findAllFormPaths () {
-
-		Set<String> allformpaths = new HashSet<>();
+	public Collection<String> findAllAssociatedPaths() {
+		Set<String> associatedPaths = new HashSet<>();
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor cursor = null;
 		try {
-
-			cursor = db.query(RECENT_FORM_TABLE, new String[]{ KEY_RECENT_FORM_PATH },
-					null, null, null, null, null);
-
+			cursor = db.query(PATH_FORM_TABLE, new String[]{KEY_FORM_PATH}, null, null, null, null, null);
 			if (cursor == null) {
 				return null;
 			}
-
 			while (cursor.moveToNext()) {
-				String allformPath;
-				allformPath = cursor.getString(cursor.getColumnIndex(KEY_RECENT_FORM_PATH));
-				allformpaths.add(allformPath);
+				String formPath;
+				formPath = cursor.getString(cursor.getColumnIndex(KEY_FORM_PATH));
+				associatedPaths.add(formPath);
 			}
 			cursor.close();
-
 		} catch (Exception e) {
 			Log.w("findUserByUsername", e.getMessage());
 		}
-		return allformpaths;
+		return associatedPaths;
 	}
-//delete submitted formsPaths
-	public void deleteSubmitForms(String sentFilepath) {
+
+	public void deleteAssociatedPath(String sentFilepath) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
-		db.delete(RECENT_FORM_TABLE, KEY_RECENT_FORM_PATH + " = ?", new String[] { "" + sentFilepath });
+		db.delete(PATH_FORM_TABLE, KEY_FORM_PATH + " = ?", new String[]{"" + sentFilepath});
 		db.setTransactionSuccessful();
 		db.endTransaction();
 		db.close();
 	}
-
-
 
 	public void deleteSubmission(long id) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -400,7 +372,7 @@ public class DatabaseAdapter {
 			db.execSQL(FORM_DB_CREATE);
 			db.execSQL(MESSAGE_DB_CREATE);
 			db.execSQL(USER_DB_CREATE);
-			db.execSQL(RECENT_DB_FORMS);  // for saving recent form instances
+			db.execSQL(ASSOCIATION_DB_CREATE);
 		}
 
 		@Override

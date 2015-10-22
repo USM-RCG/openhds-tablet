@@ -84,8 +84,6 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     private static final String HIERARCHY_PATH_VALUES = "hierarchyPathValues";
     private static final String CURRENT_RESULTS_KEY = "currentResults";
 
-
-
     NavigatePluginModule builder;
 
     private FormHelper formHelper;
@@ -259,9 +257,6 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             }
 
         }
-
-
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -340,40 +335,41 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             showDetailFragment();
             detailToggleFragment.setButtonHighlighted(true);
         }
-        deleteSubFormPaths();
-        populateFormsForPath();
+        updateAssociatedForms();
 
         if(null != getCurrentVisit()){
             visitFragment.setButtonEnabled(true);
         }
     }
 
-    private void deleteSubFormPaths() {
-        DatabaseAdapter dbadter = new DatabaseAdapter(this);
-        Collection<String> formsdel = dbadter.findAllFormPaths();
-        List<String> submitForms = OdkCollectHelper.getSentFormPaths(getContentResolver(), formsdel);
-        if (!submitForms.isEmpty()) {
-            for (String sf : submitForms) {
-                dbadter.deleteSubmitForms(sf);
+    private void disAssociateSentForms() {
+        DatabaseAdapter dbAdapter = new DatabaseAdapter(this);
+        Collection<String> paths = dbAdapter.findAllAssociatedPaths();
+        List<String> sentFormPaths = OdkCollectHelper.getSentFormPaths(getContentResolver(), paths);
+        if (!sentFormPaths.isEmpty()) {
+            for (String sf : sentFormPaths) {
+                dbAdapter.deleteAssociatedPath(sf);
             }
         }
     }
 
     private void populateFormsForPath() {
-
-        List<FormInstance> recforms;
-        ContentResolver reslovr = getContentResolver();
+        List<FormInstance> instancesForPath;
+        ContentResolver resolver = getContentResolver();
         DatabaseAdapter dbAdpt = new DatabaseAdapter(this);
-        Collection recFormpaths = dbAdpt.findFormByPath(currentHierarchyPath());
-
-        if (!recFormpaths.isEmpty()) {
-            recforms = OdkCollectHelper.getFormInstancesByPath(reslovr, recFormpaths);
+        Collection associatedPaths = dbAdpt.findAssociatedPath(currentHierarchyPath());
+        if (!associatedPaths.isEmpty()) {
+            instancesForPath = OdkCollectHelper.getFormInstancesByPath(resolver, associatedPaths);
         } else {
-            recforms = Collections.EMPTY_LIST;
+            instancesForPath = Collections.EMPTY_LIST;
         }
-        viewPathFormsFragment.populateRecentFormInstanceListView(recforms);
+        viewPathFormsFragment.populateRecentFormInstanceListView(instancesForPath);
     }
 
+    private void updateAssociatedForms() {
+        disAssociateSentForms();
+        populateFormsForPath();
+    }
 
     public Map<String, DataWrapper> getHierarchyPath() {
         return hierarchyPath;
@@ -610,8 +606,6 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
         }
     }
 
-    private Map<String, Set<String>> hierPathInstances = new HashMap<>();
-
     private String currentHierarchyPath() {
         String SEP = "/";
         StringBuilder b = new StringBuilder(SEP);
@@ -621,7 +615,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             DataWrapper pathData = hierarchyPath.get(state);
             if (pathData != null) {
                 b.append(pathData.getExtId());
-                b.append("/");
+                b.append(SEP);
             }
         }
         return b.toString();
@@ -631,9 +625,9 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
         String path = currentHierarchyPath();
         DatabaseAdapter dbadpter = new DatabaseAdapter(this);
         if (formId != null) {
-                dbadpter.addHierarchyPath(path, formId);
+            dbadpter.createAssociation(path, formId);
         }
-     }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -760,8 +754,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
                     validForms.add(form);
                 }
             }
-            deleteSubFormPaths();
-            populateFormsForPath();
+            updateAssociatedForms();
 
             if (shouldShowDetailFragment()) {
                 showDetailFragment();

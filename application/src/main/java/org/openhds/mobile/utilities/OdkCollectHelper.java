@@ -47,7 +47,6 @@ public class OdkCollectHelper {
             String filePath;
             String formName;
             String fileName;
-
             Uri uri;
 
             filePath = cursor
@@ -78,8 +77,6 @@ public class OdkCollectHelper {
         cursor.close();
         return formInstances;
     }
-
-
 
 	public static List<FormInstance> getAllFormInstances(
 			ContentResolver resolver) {
@@ -160,9 +157,8 @@ public class OdkCollectHelper {
 
     }
 
-    private static String makePlaceholders(int len) {
+    public static String makePlaceholders(int len) {
         if (len < 1) {
-            // It will lead to an invalid query anyway ..
             throw new RuntimeException("No placeholders");
         } else {
             StringBuilder sb = new StringBuilder(len * 2 - 1);
@@ -193,67 +189,40 @@ public class OdkCollectHelper {
         }
 
         while (cursor.moveToNext()) {
-
             FormInstance formInstance = new FormInstance();
-            String filePath;
-            String formName;
-            String fileName;
-
-            Uri uri;
-
-            filePath = cursor
-                    .getString(cursor
-                            .getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
-
-            uri = Uri.withAppendedPath(CONTENT_URI, cursor.getString(cursor
-                    .getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)));
-
-            String formStatus = cursor
-                    .getString(cursor
-                            .getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS));
-
-            formName = cursor
-                    .getString(cursor
-                            .getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_FORM_ID));
-
+            String filePath, formName, fileName;
+            filePath = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
+            Uri uri = Uri.withAppendedPath(CONTENT_URI, cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)));
+            String formStatus = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS));
+            formName = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_FORM_ID));
             fileName = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME));
-
             formInstance.setFilePath(filePath);
             formInstance.setUriString(uri.toString());
             formInstance.setFormName(formName);
             formInstance.setFileName(fileName);
             formInstances.add(formInstance);
-
         }
         cursor.close();
         return formInstances;
     }
 
     public static List<String> getSentFormPaths(ContentResolver resolver, Collection<String> ids) {
-
-        ArrayList<String> subforms = new ArrayList<String>();
-
-        for (String path:ids)
-        {
-            String[] selection= new String[]{InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, InstanceProviderAPI.InstanceColumns.STATUS};
-            String[] values = new String[]{path,InstanceProviderAPI.STATUS_SUBMITTED };
-            Query query = new Query(CONTENT_URI,selection,values,null,"=");
+        ArrayList<String> sentForms = new ArrayList<String>();
+        for (String path : ids) {
+            String[] selection = new String[]{InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, InstanceProviderAPI.InstanceColumns.STATUS};
+            String[] values = new String[]{path, InstanceProviderAPI.STATUS_SUBMITTED};
+            Query query = new Query(CONTENT_URI, selection, values, null, "=");
             Cursor cursor = query.select(resolver);
             if (null == cursor) {
                 return null;
             }
-
-            if (cursor.moveToFirst()){
+            if (cursor.moveToFirst()) {
                 String sentFilePaths;
-                sentFilePaths = cursor
-                        .getString(cursor
-                                .getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
-
-                subforms.add(sentFilePaths);
+                sentFilePaths = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
+                sentForms.add(sentFilePaths);
             }
             cursor.close();
         }
-        return subforms;
+        return sentForms;
     }
-
 }
