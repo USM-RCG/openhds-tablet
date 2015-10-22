@@ -9,20 +9,26 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
+
+import org.openhds.mobile.OpenHDS;
+import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.model.form.FormSubmissionRecord;
 import org.openhds.mobile.model.core.Supervisor;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.openhds.mobile.provider.InstanceProviderAPI.InstanceColumns.CONTENT_URI;
 
 public class DatabaseAdapter {
 	private static final String DATABASE_NAME = "entityData";
-
 	private static final int DATABASE_VERSION = 16;
 
-	private static final String KEY_ID = "_id";
-
 	private static final String FORM_TABLE_NAME = "formsubmission";
+	private static final String KEY_ID = "_id";
 	public static final String KEY_REMOTE_ID = "remote_id";
 	public static final String KEY_FORMOWNER_ID = "form_owner_id";
 	public static final String KEY_FORM_TYPE = "form_type";
@@ -41,6 +47,11 @@ public class DatabaseAdapter {
 	public static final String KEY_SUPERVISOR_NAME = "username";
 	public static final String KEY_SUPERVISOR_PASS = "password";
 
+	private static final String ASSOCIATION_TABLE_NAME = "path_to_forms";
+	public static final String  KEY_PATH_ID = "path_id";
+	public static final String  KEY_TO_FORM = "hierarchyPath";
+	public static final String  KEY_FORM_PATH = "formPath";
+
 	private static final String FORM_DB_CREATE = "CREATE TABLE "
 			+ FORM_TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY, "
 			+ KEY_FORMOWNER_ID + " TEXT, " + KEY_FORM_TYPE + " TEXT, "
@@ -56,6 +67,10 @@ public class DatabaseAdapter {
 	private static final String USER_DB_CREATE = "CREATE TABLE "
 			+ SUPERVISOR_TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY, "
 			+ KEY_SUPERVISOR_NAME + " TEXT, " + KEY_SUPERVISOR_PASS + " TEXT)";
+
+	private static final String ASSOCIATION_DB_CREATE = "CREATE TABLE "
+			+ ASSOCIATION_TABLE_NAME + " (" + KEY_TO_FORM + " TEXT, " + KEY_FORM_PATH + " TEXT, CONSTRAINT "
+			+ KEY_PATH_ID + " UNIQUE (" + KEY_TO_FORM + ", " +KEY_FORM_PATH +" ) )" ;
 
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd_HH_mm_ss_SSS");
@@ -176,7 +191,7 @@ public class DatabaseAdapter {
 		db.beginTransaction();
 		try {
 			rowCount = db.delete(SUPERVISOR_TABLE_NAME, KEY_SUPERVISOR_NAME
-					+ " = ?", new String[] { u.getName() });
+					+ " = ?", new String[]{u.getName()});
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
@@ -255,6 +270,73 @@ public class DatabaseAdapter {
 		updateFormSubmission(id, cv);
 	}
 
+	public long createAssociation(String hierarchyPath, String filePath) {
+		long id = -1;
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		db.beginTransaction();
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(KEY_TO_FORM, hierarchyPath);
+			cv.put(KEY_FORM_PATH, filePath);
+			id = db.insertOrThrow(ASSOCIATION_TABLE_NAME, null, cv);
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+			db.close();
+		}
+		return id;
+	}
+
+	public Collection<String> findAssociatedPath(String hierarchyPath) {
+		Set<String> formPaths = new HashSet<>();
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		try {
+			Cursor cursor = db.query(ASSOCIATION_TABLE_NAME, new String[]{KEY_FORM_PATH},
+					KEY_TO_FORM + "= ?", new String[]{hierarchyPath}, null, null, null);
+			if (cursor == null) {
+				return null;
+			}
+			while (cursor.moveToNext()) {
+				String formPath;
+				formPath = cursor.getString(cursor.getColumnIndex(KEY_FORM_PATH));
+				formPaths.add(formPath);
+			}
+			cursor.close();
+		} catch (Exception e) {
+			Log.w("findUserByUsername", e.getMessage());
+		}
+		return formPaths;
+	}
+
+	public Collection<String> findAllAssociatedPaths() {
+		Set<String> associatedPaths = new HashSet<>();
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		try {
+			Cursor cursor = db.query(ASSOCIATION_TABLE_NAME, new String[]{KEY_FORM_PATH}, null, null, null, null, null);
+			if (cursor == null) {
+				return null;
+			}
+			while (cursor.moveToNext()) {
+				String formPath;
+				formPath = cursor.getString(cursor.getColumnIndex(KEY_FORM_PATH));
+				associatedPaths.add(formPath);
+			}
+			cursor.close();
+		} catch (Exception e) {
+			Log.w("findUserByUsername", e.getMessage());
+		}
+		return associatedPaths;
+	}
+
+	public void deleteAssociatedPath(String sentFilepath) {
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		db.beginTransaction();
+		db.delete(ASSOCIATION_TABLE_NAME, KEY_FORM_PATH + " = ?", new String[]{"" + sentFilepath});
+		db.setTransactionSuccessful();
+		db.endTransaction();
+		db.close();
+	}
+
 	public void deleteSubmission(long id) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
@@ -289,6 +371,7 @@ public class DatabaseAdapter {
 			db.execSQL(FORM_DB_CREATE);
 			db.execSQL(MESSAGE_DB_CREATE);
 			db.execSQL(USER_DB_CREATE);
+			db.execSQL(ASSOCIATION_DB_CREATE);
 		}
 
 		@Override

@@ -259,4 +259,5 @@ public class OpenHDS {
 		public static final String COLUMN_INDIVIDUAL_UUID = "individual_uuid";
 		public static final String COLUMN_MEMBERSHIP_RELATIONSHIP_TO_HEAD = "relationshipToHead";
 	}
+
 }
