@@ -9,14 +9,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import android.content.ContentValues;
-
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.provider.InstanceProviderAPI;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.repository.Query;
 import org.openhds.mobile.repository.RepositoryUtils;
 
+import android.content.ContentValues;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -28,64 +27,41 @@ public class OdkCollectHelper {
     public static List<FormInstance> getAllUnsentFormInstances(ContentResolver resolver) {
 
         ArrayList<FormInstance> formInstances = new ArrayList<FormInstance>();
-
-        Cursor cursor = resolver.query(CONTENT_URI, new String[] {
-                InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH,
-                InstanceProviderAPI.InstanceColumns._ID,
-                InstanceProviderAPI.InstanceColumns.JR_FORM_ID,
-                InstanceProviderAPI.InstanceColumns.DISPLAY_NAME,
-                InstanceProviderAPI.InstanceColumns.STATUS}, InstanceProviderAPI.InstanceColumns.STATUS+" != ?",
-                            new String[] {InstanceProviderAPI.STATUS_SUBMITTED}, null);
+        Cursor cursor = resolver.query(CONTENT_URI, new String[]{
+                        InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH,
+                        InstanceProviderAPI.InstanceColumns._ID,
+                        InstanceProviderAPI.InstanceColumns.JR_FORM_ID,
+                        InstanceProviderAPI.InstanceColumns.DISPLAY_NAME,
+                        InstanceProviderAPI.InstanceColumns.STATUS}, InstanceProviderAPI.InstanceColumns.STATUS + " != ?",
+                new String[]{InstanceProviderAPI.STATUS_SUBMITTED}, null);
 
         if (null == cursor) {
             return null;
         }
-
         while (cursor.moveToNext()) {
-
             FormInstance formInstance = new FormInstance();
-            String filePath;
-            String formName;
-            String fileName;
-            Uri uri;
-
-            filePath = cursor
-                    .getString(cursor
-                            .getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
-
-            uri = Uri.withAppendedPath(CONTENT_URI, cursor.getString(cursor
-                    .getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)));
-
-            String formStatus = cursor
-                    .getString(cursor
-                            .getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS));
-
-            formName = cursor
-                    .getString(cursor
-                            .getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_FORM_ID));
-
+            String filePath, formName, fileName;
+            filePath = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
+            Uri uri = Uri.withAppendedPath(CONTENT_URI, cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)));
+            String formStatus = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS));
+            formName = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_FORM_ID));
             fileName = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME));
-
             formInstance.setFilePath(filePath);
             formInstance.setUriString(uri.toString());
             formInstance.setFormName(formName);
             formInstance.setFileName(fileName);
-
             formInstances.add(formInstance);
-
         }
         cursor.close();
         return formInstances;
     }
 
-	public static List<FormInstance> getAllFormInstances(
-			ContentResolver resolver) {
+    public static List<FormInstance> getAllFormInstances(ContentResolver resolver) {
 
-		ArrayList<FormInstance> formInstances = new ArrayList<FormInstance>();
-
-		Cursor cursor = resolver.query(CONTENT_URI, new String[] {
-				InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH,
-				InstanceProviderAPI.InstanceColumns._ID,
+        ArrayList<FormInstance> formInstances = new ArrayList<FormInstance>();
+        Cursor cursor = resolver.query(CONTENT_URI, new String[]{
+                InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH,
+                InstanceProviderAPI.InstanceColumns._ID,
                 InstanceProviderAPI.InstanceColumns.JR_FORM_ID,
                 InstanceProviderAPI.InstanceColumns.DISPLAY_NAME}, null, null, null);
 
@@ -93,43 +69,25 @@ public class OdkCollectHelper {
             return null;
         }
 
-		while (cursor.moveToNext()) {
-
-			FormInstance formInstance = new FormInstance();
-			String filePath;
-            String formName;
-            String fileName;
-
-			Uri uri;
-
-			filePath = cursor
-					.getString(cursor
-                            .getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
-
-			uri = Uri.withAppendedPath(CONTENT_URI, cursor.getString(cursor
-					.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)));
-
-            formName = cursor
-                    .getString(cursor
-                            .getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_FORM_ID));
-
+        while (cursor.moveToNext()) {
+            FormInstance formInstance = new FormInstance();
+            String filePath, formName, fileName;
+            filePath = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
+            Uri uri = Uri.withAppendedPath(CONTENT_URI, cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)));
+            formName = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_FORM_ID));
             fileName = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME));
-
-			formInstance.setFilePath(filePath);
+            formInstance.setFilePath(filePath);
             formInstance.setFormName(formName);
             formInstance.setFileName(fileName);
-
             formInstance.setUriString(uri.toString());
-
-			formInstances.add(formInstance);
-
-		}
-		cursor.close();
-		return formInstances;
-	}
+            formInstances.add(formInstance);
+        }
+        cursor.close();
+        return formInstances;
+    }
 
     public static void deleteInstance(ContentResolver resolver, Uri uri, String filePath) {
-        int result = resolver.delete(uri, InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH+"=?", new String[]{filePath});
+        int result = resolver.delete(uri, InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH + "=?", new String[]{filePath});
         result = result;
     }
 

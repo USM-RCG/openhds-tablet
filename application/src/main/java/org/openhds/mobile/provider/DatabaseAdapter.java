@@ -70,7 +70,7 @@ public class DatabaseAdapter {
 
 	private static final String ASSOCIATION_DB_CREATE = "CREATE TABLE "
 			+ ASSOCIATION_TABLE_NAME + " (" + KEY_TO_FORM + " TEXT, " + KEY_FORM_PATH + " TEXT, CONSTRAINT "
-			+ KEY_PATH_ID + " UNIQUE (" + KEY_TO_FORM+", " +KEY_FORM_PATH +" ) )" ;
+			+ KEY_PATH_ID + " UNIQUE (" + KEY_TO_FORM + ", " +KEY_FORM_PATH +" ) )" ;
 
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd_HH_mm_ss_SSS");
