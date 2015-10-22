@@ -57,8 +57,7 @@
         <FrameLayout
             android:id="@+id/view_column_bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="20dp" />
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
