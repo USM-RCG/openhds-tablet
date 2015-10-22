@@ -354,16 +354,16 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     }
 
     private void populateFormsForPath() {
-        List<FormInstance> instancesForPath;
+        List<FormInstance> forms;
         ContentResolver resolver = getContentResolver();
         DatabaseAdapter dbAdpt = new DatabaseAdapter(this);
         Collection associatedPaths = dbAdpt.findAssociatedPath(currentHierarchyPath());
         if (!associatedPaths.isEmpty()) {
-            instancesForPath = OdkCollectHelper.getFormInstancesByPath(resolver, associatedPaths);
+            forms = OdkCollectHelper.getByPaths(resolver, associatedPaths);
         } else {
-            instancesForPath = Collections.EMPTY_LIST;
+            forms = Collections.EMPTY_LIST;
         }
-        viewPathFormsFragment.populateRecentFormInstanceListView(instancesForPath);
+        viewPathFormsFragment.populateRecentFormInstanceListView(forms);
     }
 
     private void updateAssociatedForms() {

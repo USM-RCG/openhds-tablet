@@ -170,10 +170,8 @@ public class OdkCollectHelper {
         }
     }
 
-    public static List<FormInstance> getFormInstancesByPath(ContentResolver resolver, Collection<String> ids) {
-
+    public static List<FormInstance> getByPaths(ContentResolver resolver, Collection<String> ids) {
         ArrayList<FormInstance> formInstances = new ArrayList<FormInstance>();
-
         Cursor cursor = resolver.query(CONTENT_URI, new String[]{
                         InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH,
                         InstanceProviderAPI.InstanceColumns._ID,
@@ -207,22 +205,22 @@ public class OdkCollectHelper {
     }
 
     public static List<String> getSentFormPaths(ContentResolver resolver, Collection<String> ids) {
-        ArrayList<String> sentForms = new ArrayList<String>();
+        ArrayList<String> sentPaths = new ArrayList<String>();
         for (String path : ids) {
-            String[] selection = new String[]{InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, InstanceProviderAPI.InstanceColumns.STATUS};
-            String[] values = new String[]{path, InstanceProviderAPI.STATUS_SUBMITTED};
-            Query query = new Query(CONTENT_URI, selection, values, null, "=");
+            Query query = new Query(CONTENT_URI,
+                    new String[]{InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, InstanceProviderAPI.InstanceColumns.STATUS},
+                    new String[]{path, InstanceProviderAPI.STATUS_SUBMITTED}, null, "=");
             Cursor cursor = query.select(resolver);
             if (null == cursor) {
                 return null;
             }
             if (cursor.moveToFirst()) {
-                String sentFilePaths;
-                sentFilePaths = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
-                sentForms.add(sentFilePaths);
+                String sentPath;
+                sentPath = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
+                sentPaths.add(sentPath);
             }
             cursor.close();
         }
-        return sentForms;
+        return sentPaths;
     }
 }

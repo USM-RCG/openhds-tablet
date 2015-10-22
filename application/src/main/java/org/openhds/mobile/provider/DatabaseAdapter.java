@@ -47,10 +47,10 @@ public class DatabaseAdapter {
 	public static final String KEY_SUPERVISOR_NAME = "username";
 	public static final String KEY_SUPERVISOR_PASS = "password";
 
-	private static final String PATH_FORM_TABLE = "path_forms";
+	private static final String ASSOCIATION_TABLE_NAME = "path_to_forms";
 	public static final String  KEY_PATH_ID = "path_id";
-	public static final String  KEY_PATH = "hierarchyPath";
-	public static final String  KEY_FORM_PATH = "linked_formPath";
+	public static final String  KEY_TO_FORM = "hierarchyPath";
+	public static final String  KEY_FORM_PATH = "formPath";
 
 	private static final String FORM_DB_CREATE = "CREATE TABLE "
 			+ FORM_TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY, "
@@ -69,8 +69,8 @@ public class DatabaseAdapter {
 			+ KEY_SUPERVISOR_NAME + " TEXT, " + KEY_SUPERVISOR_PASS + " TEXT)";
 
 	private static final String ASSOCIATION_DB_CREATE = "CREATE TABLE "
-			+ PATH_FORM_TABLE + " (" + KEY_PATH + " TEXT, " + KEY_FORM_PATH + " TEXT, CONSTRAINT "
-			+ KEY_PATH_ID + " UNIQUE (" + KEY_PATH+", " +KEY_FORM_PATH +" ) )" ;
+			+ ASSOCIATION_TABLE_NAME + " (" + KEY_TO_FORM + " TEXT, " + KEY_FORM_PATH + " TEXT, CONSTRAINT "
+			+ KEY_PATH_ID + " UNIQUE (" + KEY_TO_FORM+", " +KEY_FORM_PATH +" ) )" ;
 
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd_HH_mm_ss_SSS");
@@ -276,9 +276,9 @@ public class DatabaseAdapter {
 		db.beginTransaction();
 		try {
 			ContentValues cv = new ContentValues();
-			cv.put(KEY_PATH, hierarchyPath);
+			cv.put(KEY_TO_FORM, hierarchyPath);
 			cv.put(KEY_FORM_PATH, filePath);
-			id = db.insertOrThrow(PATH_FORM_TABLE, null, cv);
+			id = db.insertOrThrow(ASSOCIATION_TABLE_NAME, null, cv);
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
@@ -291,8 +291,8 @@ public class DatabaseAdapter {
 		Set<String> formPaths = new HashSet<>();
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		try {
-			Cursor cursor = db.query(PATH_FORM_TABLE, new String[]{KEY_FORM_PATH},
-					KEY_PATH + "= ?", new String[]{hierarchyPath}, null, null, null);
+			Cursor cursor = db.query(ASSOCIATION_TABLE_NAME, new String[]{KEY_FORM_PATH},
+					KEY_TO_FORM + "= ?", new String[]{hierarchyPath}, null, null, null);
 			if (cursor == null) {
 				return null;
 			}
@@ -311,9 +311,8 @@ public class DatabaseAdapter {
 	public Collection<String> findAllAssociatedPaths() {
 		Set<String> associatedPaths = new HashSet<>();
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		Cursor cursor = null;
 		try {
-			cursor = db.query(PATH_FORM_TABLE, new String[]{KEY_FORM_PATH}, null, null, null, null, null);
+			Cursor cursor = db.query(ASSOCIATION_TABLE_NAME, new String[]{KEY_FORM_PATH}, null, null, null, null, null);
 			if (cursor == null) {
 				return null;
 			}
@@ -332,7 +331,7 @@ public class DatabaseAdapter {
 	public void deleteAssociatedPath(String sentFilepath) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
-		db.delete(PATH_FORM_TABLE, KEY_FORM_PATH + " = ?", new String[]{"" + sentFilepath});
+		db.delete(ASSOCIATION_TABLE_NAME, KEY_FORM_PATH + " = ?", new String[]{"" + sentFilepath});
 		db.setTransactionSuccessful();
 		db.endTransaction();
 		db.close();
