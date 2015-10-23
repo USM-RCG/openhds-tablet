@@ -2,8 +2,6 @@ package org.openhds.mobile.utilities;
 
 import android.util.Log;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +12,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+
+import static com.github.batkinson.jrsync.zsync.IOUtil.BUFFER_SIZE;
+import static com.github.batkinson.jrsync.zsync.IOUtil.buffer;
+import static com.github.batkinson.jrsync.zsync.IOUtil.close;
 
 /**
  * Dumping grounds for miscellaneous sync-related functions.
@@ -78,15 +80,15 @@ public class SyncUtils {
     }
 
     public static void streamToFile(InputStream in, File f) throws IOException {
-        OutputStream out = new BufferedOutputStream(new FileOutputStream(f));
+        OutputStream out = buffer(new FileOutputStream(f));
         try {
-            byte[] buf = new byte[4096];
+            byte[] buf = new byte[BUFFER_SIZE];
             int read;
             while ((read = in.read(buf)) >= 0) {
                 out.write(buf, 0, read);
             }
         } finally {
-            out.close();
+            close(out);
         }
     }
 }
