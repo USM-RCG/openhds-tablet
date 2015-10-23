@@ -28,32 +28,42 @@ import static org.openhds.mobile.utilities.StringUtils.join;
 import static org.openhds.mobile.utilities.SyncUtils.streamToFile;
 
 
-public class SyncTask extends AsyncTask<Sync, Void, Result> {
+public class SyncTask extends AsyncTask<SyncRequest, Void, SyncResult> {
 
     public static final String UNSUPPORTED_RESPONSE = "Unsupported Response";
 
     private final String TAG = SyncTask.class.getName();
 
+    public interface Listener {
+        void handleResult(SyncResult result);
+    }
+
+    private Listener listener;
+
+    public SyncTask(Listener listener) {
+        this.listener = listener;
+    }
+
     @Override
-    protected Result doInBackground(Sync... params) {
+    protected SyncResult doInBackground(SyncRequest... params) {
 
         if (params != null && params.length > 0) {
 
-            Sync sync = params[0];
+            SyncRequest sync = params[0];
 
-            String accept = sync.contentType;
+            String accept = sync.mimeType;
 
             boolean canSync = sync.basis.exists();
 
             // If we have local content to sync with, also accept metadata
             if (canSync) {
-                accept = join(", ", sync.contentType, Metadata.MIME_TYPE);
+                accept = join(", ", sync.mimeType, Metadata.MIME_TYPE);
             }
 
             HttpURLConnection c = null;
             try {
                 String auth = encodeBasicCreds(sync.user, sync.pass);
-                RangeRequestFactory factory = new RangeRequestFactoryImpl(sync.endpoint, sync.contentType, auth);
+                RangeRequestFactory factory = new RangeRequestFactoryImpl(sync.endpoint, sync.mimeType, auth);
                 c = HttpUtils.get(sync.endpoint, accept, auth, sync.eTag);
 
                 int status = c.getResponseCode();
@@ -64,20 +74,20 @@ public class SyncTask extends AsyncTask<Sync, Void, Result> {
                 if (status == SC_OK) {
                     if (canSync && responseType == Metadata.MIME_TYPE) {
                         incrementalSync(responseBody, sync.basis, sync.target, factory);
-                        return new Result(sync.name, Result.Type.INCREMENTAL, eTag);
-                    } else if (responseType == sync.contentType) {
+                        return new SyncResult(SyncResult.Type.INCREMENTAL, eTag);
+                    } else if (responseType == sync.mimeType) {
                         directDownload(responseBody, sync.target);
-                        return new Result(sync.name, Result.Type.FULL, eTag);
+                        return new SyncResult(SyncResult.Type.FULL, eTag);
                     }
                 } else if (status == SC_NOT_MODIFIED) {
-                    return new Result(sync.name, Result.Type.NO_UPDATE, sync.eTag);
+                    return new SyncResult(SyncResult.Type.NO_UPDATE, sync.eTag);
                 }
 
-                return new Result(sync.name, Result.Type.FAILURE, UNSUPPORTED_RESPONSE, null);
+                return new SyncResult(SyncResult.Type.FAILURE, UNSUPPORTED_RESPONSE, null);
 
             } catch (Exception e) {
                 Log.w(TAG, "sync failed", e);
-                return new Result(sync.name, Result.Type.FAILURE, e.getMessage(), null);
+                return new SyncResult(SyncResult.Type.FAILURE, e.getMessage(), null);
             } finally {
                 if (c != null) {
                     c.disconnect();
@@ -89,8 +99,9 @@ public class SyncTask extends AsyncTask<Sync, Void, Result> {
     }
 
     @Override
-    protected void onPostExecute(Result result) {
-        super.onPostExecute(result);
+    protected void onPostExecute(SyncResult result) {
+        if (result != null)
+            listener.handleResult(result);
     }
 
     /**
@@ -176,51 +187,5 @@ public class SyncTask extends AsyncTask<Sync, Void, Result> {
         public void close() throws IOException {
             c.disconnect();
         }
-    }
-}
-
-class Sync {
-
-    final String name;
-    final URL endpoint;
-    final String user;
-    final String pass;
-    final File basis;
-    final File target;
-    final String contentType;
-    final String eTag;
-
-    Sync(String name, URL endpoint, String user, String pass, File basis, File target, String mimeType, String eTag) {
-        this.name = name;
-        this.user = user;
-        this.pass = pass;
-        this.endpoint = endpoint;
-        this.basis = basis;
-        this.target = target;
-        contentType = mimeType;
-        this.eTag = eTag;
-    }
-}
-
-class Result {
-
-    enum Type {
-        FULL, INCREMENTAL, NO_UPDATE, FAILURE
-    }
-
-    final String name;
-    final Type type;
-    String message;
-    String eTag;
-
-    Result(String name, Type type, String eTag) {
-        this(name, type, null, eTag);
-    }
-
-    Result(String name, Type type, String message, String eTag) {
-        this.name = name;
-        this.type = type;
-        this.message = message;
-        this.eTag = eTag;
     }
 }
