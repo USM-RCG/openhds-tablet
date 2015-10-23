@@ -60,7 +60,7 @@ public class SyncUtils {
                 OutputStream out = new FileOutputStream(hashFile);
                 try {
                     PrintWriter writer = new PrintWriter(out);
-                    writer.println(hash == null? "": hash);
+                    writer.println(hash == null ? "" : hash);
                     writer.flush();
                 } finally {
                     close(out);
