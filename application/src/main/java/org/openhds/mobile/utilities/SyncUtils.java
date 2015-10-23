@@ -43,11 +43,7 @@ public class SyncUtils {
                 try {
                     contentHash = buf.readLine();
                 } finally {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        Log.w(TAG, "failed to close hash file", e);
-                    }
+                    close(in);
                 }
             } catch (FileNotFoundException e) {
                 Log.w(TAG, "hash file not found", e);
@@ -67,11 +63,7 @@ public class SyncUtils {
                     writer.println(hash == null? "": hash);
                     writer.flush();
                 } finally {
-                    try {
-                        out.close();
-                    } catch (IOException e) {
-                        Log.w(TAG, "failed to close hash file", e);
-                    }
+                    close(out);
                 }
             } catch (FileNotFoundException e) {
                 Log.w(TAG, "hash file not found", e);
