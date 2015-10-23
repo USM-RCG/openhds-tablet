@@ -67,8 +67,6 @@ public class SyncUtils {
                 }
             } catch (FileNotFoundException e) {
                 Log.w(TAG, "hash file not found", e);
-            } catch (IOException e) {
-                Log.w(TAG, "failed to read hash file", e);
             }
         }
     }
