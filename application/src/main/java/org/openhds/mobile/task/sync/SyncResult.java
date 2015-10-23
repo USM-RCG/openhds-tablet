@@ -11,8 +11,8 @@ public class SyncResult {
     }
 
     final Type type;
-    String message;
-    String eTag;
+    final String message;
+    final String eTag;
 
     SyncResult(Type type, String eTag) {
         this(type, null, eTag);
