@@ -18,6 +18,7 @@ import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 
 import static com.github.batkinson.jrsync.zsync.IOUtil.buffer;
+import static com.github.batkinson.jrsync.zsync.IOUtil.close;
 import static com.github.batkinson.jrsync.zsync.ZSync.readMetadata;
 import static com.github.batkinson.jrsync.zsync.ZSync.sync;
 import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
@@ -101,13 +102,7 @@ public class SyncTask extends AsyncTask<Sync, Void, Result> {
             file = new RandomAccessFile(basis, "r");
             sync(readMetadata(responseBody), file, target, factory);
         } finally {
-            if (file != null) {
-                try {
-                    file.close();
-                } catch (IOException e) {
-                    Log.w(TAG, "failed to close basis file", e);
-                }
-            }
+            close(file);
         }
     }
 
