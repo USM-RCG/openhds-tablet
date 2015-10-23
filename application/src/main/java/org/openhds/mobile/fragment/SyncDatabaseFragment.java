@@ -40,7 +40,6 @@ import java.util.Queue;
 
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
-import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 import static org.openhds.mobile.utilities.SyncUtils.hashFilename;
 import static org.openhds.mobile.utilities.SyncUtils.loadHash;
@@ -285,14 +284,14 @@ public class SyncDatabaseFragment extends Fragment {
         String entityName = getResourceString(getActivity(), entity.labelId);
         String message = "Error syncing " + entityName + " (" + Integer.toString(errorCode) + "):" + errorMessage;
         Log.e(entityName, message);
-        showLongToast(getActivity(), message);
+        showShortToast(getActivity(), message);
     }
 
     // Show progress by toasting.
     private void showProgressMessage(SyncEntity entity, String progressMessage) {
         String entityName = getResourceString(getActivity(), entity.labelId);
         String message = entityName + ": " + progressMessage;
-        showLongToast(getActivity(), message);
+        showShortToast(getActivity(), message);
     }
 
     // Update column values and button status.
