@@ -14,17 +14,17 @@ public class HttpUtils {
     /**
      * Encodes an HTTP Basic authentication header for the specified username
      * and password.
+     *
+     * FIXME: password exposed to memory scan as String via constant pool
      */
-    public static String basicAuth(String username, String password) {
-        // FIXME: password exposed to memory scan as String via constant pool
+    public static String encodeBasicCreds(String username, String password) {
         return String.format("Basic %s",
                 encodeToString((username + ":" + password).getBytes(), DEFAULT)
         );
     }
 
     /**
-     * Constructs an {@link java.net.HttpURLConnection} with the given request
-     * headers.
+     * Constructs an {@link HttpURLConnection} with the given request headers.
      */
     public static HttpURLConnection get(URL url, Map<String, String> headers) throws IOException {
         HttpURLConnection c = (HttpURLConnection)url.openConnection();
@@ -34,6 +34,9 @@ public class HttpUtils {
         return c;
     }
 
+    /**
+     * Constructs an {@link HttpURLConnection} with the specified settings, if non-null.
+     */
     public static HttpURLConnection get(URL url, String accept, String auth, String eTag) throws IOException {
         Map<String, String> headers = new HashMap<>();
         if (accept != null) {

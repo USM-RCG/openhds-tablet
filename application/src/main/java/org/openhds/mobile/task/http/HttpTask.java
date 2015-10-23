@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
 
-import static org.openhds.mobile.utilities.HttpUtils.basicAuth;
+import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
 import static org.openhds.mobile.utilities.SyncUtils.streamToFile;
 
 /**
@@ -56,7 +56,7 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
         String contentType, eTag;
         try {
             URL url = new URL(req.getUrl());
-            String auth = basicAuth(req.getUserName(), req.getPassword());
+            String auth = encodeBasicCreds(req.getUserName(), req.getPassword());
             HttpURLConnection conn = HttpUtils.get(url, req.getAccept(), auth, req.getETag());
             responseStream = conn.getInputStream();
             statusCode = conn.getResponseCode();
