@@ -71,6 +71,14 @@ public class SyncUtils {
         }
     }
 
+    /**
+     * Streams the contents of the specified {@link InputStream} to a specified
+     * location, always closing the stream.
+     *
+     * @param in stream to read contents from
+     * @param f  location to write contents to
+     * @throws IOException
+     */
     public static void streamToFile(InputStream in, File f) throws IOException {
         OutputStream out = buffer(new FileOutputStream(f));
         try {
