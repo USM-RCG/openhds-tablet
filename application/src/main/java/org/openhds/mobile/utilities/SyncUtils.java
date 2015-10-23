@@ -24,6 +24,8 @@ public class SyncUtils {
 
     private static final String TAG = SyncUtils.class.getName();
 
+    public static final String XML_MIME_TYPE = "application/xml";
+
     public static String hashFilename(String entityName) {
         return String.format("%s.etag", entityName);
     }
