@@ -159,7 +159,7 @@ public class SyncTask extends AsyncTask<SyncRequest, Void, SyncResult> {
         }
 
         @Override
-        public int getResposeCode() throws IOException {
+        public int getResponseCode() throws IOException {
             return c.getResponseCode();
         }
 
