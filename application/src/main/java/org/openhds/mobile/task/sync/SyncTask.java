@@ -72,10 +72,10 @@ public class SyncTask extends AsyncTask<SyncRequest, Void, SyncResult> {
                 String eTag = c.getHeaderField("ETag");
 
                 if (status == SC_OK) {
-                    if (canSync && responseType == Metadata.MIME_TYPE) {
+                    if (canSync && responseType.equals(Metadata.MIME_TYPE)) {
                         incrementalSync(responseBody, sync.basis, sync.target, factory);
                         return new SyncResult(SyncResult.Type.INCREMENTAL, eTag);
-                    } else if (responseType == sync.mimeType) {
+                    } else if (responseType.equals(sync.mimeType)) {
                         directDownload(responseBody, sync.target);
                         return new SyncResult(SyncResult.Type.FULL, eTag);
                     }
@@ -170,7 +170,7 @@ public class SyncTask extends AsyncTask<SyncRequest, Void, SyncResult> {
 
         @Override
         public String getHeader(String name) {
-            return c.getRequestProperty(name);
+            return c.getHeaderField(name);
         }
 
         @Override

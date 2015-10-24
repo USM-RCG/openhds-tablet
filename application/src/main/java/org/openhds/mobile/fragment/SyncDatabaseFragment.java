@@ -11,14 +11,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import org.apache.http.HttpStatus;
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.OpeningActivity;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.Gateway;
-import org.openhds.mobile.task.http.HttpTask;
-import org.openhds.mobile.task.http.HttpTaskRequest;
-import org.openhds.mobile.task.http.HttpTaskResponse;
 import org.openhds.mobile.task.parsing.DataPage;
 import org.openhds.mobile.task.parsing.ParseEntityTask;
 import org.openhds.mobile.task.parsing.ParseEntityTaskRequest;
@@ -31,8 +27,16 @@ import org.openhds.mobile.task.parsing.entities.MembershipParser;
 import org.openhds.mobile.task.parsing.entities.RelationshipParser;
 import org.openhds.mobile.task.parsing.entities.SocialGroupParser;
 import org.openhds.mobile.task.parsing.entities.VisitParser;
+import org.openhds.mobile.task.sync.SyncRequest;
+import org.openhds.mobile.task.sync.SyncResult;
+import org.openhds.mobile.task.sync.SyncTask;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,17 +45,19 @@ import java.util.Queue;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
+import static org.openhds.mobile.utilities.SyncUtils.XML_MIME_TYPE;
 import static org.openhds.mobile.utilities.SyncUtils.entityFilename;
 import static org.openhds.mobile.utilities.SyncUtils.hashFilename;
 import static org.openhds.mobile.utilities.SyncUtils.loadHash;
 import static org.openhds.mobile.utilities.SyncUtils.storeHash;
+import static org.openhds.mobile.utilities.SyncUtils.tempFilename;
 
 /**
  * Allow user to sync tables with the server.
- *
+ * <p/>
  * Shows a table with sync status and progress for each entity/table.
  * The user may sync one table at a time or queue up all tables at once.
- *
+ * <p/>
  * BSH
  */
 public class SyncDatabaseFragment extends Fragment {
@@ -110,7 +116,7 @@ public class SyncDatabaseFragment extends Fragment {
     private static final int UNKNOWN = -2;
     private static final String UNKNOWN_TEXT = "-";
 
-    private HttpTask httpTask;
+    private SyncTask syncTask;
     private ParseEntityTask parseTask;
     private Queue<SyncEntity> syncQueue;
     private SyncEntity syncEntity;
@@ -209,24 +215,62 @@ public class SyncDatabaseFragment extends Fragment {
         updateTableRow(syncEntity, UNKNOWN, 0, R.string.sync_database_button_cancel);
 
         // start the http task
-        httpTask = new HttpTask(new HttpResponseHandler());
-        HttpTaskRequest httpTaskRequest = buildHttpTaskRequest(syncEntity);
-        httpTask.execute(httpTaskRequest);
+        syncTask = new SyncTask(new SyncListener());
+        try {
+            SyncRequest syncRequest = buildSyncRequest(syncEntity);
+            syncTask.execute(syncRequest);
+        } catch (MalformedURLException e) {
+            String urlError = getResourceString(
+                    getActivity(), R.string.url_error) + ": " + e.getMessage();
+            showShortToast(getActivity(), urlError);
+            terminateSync(true);
+        }
     }
 
-    // Pass http data stream to the entity parser.
-    private void httpResultToParser(HttpTaskResponse httpTaskResponse) {
+    private class SyncListener implements SyncTask.Listener {
 
-        parseTask = new ParseEntityTask(getActivity().getContentResolver());
-        parseTask.setProgressListener(new ParseProgressListener());
+        @Override
+        public void handleResult(SyncResult result) {
+            switch (result.getType()) {
+                case FULL:
+                case INCREMENTAL:
+                    try {
+                        contentHash = result.getETag(); // Used after parse finishes
+                        flipFile();
+                        startParse(new FileInputStream(getBasisFile(syncEntity)));
+                    } catch (FileNotFoundException e) {
+                        showShortToast(getActivity(), e.getMessage());
+                        terminateSync(true);
+                    }
+                    break;
+                case NO_UPDATE:
+                    showProgressMessage(syncEntity, result.toString());
+                    terminateSync(false);
+                    break;
+                default:
+                    showError(syncEntity, result.toString());
+                    terminateSync(true);
+            }
+        }
 
-        ParseEntityTaskRequest parseEntityTaskRequest = syncEntity.taskRequest;
-        parseEntityTaskRequest.setInputStream(httpTaskResponse.getInputStream());
+        /**
+         * Replaces the basis file with the one constructed by the sync process.
+         * This guarantees that the temp storage is cleaned up and that the parse
+         * can only happen on complete files.
+         * @return true if the 'flip' succeeds
+         */
+        private boolean flipFile() {
+            return getTargetFile(syncEntity).renameTo(getBasisFile(syncEntity));
+        }
 
-        contentHash = httpTaskResponse.getETag();  // Store after parse finishes
-
-        parseEntityTaskRequest.getGateway().deleteAll(getActivity().getContentResolver());
-        parseTask.execute(parseEntityTaskRequest);
+        private void startParse(InputStream input) {
+            parseTask = new ParseEntityTask(getActivity().getContentResolver());
+            parseTask.setProgressListener(new ParseProgressListener());
+            ParseEntityTaskRequest parseRequest = syncEntity.taskRequest;
+            parseRequest.setInputStream(input);
+            parseRequest.getGateway().deleteAll(getActivity().getContentResolver());
+            parseTask.execute(parseRequest);
+        }
     }
 
     // Clean up after the entity parser is all done.
@@ -242,7 +286,7 @@ public class SyncDatabaseFragment extends Fragment {
         int errorCount = errorCounts.get(syncEntity) + 1;
         errorCounts.put(syncEntity, errorCount);
         updateTableRow(syncEntity, IGNORE, errorCount, IGNORE);
-        showError(syncEntity, 0, e.getMessage());
+        showError(syncEntity, e.getMessage());
         storeContentHash(syncEntity, null);
     }
 
@@ -266,9 +310,9 @@ public class SyncDatabaseFragment extends Fragment {
 
         syncEntity = null;
 
-        if (httpTask != null) {
-            httpTask.cancel(true);
-            httpTask = null;
+        if (syncTask != null) {
+            syncTask.cancel(true);
+            syncTask = null;
         }
 
         if (parseTask != null) {
@@ -281,9 +325,9 @@ public class SyncDatabaseFragment extends Fragment {
     }
 
     // Show an error by logging, and toasting.
-    private void showError(SyncEntity entity, int errorCode, String errorMessage) {
+    private void showError(SyncEntity entity, String errorMessage) {
         String entityName = getResourceString(getActivity(), entity.labelId);
-        String message = "Error syncing " + entityName + " (" + Integer.toString(errorCode) + "):" + errorMessage;
+        String message = "Error syncing " + entityName + ":" + errorMessage;
         Log.e(entityName, message);
         showShortToast(getActivity(), message);
     }
@@ -334,23 +378,31 @@ public class SyncDatabaseFragment extends Fragment {
     }
 
     // Create an http task request for fetching data from the server.
-    private HttpTaskRequest buildHttpTaskRequest(SyncEntity entity) {
-
+    private SyncRequest buildSyncRequest(SyncEntity entity) throws MalformedURLException {
         Bundle extras = getActivity().getIntent().getExtras();
-        String userName = (String) extras.get(OpeningActivity.USERNAME_KEY);
+        String username = (String) extras.get(OpeningActivity.USERNAME_KEY);
         String password = (String) extras.get(OpeningActivity.PASSWORD_KEY);
+        File basis = getBasisFile(entity), target = getTargetFile(entity);
+        return new SyncRequest(getEndpoint(entity), username, password, basis,
+                target, XML_MIME_TYPE, loadContentHash(entity));
+    }
 
+    private URL getEndpoint(SyncEntity entity) throws MalformedURLException {
         String openHdsBaseUrl = getPreferenceString(getActivity(), R.string.openhds_server_url_key, "");
         String path = getResourceString(getActivity(), entity.pathId);
-        String url = openHdsBaseUrl + path;
-
-        return new HttpTaskRequest(entity.labelId, url, "application/xml",
-                userName, password, loadContentHash(entity),
-                getAppFile(entityFilename(entity.name())));
+        return new URL(openHdsBaseUrl + path);
     }
 
     private File getAppFile(String file) {
         return new File(getActivity().getFilesDir(), file);
+    }
+
+    private File getBasisFile(SyncEntity entity) {
+        return getAppFile(entityFilename(entity.name()));
+    }
+
+    private File getTargetFile(SyncEntity entity) {
+        return getAppFile(tempFilename(entity.name()));
     }
 
     private String loadContentHash(SyncEntity entity) {
@@ -419,25 +471,6 @@ public class SyncDatabaseFragment extends Fragment {
         private void cancelQueuedSync(SyncEntity entity) {
             syncQueue.remove(entity);
             resetTableRow(entity);
-        }
-    }
-
-    /**
-     * Considers outcome of the http fetch, updating UI and kicking off
-     * additional work, if appropriate.
-     */
-    private class HttpResponseHandler implements HttpTask.HttpTaskResponseHandler {
-        @Override
-        public void handleHttpTaskResponse(HttpTaskResponse httpTaskResponse) {
-            if (httpTaskResponse.isSuccess()) {
-                httpResultToParser(httpTaskResponse);
-            } else if (httpTaskResponse.getHttpStatus() == HttpStatus.SC_NOT_MODIFIED) {
-                showProgressMessage(syncEntity, httpTaskResponse.getMessage());
-                terminateSync(false);
-            } else {
-                showError(syncEntity, httpTaskResponse.getHttpStatus(), httpTaskResponse.getMessage());
-                terminateSync(true);
-            }
         }
     }
 

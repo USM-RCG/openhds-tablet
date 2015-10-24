@@ -7,7 +7,22 @@ package org.openhds.mobile.task.sync;
 public class SyncResult {
 
     public enum Type {
-        FULL, INCREMENTAL, NO_UPDATE, FAILURE
+
+        FULL("Full sync successful"),
+        INCREMENTAL("Incremental sync successful"),
+        NO_UPDATE("Content not modified"),
+        FAILURE("Sync failed");
+
+        private String message;
+
+        Type(String message) {
+            this.message = message;
+        }
+
+        @Override
+        public String toString() {
+            return message;
+        }
     }
 
     final Type type;
@@ -34,5 +49,17 @@ public class SyncResult {
 
     public String getETag() {
         return eTag;
+    }
+
+    @Override
+    public String toString() {
+        switch (type) {
+            case FULL:
+            case INCREMENTAL:
+            case NO_UPDATE:
+                return type.toString();
+            default:
+                return type.toString() + (message != null ? " " + message : "");
+        }
     }
 }

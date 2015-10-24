@@ -86,9 +86,9 @@ public class ParseEntityTask extends AsyncTask<ParseEntityTaskRequest, Integer, 
     }
 
     public interface ProgressListener {
-        public void onProgressReport(int progress);
-        public void onError(DataPage dataPage, Exception e);
-        public void onComplete(int progress);
+        void onProgressReport(int progress);
+        void onError(DataPage dataPage, Exception e);
+        void onComplete(int progress);
     }
 
     private void persistBatch() {

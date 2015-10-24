@@ -34,6 +34,10 @@ public class SyncUtils {
         return String.format("%s.xml", entityName);
     }
 
+    public static String tempFilename(String entityName) {
+        return String.format("%s.xml-tmp", entityName);
+    }
+
     public static String loadHash(File hashFile) {
         String contentHash = null;
         if (hashFile.exists() && hashFile.canRead()) {
