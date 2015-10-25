@@ -28,7 +28,7 @@ import static org.openhds.mobile.utilities.StringUtils.join;
 import static org.openhds.mobile.utilities.SyncUtils.streamToFile;
 
 
-public class SyncTask extends AsyncTask<SyncRequest, Void, SyncResult> {
+public class SyncTask extends AsyncTask<SyncRequest, String, SyncResult> {
 
     public static final String UNSUPPORTED_RESPONSE = "Unsupported Response";
 
@@ -36,6 +36,7 @@ public class SyncTask extends AsyncTask<SyncRequest, Void, SyncResult> {
 
     public interface Listener {
         void handleResult(SyncResult result);
+        void handleProgress(String status);
     }
 
     private Listener listener;
@@ -104,6 +105,12 @@ public class SyncTask extends AsyncTask<SyncRequest, Void, SyncResult> {
             listener.handleResult(result);
     }
 
+    @Override
+    protected void onProgressUpdate(String... values) {
+        if (values != null && values.length >= 1)
+            listener.handleProgress(values[0]);
+    }
+
     /**
      * Reads metadata from the specified stream and closes stream.
      */
@@ -123,8 +130,11 @@ public class SyncTask extends AsyncTask<SyncRequest, Void, SyncResult> {
         RandomAccessFile file = null;
         try {
             file = new RandomAccessFile(basis, "r");
+            publishProgress("Metadata");
             Metadata metadata = readMetadata(responseBody);
+            publishProgress("Syncing");
             sync(metadata, file, target, factory);
+            publishProgress("Synced");
         } finally {
             close(file);
         }
@@ -134,7 +144,9 @@ public class SyncTask extends AsyncTask<SyncRequest, Void, SyncResult> {
      * Directly streams the given stream to the target file.
      */
     private void directDownload(InputStream responseBody, File target) throws IOException {
+        publishProgress("Download");
         streamToFile(buffer(responseBody), target);
+        publishProgress("Synced");
     }
 
     /**

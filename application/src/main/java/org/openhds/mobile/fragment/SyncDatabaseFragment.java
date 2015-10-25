@@ -253,6 +253,11 @@ public class SyncDatabaseFragment extends Fragment {
             }
         }
 
+        @Override
+        public void handleProgress(String status) {
+            setEntityStatus(status);
+        }
+
         /**
          * Replaces the basis file with the one constructed by the sync process.
          * This guarantees that the temp storage is cleaned up and that the parse
@@ -337,6 +342,16 @@ public class SyncDatabaseFragment extends Fragment {
         String entityName = getResourceString(getActivity(), entity.labelId);
         String message = entityName + ": " + progressMessage;
         showShortToast(getActivity(), message);
+    }
+
+    private void setEntityStatus(String status) {
+        View view = getView();
+        if (null == view) {
+            return;
+        }
+        TableRow tableRow = (TableRow) view.findViewWithTag(syncEntity);
+        TextView recordsText = (TextView) tableRow.findViewById(R.id.records_column);
+        recordsText.setText(status);
     }
 
     // Update column values and button status.
