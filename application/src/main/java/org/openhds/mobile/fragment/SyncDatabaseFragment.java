@@ -16,8 +16,8 @@ import org.openhds.mobile.activity.OpeningActivity;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.Gateway;
 import org.openhds.mobile.task.parsing.DataPage;
-import org.openhds.mobile.task.parsing.ParseEntityTask;
-import org.openhds.mobile.task.parsing.ParseEntityTaskRequest;
+import org.openhds.mobile.task.parsing.ParseTask;
+import org.openhds.mobile.task.parsing.ParseRequest;
 import org.openhds.mobile.task.parsing.entities.EntityParser;
 import org.openhds.mobile.task.parsing.entities.FieldWorkerParser;
 import org.openhds.mobile.task.parsing.entities.IndividualParser;
@@ -100,14 +100,14 @@ public class SyncDatabaseFragment extends Fragment {
         Integer labelId, pathId;
         EntityParser<?> parser;
         Gateway gateway;
-        ParseEntityTaskRequest taskRequest; // mutated, see usage below
+        ParseRequest taskRequest; // mutated, see usage below
 
         SyncEntity(Integer labelId, Integer pathId, EntityParser<?> parser, Gateway<?> gateway) {
             this.labelId = labelId;
             this.pathId = pathId;
             this.parser = parser;
             this.gateway = gateway;
-            this.taskRequest = new ParseEntityTaskRequest(labelId, parser, gateway);
+            this.taskRequest = new ParseRequest(labelId, parser, gateway);
         }
     }
 
@@ -117,7 +117,7 @@ public class SyncDatabaseFragment extends Fragment {
     private static final String UNKNOWN_TEXT = "-";
 
     private SyncTask syncTask;
-    private ParseEntityTask parseTask;
+    private ParseTask parseTask;
     private Queue<SyncEntity> syncQueue;
     private SyncEntity syncEntity;
     private Map<SyncEntity, Integer> errorCounts;
@@ -269,9 +269,9 @@ public class SyncDatabaseFragment extends Fragment {
         }
 
         private void startParse(InputStream input) {
-            parseTask = new ParseEntityTask(getActivity().getContentResolver());
-            parseTask.setProgressListener(new ParseProgressListener());
-            ParseEntityTaskRequest parseRequest = syncEntity.taskRequest;
+            parseTask = new ParseTask(getActivity().getContentResolver());
+            parseTask.setListener(new ParseListener());
+            ParseRequest parseRequest = syncEntity.taskRequest;
             parseRequest.setInputStream(input);
             parseRequest.getGateway().deleteAll(getActivity().getContentResolver());
             parseTask.execute(parseRequest);
@@ -309,8 +309,8 @@ public class SyncDatabaseFragment extends Fragment {
             updateTableRow(syncEntity, IGNORE, errorCount, R.string.sync_database_button_sync);
 
             // unhook the parse entity task request from the http input stream
-            ParseEntityTaskRequest parseEntityTaskRequest = syncEntity.taskRequest;
-            parseEntityTaskRequest.setInputStream(null);
+            ParseRequest parseRequest = syncEntity.taskRequest;
+            parseRequest.setInputStream(null);
         }
 
         syncEntity = null;
@@ -492,9 +492,9 @@ public class SyncDatabaseFragment extends Fragment {
     /**
      * Handles updates from parse task and updates UI/model state accordingly.
      */
-    private class ParseProgressListener implements ParseEntityTask.ProgressListener {
+    private class ParseListener implements ParseTask.Listener {
         @Override
-        public void onProgressReport(int progress) {
+        public void onProgress(int progress) {
             updateTableRow(syncEntity, progress, IGNORE, IGNORE);
         }
 

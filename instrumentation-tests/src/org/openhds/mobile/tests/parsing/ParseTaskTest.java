@@ -24,8 +24,8 @@ import org.openhds.mobile.repository.gateway.MembershipGateway;
 import org.openhds.mobile.repository.gateway.RelationshipGateway;
 import org.openhds.mobile.repository.gateway.SocialGroupGateway;
 import org.openhds.mobile.repository.gateway.VisitGateway;
-import org.openhds.mobile.task.parsing.ParseEntityTask;
-import org.openhds.mobile.task.parsing.ParseEntityTaskRequest;
+import org.openhds.mobile.task.parsing.ParseRequest;
+import org.openhds.mobile.task.parsing.ParseTask;
 import org.openhds.mobile.task.parsing.entities.FieldWorkerParser;
 import org.openhds.mobile.task.parsing.entities.IndividualParser;
 import org.openhds.mobile.task.parsing.entities.LocationHierarchyParser;
@@ -35,23 +35,22 @@ import org.openhds.mobile.task.parsing.entities.RelationshipParser;
 import org.openhds.mobile.task.parsing.entities.SocialGroupParser;
 import org.openhds.mobile.task.parsing.entities.VisitParser;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Feed XML documents to a ParseEntityTask and verify that entities were created in the database.
+ * Feed XML documents to a ParseTask and verify that entities were created in the database.
  *
  * BSH
  */
-public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
+public class ParseTaskTest extends ProviderTestCase2<OpenHDSProvider> {
 
     private static final String TEST_PASSWORD = "";
     private static final int TASK_TIMEOUT = 10;
 
     private OpenHDSProvider provider;
     private ContentResolver contentResolver;
-    private ParseEntityTask parseEntityTask;
+    private ParseTask parseTask;
 
     private class ConstantPasswordHelper implements PasswordHelper {
         @Override
@@ -60,7 +59,7 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
         }
     }
 
-    public ParseEntityTaskTest() {
+    public ParseTaskTest() {
         super(OpenHDSProvider.class, OpenHDS.AUTHORITY);
     }
 
@@ -82,7 +81,7 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
         databaseHelper.onUpgrade(db, 0, 0);
 
         // test the task against the mock content resolver with no progress dialog
-        parseEntityTask = new ParseEntityTask(contentResolver);
+        parseTask = new ParseTask(contentResolver);
     }
 
     @Override
@@ -95,15 +94,15 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
     public void testProcessFieldWorkerXml() throws Exception {
         String fileName = "testXml/field-workers.xml";
         FieldWorkerGateway gateway = GatewayRegistry.getFieldWorkerGateway();
-        ParseEntityTaskRequest<FieldWorker> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
+        ParseRequest<FieldWorker> parseRequest = new ParseRequest<>(
                 0,
                 new FieldWorkerParser(),
                 gateway);
-        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
-        parseEntityTask.execute(parseEntityTaskRequest);
-        parseEntityTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
+        parseTask.execute(parseRequest);
+        parseTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
         Thread.sleep(100);
 
         List<FieldWorker> entities = gateway.getList(contentResolver, gateway.findAll());
@@ -113,15 +112,15 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
     public void testProcessIndividualXml() throws Exception {
         String fileName = "testXml/individuals.xml";
         IndividualGateway gateway = GatewayRegistry.getIndividualGateway();
-        ParseEntityTaskRequest<Individual> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
+        ParseRequest<Individual> parseRequest = new ParseRequest<>(
                 0,
                 new IndividualParser(),
                 gateway);
-        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
-        parseEntityTask.execute(parseEntityTaskRequest);
-        parseEntityTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
+        parseTask.execute(parseRequest);
+        parseTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
         Thread.sleep(100);
 
         List<Individual> entities = gateway.getList(contentResolver, gateway.findAll());
@@ -131,15 +130,15 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
     public void testProcessLocationHierarchyXml() throws Exception {
         String fileName = "testXml/location-hierarchies.xml";
         LocationHierarchyGateway gateway = GatewayRegistry.getLocationHierarchyGateway();
-        ParseEntityTaskRequest<LocationHierarchy> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
+        ParseRequest<LocationHierarchy> parseRequest = new ParseRequest<>(
                 0,
                 new LocationHierarchyParser(),
                 gateway);
-        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
-        parseEntityTask.execute(parseEntityTaskRequest);
-        parseEntityTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
+        parseTask.execute(parseRequest);
+        parseTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
         Thread.sleep(100);
 
         List<LocationHierarchy> entities = gateway.getList(contentResolver, gateway.findAll());
@@ -149,15 +148,15 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
     public void testProcessLocationXml() throws Exception {
         String fileName = "testXml/locations.xml";
         LocationGateway gateway = GatewayRegistry.getLocationGateway();
-        ParseEntityTaskRequest<Location> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
+        ParseRequest<Location> parseRequest = new ParseRequest<>(
                 0,
                 new LocationParser(),
                 gateway);
-        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
-        parseEntityTask.execute(parseEntityTaskRequest);
-        parseEntityTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
+        parseTask.execute(parseRequest);
+        parseTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
         Thread.sleep(100);
 
         List<Location> entities = gateway.getList(contentResolver, gateway.findAll());
@@ -167,15 +166,15 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
     public void testProcessRelationshipXml() throws Exception {
         String fileName = "testXml/relationships.xml";
         RelationshipGateway gateway = GatewayRegistry.getRelationshipGateway();
-        ParseEntityTaskRequest<Relationship> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
+        ParseRequest<Relationship> parseRequest = new ParseRequest<>(
                 0,
                 new RelationshipParser(),
                 gateway);
-        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
-        parseEntityTask.execute(parseEntityTaskRequest);
-        parseEntityTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
+        parseTask.execute(parseRequest);
+        parseTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
         Thread.sleep(100);
 
         List<Relationship> entities = gateway.getList(contentResolver, gateway.findAll());
@@ -185,15 +184,15 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
     public void testProcessSocialGroupXml() throws Exception {
         String fileName = "testXml/social-groups.xml";
         SocialGroupGateway gateway = GatewayRegistry.getSocialGroupGateway();
-        ParseEntityTaskRequest<SocialGroup> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
+        ParseRequest<SocialGroup> parseRequest = new ParseRequest<>(
                 0,
                 new SocialGroupParser(),
                 gateway);
-        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
-        parseEntityTask.execute(parseEntityTaskRequest);
-        parseEntityTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
+        parseTask.execute(parseRequest);
+        parseTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
         Thread.sleep(100);
 
         List<SocialGroup> entities = gateway.getList(contentResolver, gateway.findAll());
@@ -203,15 +202,15 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
     public void testProcessVisitXml() throws Exception {
         String fileName = "testXml/visits.xml";
         VisitGateway gateway = GatewayRegistry.getVisitGateway();
-        ParseEntityTaskRequest<Visit> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
+        ParseRequest<Visit> parseRequest = new ParseRequest<>(
                 0,
                 new VisitParser(),
                 gateway);
-        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
-        parseEntityTask.execute(parseEntityTaskRequest);
-        parseEntityTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
+        parseTask.execute(parseRequest);
+        parseTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
         Thread.sleep(100);
 
         List<Visit> entities = gateway.getList(contentResolver, gateway.findAll());
@@ -221,15 +220,15 @@ public class ParseEntityTaskTest extends ProviderTestCase2<OpenHDSProvider> {
     public void testProcessMembershipXml() throws Exception {
         String fileName = "testXml/memberships.xml";
         MembershipGateway gateway = GatewayRegistry.getMembershipGateway();
-        ParseEntityTaskRequest<Membership> parseEntityTaskRequest = new ParseEntityTaskRequest<>(
+        ParseRequest<Membership> parseRequest = new ParseRequest<>(
                 0,
                 new MembershipParser(),
                 gateway);
-        parseEntityTaskRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getContext().getAssets().open(fileName));
 
         // run the task and wait for it to finish
-        parseEntityTask.execute(parseEntityTaskRequest);
-        parseEntityTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
+        parseTask.execute(parseRequest);
+        parseTask.get(TASK_TIMEOUT, TimeUnit.SECONDS);
         Thread.sleep(100);
 
         List<Membership> entities = gateway.getList(contentResolver, gateway.findAll());

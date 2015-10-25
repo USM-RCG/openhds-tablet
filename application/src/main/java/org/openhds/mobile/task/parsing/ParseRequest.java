@@ -14,18 +14,18 @@ import java.io.InputStream;
  *  - an entity parser to parse incoming data into entity objects
  *  - a gateway to persist entities in the database
  *
- *  Pass a ParseEntityTaskRequest to a ParseEntityTask to make it go.
+ *  Pass a ParseRequest to a ParseTask to make it go.
  *
  *  BSH
  */
-public class ParseEntityTaskRequest<T> {
+public class ParseRequest<T> {
 
     private final int titleId;
     private InputStream inputStream;
     private final EntityParser<T> entityParser;
     private final Gateway<T> gateway;
 
-    public ParseEntityTaskRequest(int titleId, EntityParser<T> entityParser, Gateway<T> gateway) {
+    public ParseRequest(int titleId, EntityParser<T> entityParser, Gateway<T> gateway) {
         this.titleId = titleId;
         this.entityParser = entityParser;
         this.gateway = gateway;
