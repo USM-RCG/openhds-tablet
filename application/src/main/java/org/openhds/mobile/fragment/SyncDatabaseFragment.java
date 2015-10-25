@@ -392,7 +392,9 @@ public class SyncDatabaseFragment extends Fragment {
         }
     }
 
-    // Create an http task request for fetching data from the server.
+    /**
+     * Builds a sync request for efficiently updating local database content.
+     */
     private SyncRequest buildSyncRequest(SyncEntity entity) throws MalformedURLException {
         Bundle extras = getActivity().getIntent().getExtras();
         String username = (String) extras.get(OpeningActivity.USERNAME_KEY);
