@@ -477,8 +477,8 @@ public class SyncDatabaseFragment extends Fragment {
         }
 
         private void cancelCurrentSync() {
-            terminateSync(true);
             showProgressMessage(syncEntity, getResourceString(getActivity(), R.string.sync_database_canceled));
+            terminateSync(true);
         }
 
         private boolean isQueued(SyncEntity entity) {
