@@ -279,8 +279,9 @@ public class SyncDatabaseFragment extends Fragment {
     }
 
     // Clean up after the entity parser is all done.
-    private void entityComplete() {
         int records = queryRecordCount(syncEntity);
+        updateTableRow(syncEntity, records, errorCounts.get(syncEntity), R.string.sync_database_button_sync);
+    private void entityComplete(int records) {
         updateTableRow(syncEntity, records, errorCounts.get(syncEntity), R.string.sync_database_button_sync);
         showProgressMessage(syncEntity, Integer.toString(records));
         storeContentHash(syncEntity, contentHash);  // Next call changes entity
@@ -508,7 +509,7 @@ public class SyncDatabaseFragment extends Fragment {
 
         @Override
         public void onComplete(int progress) {
-            entityComplete();
+            entityComplete(progress);
         }
     }
 }
