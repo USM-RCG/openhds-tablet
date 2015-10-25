@@ -41,6 +41,8 @@ public class ParseTask extends AsyncTask<ParseRequest, Integer, Integer> {
 
         parseRequest = parseRequests[0];
 
+        parseRequest.getGateway().deleteAll(contentResolver);
+
         // set up a page parser
         XmlPageParser xmlPageParser = new XmlPageParser();
         ParseHandler handler = new ParseHandler();

@@ -273,7 +273,6 @@ public class SyncDatabaseFragment extends Fragment {
             parseTask.setListener(new ParseListener());
             ParseRequest parseRequest = syncEntity.taskRequest;
             parseRequest.setInputStream(input);
-            parseRequest.getGateway().deleteAll(getActivity().getContentResolver());
             parseTask.execute(parseRequest);
         }
     }
