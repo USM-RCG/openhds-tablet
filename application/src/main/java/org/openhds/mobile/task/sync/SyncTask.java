@@ -9,6 +9,7 @@ import com.github.batkinson.jrsync.zsync.RangeRequestFactory;
 
 import org.openhds.mobile.utilities.HttpUtils;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +20,6 @@ import java.security.NoSuchAlgorithmException;
 
 import static com.github.batkinson.jrsync.zsync.IOUtil.buffer;
 import static com.github.batkinson.jrsync.zsync.IOUtil.close;
-import static com.github.batkinson.jrsync.zsync.ZSync.readMetadata;
 import static com.github.batkinson.jrsync.zsync.ZSync.sync;
 import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -105,13 +105,26 @@ public class SyncTask extends AsyncTask<SyncRequest, Void, SyncResult> {
     }
 
     /**
+     * Reads metadata from the specified stream and closes stream.
+     */
+    private Metadata readMetadata(InputStream in) throws IOException, NoSuchAlgorithmException {
+        DataInputStream metaIn = new DataInputStream(buffer(in));
+        try {
+            return Metadata.read(metaIn);
+        } finally {
+            close(metaIn);
+        }
+    }
+
+    /**
      * Performs an incremental sync based on a local existing file.
      */
     private void incrementalSync(InputStream responseBody, File basis, File target, RangeRequestFactory factory) throws NoSuchAlgorithmException, IOException {
         RandomAccessFile file = null;
         try {
             file = new RandomAccessFile(basis, "r");
-            sync(readMetadata(responseBody), file, target, factory);
+            Metadata metadata = readMetadata(responseBody);
+            sync(metadata, file, target, factory);
         } finally {
             close(file);
         }
