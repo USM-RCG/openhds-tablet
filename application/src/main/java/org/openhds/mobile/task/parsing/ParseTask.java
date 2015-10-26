@@ -71,9 +71,8 @@ public class ParseTask extends AsyncTask<ParseRequest, Integer, Integer> {
 
     @Override
     protected void onProgressUpdate(Integer... values) {
-        int progress = values[0];
-        if (null != listener) {
-            listener.onProgress(progress);
+        if (listener != null && values != null && values.length >= 1) {
+            listener.onProgress(values[0]);
         }
     }
 
