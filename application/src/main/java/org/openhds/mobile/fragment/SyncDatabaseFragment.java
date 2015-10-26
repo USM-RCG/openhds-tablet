@@ -505,8 +505,8 @@ public class SyncDatabaseFragment extends Fragment {
         }
 
         @Override
-        public void onComplete(int progress) {
-            entityComplete(progress);
+        public void onComplete(int records) {
+            entityComplete(records);
         }
     }
 }
