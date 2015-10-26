@@ -245,7 +245,6 @@ public class SyncDatabaseFragment extends Fragment {
                     break;
                 case NO_UPDATE:
                     setEntityStatus("No update");
-                    showProgressMessage(syncEntity, result.toString());
                     terminateSync(false);
                     break;
                 default:
