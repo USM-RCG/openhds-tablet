@@ -178,7 +178,7 @@ public class SyncDatabaseFragment extends Fragment {
     // Refresh a table with stored data and ready to sync.
     private void resetTableRow(SyncEntity entity) {
         int errors = errorCounts.containsKey(entity) ? errorCounts.get(entity) : UNKNOWN;
-        updateTableRow(entity, queryRecordCount(entity), errors, R.string.sync_database_button_sync);
+        updateTableRow(entity, UNKNOWN, errors, R.string.sync_database_button_sync);
     }
 
     // Query the database for entity record counts.
