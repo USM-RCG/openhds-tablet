@@ -478,7 +478,6 @@ public class SyncDatabaseFragment extends Fragment {
 
         private void cancelCurrentSync() {
             setEntityStatus("Canceled");
-            showProgressMessage(syncEntity, getResourceString(getActivity(), R.string.sync_database_canceled));
             terminateSync(true);
         }
 
