@@ -12,12 +12,12 @@ import java.util.List;
  * Rebuilds an entity's table from XML. It first wipes the table, then parses
  * and inserts records in batches until the entire XML file is processed.
  */
-public class ParseTask extends AsyncTask<ParseRequest, Integer, Integer> {
+public class ParseTask extends AsyncTask<ParseRequest, String, Integer> {
 
     private static final int BATCH_SIZE = 100;
 
     public interface Listener {
-        void onProgress(int progress);
+        void onProgress(String progress);
         void onError(DataPage dataPage, Exception e);
         void onComplete(int progress);
     }
@@ -41,15 +41,15 @@ public class ParseTask extends AsyncTask<ParseRequest, Integer, Integer> {
 
         parseRequest = parseRequests[0];
 
+        publishProgress("Wiping");
         parseRequest.getGateway().deleteAll(contentResolver);
 
-        // set up a page parser
         XmlPageParser xmlPageParser = new XmlPageParser();
         ParseHandler handler = new ParseHandler();
         xmlPageParser.setPageHandler(handler);
         xmlPageParser.setPageErrorHandler(handler);
 
-        // pass input stream to page parser
+        publishProgress("Parsing");
         InputStream input = parseRequest.getInputStream();
         try {
             xmlPageParser.parsePages(input);
@@ -70,7 +70,7 @@ public class ParseTask extends AsyncTask<ParseRequest, Integer, Integer> {
     }
 
     @Override
-    protected void onProgressUpdate(Integer... values) {
+    protected void onProgressUpdate(String... values) {
         if (listener != null && values != null && values.length >= 1) {
             listener.onProgress(values[0]);
         }
@@ -104,7 +104,7 @@ public class ParseTask extends AsyncTask<ParseRequest, Integer, Integer> {
             // persist entities in batches
             if (0 == entityCount % BATCH_SIZE) {
                 persistBatch();
-                publishProgress(entityCount);
+                publishProgress(Integer.toString(entityCount));
             }
 
             // stop parsing if the user cancelled the task

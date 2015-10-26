@@ -273,7 +273,6 @@ public class SyncDatabaseFragment extends Fragment {
             parseTask.setListener(new ParseListener());
             ParseRequest parseRequest = syncEntity.taskRequest;
             parseRequest.setInputStream(input);
-            setEntityStatus("Parsing");
             parseTask.execute(parseRequest);
         }
     }
@@ -496,8 +495,8 @@ public class SyncDatabaseFragment extends Fragment {
      */
     private class ParseListener implements ParseTask.Listener {
         @Override
-        public void onProgress(int progress) {
-            updateTableRow(syncEntity, progress, IGNORE, IGNORE);
+        public void onProgress(String progress) {
+            setEntityStatus(progress);
         }
 
         @Override
