@@ -59,7 +59,8 @@ public class SyncResult {
             case NO_UPDATE:
                 return type.toString();
             default:
-                return type.toString() + (message != null ? " " + message : "");
+                return type.toString() + ", " +
+                        (message != null ? " " + message : "");
         }
     }
 }

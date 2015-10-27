@@ -331,7 +331,7 @@ public class SyncDatabaseFragment extends Fragment {
     // Show an error by logging, and toasting.
     private void showError(SyncEntity entity, String errorMessage) {
         String entityName = getResourceString(getActivity(), entity.labelId);
-        String message = "Error syncing " + entityName + ":" + errorMessage;
+        String message = entityName + ": " + errorMessage;
         Log.e(entityName, message);
         showShortToast(getActivity(), message);
     }
