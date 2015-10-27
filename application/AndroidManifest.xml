@@ -29,7 +29,6 @@
         <activity android:label="@string/app_name" android:name="org.openhds.mobile.activity.SupervisorMainActivity"/>
         <activity android:label="@string/app_name" android:name="org.openhds.mobile.activity.PortalActivity"/>
         <activity android:label="@string/app_name" android:name="org.openhds.mobile.activity.FormSearchActivity"/>
-        <activity android:name=".fragment.navigate.ViewPathFormsFragment" />
 
     </application>
 
