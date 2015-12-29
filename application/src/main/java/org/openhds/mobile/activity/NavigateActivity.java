@@ -504,12 +504,12 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             }
 
             if(null == formInstance){
-                showShortToast(this, "Warning: Could not find '"+formBehaviour.getFormName()+"' form.");
+                showShortToast(this, "Warning: Could not find '" + formBehaviour.getFormName() + "' form.");
                 return;
             }
 
             if(null == formInstance.getFormVersion()){
-                showShortToast(this, "Warning: Form has no defined Version Number.");
+                showShortToast(this, "Warning: form has no defined version number.");
                 return;
             }
 

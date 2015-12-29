@@ -45,7 +45,6 @@ public class ConfigUtils {
         try {
             PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
             return packageInfo.versionCode;
-
         } catch (PackageManager.NameNotFoundException e) {
             return -1;
         }
