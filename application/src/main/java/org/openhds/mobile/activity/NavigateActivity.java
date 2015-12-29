@@ -513,12 +513,6 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
                 return;
             }
 
-            String appVersionNumber = Integer.toString(getAppVersionNumber(this));
-
-            if(!formInstance.getFormVersion().equals(appVersionNumber)){
-                showShortToast(this, "Warning: Version difference between CIMS ("+appVersionNumber+") and ODK ("+formInstance.getFormVersion()+").");
-            }
-
             Intent intent = formHelper.buildEditFormInstanceIntent();
             showShortToast(this, R.string.launching_odk_collect);
 
