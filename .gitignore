@@ -22,3 +22,4 @@ bin
 # Gradle
 local.properties
 .gradle
+build/
