@@ -1,26 +1,19 @@
 package org.openhds.mobile.utilities;
 
 import static org.openhds.mobile.provider.InstanceProviderAPI.InstanceColumns.CONTENT_URI;
-import static org.openhds.mobile.provider.InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH;
-import static org.openhds.mobile.provider.InstanceProviderAPI.InstanceColumns.STATUS;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.provider.InstanceProviderAPI;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.repository.Query;
-import org.openhds.mobile.repository.RepositoryUtils;
 
 import android.content.ContentValues;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
-
-import javax.naming.Context;
 
 public class OdkCollectHelper {
 
