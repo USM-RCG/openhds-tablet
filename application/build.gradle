@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.android:android:4.1.1.4'
+    provided 'com.google.android:android:4.1.1.4'
     compile 'org.jdom:jdom2:2.0.5'
     compile 'org.mindrot:jbcrypt:0.3m'
     compile 'sqlcipher:sqlcipher:3.1.0'
