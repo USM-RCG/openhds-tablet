@@ -14,7 +14,7 @@ apply plugin: 'com.android.application'
 repositories {
     mavenCentral()
     maven {
-        url "file://$projectDir/sqlcipher-local-repo/"
+        url "file://$projectDir/sqlcipher-repo/"
     }
 }
 
