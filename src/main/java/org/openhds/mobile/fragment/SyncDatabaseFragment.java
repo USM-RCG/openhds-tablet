@@ -16,8 +16,8 @@ import org.openhds.mobile.activity.OpeningActivity;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.Gateway;
 import org.openhds.mobile.task.parsing.DataPage;
-import org.openhds.mobile.task.parsing.ParseTask;
 import org.openhds.mobile.task.parsing.ParseRequest;
+import org.openhds.mobile.task.parsing.ParseTask;
 import org.openhds.mobile.task.parsing.entities.EntityParser;
 import org.openhds.mobile.task.parsing.entities.FieldWorkerParser;
 import org.openhds.mobile.task.parsing.entities.IndividualParser;
@@ -500,8 +500,13 @@ public class SyncDatabaseFragment extends Fragment {
         }
 
         @Override
-        public void onError(DataPage dataPage, Exception e) {
-            entityError(e);
+        public void onError(DataPage dataPage, final Exception e) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    entityError(e);
+                }
+            });
         }
 
         @Override
