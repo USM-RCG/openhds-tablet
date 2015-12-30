@@ -12,7 +12,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import org.openhds.mobile.R;
 import org.openhds.mobile.model.form.FormInstance;
-import org.openhds.mobile.utilities.EncryptionHelper;
 import org.openhds.mobile.utilities.LayoutUtils;
 
 import java.io.File;
@@ -67,7 +66,6 @@ public class ChecklistAdapter extends ArrayAdapter {
                 Uri uri = Uri.parse(selected.getUriString());
 
                 File selectedFile = new File(selected.getFilePath());
-                EncryptionHelper.decryptFile(selectedFile, getContext());
 
                 Intent intent = new Intent(Intent.ACTION_EDIT, uri);
                 showShortToast(getContext(), R.string.launching_odk_collect);

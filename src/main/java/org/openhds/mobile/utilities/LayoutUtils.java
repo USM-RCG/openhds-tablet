@@ -215,9 +215,7 @@ public class LayoutUtils {
         String formTypeName = context.getResources().getString(formTypeLocalizedId);
 
         File formFile = new File(formInstance.getFilePath());
-        EncryptionHelper.decryptFile(formFile, context);
         Map<String, String> instanceData = FormHelper.fetchFormInstanceData(formInstance.getFilePath());
-        EncryptionHelper.encryptFile(formFile, context);
 
         String entityId = safeGetMapField(instanceData, ProjectFormFields.General.ENTITY_EXTID);
         String fieldWorker = safeGetMapField(instanceData, ProjectFormFields.General.FIELD_WORKER_EXTID);

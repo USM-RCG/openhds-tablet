@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,11 +21,9 @@ import org.openhds.mobile.fragment.navigate.VisitFragment;
 import org.openhds.mobile.fragment.navigate.detail.DefaultDetailFragment;
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
 import org.openhds.mobile.model.core.FieldWorker;
-import org.openhds.mobile.model.core.Supervisor;
 import org.openhds.mobile.model.form.FormBehaviour;
 import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
-import org.openhds.mobile.projectdata.ProjectFormFields;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.utilities.StateMachine;
 import org.openhds.mobile.utilities.StateMachine.StateListener;
@@ -40,7 +35,6 @@ import org.openhds.mobile.projectdata.ProjectActivityBuilder;
 import org.openhds.mobile.projectdata.ModuleUiHelper;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.search.FormSearchPluginModule;
-import org.openhds.mobile.utilities.EncryptionHelper;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.util.ArrayList;
@@ -48,13 +42,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import static org.openhds.mobile.utilities.ConfigUtils.getAppVersionNumber;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
@@ -650,14 +640,6 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
                             }
                         }
                     }
-
-                    // encrypt files regardless
-                    List<FormInstance> allFormInstances = OdkCollectHelper.getAllFormInstances(getContentResolver());
-                    if (null != allFormInstances) {
-                        EncryptionHelper.encryptFiles(FormInstance.toListOfFiles(allFormInstances), this);
-                    }
-
-                    // TODO: launchForm() for follow-up, if any.
 
                     return;
 

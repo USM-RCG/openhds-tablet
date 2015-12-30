@@ -21,7 +21,6 @@ import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.projectdata.ModuleUiHelper;
 import org.openhds.mobile.projectdata.ProjectActivityBuilder;
-import org.openhds.mobile.utilities.EncryptionHelper;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.io.File;
@@ -138,7 +137,6 @@ public class PortalActivity extends Activity implements OnClickListener {
                 Uri uri = Uri.parse(selected.getUriString());
 
                 File selectedFile = new File(selected.getFilePath());
-                EncryptionHelper.decryptFile(selectedFile, getApplicationContext());
 
                 Intent intent = new Intent(Intent.ACTION_EDIT, uri);
                 showShortToast(PortalActivity.this, R.string.launching_odk_collect);

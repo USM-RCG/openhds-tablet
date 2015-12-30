@@ -17,7 +17,6 @@ import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.projectdata.ProjectFormFields;
 import org.openhds.mobile.projectdata.ProjectResources;
-import org.openhds.mobile.utilities.EncryptionHelper;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.io.File;
@@ -144,13 +143,10 @@ public class ChecklistFragment extends Fragment {
 
         for (FormInstance instance : formInstances ) {
             File instanceFile = new File(instance.getFilePath());
-            EncryptionHelper.decryptFile(instanceFile, getActivity());
             String needsReview = FormHelper.getFormTagValue(ProjectFormFields.General.NEEDS_REVIEW, instance.getFilePath());
-
             if (ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(needsReview)) {
                 needApproval.add(instance);
             }
-            EncryptionHelper.encryptFile(instanceFile, getActivity());
         }
 
         ChecklistAdapter adapter = new ChecklistAdapter(getActivity(), R.id.form_instance_check_item_orange, needApproval);
@@ -194,18 +190,15 @@ public class ChecklistFragment extends Fragment {
     private void approveForms(List<FormInstance> forms) {
         for (FormInstance instance: forms) {
             File instanceFile = new File(instance.getFilePath());
-            EncryptionHelper.decryptFile(instanceFile, getActivity());
             FormHelper.setFormTagValue(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NO_REVIEW_NEEDED,
                     instance.getFilePath());
             OdkCollectHelper.setStatusComplete(getActivity().getContentResolver(), Uri.parse(instance.getUriString()));
-            EncryptionHelper.encryptFile(instanceFile, getActivity());
         }
     }
 
     private void deleteForms(List<FormInstance> forms) {
         for (FormInstance instance: forms) {
             File instanceFile = new File(instance.getFilePath());
-            EncryptionHelper.decryptFile(instanceFile, getActivity());
             instanceFile.delete();
             OdkCollectHelper.setStatusSubmitted(getActivity().getContentResolver(), Uri.parse(instance.getUriString()));
             //OdkCollectHelper.deleteInstance(getActivity().getContentResolver(), Uri.parse(instance.getUriString()), instance.getFilePath());

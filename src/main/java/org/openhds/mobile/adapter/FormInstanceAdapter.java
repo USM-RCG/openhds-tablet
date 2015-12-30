@@ -6,17 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import org.openhds.mobile.R;
-import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
-import org.openhds.mobile.projectdata.ProjectFormFields;
-import org.openhds.mobile.projectdata.ProjectResources;
-import org.openhds.mobile.utilities.EncryptionHelper;
 import org.openhds.mobile.utilities.LayoutUtils;
-
-import java.io.File;
-import java.util.Map;
 
 public class FormInstanceAdapter extends ArrayAdapter {
 

@@ -11,13 +11,8 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
 import org.openhds.mobile.fragment.LoginPreferenceFragment;
 import org.openhds.mobile.fragment.SupervisorLoginFragment;
-import org.openhds.mobile.model.form.FormInstance;
-import org.openhds.mobile.utilities.EncryptionHelper;
-import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import static org.openhds.mobile.utilities.ConfigUtils.getAppFullName;
-
-import java.util.List;
 
 public class OpeningActivity extends Activity {
 
@@ -29,10 +24,6 @@ public class OpeningActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        List<FormInstance> allFormInstances = OdkCollectHelper.getAllFormInstances(getContentResolver());
-        if (null != allFormInstances) {
-            EncryptionHelper.encryptFiles(FormInstance.toListOfFiles(allFormInstances), this);
-        }
     }
 
     @Override

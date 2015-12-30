@@ -1,9 +1,9 @@
 package org.openhds.mobile.tests.gateway;
 
 import android.content.ContentResolver;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.test.ProviderTestCase2;
-import net.sqlcipher.database.SQLiteDatabase;
-import net.sqlcipher.database.SQLiteOpenHelper;
 import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.provider.OpenHDSProvider;
 import org.openhds.mobile.provider.PasswordHelper;
@@ -50,15 +50,14 @@ public abstract class GatewayTest<T> extends ProviderTestCase2<OpenHDSProvider> 
 
         // make sure we have a fresh database for each test
         SQLiteOpenHelper databaseHelper = provider.getDatabaseHelper();
-        SQLiteDatabase.loadLibs(getContext());
-        SQLiteDatabase db = databaseHelper.getWritableDatabase(TEST_PASSWORD);
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
         databaseHelper.onUpgrade(db, 0, 0);
     }
 
     @Override
     protected void tearDown() {
         SQLiteOpenHelper databaseHelper = provider.getDatabaseHelper();
-        SQLiteDatabase db = databaseHelper.getWritableDatabase(TEST_PASSWORD);
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
         db.close();
     }
 

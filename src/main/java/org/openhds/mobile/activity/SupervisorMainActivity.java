@@ -20,7 +20,6 @@ import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.repository.search.FormSearchPluginModule;
 import org.openhds.mobile.repository.search.SearchUtils;
-import org.openhds.mobile.utilities.EncryptionHelper;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.io.File;
@@ -97,15 +96,7 @@ public class SupervisorMainActivity extends Activity implements DeleteWarningDia
     @Override
     protected void onResume() {
         super.onResume();
-        encryptAllForms();
         checklistFragment.resetCurrentMode();
-    }
-
-    private void encryptAllForms() {
-        List<FormInstance> allFormInstances = OdkCollectHelper.getAllFormInstances(getContentResolver());
-        if (null != allFormInstances) {
-            EncryptionHelper.encryptFiles(FormInstance.toListOfFiles(allFormInstances), this);
-        }
     }
 
     private void searchDatabase() {
@@ -123,12 +114,10 @@ public class SupervisorMainActivity extends Activity implements DeleteWarningDia
     public void sendApprovedForms() {
 
         List<FormInstance> allFormInstances = OdkCollectHelper.getAllUnsentFormInstances(this.getContentResolver());
-        EncryptionHelper.decryptFiles(FormInstance.toListOfFiles(allFormInstances), this);
         for (FormInstance instance: allFormInstances) {
             File instanceFile = new File(instance.getFilePath());
             if (!FormHelper.isFormReviewed(instance.getFilePath())) {
                 OdkCollectHelper.setStatusIncomplete(this.getContentResolver(), Uri.parse(instance.getUriString()));
-                EncryptionHelper.encryptFile(instanceFile, this);
             }
         }
         showShortToast(this, R.string.launching_odk_collect);

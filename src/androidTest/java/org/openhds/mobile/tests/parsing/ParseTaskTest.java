@@ -1,9 +1,9 @@
 package org.openhds.mobile.tests.parsing;
 
 import android.content.ContentResolver;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.test.ProviderTestCase2;
-import net.sqlcipher.database.SQLiteDatabase;
-import net.sqlcipher.database.SQLiteOpenHelper;
 import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.core.Individual;
@@ -76,8 +76,8 @@ public class ParseTaskTest extends ProviderTestCase2<OpenHDSProvider> {
 
         // make sure we have a fresh database for each test
         SQLiteOpenHelper databaseHelper = provider.getDatabaseHelper();
-        SQLiteDatabase.loadLibs(getContext());
-        SQLiteDatabase db = databaseHelper.getWritableDatabase(TEST_PASSWORD);
+
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
         databaseHelper.onUpgrade(db, 0, 0);
 
         // test the task against the mock content resolver with no progress dialog
@@ -87,7 +87,7 @@ public class ParseTaskTest extends ProviderTestCase2<OpenHDSProvider> {
     @Override
     protected void tearDown() {
         SQLiteOpenHelper databaseHelper = provider.getDatabaseHelper();
-        SQLiteDatabase db = databaseHelper.getWritableDatabase(TEST_PASSWORD);
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
         db.close();
     }
 

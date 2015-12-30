@@ -17,7 +17,6 @@ import org.openhds.mobile.model.form.FormInstance;
 import java.io.File;
 import java.util.List;
 
-import static org.openhds.mobile.utilities.EncryptionHelper.decryptFile;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 
@@ -43,12 +42,7 @@ public class ViewPathFormsFragment extends Fragment {
         startActivityForResult(intent, 0);
     }
 
-    private void decrypt(FormInstance instance) {
-        decryptFile(new File(instance.getFilePath()), getActivity());
-    }
-
     private void launchEdit(FormInstance selected) {
-        decrypt(selected);
         launch(selected, Intent.ACTION_EDIT);
         showShortToast(getActivity(), R.string.launching_odk_collect);
     }
