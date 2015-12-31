@@ -9,8 +9,8 @@
     <string name="configuration">Configuración</string>
     <string name="configureDatabase">Configurar Base de Datos </string>
     <string name="databaseSync">Sincronizar con CIMS Base de Datos</string>
-    <string name="default_interop_server_url">http://cims-bioko.org:8080/openhds</string>
-    <string name="default_openhds_server_url">http://cims-bioko.org:8080/openhds</string>
+    <string name="default_interop_server_url">https://cims-bioko.org/openhds</string>
+    <string name="default_openhds_server_url">https://cims-bioko.org/openhds</string>
     <string name="delete_form_btn">Borrar Impreso(s)</string>
     <string name="download_form_button">Descargar Impresos</string>
     <string name="failure_reasons_txt">Mensajes de Falla:</string>

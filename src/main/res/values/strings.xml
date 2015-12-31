@@ -102,8 +102,8 @@
     <string name="house_of_prefix">House of</string>
 
     <!-- Server URLs and Paths -->
-    <string name="default_interop_server_url">https://cims-bioko.org:8443/openhds</string>
-    <string name="default_openhds_server_url">https://cims-bioko.org:8443/openhds</string>
+    <string name="default_interop_server_url">https://cims-bioko.org/openhds</string>
+    <string name="default_openhds_server_url">https://cims-bioko.org/openhds</string>
     <string name="supervisor_login_url">/api/rest/rounds</string>
     <string name="sync_field_workers_path">/api/rest/fieldworkers</string>
     <string name="sync_individuals_path">/api/rest/individuals/cached</string>
