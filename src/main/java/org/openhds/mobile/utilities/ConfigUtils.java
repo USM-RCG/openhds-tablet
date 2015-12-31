@@ -37,14 +37,4 @@ public class ConfigUtils {
             return appName;
         }
     }
-
-    public static int getAppVersionNumber(Context context) {
-        String packageName = context.getPackageName();
-        try {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
-            return packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            return -1;
-        }
-    }
 }
