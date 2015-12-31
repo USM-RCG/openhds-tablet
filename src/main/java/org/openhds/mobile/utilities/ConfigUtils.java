@@ -31,9 +31,7 @@ public class ConfigUtils {
         String appName = getResourceString(context, R.string.app_name);
         try {
             PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
-            return appName + " (" +
-                    packageInfo.versionName + " " +
-                    packageInfo.versionCode + ")";
+            return appName + " " + packageInfo.versionName;
 
         } catch (PackageManager.NameNotFoundException e) {
             return appName;
