@@ -12,9 +12,6 @@ import java.util.UUID;
 
 import static org.openhds.mobile.repository.RepositoryUtils.LIKE_WILD_CARD;
 
-/**
- * Created by motech-admin on 12/9/14.
- */
 public class IdHelper {
 
     public static String INDIVIDUAL_ID_FORMAT = LIKE_WILD_CARD + "05d";
