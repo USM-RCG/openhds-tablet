@@ -34,7 +34,7 @@ public class DetailFragment extends Fragment {
 
 	public void setUpDetails() {
 
-	};
+	}
 
 	public void setNavigateActivity(NavigateActivity navigateActivity) {
 		this.navigateActivity = navigateActivity;
