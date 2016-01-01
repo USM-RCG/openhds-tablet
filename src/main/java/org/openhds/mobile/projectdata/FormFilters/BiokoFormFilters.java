@@ -18,10 +18,7 @@ public class BiokoFormFilters {
             Location location = locationGateway.getFirst(navigateActivity.getContentResolver(),
                     locationGateway.findById(navigateActivity.getCurrentSelection().getUuid()));
 
-            if (!"true".equals(location.getHasReceivedBedNets())) {
-                return true;
-            }
-            return false;
+            return !"true".equals(location.getHasReceivedBedNets());
         }
 
     }
@@ -36,10 +33,7 @@ public class BiokoFormFilters {
             Location location = locationGateway.getFirst(navigateActivity.getContentResolver(),
                     locationGateway.findById(navigateActivity.getCurrentSelection().getUuid()));
 
-            if (location.getSprayingEvaluation() == null) {
-                return true;
-            }
-            return false;
+            return location.getSprayingEvaluation() == null;
         }
     }
 

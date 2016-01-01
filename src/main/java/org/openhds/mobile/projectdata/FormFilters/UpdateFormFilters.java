@@ -21,12 +21,7 @@ public class UpdateFormFilters {
 
         @Override
         public boolean amIValid(NavigateActivity navigateActivity) {
-
-            if (null == navigateActivity.getCurrentVisit()) {
-                return true;
-            }
-
-            return false;
+            return navigateActivity.getCurrentVisit() == null;
         }
     }
 
@@ -41,11 +36,8 @@ public class UpdateFormFilters {
 
             String locationKey = HOUSEHOLD_STATE;
             Map<String, DataWrapper> hierarchyPath = navigateActivity.getHierarchyPath();
-            if (hierarchyPath.containsKey(locationKey) && null != hierarchyPath.get(locationKey)) {
-                return true;
-            }
+            return hierarchyPath.containsKey(locationKey) && hierarchyPath.get(locationKey) != null;
 
-            return false;
         }
     }
 
@@ -59,11 +51,8 @@ public class UpdateFormFilters {
             boolean deceased = UpdateFormFilters.isIndividualDeceased(selectedIndividual);
             boolean isOutMigrated = UpdateFormFilters.isIndividualOutMigrated(selectedIndividual);
 
-            if (null != navigateActivity.getCurrentVisit() && !deceased && !isOutMigrated) {
-                return true;
-            }
+            return navigateActivity.getCurrentVisit() != null && !deceased && !isOutMigrated;
 
-            return false;
         }
     }
 
@@ -77,11 +66,8 @@ public class UpdateFormFilters {
             boolean deceased = UpdateFormFilters.isIndividualDeceased(selectedIndividual);
             boolean isOutMigrated = UpdateFormFilters.isIndividualOutMigrated(selectedIndividual);
 
-            if (null != navigateActivity.getCurrentVisit() && !deceased && !isOutMigrated) {
-                return true;
-            }
+            return navigateActivity.getCurrentVisit() != null && !deceased && !isOutMigrated;
 
-            return false;
         }
     }
 
@@ -96,11 +82,8 @@ public class UpdateFormFilters {
             boolean isFemale = UpdateFormFilters.isIndividualFemale(selectedIndividual);
             boolean isOutMigrated = UpdateFormFilters.isIndividualOutMigrated(selectedIndividual);
 
-            if (null != navigateActivity.getCurrentVisit() && isFemale && !isDeceased && !isOutMigrated) {
-                return true;
-            }
+            return navigateActivity.getCurrentVisit() != null && isFemale && !isDeceased && !isOutMigrated;
 
-            return false;
         }
     }
 
@@ -115,11 +98,8 @@ public class UpdateFormFilters {
             boolean isFemale = UpdateFormFilters.isIndividualFemale(selectedIndividual);
             boolean isOutMigrated = UpdateFormFilters.isIndividualOutMigrated(selectedIndividual);
 
-            if (null != navigateActivity.getCurrentVisit() && isFemale && !isDeceased && !isOutMigrated) {
-                return true;
-            }
+            return navigateActivity.getCurrentVisit() != null && isFemale && !isDeceased && !isOutMigrated;
 
-            return false;
         }
     }
 

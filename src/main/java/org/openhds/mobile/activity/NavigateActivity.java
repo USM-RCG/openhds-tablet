@@ -561,10 +561,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     }
 
     private boolean shouldShowDetailFragment() {
-        if (null == currentResults || currentResults.isEmpty()) {
-            return true;
-        }
-        return false;
+        return currentResults == null || currentResults.isEmpty();
     }
 
     private void updateToggleButton() {
