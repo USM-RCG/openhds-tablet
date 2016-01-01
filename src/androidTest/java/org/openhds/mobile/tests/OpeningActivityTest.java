@@ -16,7 +16,7 @@ import org.openhds.mobile.activity.OpeningActivity;
 public class OpeningActivityTest extends ActivityInstrumentationTestCase2<OpeningActivity> {
 
     public OpeningActivityTest() {
-        super("org.openhds.mobile", OpeningActivity.class);
+        super(OpeningActivity.class);
     }
 
     public void testNothing() {
