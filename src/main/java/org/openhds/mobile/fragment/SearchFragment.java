@@ -40,7 +40,6 @@ public class SearchFragment extends Fragment {
 
     private SearchPluginModule currentPluginModule;
     private ResultsHandler resultsHandler;
-    private ArrayAdapter<SearchPluginModule> searchPluginAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,7 +72,7 @@ public class SearchFragment extends Fragment {
 
         // allow the user to choose from 2 or more plugins
         spinner.setVisibility(View.VISIBLE);
-        searchPluginAdapter = new SpinnerListAdapter(
+        ArrayAdapter<SearchPluginModule> searchPluginAdapter = new SpinnerListAdapter(
                 getActivity(), R.layout.generic_dropdown_item, (List<SearchPluginModule>) searchPluginModules);
         spinner.setAdapter(searchPluginAdapter);
         spinner.setOnItemSelectedListener(new SpinnerClickHandler());

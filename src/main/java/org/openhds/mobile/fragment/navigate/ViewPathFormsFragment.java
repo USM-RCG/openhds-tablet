@@ -22,8 +22,6 @@ import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 public class ViewPathFormsFragment extends Fragment {
 
-    private ListView instanceList;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.view_form_fragment, container, false);
@@ -31,7 +29,7 @@ public class ViewPathFormsFragment extends Fragment {
 
     public void populateRecentFormInstanceListView(List<FormInstance> formsForPath) {
         FormInstanceAdapter adapter = new FormInstanceAdapter(getActivity(), R.id.form_instance_list_item, formsForPath.toArray());
-        instanceList = (ListView) getActivity().findViewById(R.id.path_forms_form_right_column);
+        ListView instanceList = (ListView) getActivity().findViewById(R.id.path_forms_form_right_column);
         instanceList.setAdapter(adapter);
         instanceList.setOnItemClickListener(new ClickListener());
     }

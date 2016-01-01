@@ -32,7 +32,6 @@ public class SupervisorLoginFragment extends Fragment implements
 
     private EditText usernameEditText;
     private EditText passwordEditText;
-    private Button loginButton;
     private DatabaseAdapter databaseAdapter;
 
     @Override
@@ -45,7 +44,7 @@ public class SupervisorLoginFragment extends Fragment implements
         passwordEditText = (EditText) v.findViewById(R.id.passwordEditText);
         usernameEditText.setOnKeyListener(this);
         passwordEditText.setOnKeyListener(this);
-        loginButton = (Button) v.findViewById(R.id.loginButton);
+        Button loginButton = (Button) v.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
         databaseAdapter = new DatabaseAdapter(getActivity());
 

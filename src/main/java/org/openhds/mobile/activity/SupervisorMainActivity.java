@@ -36,8 +36,6 @@ public class SupervisorMainActivity extends Activity implements DeleteWarningDia
     private static final String PREFERENCE_FRAGMENT_TAG = "preferenceFragment";
 
     private ChecklistFragment checklistFragment;
-    private SyncDatabaseFragment syncDatabaseFragment;
-    private PreferenceFragment preferenceFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,6 +72,8 @@ public class SupervisorMainActivity extends Activity implements DeleteWarningDia
                 buttonClickListener,
                 supervisorButtonLayout);
 
+        SyncDatabaseFragment syncDatabaseFragment;
+        PreferenceFragment preferenceFragment;
         if (null == savedInstanceState)  {
             checklistFragment = new ChecklistFragment();
             syncDatabaseFragment = new SyncDatabaseFragment();
