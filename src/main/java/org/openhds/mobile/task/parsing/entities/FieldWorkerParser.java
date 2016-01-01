@@ -3,8 +3,6 @@ package org.openhds.mobile.task.parsing.entities;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.task.parsing.DataPage;
 
-import java.util.UUID;
-
 import static java.util.Arrays.asList;
 
 /**

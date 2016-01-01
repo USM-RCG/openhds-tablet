@@ -5,9 +5,6 @@ import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
 import static org.openhds.mobile.utilities.UrlUtils.isValidUrl;
 
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

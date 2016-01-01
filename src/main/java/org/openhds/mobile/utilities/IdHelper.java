@@ -1,16 +1,12 @@
 package org.openhds.mobile.utilities;
 
 import android.content.ContentResolver;
-import org.openhds.mobile.model.core.FieldWorker;
+
 import org.openhds.mobile.model.core.Individual;
-import org.openhds.mobile.projectdata.QueryHelpers.CensusQueryHelper;
-import org.openhds.mobile.projectdata.QueryHelpers.QueryHelper;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.GatewayRegistry;
-import org.openhds.mobile.repository.gateway.Gateway;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 

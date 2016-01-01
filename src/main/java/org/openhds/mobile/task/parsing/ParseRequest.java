@@ -3,7 +3,6 @@ package org.openhds.mobile.task.parsing;
 import org.openhds.mobile.repository.gateway.Gateway;
 import org.openhds.mobile.task.parsing.entities.EntityParser;
 
-import java.io.File;
 import java.io.InputStream;
 
 /**

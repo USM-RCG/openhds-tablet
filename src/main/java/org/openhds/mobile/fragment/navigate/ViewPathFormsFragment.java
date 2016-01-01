@@ -14,7 +14,6 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.adapter.FormInstanceAdapter;
 import org.openhds.mobile.model.form.FormInstance;
 
-import java.io.File;
 import java.util.List;
 
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;

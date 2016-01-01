@@ -10,8 +10,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
 
-import org.openhds.mobile.OpenHDS;
-import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.model.form.FormSubmissionRecord;
 import org.openhds.mobile.model.core.Supervisor;
 
@@ -20,8 +18,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.openhds.mobile.provider.InstanceProviderAPI.InstanceColumns.CONTENT_URI;
 
 public class DatabaseAdapter {
 	private static final String DATABASE_NAME = "entityData";

@@ -1,9 +1,7 @@
 package org.openhds.mobile.repository.search;
 
-import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.Gateway;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 

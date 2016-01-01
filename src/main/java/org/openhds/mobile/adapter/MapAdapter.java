@@ -1,6 +1,5 @@
 package org.openhds.mobile.adapter;
 
-import org.openhds.mobile.R;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
