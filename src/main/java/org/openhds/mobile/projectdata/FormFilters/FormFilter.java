@@ -4,5 +4,5 @@ import org.openhds.mobile.activity.NavigateActivity;
 
 
 public interface FormFilter {
-	public boolean amIValid(NavigateActivity navigateActivity);
+	boolean amIValid(NavigateActivity navigateActivity);
 }

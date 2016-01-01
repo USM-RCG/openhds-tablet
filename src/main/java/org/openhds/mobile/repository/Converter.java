@@ -9,12 +9,12 @@ import android.database.Cursor;
  */
 public interface Converter<T> {
 
-    public T fromCursor(Cursor cursor);
+    T fromCursor(Cursor cursor);
 
-    public ContentValues toContentValues(T entity);
+    ContentValues toContentValues(T entity);
 
-    public String getId(T entity);
+    String getId(T entity);
 
-    public DataWrapper toDataWrapper(ContentResolver contentResolver, T entity, String state);
+    DataWrapper toDataWrapper(ContentResolver contentResolver, T entity, String state);
 
 }

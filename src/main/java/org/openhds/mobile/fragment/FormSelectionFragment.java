@@ -49,7 +49,7 @@ public class FormSelectionFragment extends Fragment {
     }
 
     public interface SelectionHandler {
-        public void handleSelectedForm(FormBehaviour formBehaviour);
+        void handleSelectedForm(FormBehaviour formBehaviour);
     }
 
     private class FormClickListener implements OnItemClickListener {

@@ -9,14 +9,14 @@ import org.openhds.mobile.projectdata.QueryHelpers.QueryHelper;
 
 public interface NavigatePluginModule {
 
-	public QueryHelper getQueryHelper();
+	QueryHelper getQueryHelper();
 
-    public ModuleUiHelper getModuleUiHelper();
+    ModuleUiHelper getModuleUiHelper();
 
-    public HierarchyInfo getHierarchyInfo();
+    HierarchyInfo getHierarchyInfo();
 
-	public Map<String, List<FormBehaviour>> getFormsForStates();
+	Map<String, List<FormBehaviour>> getFormsForStates();
 
-	public Map<String, DetailFragment> getDetailFragsForStates();
+	Map<String, DetailFragment> getDetailFragsForStates();
 	
 }

@@ -10,15 +10,15 @@ package org.openhds.mobile.projectdata;
  */
 public interface ModuleUiHelper {
 
-    public int getModuleLabelStringId();
-    public int getModuleDescriptionStringId();
-    public int getModulePortalDrawableId();
-    public int getModuleTitleStringId();
+    int getModuleLabelStringId();
+    int getModuleDescriptionStringId();
+    int getModulePortalDrawableId();
+    int getModuleTitleStringId();
 
-    public int getDataSelectionDrawableId();
-    public int getFormSelectionDrawableId();
-    public int getHierarchySelectionDrawableId();
+    int getDataSelectionDrawableId();
+    int getFormSelectionDrawableId();
+    int getHierarchySelectionDrawableId();
 
-    public int getMiddleColumnDrawableId();
+    int getMiddleColumnDrawableId();
 
 }

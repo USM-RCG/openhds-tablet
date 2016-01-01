@@ -180,7 +180,7 @@ public class SearchFragment extends Fragment {
     }
 
     public interface ResultsHandler {
-        public void handleSearchResults(List<DataWrapper> dataWrappers);
+        void handleSearchResults(List<DataWrapper> dataWrappers);
     }
 
     // Display a choice of search plugin modules.

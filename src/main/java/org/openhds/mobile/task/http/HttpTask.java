@@ -100,6 +100,6 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
 
     // A handler type to receive response status code and response body input stream.
     public interface HttpTaskResponseHandler {
-        public void handleHttpTaskResponse(HttpTaskResponse httpTaskResponse);
+        void handleHttpTaskResponse(HttpTaskResponse httpTaskResponse);
     }
 }

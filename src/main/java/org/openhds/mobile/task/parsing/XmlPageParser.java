@@ -153,10 +153,10 @@ public class XmlPageParser {
     }
 
     public interface PageHandler {
-        public boolean handlePage(DataPage dataPage);
+        boolean handlePage(DataPage dataPage);
     }
 
     public interface PageErrorHandler {
-        public boolean handlePageError(DataPage dataPage, Exception e);
+        boolean handlePageError(DataPage dataPage, Exception e);
     }
 }

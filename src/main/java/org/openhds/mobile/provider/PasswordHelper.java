@@ -10,5 +10,5 @@ package org.openhds.mobile.provider;
  * BSH
  */
 public interface PasswordHelper {
-    public String getPassword();
+    String getPassword();
 }

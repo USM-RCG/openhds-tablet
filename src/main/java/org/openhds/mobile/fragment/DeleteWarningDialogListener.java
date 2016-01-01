@@ -4,7 +4,7 @@ import android.app.DialogFragment;
 
 public interface DeleteWarningDialogListener {
 
-    public void onDialogPositiveClick(DialogFragment dialogFragment);
-    public void onDialogNegativeClick(DialogFragment dialogFragment);
+    void onDialogPositiveClick(DialogFragment dialogFragment);
+    void onDialogNegativeClick(DialogFragment dialogFragment);
 
 }

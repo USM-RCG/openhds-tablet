@@ -8,13 +8,13 @@ import org.openhds.mobile.model.form.FormBehaviour;
 
 public interface HierarchyNavigator {
 
-	public Map<String, Integer> getStateLabels();
+	Map<String, Integer> getStateLabels();
 
-	public List<String> getStateSequence();
+	List<String> getStateSequence();
 
-	public void jumpUp(String state);
+	void jumpUp(String state);
 
-	public void stepDown(DataWrapper qr);
+	void stepDown(DataWrapper qr);
 	
-	public void launchForm(FormBehaviour form, Map<String, String> followUpformHints);
+	void launchForm(FormBehaviour form, Map<String, String> followUpformHints);
 }

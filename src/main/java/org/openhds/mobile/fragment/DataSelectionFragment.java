@@ -59,7 +59,7 @@ public class DataSelectionFragment extends Fragment {
     }
 
     public interface SelectionHandler {
-        public void handleSelectedData(DataWrapper dataWrapper);
+        void handleSelectedData(DataWrapper dataWrapper);
     }
 
     private class DataClickListener implements OnItemClickListener {

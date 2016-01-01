@@ -15,10 +15,10 @@ import java.util.Map;
  */
 public interface HierarchyInfo {
 
-    public String getHierarchyName();
+    String getHierarchyName();
 
-    public Map<String, Integer> getStateLabels();
+    Map<String, Integer> getStateLabels();
 
-    public List<String> getStateSequence();
+    List<String> getStateSequence();
 
 }
