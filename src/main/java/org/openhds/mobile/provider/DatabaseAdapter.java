@@ -228,10 +228,8 @@ public class DatabaseAdapter {
 		record.setOdkUri(cursor.getString(cursor.getColumnIndex(KEY_ODK_URI)));
 		record.setFormId(cursor.getString(cursor
 				.getColumnIndex(KEY_ODK_FORM_ID)));
-		record.setCompleted(cursor.getInt(cursor
-				.getColumnIndex(KEY_FORM_COMPLETED)) == 0 ? false : true);
-		record.setNeedReview(cursor.getInt(cursor.getColumnIndex(KEY_REVIEW)) == 0 ? false
-				: true);
+		record.setCompleted(cursor.getInt(cursor.getColumnIndex(KEY_FORM_COMPLETED)) != 0);
+		record.setNeedReview(cursor.getInt(cursor.getColumnIndex(KEY_REVIEW)) != 0);
 		record.setRemoteId(cursor.getInt(cursor.getColumnIndex(KEY_REMOTE_ID)));
 		cursor.close();
 
