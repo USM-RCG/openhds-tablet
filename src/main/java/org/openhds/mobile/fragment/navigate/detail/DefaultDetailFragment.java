@@ -13,10 +13,9 @@ public class DefaultDetailFragment extends DetailFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		LinearLayout detailContainer = (LinearLayout) inflater.inflate(
-				R.layout.default_detail_fragment, container, false);
 
-		return detailContainer;
+		return (LinearLayout) inflater.inflate(
+				R.layout.default_detail_fragment, container, false);
 	}
 
 	@Override

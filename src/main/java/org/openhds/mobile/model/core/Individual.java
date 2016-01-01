@@ -207,16 +207,14 @@ public class Individual implements Serializable {
 	}
 
 	public static String getFullName(Individual individual) {
-		String fullname = individual.getFirstName() + " "
+		return individual.getFirstName() + " "
 				+ individual.getLastName();
-		return fullname;
 	}
 
 	public static String getAgeWithUnits(Individual individual) {
 
         String ageString = (null == individual.age || individual.age.equals("null")) ? "n/a" : individual.age;
         String unitsString = (null == individual.ageUnits || individual.ageUnits.equals("null")) ? "n/a" : individual.ageUnits;
-		String ageWithUnits = ageString + " " + "(" + unitsString + ")";
-		return ageWithUnits;
+		return ageString + " " + "(" + unitsString + ")";
 	}
 }

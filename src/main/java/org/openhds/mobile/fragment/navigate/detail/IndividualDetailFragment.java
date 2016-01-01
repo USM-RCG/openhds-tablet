@@ -138,17 +138,15 @@ public class IndividualDetailFragment extends DetailFragment {
     private Individual getIndividual(String uuid) {
         IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
         ContentResolver contentResolver = navigateActivity.getContentResolver();
-        Individual individual = individualGateway.getFirst(contentResolver, individualGateway.findById(uuid));
 
-        return individual;
+        return individualGateway.getFirst(contentResolver, individualGateway.findById(uuid));
     }
 
     private List<Membership> getMemberships(String individualExtId) {
         MembershipGateway membershipGateway = GatewayRegistry.getMembershipGateway();
         ContentResolver contentResolver = navigateActivity.getContentResolver();
-        List<Membership> memberships = membershipGateway.getList(contentResolver,
-                membershipGateway.findByIndividual(individualExtId));
 
-        return memberships;
+        return membershipGateway.getList(contentResolver,
+                membershipGateway.findByIndividual(individualExtId));
     }
 }

@@ -80,8 +80,7 @@ public class OdkCollectHelper {
     }
 
     public static void deleteInstance(ContentResolver resolver, Uri uri, String filePath) {
-        int result = resolver.delete(uri, InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH + "=?", new String[]{filePath});
-        result = result;
+        resolver.delete(uri, InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH + "=?", new String[]{filePath});
     }
 
     public static void setStatusSubmitted(ContentResolver resolver, Uri uri) {

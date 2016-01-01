@@ -68,13 +68,11 @@ public class SupervisorLoginFragment extends Fragment implements
     }
 
     private String getUsernameFromEditText() {
-        String username = usernameEditText.getText().toString();
-        return username;
+        return usernameEditText.getText().toString();
     }
 
     private String getPasswordFromEditText() {
-        String password = passwordEditText.getText().toString();
-        return password;
+        return passwordEditText.getText().toString();
     }
 
     private String getUrl() {

@@ -38,9 +38,7 @@ public class LoginPreferenceFragment extends PreferenceFragment implements
 
         super.onCreateView(inflater, container, savedInstanceState);
 
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.preference_fragment, container, false);
-
-        return layout;
+		return (LinearLayout) inflater.inflate(R.layout.preference_fragment, container, false);
     }
 
     @Override
