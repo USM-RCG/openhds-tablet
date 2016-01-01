@@ -510,8 +510,6 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             currentResults = null;
 
             startActivityForResult(intent, ODK_ACTIVITY_REQUEST_CODE);
-            return;
-
         }
     }
 
@@ -652,7 +650,6 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
 
                     // now let the user finish filling in the form in ODK
                     launchCurrentFormInODK();
-                    return;
             }
         }
     }
