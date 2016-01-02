@@ -148,6 +148,7 @@ public class SearchFragment extends Fragment {
     }
 
     // Query based on user's text and return result count or code
+    @SuppressWarnings("unchecked")
     private int performQuery() {
         Map<String, String> columnNamesAndValues = gatherColumnValues();
         if (null == columnNamesAndValues) {
