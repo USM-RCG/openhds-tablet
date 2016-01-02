@@ -18,10 +18,4 @@ public class DefaultDetailFragment extends DetailFragment {
 				R.layout.default_detail_fragment, container, false);
 	}
 
-	@Override
-	public void setUpDetails() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

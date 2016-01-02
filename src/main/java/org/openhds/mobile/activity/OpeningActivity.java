@@ -22,11 +22,6 @@ public class OpeningActivity extends Activity {
     private FrameLayout loginPrefContainer;
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
