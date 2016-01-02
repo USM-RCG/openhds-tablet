@@ -5,6 +5,7 @@ import org.openhds.mobile.task.parsing.DataPage;
 import org.openhds.mobile.task.parsing.XmlPageParser;
 
 import java.io.InputStream;
+import java.util.Collections;
 
 import static java.util.Arrays.asList;
 
@@ -14,7 +15,7 @@ public class XmlPageParserTest extends AndroidTestCase {
         assertEquals("rootElement", dataPage.getRootElementName());
         assertEquals("pageElement", dataPage.getPageElementName());
 
-        assertEquals("page text", dataPage.getFirstString(asList("pageElement")));
+        assertEquals("page text", dataPage.getFirstString(Collections.singletonList("pageElement")));
 
         assertEquals("simple text", dataPage.getFirstString(asList("pageElement", "simple")));
 

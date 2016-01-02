@@ -541,7 +541,7 @@ public class OpenHDSProvider extends ContentProvider {
 
         qb.appendWhere(OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_UUID + " IN ("
                 + placeholders.toString() + ")");
-        return socialGroupUuids.toArray(new String[] {});
+        return socialGroupUuids.toArray(new String[socialGroupUuids.size()]);
     }
 
     @Override

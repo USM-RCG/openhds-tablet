@@ -129,7 +129,7 @@ public class OdkCollectHelper {
                         InstanceProviderAPI.InstanceColumns.STATUS},
                 InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH
                         + " IN (" + makePlaceholders(ids.size()) + ")",
-                ids.toArray(new String[]{}), null);
+                ids.toArray(new String[ids.size()]), null);
 
         if (null == cursor) {
             return null;
