@@ -7,6 +7,8 @@ import com.github.batkinson.jrsync.Metadata;
 import com.github.batkinson.jrsync.zsync.RangeRequest;
 import com.github.batkinson.jrsync.zsync.RangeRequestFactory;
 
+import org.openhds.mobile.R;
+import org.openhds.mobile.task.TaskStatus;
 import org.openhds.mobile.utilities.HttpUtils;
 
 import java.io.DataInputStream;
@@ -28,7 +30,7 @@ import static org.openhds.mobile.utilities.StringUtils.join;
 import static org.openhds.mobile.utilities.SyncUtils.streamToFile;
 
 
-public class SyncTask extends AsyncTask<SyncRequest, String, SyncResult> {
+public class SyncTask extends AsyncTask<SyncRequest, TaskStatus, SyncResult> {
 
     public static final String UNSUPPORTED_RESPONSE = "Unsupported Response";
 
@@ -36,7 +38,7 @@ public class SyncTask extends AsyncTask<SyncRequest, String, SyncResult> {
 
     public interface Listener {
         void handleResult(SyncResult result);
-        void handleProgress(String status);
+        void handleProgress(TaskStatus status);
     }
 
     private Listener listener;
@@ -106,7 +108,7 @@ public class SyncTask extends AsyncTask<SyncRequest, String, SyncResult> {
     }
 
     @Override
-    protected void onProgressUpdate(String... values) {
+    protected void onProgressUpdate(TaskStatus... values) {
         if (values != null && values.length >= 1)
             listener.handleProgress(values[0]);
     }
@@ -130,11 +132,11 @@ public class SyncTask extends AsyncTask<SyncRequest, String, SyncResult> {
         RandomAccessFile file = null;
         try {
             file = new RandomAccessFile(basis, "r");
-            publishProgress("Metadata");
+            publishProgress(new TaskStatus(R.string.sync_state_metadata));
             Metadata metadata = readMetadata(responseBody);
-            publishProgress("Syncing");
+            publishProgress(new TaskStatus(R.string.sync_state_syncing));
             sync(metadata, file, target, factory);
-            publishProgress("Synced");
+            publishProgress(new TaskStatus(R.string.sync_state_synced));
         } finally {
             close(file);
         }
@@ -144,9 +146,9 @@ public class SyncTask extends AsyncTask<SyncRequest, String, SyncResult> {
      * Directly streams the given stream to the target file.
      */
     private void directDownload(InputStream responseBody, File target) throws IOException {
-        publishProgress("Download");
+        publishProgress(new TaskStatus(R.string.sync_state_download));
         streamToFile(buffer(responseBody), target);
-        publishProgress("Synced");
+        publishProgress(new TaskStatus(R.string.sync_state_synced));
     }
 
     /**

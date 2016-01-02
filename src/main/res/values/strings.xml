@@ -195,6 +195,17 @@
     <string name="sync_database_label_social_groups">Social Groups</string>
     <string name="sync_database_label_visits">Visits</string>
 
+    <!-- Sync state labels -->
+    <string name="sync_state_metadata">Metadata</string>
+    <string name="sync_state_syncing">Syncing</string>
+    <string name="sync_state_synced">Synced</string>
+    <string name="sync_state_download">Download</string>
+    <string name="sync_state_wiping">Wiping</string>
+    <string name="sync_state_parsing">Parsing</string>
+    <string name="sync_state_complete">Complete</string>
+    <string name="sync_state_canceled">Canceled</string>
+    <string name="sync_state_noupdate">No Update</string>
+
     <!-- Individual Labels -->
     <string name="individual_first_name_label">First Name</string>
     <string name="individual_last_name_label">Last Name</string>

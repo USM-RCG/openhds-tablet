@@ -15,6 +15,7 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.activity.OpeningActivity;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.Gateway;
+import org.openhds.mobile.task.TaskStatus;
 import org.openhds.mobile.task.parsing.DataPage;
 import org.openhds.mobile.task.parsing.ParseRequest;
 import org.openhds.mobile.task.parsing.ParseTask;
@@ -32,9 +33,7 @@ import org.openhds.mobile.task.sync.SyncResult;
 import org.openhds.mobile.task.sync.SyncTask;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayDeque;
@@ -238,14 +237,14 @@ public class SyncDatabaseFragment extends Fragment {
                     try {
                         contentHash = result.getETag(); // Used after parse finishes
                         flipFile();
-                        startParse(new FileInputStream(getBasisFile(syncEntity)));
+                        startParse(getBasisFile(syncEntity));
                     } catch (FileNotFoundException e) {
                         showShortToast(getActivity(), e.getMessage());
                         terminateSync(true);
                     }
                     break;
                 case NO_UPDATE:
-                    setEntityStatus("No update");
+                    setEntityStatus(R.string.sync_state_noupdate);
                     terminateSync(false);
                     break;
                 default:
@@ -255,8 +254,8 @@ public class SyncDatabaseFragment extends Fragment {
         }
 
         @Override
-        public void handleProgress(String status) {
-            setEntityStatus(status);
+        public void handleProgress(TaskStatus status) {
+            setEntityStatus(status.format(getActivity()));
         }
 
         /**
@@ -269,18 +268,18 @@ public class SyncDatabaseFragment extends Fragment {
             return getTargetFile(syncEntity).renameTo(getBasisFile(syncEntity));
         }
 
-        private void startParse(InputStream input) {
+        private void startParse(File input) throws FileNotFoundException {
             parseTask = new ParseTask(getActivity().getContentResolver());
             parseTask.setListener(new ParseListener());
             ParseRequest parseRequest = syncEntity.taskRequest;
-            parseRequest.setInputStream(input);
+            parseRequest.setInputFile(input);
             parseTask.execute(parseRequest);
         }
     }
 
     // Clean up after the entity parser is all done.
     private void entityComplete(int records) {
-        setEntityStatus("Complete");
+        setEntityStatus(R.string.sync_state_complete);
         updateTableRow(syncEntity, IGNORE, errorCounts.get(syncEntity), R.string.sync_database_button_sync);
         showProgressMessage(syncEntity, Integer.toString(records));
         storeContentHash(syncEntity, contentHash);  // Next call changes entity
@@ -310,7 +309,7 @@ public class SyncDatabaseFragment extends Fragment {
 
             // unhook the parse entity task request from the http input stream
             ParseRequest parseRequest = syncEntity.taskRequest;
-            parseRequest.setInputStream(null);
+            parseRequest.clearInput();
         }
 
         syncEntity = null;
@@ -342,6 +341,10 @@ public class SyncDatabaseFragment extends Fragment {
         String entityName = getResourceString(getActivity(), entity.labelId);
         String message = entityName + ": " + progressMessage;
         showShortToast(getActivity(), message);
+    }
+
+    private void setEntityStatus(int labelId) {
+        setEntityStatus(getText(labelId).toString());
     }
 
     private void setEntityStatus(String status) {
@@ -477,7 +480,7 @@ public class SyncDatabaseFragment extends Fragment {
         }
 
         private void cancelCurrentSync() {
-            setEntityStatus("Canceled");
+            setEntityStatus(R.string.sync_state_canceled);
             terminateSync(true);
         }
 
@@ -496,8 +499,8 @@ public class SyncDatabaseFragment extends Fragment {
      */
     private class ParseListener implements ParseTask.Listener {
         @Override
-        public void onProgress(String progress) {
-            setEntityStatus(progress);
+        public void onProgress(TaskStatus progress) {
+            setEntityStatus(progress.format(getActivity()));
         }
 
         @Override

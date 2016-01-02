@@ -4,20 +4,23 @@ import android.content.ContentResolver;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.IOException;
-import java.io.InputStream;
+import org.openhds.mobile.R;
+import org.openhds.mobile.task.TaskStatus;
+
 import java.util.List;
+
+import static com.github.batkinson.jrsync.zsync.IOUtil.close;
 
 /**
  * Rebuilds an entity's table from XML. It first wipes the table, then parses
  * and inserts records in batches until the entire XML file is processed.
  */
-public class ParseTask extends AsyncTask<ParseRequest, String, Integer> {
+public class ParseTask extends AsyncTask<ParseRequest, TaskStatus, Integer> {
 
     private static final int BATCH_SIZE = 100;
 
     public interface Listener {
-        void onProgress(String progress);
+        void onProgress(TaskStatus progress);
         void onError(DataPage dataPage, Exception e);
         void onComplete(int progress);
     }
@@ -25,8 +28,8 @@ public class ParseTask extends AsyncTask<ParseRequest, String, Integer> {
     private ContentResolver contentResolver;
     private ParseRequest parseRequest;
     private Listener listener;
+    private ParserInputStream input;
     private int entityCount;
-
 
     public ParseTask(ContentResolver contentResolver) {
         this.contentResolver = contentResolver;
@@ -41,7 +44,7 @@ public class ParseTask extends AsyncTask<ParseRequest, String, Integer> {
 
         parseRequest = parseRequests[0];
 
-        publishProgress("Wiping");
+        publishProgress(new TaskStatus(R.string.sync_state_wiping));
         parseRequest.getGateway().deleteAll(contentResolver);
 
         XmlPageParser xmlPageParser = new XmlPageParser();
@@ -49,19 +52,15 @@ public class ParseTask extends AsyncTask<ParseRequest, String, Integer> {
         xmlPageParser.setPageHandler(handler);
         xmlPageParser.setPageErrorHandler(handler);
 
-        publishProgress("Parsing");
-        InputStream input = parseRequest.getInputStream();
         try {
+            input = parseRequest.getInputStream();
+            publishProgress(new TaskStatus(R.string.sync_state_parsing, 0));
             xmlPageParser.parsePages(input);
         } catch (Exception e) {
             Log.e(getTagName(), e.getMessage(), e);
             return -1;
         } finally {
-            try {
-                input.close();
-            } catch (IOException e) {
-                Log.d(getTagName(), "failed to close input", e);
-            }
+            close(input);
         }
 
         persistBatch();
@@ -70,7 +69,7 @@ public class ParseTask extends AsyncTask<ParseRequest, String, Integer> {
     }
 
     @Override
-    protected void onProgressUpdate(String... values) {
+    protected void onProgressUpdate(TaskStatus... values) {
         if (listener != null && values != null && values.length >= 1) {
             listener.onProgress(values[0]);
         }
@@ -105,7 +104,7 @@ public class ParseTask extends AsyncTask<ParseRequest, String, Integer> {
             // persist entities in batches
             if (0 == entityCount % BATCH_SIZE) {
                 persistBatch();
-                publishProgress(Integer.toString(entityCount));
+                publishProgress(new TaskStatus(R.string.sync_state_parsing, input.getPercentRead()));
             }
 
             // stop parsing if the user cancelled the task
