@@ -38,6 +38,8 @@ import org.openhds.mobile.task.parsing.entities.VisitParser;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static org.openhds.mobile.tests.util.TestUtil.getTestContext;
+
 /**
  * Feed XML documents to a ParseTask and verify that entities were created in the database.
  *
@@ -98,7 +100,7 @@ public class ParseTaskTest extends ProviderTestCase2<OpenHDSProvider> {
                 0,
                 new FieldWorkerParser(),
                 gateway);
-        parseRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getTestContext(this).getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseTask.execute(parseRequest);
@@ -116,7 +118,7 @@ public class ParseTaskTest extends ProviderTestCase2<OpenHDSProvider> {
                 0,
                 new IndividualParser(),
                 gateway);
-        parseRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getTestContext(this).getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseTask.execute(parseRequest);
@@ -134,7 +136,7 @@ public class ParseTaskTest extends ProviderTestCase2<OpenHDSProvider> {
                 0,
                 new LocationHierarchyParser(),
                 gateway);
-        parseRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getTestContext(this).getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseTask.execute(parseRequest);
@@ -152,7 +154,7 @@ public class ParseTaskTest extends ProviderTestCase2<OpenHDSProvider> {
                 0,
                 new LocationParser(),
                 gateway);
-        parseRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getTestContext(this).getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseTask.execute(parseRequest);
@@ -170,7 +172,7 @@ public class ParseTaskTest extends ProviderTestCase2<OpenHDSProvider> {
                 0,
                 new RelationshipParser(),
                 gateway);
-        parseRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getTestContext(this).getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseTask.execute(parseRequest);
@@ -188,7 +190,7 @@ public class ParseTaskTest extends ProviderTestCase2<OpenHDSProvider> {
                 0,
                 new SocialGroupParser(),
                 gateway);
-        parseRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getTestContext(this).getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseTask.execute(parseRequest);
@@ -206,7 +208,7 @@ public class ParseTaskTest extends ProviderTestCase2<OpenHDSProvider> {
                 0,
                 new VisitParser(),
                 gateway);
-        parseRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getTestContext(this).getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseTask.execute(parseRequest);
@@ -224,7 +226,7 @@ public class ParseTaskTest extends ProviderTestCase2<OpenHDSProvider> {
                 0,
                 new MembershipParser(),
                 gateway);
-        parseRequest.setInputStream(getContext().getAssets().open(fileName));
+        parseRequest.setInputStream(getTestContext(this).getAssets().open(fileName));
 
         // run the task and wait for it to finish
         parseTask.execute(parseRequest);

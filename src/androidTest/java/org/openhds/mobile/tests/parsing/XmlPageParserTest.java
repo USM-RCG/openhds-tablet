@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.Collections;
 
 import static java.util.Arrays.asList;
+import static org.openhds.mobile.tests.util.TestUtil.getTestContext;
 
 public class XmlPageParserTest extends AndroidTestCase {
 
@@ -37,7 +38,7 @@ public class XmlPageParserTest extends AndroidTestCase {
         pageParser.setPageHandler(happyPageHandler);
 
         // should parse all three xml data "pages"
-        InputStream inputStream = getContext().getAssets().open("testXml/page-parser-test.xml");
+        InputStream inputStream = getTestContext(this).getAssets().open("testXml/page-parser-test.xml");
         pageParser.parsePages(inputStream);
 
         assertEquals(3, happyPageHandler.getPageCount());
@@ -68,7 +69,7 @@ public class XmlPageParserTest extends AndroidTestCase {
         pageParser.setPageErrorHandler(unhappyPageErrorHandler);
 
         // should error on first page, parse the second page, and quit before the third page
-        InputStream inputStream = getContext().getAssets().open("testXml/page-parser-test.xml");
+        InputStream inputStream = getTestContext(this).getAssets().open("testXml/page-parser-test.xml");
         pageParser.parsePages(inputStream);
 
         assertEquals(2, unhappyPageHandler.getPageCount());
