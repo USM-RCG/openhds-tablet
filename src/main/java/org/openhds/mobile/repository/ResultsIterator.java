@@ -43,7 +43,7 @@ public class ResultsIterator<T> implements Iterator<T> {
         this.converter = converter;
         this.windowMaxSize = windowMaxSize;
 
-        windowResults = new ArrayList<T>();
+        windowResults = new ArrayList<>();
         windowIndex = 0;
         windowQueryOffset = 0;
         gotLastResult = false;

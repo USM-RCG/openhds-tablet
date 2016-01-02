@@ -19,7 +19,7 @@ public class OdkCollectHelper {
 
     public static List<FormInstance> getAllUnsentFormInstances(ContentResolver resolver) {
 
-        ArrayList<FormInstance> formInstances = new ArrayList<FormInstance>();
+        ArrayList<FormInstance> formInstances = new ArrayList<>();
         Cursor cursor = resolver.query(CONTENT_URI, new String[]{
                         InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH,
                         InstanceProviderAPI.InstanceColumns._ID,
@@ -50,7 +50,7 @@ public class OdkCollectHelper {
 
     public static List<FormInstance> getAllFormInstances(ContentResolver resolver) {
 
-        ArrayList<FormInstance> formInstances = new ArrayList<FormInstance>();
+        ArrayList<FormInstance> formInstances = new ArrayList<>();
         Cursor cursor = resolver.query(CONTENT_URI, new String[]{
                 InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH,
                 InstanceProviderAPI.InstanceColumns._ID,
@@ -120,7 +120,7 @@ public class OdkCollectHelper {
     }
 
     public static List<FormInstance> getByPaths(ContentResolver resolver, Collection<String> ids) {
-        ArrayList<FormInstance> formInstances = new ArrayList<FormInstance>();
+        ArrayList<FormInstance> formInstances = new ArrayList<>();
         Cursor cursor = resolver.query(CONTENT_URI, new String[]{
                         InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH,
                         InstanceProviderAPI.InstanceColumns._ID,
@@ -153,7 +153,7 @@ public class OdkCollectHelper {
     }
 
     public static List<String> getSentFormPaths(ContentResolver resolver, Collection<String> ids) {
-        ArrayList<String> sentPaths = new ArrayList<String>();
+        ArrayList<String> sentPaths = new ArrayList<>();
         for (String path : ids) {
             Query query = new Query(CONTENT_URI,
                     new String[]{InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, InstanceProviderAPI.InstanceColumns.STATUS},

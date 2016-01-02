@@ -101,7 +101,7 @@ public abstract class GatewayTest<T> extends ProviderTestCase2<OpenHDSProvider> 
     }
 
     public void testAddMany() {
-        List<T> manyEntities = new ArrayList<T>();
+        List<T> manyEntities = new ArrayList<>();
         int insertedCount = gateway.insertMany(contentResolver, manyEntities);
         assertEquals(0, insertedCount);
 

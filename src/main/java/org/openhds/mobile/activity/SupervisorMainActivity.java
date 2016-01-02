@@ -22,7 +22,6 @@ import org.openhds.mobile.repository.search.FormSearchPluginModule;
 import org.openhds.mobile.repository.search.SearchUtils;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

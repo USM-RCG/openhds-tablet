@@ -17,7 +17,6 @@ import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.projectdata.ProjectFormFields;
 import org.openhds.mobile.projectdata.ProjectResources;
 
-import java.io.File;
 import java.util.Map;
 
 public class LayoutUtils {

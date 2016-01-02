@@ -73,7 +73,7 @@ public class CensusQueryHelper implements QueryHelper {
             return individualGateway.getQueryResultList(contentResolver, individualGateway.findAll(), state);
         }
 
-        return new ArrayList<DataWrapper>();
+        return new ArrayList<>();
     }
 
     public List<DataWrapper> getChildren(ContentResolver contentResolver, DataWrapper qr, String childState) {
@@ -101,6 +101,6 @@ public class CensusQueryHelper implements QueryHelper {
                     individualGateway.findByResidency(qr.getUuid()), childState);
         }
 
-        return new ArrayList<DataWrapper>();
+        return new ArrayList<>();
     }
 }

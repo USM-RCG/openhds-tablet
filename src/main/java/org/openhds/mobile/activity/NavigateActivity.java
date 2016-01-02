@@ -99,9 +99,9 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
         currentModuleName = (String) getIntent().getExtras().get(ProjectActivityBuilder.ACTIVITY_MODULE_EXTRA);
         builder = ProjectActivityBuilder.getModuleByName(currentModuleName);
 
-        hierarchyPath = new HashMap<String, DataWrapper>();
+        hierarchyPath = new HashMap<>();
         formHelper = new FormHelper(getContentResolver());
-        stateMachine = new StateMachine(new HashSet<String>(getStateSequence()), getStateSequence().get(0));
+        stateMachine = new StateMachine(new HashSet<>(getStateSequence()), getStateSequence().get(0));
 
 
         for (String state : getStateSequence()) {
@@ -200,7 +200,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
-        ArrayList<String> hierarchyPathKeys = new ArrayList<String>(hierarchyPath.keySet());
+        ArrayList<String> hierarchyPathKeys = new ArrayList<>(hierarchyPath.keySet());
         for (String key : hierarchyPathKeys) {
             savedInstanceState.putParcelable(key + HIERARCHY_PATH_VALUES, hierarchyPath.get(key));
         }
@@ -273,7 +273,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             intent.putExtra(ProjectActivityBuilder.ACTIVITY_MODULE_EXTRA, menuItemTags.get(item));
             intent.putParcelableArrayListExtra(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
 
-            ArrayList<String> hierarchyPathKeys = new ArrayList<String>(hierarchyPath.keySet());
+            ArrayList<String> hierarchyPathKeys = new ArrayList<>(hierarchyPath.keySet());
             for (String key : hierarchyPathKeys) {
                 intent.putExtra(key + HIERARCHY_PATH_VALUES, hierarchyPath.get(key));
             }
@@ -463,7 +463,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
         formHelper.setFormBehaviour(formBehaviour);
 
 
-        Map<String, String> formFieldData = new HashMap<String, String>();
+        Map<String, String> formFieldData = new HashMap<>();
         if(null != followUpFormHints){
             formFieldData.putAll(followUpFormHints);
         }
@@ -717,7 +717,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             }
 
             List<FormBehaviour> filteredForms = builder.getFormsForStates().get(state);
-            List<FormBehaviour> validForms = new ArrayList<FormBehaviour>();
+            List<FormBehaviour> validForms = new ArrayList<>();
 
             for (FormBehaviour form : filteredForms) {
                 if (form.getFormFilter().amIValid(NavigateActivity.this)) {

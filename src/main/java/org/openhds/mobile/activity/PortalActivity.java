@@ -23,7 +23,6 @@ import org.openhds.mobile.projectdata.ModuleUiHelper;
 import org.openhds.mobile.projectdata.ProjectActivityBuilder;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
-import java.io.File;
 import java.util.List;
 
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;

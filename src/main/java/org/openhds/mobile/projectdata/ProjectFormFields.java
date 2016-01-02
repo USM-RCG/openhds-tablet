@@ -33,7 +33,7 @@ public class ProjectFormFields {
         public static final String INDIVIDUAL_STATE_FIELD_NAME = "individualExtId";
         public static final String BOTTOM_STATE_FIELD_NAME = "bottomExtId";
 
-        private static final Map<String, String> stateFieldNames = new HashMap<String, String>();
+        private static final Map<String, String> stateFieldNames = new HashMap<>();
 
         static {
             stateFieldNames.put(REGION_STATE, REGION_STATE_FIELD_NAME);
@@ -86,7 +86,7 @@ public class ProjectFormFields {
 
         public static final String EVALUATION = "evaluation";
 
-        private static Map<String, String> columnsToFieldNames = new HashMap<String, String>();
+        private static Map<String, String> columnsToFieldNames = new HashMap<>();
 
         static {
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_HIERARCHY_UUID, HIERERCHY_UUID);
@@ -156,7 +156,7 @@ public class ProjectFormFields {
 
         public static final String IS_PREGNANT_FLAG = "individualIsPregnantFlag";
 
-        private static Map<String, String> columnsToFieldNames = new HashMap<String, String>();
+        private static Map<String, String> columnsToFieldNames = new HashMap<>();
 
         static {
             columnsToFieldNames.put(
@@ -230,7 +230,7 @@ public class ProjectFormFields {
         public static final String LOCATION_EXTID = "locationExtId";
         public static final String FIELDWORKER_UUID = "fieldWorkerUuid";
 
-        private static Map<String, String> columnsToFieldNames = new HashMap<String, String>();
+        private static Map<String, String> columnsToFieldNames = new HashMap<>();
 
         static {
             columnsToFieldNames.put(

@@ -17,7 +17,7 @@ public class FormSubmissionRecord {
 	private int remoteId;
 	private boolean completed;
 	private boolean needReview;
-	private List<String> errors = new ArrayList<String>();
+	private List<String> errors = new ArrayList<>();
 
 	public void setFormOwnerId(String text) {
 		this.formOwnerId = text;

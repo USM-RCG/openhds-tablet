@@ -33,7 +33,7 @@ public class ProjectActivityBuilder {
     private static final String UPDATE_ACTIVITY_MODULE = "UpdateActivityModule";
     private static final String BIOKO_ACTIVITY_MODULE = "BiokoActivityModule";
 
-    private static final ArrayList<String> activityModules = new ArrayList<String>();
+    private static final ArrayList<String> activityModules = new ArrayList<>();
 
     static {
         activityModules.add(CENSUS_ACTIVITY_MODULE);
@@ -61,8 +61,8 @@ public class ProjectActivityBuilder {
     // These modules are passed to NavigateActivity and inject it project specific data and hierarchy information
     public static class BiokoActivityModule implements NavigatePluginModule {
 
-        private static final Map<String, List<FormBehaviour>> formsForStates = new HashMap<String, List<FormBehaviour>>();
-        private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<String, DetailFragment>();
+        private static final Map<String, List<FormBehaviour>> formsForStates = new HashMap<>();
+        private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<>();
         public static class BiokoUiHelper implements ModuleUiHelper {
 
             @Override
@@ -109,16 +109,16 @@ public class ProjectActivityBuilder {
 
         static {
 
-            ArrayList<FormBehaviour> regionFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> provinceFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> districtFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> subDistrictFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> localityFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> mapAreaFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> sectorFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> householdFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> individualFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> bottomFormList = new ArrayList<FormBehaviour>();
+            ArrayList<FormBehaviour> regionFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> provinceFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> districtFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> subDistrictFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> localityFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> mapAreaFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> sectorFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> householdFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> individualFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> bottomFormList = new ArrayList<>();
 
             individualFormList.add(new FormBehaviour("Bed_net",
                     R.string.distribute_bednets,
@@ -195,8 +195,8 @@ public class ProjectActivityBuilder {
 
     public static class CensusActivityModule implements NavigatePluginModule {
 
-        private static final Map<String, List<FormBehaviour>> formsForStates = new HashMap<String, List<FormBehaviour>>();
-        private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<String, DetailFragment>();
+        private static final Map<String, List<FormBehaviour>> formsForStates = new HashMap<>();
+        private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<>();
         public static class CensusUiHelper implements ModuleUiHelper {
 
             @Override
@@ -266,16 +266,16 @@ public class ProjectActivityBuilder {
                     new CensusFormPayloadBuilders.AddLocation(),
                     new CensusFormPayloadConsumers.AddLocation());
 
-            ArrayList<FormBehaviour> regionFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> provinceFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> districtFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> subDistrictFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> localityFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> mapAreaFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> sectorFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> householdFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> individualFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> bottomFormList = new ArrayList<FormBehaviour>();
+            ArrayList<FormBehaviour> regionFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> provinceFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> districtFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> subDistrictFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> localityFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> mapAreaFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> sectorFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> householdFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> individualFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> bottomFormList = new ArrayList<>();
 
             householdFormList.add(addLocationFormBehaviour);
 
@@ -355,8 +355,8 @@ public class ProjectActivityBuilder {
 
     public static class UpdateActivityModule implements NavigatePluginModule {
 
-        private static final Map<String, List<FormBehaviour>> formsForStates = new HashMap<String, List<FormBehaviour>>();
-        private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<String, DetailFragment>();
+        private static final Map<String, List<FormBehaviour>> formsForStates = new HashMap<>();
+        private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<>();
         public static class UpdateUiHelper implements ModuleUiHelper {
 
             @Override
@@ -405,16 +405,16 @@ public class ProjectActivityBuilder {
 
         static {
 
-            ArrayList<FormBehaviour> regionFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> provinceFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> districtFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> subDistrictFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> localityFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> mapAreaFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> sectorFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> householdFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> individualFormList = new ArrayList<FormBehaviour>();
-            ArrayList<FormBehaviour> bottomFormList = new ArrayList<FormBehaviour>();
+            ArrayList<FormBehaviour> regionFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> provinceFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> districtFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> subDistrictFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> localityFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> mapAreaFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> sectorFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> householdFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> individualFormList = new ArrayList<>();
+            ArrayList<FormBehaviour> bottomFormList = new ArrayList<>();
 
 
             // Start a Visit FormBehaviour

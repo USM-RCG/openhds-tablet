@@ -24,7 +24,7 @@ public class StateMachine {
 
 	public StateMachine(Set<String> stateSet, String defaultState) {
 		this.stateSet = stateSet;
-		stateListeners = new HashMap<String, Set<StateListener>>();
+		stateListeners = new HashMap<>();
 		transitionTo(defaultState);
 	}
 

@@ -29,8 +29,8 @@ public class BiokoHierarchy implements HierarchyInfo {
     public static final String INDIVIDUAL_STATE = "individual";
     public static final String BOTTOM_STATE = "bottom";
 
-    private static final Map<String, Integer> stateLabels = new HashMap<String, Integer>();
-    private static final List<String> stateSequence = new ArrayList<String>();
+    private static final Map<String, Integer> stateLabels = new HashMap<>();
+    private static final List<String> stateSequence = new ArrayList<>();
 
     static {
 

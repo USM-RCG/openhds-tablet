@@ -82,7 +82,7 @@ public class FormSearchPluginModule extends SearchPluginModule implements Parcel
         parcel.writeString(gatewayName);
 
         // Android recommends parceling Maps as Bundles
-        final List<String> columnList = new ArrayList<String>(columnsAndLabels.keySet());
+        final List<String> columnList = new ArrayList<>(columnsAndLabels.keySet());
         parcel.writeStringList(columnList);
 
         Bundle columnsAndLabelsBundle = new Bundle();

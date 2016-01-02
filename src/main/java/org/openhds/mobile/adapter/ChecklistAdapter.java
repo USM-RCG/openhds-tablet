@@ -14,7 +14,6 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.utilities.LayoutUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

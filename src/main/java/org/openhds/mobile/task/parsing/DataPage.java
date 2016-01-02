@@ -54,7 +54,7 @@ public class DataPage {
     public void addText(List<String> elementPath, String text) {
         if (!pageText.containsKey(elementPath)) {
             // copy the path to avoid modifications to map keys
-            pageText.put(new ArrayList<String>(elementPath), new ArrayList<String>());
+            pageText.put(new ArrayList<>(elementPath), new ArrayList<String>());
         }
         pageText.get(elementPath).add(text);
     }

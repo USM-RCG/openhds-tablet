@@ -86,7 +86,7 @@ public class OpenHDSProvider extends ContentProvider {
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "memberships", MEMBERSHIPS);
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "memberships/#", MEMBERSHIPS_ID);
 
-        individualsProjectionMap = new HashMap<String, String>();
+        individualsProjectionMap = new HashMap<>();
         // general individual columns
         individualsProjectionMap.put(OpenHDS.Individuals._ID,
                 OpenHDS.Individuals._ID);
@@ -160,7 +160,7 @@ public class OpenHDSProvider extends ContentProvider {
                 OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_ID,
                 OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_ID);
 
-        locationsProjectionMap = new HashMap<String, String>();
+        locationsProjectionMap = new HashMap<>();
         locationsProjectionMap
                 .put(OpenHDS.Locations._ID, OpenHDS.Locations._ID);
         locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_EXTID,
@@ -221,7 +221,7 @@ public class OpenHDSProvider extends ContentProvider {
                 OpenHDS.Locations.COLUMN_LOCATION_EVALUATION_STATUS,
                 OpenHDS.Locations.COLUMN_LOCATION_EVALUATION_STATUS);
 
-        hierarchyitemsProjectionMap = new HashMap<String, String>();
+        hierarchyitemsProjectionMap = new HashMap<>();
         hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems._ID,
                 OpenHDS.HierarchyItems._ID);
         hierarchyitemsProjectionMap.put(
@@ -240,7 +240,7 @@ public class OpenHDSProvider extends ContentProvider {
                 OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT,
                 OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT);
 
-        visitsProjectionMap = new HashMap<String, String>();
+        visitsProjectionMap = new HashMap<>();
         visitsProjectionMap.put(OpenHDS.Visits._ID, OpenHDS.Visits._ID);
         visitsProjectionMap.put(OpenHDS.Visits.COLUMN_VISIT_DATE,
                 OpenHDS.Visits.COLUMN_VISIT_DATE);
@@ -253,7 +253,7 @@ public class OpenHDSProvider extends ContentProvider {
         visitsProjectionMap.put(OpenHDS.Visits.COLUMN_VISIT_FIELDWORKER_UUID,
                 OpenHDS.Visits.COLUMN_VISIT_FIELDWORKER_UUID);
 
-        relationshipsProjectionMap = new HashMap<String, String>();
+        relationshipsProjectionMap = new HashMap<>();
         relationshipsProjectionMap.put(OpenHDS.Relationships._ID,
                 OpenHDS.Relationships._ID);
         relationshipsProjectionMap.put(
@@ -272,7 +272,7 @@ public class OpenHDSProvider extends ContentProvider {
                 OpenHDS.Relationships.COLUMN_RELATIONSHIP_STARTDATE,
                 OpenHDS.Relationships.COLUMN_RELATIONSHIP_STARTDATE);
 
-        fieldworkersProjectionMap = new HashMap<String, String>();
+        fieldworkersProjectionMap = new HashMap<>();
         fieldworkersProjectionMap.put(OpenHDS.FieldWorkers._ID,
                 OpenHDS.FieldWorkers._ID);
         fieldworkersProjectionMap.put(
@@ -294,7 +294,7 @@ public class OpenHDSProvider extends ContentProvider {
                 OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_PASSWORD,
                 OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_PASSWORD);
 
-        socialgroupsProjectionMap = new HashMap<String, String>();
+        socialgroupsProjectionMap = new HashMap<>();
         socialgroupsProjectionMap.put(OpenHDS.SocialGroups._ID,
                 OpenHDS.SocialGroups._ID);
         socialgroupsProjectionMap.put(
@@ -310,7 +310,7 @@ public class OpenHDSProvider extends ContentProvider {
                 OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_NAME,
                 OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_NAME);
 
-        membershipsProjectionMap = new HashMap<String, String>();
+        membershipsProjectionMap = new HashMap<>();
         membershipsProjectionMap.put(OpenHDS.Memberships._ID,
                 OpenHDS.Memberships._ID);
         membershipsProjectionMap.put(
@@ -514,7 +514,7 @@ public class OpenHDSProvider extends ContentProvider {
 
         // iterate over all individuals and collect their memberships
         // this results in a subset of households at the location
-        Set<String> socialGroupUuids = new HashSet<String>();
+        Set<String> socialGroupUuids = new HashSet<>();
         while (c.moveToNext()) {
             Cursor c2 = db
                     .query(OpenHDS.Memberships.TABLE_NAME,

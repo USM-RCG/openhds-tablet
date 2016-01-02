@@ -54,7 +54,7 @@ public class FormInstance implements Serializable {
 	}
 
 	public static List<File> toListOfFiles(List<FormInstance> formInstances) {
-		ArrayList<File> fileList = new ArrayList<File>();
+		ArrayList<File> fileList = new ArrayList<>();
 
 		for (FormInstance instance : formInstances) {
 			fileList.add(new File(instance.getFilePath()));
@@ -63,7 +63,7 @@ public class FormInstance implements Serializable {
 	}
 
 	public static List<Uri> toListOfUris(List<FormInstance> formInstances) {
-		ArrayList<Uri> uriList = new ArrayList<Uri>();
+		ArrayList<Uri> uriList = new ArrayList<>();
 
 		for (FormInstance instance : formInstances) {
 			uriList.add(Uri.parse(instance.getUriString()));

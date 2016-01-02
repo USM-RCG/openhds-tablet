@@ -27,8 +27,8 @@ public class DataWrapper implements Parcelable {
     private String category;
     private String extId;
     private String name;
-    private Map<Integer, String> stringsPayload = new HashMap<Integer, String>();
-    private Map<Integer, Integer> stringIdsPayload = new HashMap<Integer, Integer>();
+    private Map<Integer, String> stringsPayload = new HashMap<>();
+    private Map<Integer, Integer> stringIdsPayload = new HashMap<>();
 
     public String getCategory() {
         return category;
@@ -87,7 +87,7 @@ public class DataWrapper implements Parcelable {
         uuid = parcel.readString();
 
         // INTEGER to STRING
-        final List<Integer> stringIds = new ArrayList<Integer>();
+        final List<Integer> stringIds = new ArrayList<>();
         parcel.readList(stringIds, null);
 
         final Bundle stringsPayloadBundle = parcel.readBundle();
@@ -98,7 +98,7 @@ public class DataWrapper implements Parcelable {
 
 
         // INTEGER to INTEGER
-        final List<Integer> moreStringIds = new ArrayList<Integer>();
+        final List<Integer> moreStringIds = new ArrayList<>();
         parcel.readList(moreStringIds, null);
 
         final Bundle stringIdsPayloadBundle = parcel.readBundle();
@@ -126,7 +126,7 @@ public class DataWrapper implements Parcelable {
 
 
         // Pull apart the INTEGER to STRING payload and put into the parcel
-        final List<Integer> stringIds = new ArrayList<Integer>(stringsPayload.keySet());
+        final List<Integer> stringIds = new ArrayList<>(stringsPayload.keySet());
         parcel.writeList(stringIds);
         Bundle stringsPayloadBundle = new Bundle();
         for (Integer key : stringIds) {
@@ -135,7 +135,7 @@ public class DataWrapper implements Parcelable {
         parcel.writeBundle(stringsPayloadBundle);
 
         // Pull apart the INTEGER to INTEGER payload and put into the parcel
-        final List<Integer> moreStringIds = new ArrayList<Integer>(stringIdsPayload.keySet());
+        final List<Integer> moreStringIds = new ArrayList<>(stringIdsPayload.keySet());
         parcel.writeList(moreStringIds);
         Bundle stringIdsPayloadBundle = new Bundle();
         for (Integer key : moreStringIds) {

@@ -38,7 +38,7 @@ public class HierarchyButtonFragment extends Fragment {
 		LinearLayout selectionContainer = (LinearLayout) inflater.inflate(
 				R.layout.hierarchy_button_fragment, container, false);
 
-		viewsForStates = new HashMap<String, RelativeLayout>();
+		viewsForStates = new HashMap<>();
 		HierarchyButtonListener listener = new HierarchyButtonListener();
 
 		Map<String, Integer> labels = navigator.getStateLabels();

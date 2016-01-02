@@ -22,14 +22,14 @@ public class QueryResultsIterator<T> implements Iterator<DataWrapper> {
     public QueryResultsIterator(ContentResolver contentResolver, Query query, Converter<T> converter, String state) {
         this.converter = converter;
         this.contentResolver = contentResolver;
-        this.resultsIterator = new ResultsIterator<T>(contentResolver, query, converter);
+        this.resultsIterator = new ResultsIterator<>(contentResolver, query, converter);
         this.state = state;
     }
 
     public QueryResultsIterator(ContentResolver contentResolver, Query query, Converter<T> converter, String state, int windowMaxSize) {
         this.converter = converter;
         this.contentResolver = contentResolver;
-        this.resultsIterator = new ResultsIterator<T>(contentResolver, query, converter, windowMaxSize);
+        this.resultsIterator = new ResultsIterator<>(contentResolver, query, converter, windowMaxSize);
         this.state = state;
     }
 

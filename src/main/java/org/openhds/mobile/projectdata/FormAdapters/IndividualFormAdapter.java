@@ -59,7 +59,7 @@ public class IndividualFormAdapter {
     }
 
     public static Map<String, String> toForm( Individual individual) {
-        Map<String, String> formFields = new HashMap<String, String>();
+        Map<String, String> formFields = new HashMap<>();
 
         formFields.put(ProjectFormFields.General.ENTITY_UUID, individual.getUuid());
         formFields.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, individual.getExtId());
