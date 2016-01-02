@@ -8,7 +8,7 @@ import static org.openhds.mobile.utilities.UrlUtils.isValidUrl;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+
 import org.openhds.mobile.R;
 
 import android.content.SharedPreferences;
@@ -35,7 +35,7 @@ public class LoginPreferenceFragment extends PreferenceFragment implements
 
         super.onCreateView(inflater, container, savedInstanceState);
 
-		return (LinearLayout) inflater.inflate(R.layout.preference_fragment, container, false);
+		return inflater.inflate(R.layout.preference_fragment, container, false);
     }
 
     @Override

@@ -41,7 +41,7 @@ public abstract class GatewayTest<T> extends ProviderTestCase2<OpenHDSProvider> 
     protected void setUp() throws Exception {
         super.setUp();
 
-        this.provider = (OpenHDSProvider) getProvider();
+        this.provider = getProvider();
         this.contentResolver = getMockContentResolver();
 
         // inject a password helper that uses a known password

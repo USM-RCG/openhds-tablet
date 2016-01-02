@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import org.openhds.mobile.R;
@@ -28,7 +27,7 @@ public class FormSelectionFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return (LinearLayout) inflater.inflate(R.layout.form_selection_fragment, container, false);
+        return inflater.inflate(R.layout.form_selection_fragment, container, false);
     }
 
     public void setSelectionHandler(SelectionHandler selectionHandler) {
