@@ -717,7 +717,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
                 hierarchyButtonFragment.setButtonAllowed(state, true);
             }
 
-            List<FormBehaviour> filteredForms = builder.getFormsForStates().get(state);
+            List<FormBehaviour> filteredForms = builder.getFormsForState(state);
             List<FormBehaviour> validForms = new ArrayList<>();
 
             for (FormBehaviour form : filteredForms) {

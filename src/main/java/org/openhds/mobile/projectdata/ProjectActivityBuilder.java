@@ -19,6 +19,7 @@ import org.openhds.mobile.repository.search.FormSearchPluginModule;
 import org.openhds.mobile.repository.search.SearchUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,6 @@ public class ProjectActivityBuilder {
         private static final Map<String, List<FormBehaviour>> formsForStates = new HashMap<>();
         private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<>();
         public static class BiokoUiHelper implements ModuleUiHelper {
-
             @Override
             public int getModuleLabelStringId() {
                 return R.string.bioko_portal_label;
@@ -103,21 +103,11 @@ public class ProjectActivityBuilder {
             public int getMiddleColumnDrawableId() {
                 return R.drawable.bioko_middle_column_drawable;
             }
-
         }
 
         static {
 
-            ArrayList<FormBehaviour> regionFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> provinceFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> districtFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> subDistrictFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> localityFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> mapAreaFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> sectorFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> householdFormList = new ArrayList<>();
             ArrayList<FormBehaviour> individualFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> bottomFormList = new ArrayList<>();
 
             individualFormList.add(new FormBehaviour("Bed_net",
                     R.string.distribute_bednets,
@@ -137,30 +127,12 @@ public class ProjectActivityBuilder {
                     new BiokoFormPayloadBuilders.SuperOjo(),
                     new BiokoFormPayloadConsumers.SuperOjo()));
 
-            formsForStates.put(REGION_STATE, regionFormList);
-            formsForStates.put(PROVINCE_STATE, provinceFormList);
-            formsForStates.put(DISTRICT_STATE, districtFormList);
-            formsForStates.put(SUB_DISTRICT_STATE, subDistrictFormList);
-            formsForStates.put(LOCALITY_STATE, localityFormList);
-            formsForStates.put(MAP_AREA_STATE, mapAreaFormList);
-            formsForStates.put(SECTOR_STATE, sectorFormList);
-            formsForStates.put(HOUSEHOLD_STATE, householdFormList);
             formsForStates.put(INDIVIDUAL_STATE, individualFormList);
-            formsForStates.put(BOTTOM_STATE, bottomFormList);
 
             // these details are off by 1: details for an individual should be
             // shown when you click a specific individual which is technically
             // in the bottom state.
-            detailFragsForStates.put(REGION_STATE, null);
-            detailFragsForStates.put(PROVINCE_STATE, null);
-            detailFragsForStates.put(DISTRICT_STATE, null);
-            detailFragsForStates.put(SUB_DISTRICT_STATE, null);
-            detailFragsForStates.put(MAP_AREA_STATE, null);
-            detailFragsForStates.put(SECTOR_STATE, null);
-            detailFragsForStates.put(HOUSEHOLD_STATE, null);
-            detailFragsForStates.put(INDIVIDUAL_STATE, null);
             detailFragsForStates.put(BOTTOM_STATE,  new IndividualDetailFragment());
-
         }
 
         @Override
@@ -179,17 +151,17 @@ public class ProjectActivityBuilder {
         }
 
         @Override
-        public Map<String, List<FormBehaviour>> getFormsForStates() {
-            return formsForStates;
+        public List<FormBehaviour> getFormsForState(String state) {
+            List<FormBehaviour> formsForState = formsForStates.get(state);
+            if (formsForState == null)
+                formsForState = Collections.emptyList();
+            return formsForState;
         }
 
         @Override
         public Map<String, DetailFragment> getDetailFragsForStates() {
             return detailFragsForStates;
         }
-
-
-
     }
 
     public static class CensusActivityModule implements NavigatePluginModule {
@@ -265,16 +237,8 @@ public class ProjectActivityBuilder {
                     new CensusFormPayloadBuilders.AddLocation(),
                     new CensusFormPayloadConsumers.AddLocation());
 
-            ArrayList<FormBehaviour> regionFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> provinceFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> districtFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> subDistrictFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> localityFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> mapAreaFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> sectorFormList = new ArrayList<>();
             ArrayList<FormBehaviour> householdFormList = new ArrayList<>();
             ArrayList<FormBehaviour> individualFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> bottomFormList = new ArrayList<>();
 
             householdFormList.add(addLocationFormBehaviour);
 
@@ -296,43 +260,18 @@ public class ProjectActivityBuilder {
                     new CensusFormPayloadBuilders.AddMemberOfHousehold(),
                     new CensusFormPayloadConsumers.AddMemberOfHousehold()));
 
-
-
-            formsForStates.put(REGION_STATE, regionFormList);
-            formsForStates.put(PROVINCE_STATE, provinceFormList);
-            formsForStates.put(DISTRICT_STATE, districtFormList);
-            formsForStates.put(SUB_DISTRICT_STATE, subDistrictFormList);
-            formsForStates.put(LOCALITY_STATE, localityFormList);
-            formsForStates.put(MAP_AREA_STATE, mapAreaFormList);
-            formsForStates.put(SECTOR_STATE, sectorFormList);
             formsForStates.put(HOUSEHOLD_STATE, householdFormList);
             formsForStates.put(INDIVIDUAL_STATE, individualFormList);
-            formsForStates.put(BOTTOM_STATE, bottomFormList);
 
             // these details are off by 1: details for an individual should be
             // shown when you click a specific individual which is technically
             // in the bottom state.
-            detailFragsForStates.put(REGION_STATE, null);
-            detailFragsForStates.put(PROVINCE_STATE, null);
-            detailFragsForStates.put(DISTRICT_STATE, null);
-            detailFragsForStates.put(SUB_DISTRICT_STATE, null);
-            detailFragsForStates.put(MAP_AREA_STATE, null);
-            detailFragsForStates.put(SECTOR_STATE, null);
-            detailFragsForStates.put(HOUSEHOLD_STATE, null);
-            detailFragsForStates.put(INDIVIDUAL_STATE, null);
-            detailFragsForStates.put(BOTTOM_STATE,
-                    new IndividualDetailFragment());
-
+            detailFragsForStates.put(BOTTOM_STATE, new IndividualDetailFragment());
         }
 
         @Override
         public Map<String, DetailFragment> getDetailFragsForStates() {
             return detailFragsForStates;
-        }
-
-        @Override
-        public Map<String, List<FormBehaviour>> getFormsForStates() {
-            return formsForStates;
         }
 
         @Override
@@ -349,6 +288,14 @@ public class ProjectActivityBuilder {
         @Override
         public HierarchyInfo getHierarchyInfo() {
             return BiokoHierarchy.INSTANCE;
+        }
+
+        @Override
+        public List<FormBehaviour> getFormsForState(String state) {
+            List<FormBehaviour> formsForState = formsForStates.get(state);
+            if (formsForState == null)
+                formsForState = Collections.emptyList();
+            return formsForState;
         }
     }
 
@@ -404,17 +351,8 @@ public class ProjectActivityBuilder {
 
         static {
 
-            ArrayList<FormBehaviour> regionFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> provinceFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> districtFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> subDistrictFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> localityFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> mapAreaFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> sectorFormList = new ArrayList<>();
-            ArrayList<FormBehaviour> householdFormList = new ArrayList<>();
             ArrayList<FormBehaviour> individualFormList = new ArrayList<>();
             ArrayList<FormBehaviour> bottomFormList = new ArrayList<>();
-
 
             // Start a Visit FormBehaviour
             individualFormList.add(new FormBehaviour("Visit",
@@ -480,41 +418,18 @@ public class ProjectActivityBuilder {
                     null,
                     daddySearch));
 
-            formsForStates.put(REGION_STATE, regionFormList);
-            formsForStates.put(PROVINCE_STATE, provinceFormList);
-            formsForStates.put(DISTRICT_STATE, districtFormList);
-            formsForStates.put(SUB_DISTRICT_STATE, subDistrictFormList);
-            formsForStates.put(LOCALITY_STATE, localityFormList);
-            formsForStates.put(MAP_AREA_STATE, mapAreaFormList);
-            formsForStates.put(SECTOR_STATE, sectorFormList);
-            formsForStates.put(HOUSEHOLD_STATE, householdFormList);
             formsForStates.put(INDIVIDUAL_STATE, individualFormList);
             formsForStates.put(BOTTOM_STATE, bottomFormList);
 
             // these details are off by 1: details for an individual should be
             // shown when you click a specific individual which is technically
             // in the bottom state.
-            detailFragsForStates.put(REGION_STATE, null);
-            detailFragsForStates.put(PROVINCE_STATE, null);
-            detailFragsForStates.put(DISTRICT_STATE, null);
-            detailFragsForStates.put(SUB_DISTRICT_STATE, null);
-            detailFragsForStates.put(MAP_AREA_STATE, null);
-            detailFragsForStates.put(SECTOR_STATE, null);
-            detailFragsForStates.put(HOUSEHOLD_STATE, null);
-            detailFragsForStates.put(INDIVIDUAL_STATE, null);
-            detailFragsForStates.put(BOTTOM_STATE,
-                    new IndividualDetailFragment());
-
+            detailFragsForStates.put(BOTTOM_STATE, new IndividualDetailFragment());
         }
 
         @Override
         public Map<String, DetailFragment> getDetailFragsForStates() {
             return detailFragsForStates;
-        }
-
-        @Override
-        public Map<String, List<FormBehaviour>> getFormsForStates() {
-            return formsForStates;
         }
 
         @Override
@@ -533,7 +448,12 @@ public class ProjectActivityBuilder {
             return BiokoHierarchy.INSTANCE;
         }
 
+        @Override
+        public List<FormBehaviour> getFormsForState(String state) {
+            List<FormBehaviour> formsForState = formsForStates.get(state);
+            if (formsForState == null)
+                formsForState = Collections.emptyList();
+            return formsForState;
+        }
     }
-
-
 }

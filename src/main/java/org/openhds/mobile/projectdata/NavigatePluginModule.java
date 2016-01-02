@@ -15,7 +15,7 @@ public interface NavigatePluginModule {
 
     HierarchyInfo getHierarchyInfo();
 
-	Map<String, List<FormBehaviour>> getFormsForStates();
+	List<FormBehaviour> getFormsForState(String state);
 
 	Map<String, DetailFragment> getDetailFragsForStates();
 	
