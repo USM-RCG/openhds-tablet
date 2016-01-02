@@ -72,13 +72,12 @@ public class SupervisorMainActivity extends Activity implements DeleteWarningDia
                 buttonClickListener,
                 supervisorButtonLayout);
 
-        SyncDatabaseFragment syncDatabaseFragment;
-        PreferenceFragment preferenceFragment;
-        if (null == savedInstanceState)  {
-            checklistFragment = new ChecklistFragment();
-            syncDatabaseFragment = new SyncDatabaseFragment();
+
+        if (savedInstanceState == null)  {
+            SyncDatabaseFragment syncDatabaseFragment = new SyncDatabaseFragment();
             syncDatabaseFragment.setRetainInstance(true);
-            preferenceFragment = new LoginPreferenceFragment();
+            PreferenceFragment preferenceFragment = new LoginPreferenceFragment();
+            checklistFragment = new ChecklistFragment();
             getFragmentManager()
                     .beginTransaction()
                     .add(R.id.supervisor_edit_form_container, checklistFragment, CHECKLIST_FRAGMENT_TAG)
@@ -88,8 +87,6 @@ public class SupervisorMainActivity extends Activity implements DeleteWarningDia
 
         } else {
             checklistFragment = (ChecklistFragment) getFragmentManager().findFragmentByTag(CHECKLIST_FRAGMENT_TAG);
-            syncDatabaseFragment = (SyncDatabaseFragment) getFragmentManager().findFragmentByTag(SYNC_FRAGMENT_TAG);
-            preferenceFragment = (LoginPreferenceFragment) getFragmentManager().findFragmentByTag(PREFERENCE_FRAGMENT_TAG);
         }
     }
 
@@ -115,7 +112,6 @@ public class SupervisorMainActivity extends Activity implements DeleteWarningDia
 
         List<FormInstance> allFormInstances = OdkCollectHelper.getAllUnsentFormInstances(this.getContentResolver());
         for (FormInstance instance: allFormInstances) {
-            File instanceFile = new File(instance.getFilePath());
             if (!FormHelper.isFormReviewed(instance.getFilePath())) {
                 OdkCollectHelper.setStatusIncomplete(this.getContentResolver(), Uri.parse(instance.getUriString()));
             }

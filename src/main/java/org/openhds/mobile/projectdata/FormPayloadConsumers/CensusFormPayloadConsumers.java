@@ -140,8 +140,6 @@ public class CensusFormPayloadConsumers {
 
             String relationshipType = formPayload
                     .get(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD);
-            String membershipStatus = formPayload
-                    .get(ProjectFormFields.Individuals.MEMBER_STATUS);
             Individual individual = insertOrUpdateIndividual(formPayload,
                     navigateActivity);
             String startDate = formPayload
@@ -198,8 +196,6 @@ public class CensusFormPayloadConsumers {
             String relationshipType = "1";
 
             // Pull out useful strings from the formPayload
-            String membershipStatus = formPayload
-                    .get(ProjectFormFields.Individuals.MEMBER_STATUS);
             String startDate = formPayload
                     .get(ProjectFormFields.General.COLLECTION_DATE_TIME);
             Individual individual = insertOrUpdateIndividual(formPayload,

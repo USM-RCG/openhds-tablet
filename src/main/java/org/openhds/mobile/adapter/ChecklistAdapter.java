@@ -64,9 +64,6 @@ public class ChecklistAdapter extends ArrayAdapter {
             public void onClick(View v) {
                 FormInstance selected = (FormInstance) v.getTag();
                 Uri uri = Uri.parse(selected.getUriString());
-
-                File selectedFile = new File(selected.getFilePath());
-
                 Intent intent = new Intent(Intent.ACTION_EDIT, uri);
                 showShortToast(getContext(), R.string.launching_odk_collect);
                 ((Activity) getContext()).startActivityForResult(intent, 0);

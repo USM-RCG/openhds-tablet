@@ -149,8 +149,6 @@ public class UpdateFormPayloadConsumers {
             String relationshipType = formPayload.get(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD);
 
             // Pull out useful strings from the formPayload
-            String membershipStatus = formPayload
-                    .get(ProjectFormFields.Individuals.MEMBER_STATUS);
             String startDate = formPayload
                     .get(ProjectFormFields.General.COLLECTION_DATE_TIME);
 

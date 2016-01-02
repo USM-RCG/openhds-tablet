@@ -79,7 +79,7 @@ public class XmlPageParser {
         pullParser.setInput(new InputStreamReader(inputStream));
 
         String rootElementName = null;
-        String pageElementName = null;
+        String pageElementName;
         List<String> elementPath = null;
         DataPage dataPage = null;
 

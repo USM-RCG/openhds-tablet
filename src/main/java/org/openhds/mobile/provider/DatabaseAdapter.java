@@ -199,11 +199,9 @@ public class DatabaseAdapter {
 
 	public Cursor getFormsForUsername(String user) {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		Cursor cursor = null;
-		cursor = db.query(FORM_TABLE_NAME, new String[] { KEY_ID,
+		return db.query(FORM_TABLE_NAME, new String[] { KEY_ID,
 				KEY_FORM_TYPE, KEY_FORMOWNER_ID, KEY_REVIEW }, KEY_FORMOWNER_ID
 				+ " = ?", new String[] { user }, null, null, null);
-		return cursor;
 	}
 
 	public FormSubmissionRecord findSubmissionById(long id) {

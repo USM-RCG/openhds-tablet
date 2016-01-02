@@ -24,7 +24,7 @@ public class MapAdapter extends ArrayAdapter<AdapterContent> {
 	@Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        AdapterHolder holder = null;
+        AdapterHolder holder;
        
         if(row == null) {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();

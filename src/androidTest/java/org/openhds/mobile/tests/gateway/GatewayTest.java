@@ -199,9 +199,7 @@ public abstract class GatewayTest<T> extends ProviderTestCase2<OpenHDSProvider> 
     public void testDelete() {
         String id = "TEST";
         T entity = makeTestEntity(id, "mr. test");
-
-        boolean wasInserted = gateway.insertOrUpdate(contentResolver, entity);
-
+        gateway.insertOrUpdate(contentResolver, entity);
         T savedEntity = gateway.getFirst(contentResolver, gateway.findById(id));
         assertNotNull(savedEntity);
         String savedId = gateway.getConverter().getId(savedEntity);

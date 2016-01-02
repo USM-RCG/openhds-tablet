@@ -135,9 +135,6 @@ public class PortalActivity extends Activity implements OnClickListener {
             if (position > 0 && position <= formInstances.size()) {
                 FormInstance selected = formInstances.get(position - 1);
                 Uri uri = Uri.parse(selected.getUriString());
-
-                File selectedFile = new File(selected.getFilePath());
-
                 Intent intent = new Intent(Intent.ACTION_EDIT, uri);
                 showShortToast(PortalActivity.this, R.string.launching_odk_collect);
                 startActivityForResult(intent, 0);

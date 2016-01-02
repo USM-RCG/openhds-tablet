@@ -213,8 +213,6 @@ public class LayoutUtils {
         // get the data we want to display
         int formTypeLocalizedId= ProjectResources.FormType.getFormTypeStringId(formInstance.getFormName());
         String formTypeName = context.getResources().getString(formTypeLocalizedId);
-
-        File formFile = new File(formInstance.getFilePath());
         Map<String, String> instanceData = FormHelper.fetchFormInstanceData(formInstance.getFilePath());
 
         String entityId = safeGetMapField(instanceData, ProjectFormFields.General.ENTITY_EXTID);

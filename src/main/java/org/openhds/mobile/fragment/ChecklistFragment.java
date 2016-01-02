@@ -141,7 +141,6 @@ public class ChecklistFragment extends Fragment {
         List<FormInstance> needApproval = new ArrayList<>();
 
         for (FormInstance instance : formInstances ) {
-            File instanceFile = new File(instance.getFilePath());
             String needsReview = FormHelper.getFormTagValue(ProjectFormFields.General.NEEDS_REVIEW, instance.getFilePath());
             if (ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(needsReview)) {
                 needApproval.add(instance);
@@ -187,7 +186,6 @@ public class ChecklistFragment extends Fragment {
 
     private void approveForms(List<FormInstance> forms) {
         for (FormInstance instance: forms) {
-            File instanceFile = new File(instance.getFilePath());
             FormHelper.setFormTagValue(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NO_REVIEW_NEEDED,
                     instance.getFilePath());
             OdkCollectHelper.setStatusComplete(getActivity().getContentResolver(), Uri.parse(instance.getUriString()));
