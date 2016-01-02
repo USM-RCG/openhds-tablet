@@ -78,7 +78,7 @@ public class BiokoFormPayloadBuilders {
             FieldWorker fieldWorker = navigateActivity.getCurrentFieldWorker();
             formPayload.put(ProjectFormFields.SprayHousehold.SUPERVISOR_EXT_ID, fieldWorker.getExtId());
             formPayload.put(ProjectFormFields.SprayHousehold.SURVEY_DATE,
-                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()).toString());
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
 
 
             String locationExtId = navigateActivity.getHierarchyPath()
@@ -105,7 +105,7 @@ public class BiokoFormPayloadBuilders {
             FieldWorker fieldWorker = navigateActivity.getCurrentFieldWorker();
             formPayload.put(ProjectFormFields.SprayHousehold.SUPERVISOR_EXT_ID, fieldWorker.getExtId());
             formPayload.put(ProjectFormFields.SuperOjo.OJO_DATE,
-                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()).toString());
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
 
 
             String locationExtId = navigateActivity.getHierarchyPath()

@@ -33,7 +33,7 @@ public class UpdateFormPayloadBuilders {
             PayloadTools.flagForReview(formPayload, false);
 
             String visitDate = new SimpleDateFormat("yyyy-MM-dd").format(
-                    Calendar.getInstance().getTime()).toString();
+                    Calendar.getInstance().getTime());
             String locationExtId = navigateActivity.getHierarchyPath()
                     .get(HOUSEHOLD_STATE).getExtId();
             String locationUuid= navigateActivity.getHierarchyPath()
@@ -73,7 +73,7 @@ public class UpdateFormPayloadBuilders {
 
             formPayload.put(ProjectFormFields.InMigrations.IN_MIGRATION_TYPE, ProjectFormFields.InMigrations.IN_MIGRATION_INTERNAL);
 
-            String migrationDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()).toString();
+            String migrationDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
             formPayload.put(ProjectFormFields.InMigrations.IN_MIGRATION_DATE, migrationDate);
         }
     }
@@ -100,7 +100,7 @@ public class UpdateFormPayloadBuilders {
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID));
 
-            String migrationDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()).toString();
+            String migrationDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
             formPayload.put(ProjectFormFields.InMigrations.IN_MIGRATION_DATE, migrationDate);
         }
     }
@@ -115,7 +115,7 @@ public class UpdateFormPayloadBuilders {
             PayloadTools.flagForReview(formPayload, false);
 
             String outMigrationDate = new SimpleDateFormat("yyyy-MM-dd").format(
-                    Calendar.getInstance().getTime()).toString();
+                    Calendar.getInstance().getTime());
 
             String individualExtId = navigateActivity.getHierarchyPath()
                     .get(INDIVIDUAL_STATE).getExtId();
@@ -177,7 +177,7 @@ public class UpdateFormPayloadBuilders {
             PayloadTools.flagForReview(formPayload, false);
 
             String observationDate = new SimpleDateFormat("yyyy-MM-dd").format(
-                    Calendar.getInstance().getTime()).toString();
+                    Calendar.getInstance().getTime());
 
             String individualExtId;
             String individualUuid;

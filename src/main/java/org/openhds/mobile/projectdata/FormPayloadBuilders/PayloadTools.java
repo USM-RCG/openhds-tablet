@@ -42,6 +42,6 @@ public class PayloadTools {
 
         // add collected DateTime
         formPayload.put(ProjectFormFields.General.COLLECTION_DATE_TIME,
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()).toString());
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
     }
 }
