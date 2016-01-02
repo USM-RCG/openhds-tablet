@@ -343,6 +343,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void populateFormsForPath() {
         List<FormInstance> forms;
         ContentResolver resolver = getContentResolver();

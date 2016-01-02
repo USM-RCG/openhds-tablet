@@ -15,7 +15,7 @@ public class FormInstanceAdapter extends ArrayAdapter {
     private Object[] formInstances;
     private LayoutInflater inflater;
 
-
+    @SuppressWarnings("unchecked")
     public FormInstanceAdapter(Context context, int resource, Object[] formInstances) {
         super(context, resource, formInstances);
         this.formInstances = formInstances;

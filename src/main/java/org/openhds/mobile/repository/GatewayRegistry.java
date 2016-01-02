@@ -35,6 +35,7 @@ public class GatewayRegistry {
      * Creates lazy-loaded singletons by creating on first access and then
      * returning the same value for subsequent access.
      */
+    @SuppressWarnings("unchecked")
     private static <T extends Gateway> T lazy(Class<T> gatewayClass) {
         final String gatewayName = gatewayClass.getName();
         if (!SINGLETONS.containsKey(gatewayName)) {
@@ -79,6 +80,7 @@ public class GatewayRegistry {
         return lazy(VisitGateway.class);
     }
 
+    @SuppressWarnings("unchecked")
     public static Gateway getGatewayByName(String name) {
         try {
             return lazy((Class<Gateway>) Class.forName(name));

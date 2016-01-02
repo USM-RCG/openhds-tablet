@@ -102,6 +102,7 @@ public class SyncDatabaseFragment extends Fragment {
         Gateway gateway;
         ParseRequest taskRequest; // mutated, see usage below
 
+        @SuppressWarnings("unchecked")
         SyncEntity(Integer labelId, Integer pathId, EntityParser<?> parser, Gateway<?> gateway) {
             this.labelId = labelId;
             this.pathId = pathId;

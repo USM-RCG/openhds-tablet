@@ -55,6 +55,7 @@ public class SearchFragment extends Fragment {
         this.resultsHandler = resultsHandler;
     }
 
+    @SuppressWarnings("unchecked")
     public void setSearchPluginModules(List<? extends SearchPluginModule> searchPluginModules) {
         Spinner spinner = (Spinner) getView().findViewById(R.id.search_fragment_spinner);
 
