@@ -45,17 +45,16 @@ public class ProjectActivityBuilder {
         return activityModules;
     }
     public static NavigatePluginModule getModuleByName(String name) {
-
-        if (name.equals(CENSUS_ACTIVITY_MODULE)) {
-            return new CensusActivityModule();
-        } else if (name.equals(UPDATE_ACTIVITY_MODULE)) {
-            return new UpdateActivityModule();
-        } else if (name.equals(BIOKO_ACTIVITY_MODULE)) {
-            return new BiokoActivityModule();
+        switch (name) {
+            case CENSUS_ACTIVITY_MODULE:
+                return new CensusActivityModule();
+            case UPDATE_ACTIVITY_MODULE:
+                return new UpdateActivityModule();
+            case BIOKO_ACTIVITY_MODULE:
+                return new BiokoActivityModule();
+            default:
+                return null;
         }
-
-        return null;
-
     }
 
     // These modules are passed to NavigateActivity and inject it project specific data and hierarchy information

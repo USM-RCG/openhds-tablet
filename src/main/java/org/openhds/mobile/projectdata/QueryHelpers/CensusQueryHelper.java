@@ -28,79 +28,60 @@ public class CensusQueryHelper implements QueryHelper {
     public CensusQueryHelper() {}
 
     public List<DataWrapper> getAll(ContentResolver contentResolver, String state) {
-
-        if (state.equals(REGION_STATE)) {
-            LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
-            return locationHierarchyGateway.getQueryResultList(contentResolver,
-                    locationHierarchyGateway.findByLevel(REGION_HIERARCHY_LEVEL_NAME), state);
-
-        } else if (state.equals(PROVINCE_STATE)) {
-            LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
-            return locationHierarchyGateway.getQueryResultList(contentResolver,
-                    locationHierarchyGateway.findByLevel(PROVINCE_HIERARCHY_LEVEL_NAME), state);
-
-        } else if (state.equals(DISTRICT_STATE)) {
-            LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
-            return locationHierarchyGateway.getQueryResultList(contentResolver,
-                    locationHierarchyGateway.findByLevel(DISTRICT_HIERARCHY_LEVEL_NAME), state);
-
-        } else if (state.equals(SUB_DISTRICT_STATE)) {
-            LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
-            return locationHierarchyGateway.getQueryResultList(contentResolver,
-                    locationHierarchyGateway.findByLevel(SUB_DISTRICT_HIERARCHY_LEVEL_NAME), state);
-
-        } else if (state.equals(LOCALITY_STATE)) {
-            LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
-            return locationHierarchyGateway.getQueryResultList(contentResolver,
-                    locationHierarchyGateway.findByLevel(LOCALITY_HIERARCHY_LEVEL_NAME), state);
-
-        } else if (state.equals(MAP_AREA_STATE)) {
-            LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
-            return locationHierarchyGateway.getQueryResultList(contentResolver,
-                    locationHierarchyGateway.findByLevel(MAP_AREA_HIERARCHY_LEVEL_NAME), state);
-
-        } else if (state.equals(SECTOR_STATE)) {
-            LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
-            return locationHierarchyGateway.getQueryResultList(contentResolver,
-                    locationHierarchyGateway.findByLevel(SECTOR_HIERARCHY_LEVEL_NAME), state);
-
-        } else if (state.equals(HOUSEHOLD_STATE)) {
-            LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            return locationGateway.getQueryResultList(contentResolver, locationGateway.findAll(), state);
-
-        } else if (state.equals(INDIVIDUAL_STATE)) {
-            IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-            return individualGateway.getQueryResultList(contentResolver, individualGateway.findAll(), state);
+        LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
+        switch (state) {
+            case REGION_STATE:
+                return locationHierarchyGateway.getQueryResultList(contentResolver,
+                        locationHierarchyGateway.findByLevel(REGION_HIERARCHY_LEVEL_NAME), state);
+            case PROVINCE_STATE:
+                return locationHierarchyGateway.getQueryResultList(contentResolver,
+                        locationHierarchyGateway.findByLevel(PROVINCE_HIERARCHY_LEVEL_NAME), state);
+            case DISTRICT_STATE:
+                return locationHierarchyGateway.getQueryResultList(contentResolver,
+                        locationHierarchyGateway.findByLevel(DISTRICT_HIERARCHY_LEVEL_NAME), state);
+            case SUB_DISTRICT_STATE:
+                return locationHierarchyGateway.getQueryResultList(contentResolver,
+                        locationHierarchyGateway.findByLevel(SUB_DISTRICT_HIERARCHY_LEVEL_NAME), state);
+            case LOCALITY_STATE:
+                return locationHierarchyGateway.getQueryResultList(contentResolver,
+                        locationHierarchyGateway.findByLevel(LOCALITY_HIERARCHY_LEVEL_NAME), state);
+            case MAP_AREA_STATE:
+                return locationHierarchyGateway.getQueryResultList(contentResolver,
+                        locationHierarchyGateway.findByLevel(MAP_AREA_HIERARCHY_LEVEL_NAME), state);
+            case SECTOR_STATE:
+                return locationHierarchyGateway.getQueryResultList(contentResolver,
+                        locationHierarchyGateway.findByLevel(SECTOR_HIERARCHY_LEVEL_NAME), state);
+            case HOUSEHOLD_STATE:
+                LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
+                return locationGateway.getQueryResultList(contentResolver, locationGateway.findAll(), state);
+            case INDIVIDUAL_STATE:
+                IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
+                return individualGateway.getQueryResultList(contentResolver, individualGateway.findAll(), state);
+            default:
+                return new ArrayList<>();
         }
-
-        return new ArrayList<>();
     }
 
     public List<DataWrapper> getChildren(ContentResolver contentResolver, DataWrapper qr, String childState) {
-        String state = qr.getCategory();
-
-        if (state.equals(REGION_STATE)
-                || state.equals(PROVINCE_STATE)
-                || state.equals(DISTRICT_STATE)
-                || state.equals(SUB_DISTRICT_STATE)
-                || state.equals(LOCALITY_STATE)
-                || state.equals(MAP_AREA_STATE)) {
-
-            LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
-            return locationHierarchyGateway.getQueryResultList(contentResolver,
-                    locationHierarchyGateway.findByParent(qr.getUuid()), childState);
-
-        } else if (state.equals(SECTOR_STATE)) {
-            LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            return locationGateway.getQueryResultList(contentResolver,
-                    locationGateway.findByHierarchyDescendingBuildingNumber(qr.getUuid()), childState);
-
-        } else if (state.equals(HOUSEHOLD_STATE)) {
-            IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-            return individualGateway.getQueryResultList(contentResolver,
-                    individualGateway.findByResidency(qr.getUuid()), childState);
+        switch (qr.getCategory()) {
+            case REGION_STATE:
+            case PROVINCE_STATE:
+            case DISTRICT_STATE:
+            case SUB_DISTRICT_STATE:
+            case LOCALITY_STATE:
+            case MAP_AREA_STATE:
+                LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
+                return locationHierarchyGateway.getQueryResultList(contentResolver,
+                        locationHierarchyGateway.findByParent(qr.getUuid()), childState);
+            case SECTOR_STATE:
+                LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
+                return locationGateway.getQueryResultList(contentResolver,
+                        locationGateway.findByHierarchyDescendingBuildingNumber(qr.getUuid()), childState);
+            case HOUSEHOLD_STATE:
+                IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
+                return individualGateway.getQueryResultList(contentResolver,
+                        individualGateway.findByResidency(qr.getUuid()), childState);
         }
-
         return new ArrayList<>();
     }
 }
