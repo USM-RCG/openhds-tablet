@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.github.batkinson.jrsync.Metadata;
+import com.github.batkinson.jrsync.zsync.ProgressTracker;
 import com.github.batkinson.jrsync.zsync.RangeRequest;
 import com.github.batkinson.jrsync.zsync.RangeRequestFactory;
 
@@ -135,10 +136,24 @@ public class SyncTask extends AsyncTask<SyncRequest, TaskStatus, SyncResult> {
             publishProgress(new TaskStatus(R.string.sync_state_metadata));
             Metadata metadata = readMetadata(responseBody);
             publishProgress(new TaskStatus(R.string.sync_state_syncing));
-            sync(metadata, file, target, factory);
+            sync(metadata, file, target, factory, new SyncTracker());
             publishProgress(new TaskStatus(R.string.sync_state_synced));
         } finally {
             close(file);
+        }
+    }
+
+    class SyncTracker implements ProgressTracker {
+        @Override
+        public void onProgress(Stage stage, int percent) {
+            switch (stage) {
+                case SEARCH:
+                    publishProgress(new TaskStatus(R.string.sync_state_compare, percent));
+                    break;
+                case BUILD:
+                    publishProgress(new TaskStatus(R.string.sync_state_build, percent));
+                    break;
+            }
         }
     }
 

@@ -198,10 +198,12 @@
     <!-- Sync state labels -->
     <string name="sync_state_metadata">Metadata</string>
     <string name="sync_state_syncing">Syncing</string>
+    <string name="sync_state_compare">Compare</string>
+    <string name="sync_state_build">Build</string>
     <string name="sync_state_synced">Synced</string>
     <string name="sync_state_download">Download</string>
     <string name="sync_state_wiping">Wiping</string>
-    <string name="sync_state_parsing">Parsing</string>
+    <string name="sync_state_parse">Parse</string>
     <string name="sync_state_complete">Complete</string>
     <string name="sync_state_canceled">Canceled</string>
     <string name="sync_state_noupdate">No Update</string>

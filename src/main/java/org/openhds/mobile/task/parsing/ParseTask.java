@@ -54,7 +54,7 @@ public class ParseTask extends AsyncTask<ParseRequest, TaskStatus, Integer> {
 
         try {
             input = parseRequest.getInputStream();
-            publishProgress(new TaskStatus(R.string.sync_state_parsing, 0));
+            publishProgress(new TaskStatus(R.string.sync_state_parse, 0));
             xmlPageParser.parsePages(input);
         } catch (Exception e) {
             Log.e(getTagName(), e.getMessage(), e);
@@ -104,7 +104,7 @@ public class ParseTask extends AsyncTask<ParseRequest, TaskStatus, Integer> {
             // persist entities in batches
             if (0 == entityCount % BATCH_SIZE) {
                 persistBatch();
-                publishProgress(new TaskStatus(R.string.sync_state_parsing, input.getPercentRead()));
+                publishProgress(new TaskStatus(R.string.sync_state_parse, input.getPercentRead()));
             }
 
             // stop parsing if the user cancelled the task
