@@ -79,7 +79,7 @@ public class CensusFormPayloadBuilders {
             communityCode = "";
         }
 
-        formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, String.format(LIKE_WILD_CARD + "02d", buildingNumber));
+        formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, String.format("%02d", buildingNumber));
         formPayload.put(ProjectFormFields.Locations.COMMUNITY_NAME, communityName);
         formPayload.put(ProjectFormFields.Locations.COMMUNITY_CODE, communityCode);
         formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
