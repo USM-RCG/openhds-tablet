@@ -79,6 +79,7 @@ public class CensusFormPayloadBuilders {
             communityCode = "";
         }
 
+        // Building numbers (E) are left-padded to be at least 2 digits long
         formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, String.format("%02d", buildingNumber));
         formPayload.put(ProjectFormFields.Locations.COMMUNITY_NAME, communityName);
         formPayload.put(ProjectFormFields.Locations.COMMUNITY_CODE, communityCode);
