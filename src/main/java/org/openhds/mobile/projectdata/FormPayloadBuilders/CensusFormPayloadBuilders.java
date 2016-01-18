@@ -15,8 +15,6 @@ import java.util.Map;
 
 import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
 
-import static org.openhds.mobile.repository.RepositoryUtils.LIKE_WILD_CARD;
-
 
 public class CensusFormPayloadBuilders {
 
