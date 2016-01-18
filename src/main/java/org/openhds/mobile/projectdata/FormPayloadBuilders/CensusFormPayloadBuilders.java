@@ -59,17 +59,24 @@ public class CensusFormPayloadBuilders {
         LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
 
         // location with largest building number <locationBuildingNumber />
-        int buildingNumber = 1;
-        // name and code of community will default to empty String if this sector has no neighboring location
-        String communityName = "";
-        String communityCode = "";
-        Iterator<Location> locationIterator = locationGateway.getIterator(contentResolver,
+        int buildingNumber;
+
+        // Name and code of community will default to empty String if this sector has no neighboring location
+        String communityName, communityCode;
+
+        Iterator<Location> locationIterator = locationGateway.getIterator(
+                contentResolver,
                 locationGateway.findByHierarchyDescendingBuildingNumber(sector.getUuid()));
+
         if (locationIterator.hasNext()) {
-            Location location = locationIterator.next();
-            buildingNumber += location.getBuildingNumber();
-            communityName = location.getCommunityName();
-            communityCode = location.getCommunityCode();
+            Location highest = locationIterator.next();
+            buildingNumber = highest.getBuildingNumber() + 1;
+            communityName = highest.getCommunityName();
+            communityCode = highest.getCommunityCode();
+        } else {
+            buildingNumber = 1;
+            communityName = "";
+            communityCode = "";
         }
 
         formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, String.format(LIKE_WILD_CARD + "02d", buildingNumber));
