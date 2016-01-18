@@ -24,37 +24,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
+import static org.openhds.mobile.projectdata.BiokoHierarchy.BOTTOM_STATE;
+import static org.openhds.mobile.projectdata.BiokoHierarchy.HOUSEHOLD_STATE;
+import static org.openhds.mobile.projectdata.BiokoHierarchy.INDIVIDUAL_STATE;
 
 public class ProjectActivityBuilder {
 
     public static final String ACTIVITY_MODULE_EXTRA = "ACTIVITY_MODULE_EXTRA";
 
-    private static final String CENSUS_ACTIVITY_MODULE = "CensusActivityModule";
-    private static final String UPDATE_ACTIVITY_MODULE = "UpdateActivityModule";
-    private static final String BIOKO_ACTIVITY_MODULE = "BiokoActivityModule";
+    public enum Module {
 
-    private static final ArrayList<String> activityModules = new ArrayList<>();
+        CENSUS(CensusActivityModule.class),
+        UPDATE(UpdateActivityModule.class),
+        BIOKO(BiokoActivityModule.class);
 
-    static {
-        activityModules.add(CENSUS_ACTIVITY_MODULE);
-        activityModules.add(UPDATE_ACTIVITY_MODULE);
-        activityModules.add(BIOKO_ACTIVITY_MODULE);
-    }
+        private Class<? extends NavigatePluginModule> type;
 
-    public static ArrayList<String> getActivityModuleNames() {
-        return activityModules;
-    }
-    public static NavigatePluginModule getModuleByName(String name) {
-        switch (name) {
-            case CENSUS_ACTIVITY_MODULE:
-                return new CensusActivityModule();
-            case UPDATE_ACTIVITY_MODULE:
-                return new UpdateActivityModule();
-            case BIOKO_ACTIVITY_MODULE:
-                return new BiokoActivityModule();
-            default:
-                return null;
+        Module(Class<? extends NavigatePluginModule> type) {
+            this.type = type;
+        }
+
+        public NavigatePluginModule newInstance() throws IllegalAccessException, InstantiationException {
+            return type.newInstance();
         }
     }
 

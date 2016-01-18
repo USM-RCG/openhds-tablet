@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.projectdata.ModuleUiHelper;
+import org.openhds.mobile.projectdata.NavigatePluginModule;
 import org.openhds.mobile.projectdata.ProjectActivityBuilder;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
@@ -29,6 +31,8 @@ import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 public class PortalActivity extends Activity implements OnClickListener {
+
+    private static final String TAG = PortalActivity.class.getName();
 
     private static final String SEARCH_FRAGMENT_TAG = "searchFragment";
 
@@ -49,19 +53,20 @@ public class PortalActivity extends Activity implements OnClickListener {
 
         // fill the middle column with a button for each available activity
         LinearLayout activitiesLayout = (LinearLayout) findViewById(R.id.portal_middle_column);
-        List<String> activityModuleNames = ProjectActivityBuilder.getActivityModuleNames();
-        for (String name : activityModuleNames) {
-
-            ModuleUiHelper moduleInfo = ProjectActivityBuilder.getModuleByName(name).getModuleUiHelper();
-
-            RelativeLayout layout = makeTextWithPayload(this,
-                    getString(moduleInfo.getModuleLabelStringId()),
-                    getString(moduleInfo.getModuleDescriptionStringId()),
-                    name, this, activitiesLayout,
-                    moduleInfo.getModulePortalDrawableId(), null, null,true);
-
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-            params.setMargins(0, 0, 0, 20);
+        for (ProjectActivityBuilder.Module module : ProjectActivityBuilder.Module.values()) {
+            try {
+                NavigatePluginModule instance = module.newInstance();
+                ModuleUiHelper moduleInfo = instance.getModuleUiHelper();
+                RelativeLayout layout = makeTextWithPayload(this,
+                        getString(moduleInfo.getModuleLabelStringId()),
+                        getString(moduleInfo.getModuleDescriptionStringId()),
+                        module.name(), this, activitiesLayout,
+                        moduleInfo.getModulePortalDrawableId(), null, null,true);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
+                params.setMargins(0, 0, 0, 20);
+            } catch (Exception e) {
+                Log.e(TAG, "failed to create launcher for module " + module.name(), e);
+            }
         }
 
         // fill the right column with a list of recent form instances

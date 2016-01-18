@@ -5,15 +5,16 @@ import android.app.FragmentManager;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import org.openhds.mobile.R;
+import org.openhds.mobile.fragment.DataSelectionFragment;
 import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
 import org.openhds.mobile.fragment.FormSelectionFragment;
-import org.openhds.mobile.fragment.DataSelectionFragment;
 import org.openhds.mobile.fragment.navigate.DetailToggleFragment;
 import org.openhds.mobile.fragment.navigate.HierarchyButtonFragment;
 import org.openhds.mobile.fragment.navigate.ViewPathFormsFragment;
@@ -24,18 +25,18 @@ import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.form.FormBehaviour;
 import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
-import org.openhds.mobile.provider.DatabaseAdapter;
-import org.openhds.mobile.utilities.StateMachine;
-import org.openhds.mobile.utilities.StateMachine.StateListener;
 import org.openhds.mobile.model.update.Visit;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.ConsumerResults;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.FormPayloadConsumer;
+import org.openhds.mobile.projectdata.ModuleUiHelper;
 import org.openhds.mobile.projectdata.NavigatePluginModule;
 import org.openhds.mobile.projectdata.ProjectActivityBuilder;
-import org.openhds.mobile.projectdata.ModuleUiHelper;
+import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.search.FormSearchPluginModule;
 import org.openhds.mobile.utilities.OdkCollectHelper;
+import org.openhds.mobile.utilities.StateMachine;
+import org.openhds.mobile.utilities.StateMachine.StateListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,6 +50,8 @@ import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 public class NavigateActivity extends Activity implements HierarchyNavigator {
+
+    private static final String TAG = NavigateActivity.class.getName();
 
     private static final int ODK_ACTIVITY_REQUEST_CODE = 0;
     private static final int SEARCH_ACTIVITY_REQUEST_CODE = 1;
@@ -88,7 +91,6 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     private ConsumerResults previousConsumerResults;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,86 +99,90 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
         FieldWorker fieldWorker = (FieldWorker) getIntent().getExtras().get(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA);
         setCurrentFieldWorker(fieldWorker);
         currentModuleName = (String) getIntent().getExtras().get(ProjectActivityBuilder.ACTIVITY_MODULE_EXTRA);
-        builder = ProjectActivityBuilder.getModuleByName(currentModuleName);
 
-        hierarchyPath = new HashMap<>();
-        formHelper = new FormHelper(getContentResolver());
-        stateMachine = new StateMachine(new HashSet<>(getStateSequence()), getStateSequence().get(0));
+        try {
 
+            builder = ProjectActivityBuilder.Module.valueOf(currentModuleName).newInstance();
+            hierarchyPath = new HashMap<>();
+            formHelper = new FormHelper(getContentResolver());
+            stateMachine = new StateMachine(new HashSet<>(getStateSequence()), getStateSequence().get(0));
 
-        for (String state : getStateSequence()) {
-            stateMachine.registerListener(state, new HierarchyStateListener());
-        }
+            for (String state : getStateSequence()) {
+                stateMachine.registerListener(state, new HierarchyStateListener());
+            }
 
-        if (null == savedInstanceState) {
+            if (null == savedInstanceState) {
 
-            if(null != getIntent().getStringArrayListExtra(HIERARCHY_PATH_KEYS)) {
-                ArrayList<String> hierarchyPathKeys = getIntent().getStringArrayListExtra(HIERARCHY_PATH_KEYS);
-                for (String key : hierarchyPathKeys) {
-                    hierarchyPath.put(key, (DataWrapper) getIntent().getParcelableExtra(key + HIERARCHY_PATH_VALUES));
+                if (null != getIntent().getStringArrayListExtra(HIERARCHY_PATH_KEYS)) {
+                    ArrayList<String> hierarchyPathKeys = getIntent().getStringArrayListExtra(HIERARCHY_PATH_KEYS);
+                    for (String key : hierarchyPathKeys) {
+                        hierarchyPath.put(key, (DataWrapper) getIntent().getParcelableExtra(key + HIERARCHY_PATH_VALUES));
+                    }
+                    currentResults = getIntent().getParcelableArrayListExtra(CURRENT_RESULTS_KEY);
                 }
-                currentResults = getIntent().getParcelableArrayListExtra(CURRENT_RESULTS_KEY);
-            }
 
-            //fresh activity
-            hierarchyButtonFragment = new HierarchyButtonFragment();
-            hierarchyButtonFragment.setNavigator(this);
-            valueFragment = new DataSelectionFragment();
-            valueFragment.setSelectionHandler(new ValueSelectionHandler());
-            formFragment = new FormSelectionFragment();
-            formFragment.setSelectionHandler(new FormSelectionHandler());
-            detailToggleFragment = new DetailToggleFragment();
-            detailToggleFragment.setNavigateActivity(this);
-            defaultDetailFragment = new DefaultDetailFragment();
-            visitFragment = new VisitFragment();
-            visitFragment.setNavigateActivity(this);
-            viewPathFormsFragment = new ViewPathFormsFragment();
-
-
-
-            getFragmentManager().beginTransaction()
-                     .add(R.id.left_column_top, hierarchyButtonFragment, HIERARCHY_BUTTON_FRAGMENT_TAG)
-                     .add(R.id.left_column_bottom, detailToggleFragment, TOGGLE_FRAGMENT_TAG)
-                     .add(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG)
-                     .add(R.id.right_column_top, formFragment, FORM_FRAGMENT_TAG)
-                     .add(R.id.right_column_bottom, visitFragment, VISIT_FRAGMENT_TAG)
-                     .add(R.id.view_column_bottom, viewPathFormsFragment, VIEW_RECENT_FORM_TAG)
-                    .commit();
-       } else {
-
-            FragmentManager fragmentManager = getFragmentManager();
-            // restore saved activity state
-            hierarchyButtonFragment = (HierarchyButtonFragment) fragmentManager.findFragmentByTag(HIERARCHY_BUTTON_FRAGMENT_TAG);
-            hierarchyButtonFragment.setNavigator(this);
-            formFragment = (FormSelectionFragment) fragmentManager.findFragmentByTag(FORM_FRAGMENT_TAG);
-            formFragment.setSelectionHandler(new FormSelectionHandler());
-            detailToggleFragment = (DetailToggleFragment) fragmentManager.findFragmentByTag(TOGGLE_FRAGMENT_TAG);
-            detailToggleFragment.setNavigateActivity(this);
-            visitFragment = (VisitFragment) fragmentManager.findFragmentByTag(VISIT_FRAGMENT_TAG);
-            visitFragment.setNavigateActivity(this);
-
-            defaultDetailFragment = new DefaultDetailFragment();
-            valueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
-            viewPathFormsFragment = (ViewPathFormsFragment) fragmentManager.findFragmentByTag(VIEW_RECENT_FORM_TAG);
-
-            // draw details if valuefrag is null, the drawing of valuefrag is
-            // handled in onResume().
-            if (null == valueFragment) {
+                //fresh activity
+                hierarchyButtonFragment = new HierarchyButtonFragment();
+                hierarchyButtonFragment.setNavigator(this);
                 valueFragment = new DataSelectionFragment();
-                viewPathFormsFragment = (ViewPathFormsFragment) fragmentManager.findFragmentByTag(VIEW_RECENT_FORM_TAG);
-                detailFragment = (DetailFragment) fragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG);
-                detailFragment.setNavigateActivity(this);
-            }
-            valueFragment.setSelectionHandler(new ValueSelectionHandler());
+                valueFragment.setSelectionHandler(new ValueSelectionHandler());
+                formFragment = new FormSelectionFragment();
+                formFragment.setSelectionHandler(new FormSelectionHandler());
+                detailToggleFragment = new DetailToggleFragment();
+                detailToggleFragment.setNavigateActivity(this);
+                defaultDetailFragment = new DefaultDetailFragment();
+                visitFragment = new VisitFragment();
+                visitFragment.setNavigateActivity(this);
+                viewPathFormsFragment = new ViewPathFormsFragment();
 
-            ArrayList<String> hierarchyPathKeys = savedInstanceState.getStringArrayList(HIERARCHY_PATH_KEYS);
-            for(String key : hierarchyPathKeys){
-                hierarchyPath.put(key, (DataWrapper) savedInstanceState.getParcelable(key + HIERARCHY_PATH_VALUES));
+                getFragmentManager().beginTransaction()
+                        .add(R.id.left_column_top, hierarchyButtonFragment, HIERARCHY_BUTTON_FRAGMENT_TAG)
+                        .add(R.id.left_column_bottom, detailToggleFragment, TOGGLE_FRAGMENT_TAG)
+                        .add(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG)
+                        .add(R.id.right_column_top, formFragment, FORM_FRAGMENT_TAG)
+                        .add(R.id.right_column_bottom, visitFragment, VISIT_FRAGMENT_TAG)
+                        .add(R.id.view_column_bottom, viewPathFormsFragment, VIEW_RECENT_FORM_TAG)
+                        .commit();
+            } else {
+
+                FragmentManager fragmentManager = getFragmentManager();
+                // restore saved activity state
+                hierarchyButtonFragment = (HierarchyButtonFragment) fragmentManager.findFragmentByTag(HIERARCHY_BUTTON_FRAGMENT_TAG);
+                hierarchyButtonFragment.setNavigator(this);
+                formFragment = (FormSelectionFragment) fragmentManager.findFragmentByTag(FORM_FRAGMENT_TAG);
+                formFragment.setSelectionHandler(new FormSelectionHandler());
+                detailToggleFragment = (DetailToggleFragment) fragmentManager.findFragmentByTag(TOGGLE_FRAGMENT_TAG);
+                detailToggleFragment.setNavigateActivity(this);
+                visitFragment = (VisitFragment) fragmentManager.findFragmentByTag(VISIT_FRAGMENT_TAG);
+                visitFragment.setNavigateActivity(this);
+
+                defaultDetailFragment = new DefaultDetailFragment();
+                valueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
+                viewPathFormsFragment = (ViewPathFormsFragment) fragmentManager.findFragmentByTag(VIEW_RECENT_FORM_TAG);
+
+                // draw details if valuefrag is null, the drawing of valuefrag is
+                // handled in onResume().
+                if (null == valueFragment) {
+                    valueFragment = new DataSelectionFragment();
+                    viewPathFormsFragment = (ViewPathFormsFragment) fragmentManager.findFragmentByTag(VIEW_RECENT_FORM_TAG);
+                    detailFragment = (DetailFragment) fragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG);
+                    detailFragment.setNavigateActivity(this);
+                }
+                valueFragment.setSelectionHandler(new ValueSelectionHandler());
+
+                ArrayList<String> hierarchyPathKeys = savedInstanceState.getStringArrayList(HIERARCHY_PATH_KEYS);
+                for (String key : hierarchyPathKeys) {
+                    hierarchyPath.put(key, (DataWrapper) savedInstanceState.getParcelable(key + HIERARCHY_PATH_VALUES));
+                }
+                currentResults = savedInstanceState.getParcelableArrayList(CURRENT_RESULTS_KEY);
+                setCurrentVisit((Visit) savedInstanceState.get(VISIT_KEY));
             }
-            currentResults = savedInstanceState.getParcelableArrayList(CURRENT_RESULTS_KEY);
-            setCurrentVisit((Visit)savedInstanceState.get(VISIT_KEY));
+
+            setActivityVisualTheme(builder.getModuleUiHelper());
+
+        } catch (Exception e) {
+            Log.e(TAG, "failed to create navigation module by name " + currentModuleName, e);
         }
-        setActivityVisualTheme(builder.getModuleUiHelper());
     }
 
     // Takes in a NavigatePluginModule's (builder) ModuleUiHelper and sets all the fragment's drawables
@@ -220,32 +226,23 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
         // as a key and the moduleName.
         menuItemTags = new HashMap<>();
 
-        // get the list of modules to iterate through
-        List<String> modulesList = ProjectActivityBuilder.getActivityModuleNames();
-
-        // reference to the current hierarchy's name
+        // Configures the menu for switching between inactive modules (ones other than the 'current' one)
         String currentHierarchy = builder.getHierarchyInfo().getHierarchyName();
-
-        // for each module
-        for(String moduleName : modulesList){
-
-            // keep a reference to make the code readable
-            NavigatePluginModule module = ProjectActivityBuilder.getModuleByName(moduleName);
-
-            // if that module has the same hierarchy as the current module
-            if(module.getHierarchyInfo().getHierarchyName().equals(currentHierarchy) && !moduleName.equals(currentModuleName)){
-
-                // keep a reference to make the code readable
-                ModuleUiHelper uiHelper = module.getModuleUiHelper();
-
-                // add a menuItem for the module, set its UI, give it a tag for OnClick
-                MenuItem menuItem = menu.add(uiHelper.getModuleTitleStringId());
-                menuItem.setIcon(uiHelper.getModulePortalDrawableId());
-                menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-                menuItemTags.put(menuItem, moduleName);
-
+        for(ProjectActivityBuilder.Module module : ProjectActivityBuilder.Module.values()){
+            try {
+                NavigatePluginModule instance = module.newInstance();
+                // If the module matches the current module's hierarchy...
+                if(instance.getHierarchyInfo().getHierarchyName().equals(currentHierarchy) && !module.name().equals(currentModuleName)){
+                    ModuleUiHelper uiHelper = instance.getModuleUiHelper();
+                    // ...add a menu item and give it a tag for the click handler
+                    MenuItem menuItem = menu.add(uiHelper.getModuleTitleStringId());
+                    menuItem.setIcon(uiHelper.getModulePortalDrawableId());
+                    menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                    menuItemTags.put(menuItem, module.name());
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "failed to create options menu for module " + module.name(), e);
             }
-
         }
         return super.onCreateOptionsMenu(menu);
     }
