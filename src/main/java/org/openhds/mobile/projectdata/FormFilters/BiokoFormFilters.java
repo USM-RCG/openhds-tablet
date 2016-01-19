@@ -45,4 +45,12 @@ public class BiokoFormFilters {
         }
     }
 
+    public static class DuplicateLocation implements FormFilter {
+
+        @Override
+        public boolean amIValid(NavigateActivity navigateActivity) {
+            return true;
+        }
+    }
+
 }

@@ -292,6 +292,7 @@
     <string name="form_type_pregnancy_outcome">Pregnancy Outcome</string>
     <string name="form_type_household_spraying">Spraying</string>
     <string name="form_type_super_ojo">Super Ojo</string>
+    <string name="form_type_dup_location">Dup. Location</string>
     <string name="form_instance_list_header">Recent Forms</string>
     <string name="field_worker_home_menu_text">Field Worker Home</string>
     <string name="logout_menu_text">Logout</string>
@@ -314,5 +315,7 @@
     <string name="uuid">UUID</string>
     <string name="db_val_age_not_applicable">n/a</string>
     <string name="super_ojo">Super Ojo</string>
+
+    <string name="duplicate_location">Duplicate Location</string>
 
 </resources>

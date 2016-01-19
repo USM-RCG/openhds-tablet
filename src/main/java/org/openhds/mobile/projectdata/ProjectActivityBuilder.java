@@ -98,27 +98,33 @@ public class ProjectActivityBuilder {
 
         static {
 
-            ArrayList<FormBehaviour> individualFormList = new ArrayList<>();
+            List<FormBehaviour> individualForms = new ArrayList<>();
 
-            individualFormList.add(new FormBehaviour("Bed_net",
+            individualForms.add(new FormBehaviour("Bed_net",
                     R.string.distribute_bednets,
                     new BiokoFormFilters.DistributeBednets(),
                     new BiokoFormPayloadBuilders.DistributeBednets(),
                     new BiokoFormPayloadConsumers.DistributeBednets()));
 
-            individualFormList.add(new FormBehaviour("spraying",
+            individualForms.add(new FormBehaviour("spraying",
                     R.string.spray_household,
                     new BiokoFormFilters.SprayHousehold(),
                     new BiokoFormPayloadBuilders.SprayHousehold(),
                     new BiokoFormPayloadConsumers.SprayHousehold()));
 
-            individualFormList.add(new FormBehaviour("super_ojo",
+            individualForms.add(new FormBehaviour("super_ojo",
                     R.string.super_ojo,
                     new BiokoFormFilters.SuperOjo(),
                     new BiokoFormPayloadBuilders.SuperOjo(),
                     new BiokoFormPayloadConsumers.SuperOjo()));
 
-            formsForStates.put(INDIVIDUAL_STATE, individualFormList);
+            individualForms.add(new FormBehaviour("duplicate_location",
+                    R.string.duplicate_location,
+                    new BiokoFormFilters.DuplicateLocation(),
+                    new BiokoFormPayloadBuilders.DuplicateLocation(),
+                    new BiokoFormPayloadConsumers.DuplicateLocation()));
+
+            formsForStates.put(INDIVIDUAL_STATE, individualForms);
 
             // these details are off by 1: details for an individual should be
             // shown when you click a specific individual which is technically

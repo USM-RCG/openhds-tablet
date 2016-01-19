@@ -201,6 +201,7 @@ public class ProjectResources {
         private static final String FORM_TYPE_LOCATION_EVALUATION = "location_evaluation";
         private static final String FORM_TYPE_HOUSEHOLD_SPRAYING = "spraying";
         private static final String FORM_TYPE_SUPER_OJO = "super_ojo";
+        private static final String FORM_TYPE_DUP_LOCATION = "duplicate_location";
 
         static {
             FormType.put(FORM_TYPE_INDIVIDUAL, R.string.form_type_individual);
@@ -215,7 +216,7 @@ public class ProjectResources {
             FormType.put(FORM_TYPE_LOCATION_EVALUATION, R.string.form_type_location_evaluation);
             FormType.put(FORM_TYPE_HOUSEHOLD_SPRAYING, R.string.form_type_household_spraying);
             FormType.put(FORM_TYPE_SUPER_OJO, R.string.form_type_super_ojo);
-
+            FormType.put(FORM_TYPE_DUP_LOCATION, R.string.form_type_dup_location);
         }
 
         public static int getFormTypeStringId(String key) {

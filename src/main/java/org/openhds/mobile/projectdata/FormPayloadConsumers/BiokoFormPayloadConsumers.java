@@ -75,4 +75,22 @@ public class BiokoFormPayloadConsumers {
         }
     }
 
+    public static class DuplicateLocation implements FormPayloadConsumer {
+
+        @Override
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
+                                                  NavigateActivity navigateActivity) {
+            // FIXME: Do something intelligent to 'mark' dup status?
+//            LocationGateway gateway = GatewayRegistry.getLocationGateway();
+//            Location location = gateway.getFirst(navigateActivity.getContentResolver(),
+//                    gateway.findById(navigateActivity.getCurrentSelection().getUuid()));
+//            location.setHasReceivedBedNets("true");
+//            gateway.insertOrUpdate(navigateActivity.getContentResolver(), location);
+            return new ConsumerResults(false, null, null);
+        }
+
+        @Override
+        public void postFillFormPayload(Map<String, String> formPayload) { }
+
+    }
 }
