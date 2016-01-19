@@ -1,6 +1,7 @@
 package org.openhds.mobile.projectdata.FormPayloadBuilders;
 
 import android.content.ContentResolver;
+
 import org.openhds.mobile.activity.NavigateActivity;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.core.Individual;
@@ -13,6 +14,7 @@ import org.openhds.mobile.repository.gateway.LocationGateway;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -127,12 +129,32 @@ public class BiokoFormPayloadBuilders {
         @Override
         public void buildFormPayload(Map<String, String> formPayload, NavigateActivity navigateActivity) {
 
+            ContentResolver contentResolver = navigateActivity.getContentResolver();
+
             PayloadTools.addMinimalFormPayload(formPayload, navigateActivity);
             PayloadTools.flagForReview(formPayload, false);
+
+            DataWrapper mapArea = navigateActivity.getHierarchyPath().get(MAP_AREA_STATE);
+            formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, mapArea.getName());
+
+            DataWrapper sector = navigateActivity.getHierarchyPath().get(SECTOR_STATE);
+            formPayload.put(ProjectFormFields.Locations.SECTOR_NAME, sector.getName());
+
+            // Assign the next sequential building number in sector
+            LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
+            Iterator<Location> locationIterator = locationGateway.getIterator(contentResolver,
+                    locationGateway.findByHierarchyDescendingBuildingNumber(sector.getUuid()));
+            int buildingNumber = 1;
+            if (locationIterator.hasNext()) {
+                buildingNumber = locationIterator.next().getBuildingNumber() + 1;
+            }
+            formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, String.format("E%02d", buildingNumber));
 
             DataWrapper household = navigateActivity.getHierarchyPath().get(HOUSEHOLD_STATE);
             String locationExtId = household.getExtId();
             String locationUuid = household.getUuid();
+
+            formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, String.format("P%01d", 1));
 
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
