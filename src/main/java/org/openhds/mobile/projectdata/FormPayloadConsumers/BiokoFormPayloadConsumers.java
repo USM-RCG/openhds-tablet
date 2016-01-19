@@ -28,10 +28,7 @@ public class BiokoFormPayloadConsumers {
         }
 
         @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
-            // TODO Auto-generated method stub
-
-        }
+        public void postFillFormPayload(Map<String, String> formPayload) { }
 
     }
 
@@ -57,9 +54,7 @@ public class BiokoFormPayloadConsumers {
         }
 
         @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
-            // TODO Auto-generated method stub
-        }
+        public void postFillFormPayload(Map<String, String> formPayload) { }
     }
 
     public static class SuperOjo implements FormPayloadConsumer {
@@ -70,9 +65,7 @@ public class BiokoFormPayloadConsumers {
         }
 
         @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
-            // TODO Auto-generated method stub
-        }
+        public void postFillFormPayload(Map<String, String> formPayload) { }
     }
 
     public static class DuplicateLocation implements FormPayloadConsumer {
