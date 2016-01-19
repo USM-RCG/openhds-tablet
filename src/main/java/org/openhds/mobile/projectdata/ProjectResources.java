@@ -186,6 +186,7 @@ public class ProjectResources {
     public static final class FormType {
 
         //provides a mapping between JR form id and android string resource id
+        // FIXME: This duplicates the information in ProjectActivityBuilder
 
         private static final Map<String, Integer> FormType = new HashMap<>();
 
