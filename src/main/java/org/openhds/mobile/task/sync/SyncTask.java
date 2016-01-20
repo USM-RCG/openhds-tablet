@@ -144,15 +144,26 @@ public class SyncTask extends AsyncTask<SyncRequest, TaskStatus, SyncResult> {
     }
 
     class SyncTracker implements ProgressTracker {
+
+        private Stage stage;
+        private int percent;
+
         @Override
         public void onProgress(Stage stage, int percent) {
-            switch (stage) {
-                case SEARCH:
-                    publishProgress(new TaskStatus(R.string.sync_state_compare, percent));
-                    break;
-                case BUILD:
-                    publishProgress(new TaskStatus(R.string.sync_state_build, percent));
-                    break;
+            if (this.stage != stage || percent != this.percent) {
+
+                // Setting these guarantees only publishing unique updates
+                this.stage = stage;
+                this.percent = percent;
+
+                switch (stage) {
+                    case SEARCH:
+                        publishProgress(new TaskStatus(R.string.sync_state_compare, percent));
+                        break;
+                    case BUILD:
+                        publishProgress(new TaskStatus(R.string.sync_state_build, percent));
+                        break;
+                }
             }
         }
     }
