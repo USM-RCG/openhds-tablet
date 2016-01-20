@@ -85,8 +85,11 @@ public class ParseTask extends AsyncTask<ParseRequest, TaskStatus, Integer> {
     @SuppressWarnings("unchecked")
     private void persistBatch() {
         List<?> entities = parseRequest.getEntityParser().getEntities();
-        parseRequest.getGateway().insertMany(contentResolver, entities);
-        entities.clear();
+        try {
+            parseRequest.getGateway().insertMany(contentResolver, entities);
+        } finally {
+            entities.clear();
+        }
     }
 
     private String getTagName() {
