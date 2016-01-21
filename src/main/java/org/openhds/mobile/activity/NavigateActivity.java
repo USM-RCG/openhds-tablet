@@ -296,7 +296,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
         }
 
         String state = getStateSequence().get(stateIndex);
-        if (0 == stateIndex) {
+        if (stateIndex == 0) {
             hierarchyButtonFragment.setButtonAllowed(state, true);
             currentResults = builder.getQueryHelper().getAll(getContentResolver(), getStateSequence().get(0));
             updateToggleButton();
