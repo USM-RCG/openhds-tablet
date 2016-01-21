@@ -25,13 +25,13 @@
     <string name="login_btn">Login</string>
     <string name="logout_btn">Logout</string>
     <string name="main_txt">Form Management</string>
-    <string name="openhdswebservice">CIMS Web Service</string>
+    <string name="openhdswebservice" translatable="false">CIMS Web Service</string>
     <string name="owner_txt">Form Owner Id:</string>
     <string name="passwordHash">CIMS Password</string>
     <string name="retrieving_fieldworkers_interrupted">Retrieving Field Workers has been interrupted</string>
     <string name="send_to_odk_btn">Edit in ODK</string>
-    <string name="shared_pref_file_name">server_prefs</string>
-    <string name="shared_pref_server_url_key">server_url</string>
+    <string name="shared_pref_file_name" translatable="false">server_prefs</string>
+    <string name="shared_pref_server_url_key" translatable="false">server_url</string>
     <string name="sync_forms_successful">Forms Collected Successfully</string>
     <string name="sync_forms_failure">Failed to Collect the forms</string>
     <string name="unable_to_connect">Unable to connect</string>
@@ -69,12 +69,12 @@
     <string name="fieldworker_login">Field Worker Login</string>
     <string name="supervisor_login">Supervisor Login</string>
     <string name="preferences">Preferences</string>
-    <string name="openhds_server_url_key">openhds_server_url</string>
-    <string name="interop_server_url_key">interop_server_url</string>
+    <string name="openhds_server_url_key" translatable="false">openhds_server_url</string>
+    <string name="interop_server_url_key" translatable="false">interop_server_url</string>
     <string name="openhds_server_url_default_summary">Same URL used for CIMS Server via Web browser</string>
-    <string name="openhds_server_url_title">CIMS Server URL</string>
-    <string name="landscape_layout_tag">landscape</string>
-    <string name="portrait_layout_tag">portrait</string>
+    <string name="openhds_server_url_title" translatable="false">CIMS Server URL</string>
+    <string name="landscape_layout_tag" translatable="false">landscape</string>
+    <string name="portrait_layout_tag" translatable="false">portrait</string>
     <string name="supervisor_bad_credentials">Invalid supervisor credentials</string>
     <string name="preference_invalid_label">Invalid!</string>
     <string name="preference_invalid_warning">Invalid preference value</string>
@@ -104,15 +104,15 @@
     <!-- Server URLs and Paths -->
     <string name="default_interop_server_url">https://cims-bioko.org/openhds</string>
     <string name="default_openhds_server_url">https://cims-bioko.org/openhds</string>
-    <string name="supervisor_login_url">/api/rest/rounds</string>
-    <string name="sync_field_workers_path">/api/rest/fieldworkers</string>
-    <string name="sync_individuals_path">/api/rest/individuals/cached</string>
-    <string name="sync_location_hierarchies_path">/api/rest/locationhierarchies</string>
-    <string name="sync_locations_path">/api/rest/locations/cached</string>
-    <string name="sync_memberships_path">/api/rest/memberships/cached</string>
-    <string name="sync_relationships_path">/api/rest/relationships/cached</string>
-    <string name="sync_social_groups_path">/api/rest/socialgroups/cached</string>
-    <string name="sync_visits_path">/api/rest/visits/cached</string>
+    <string name="supervisor_login_url" translatable="false">/api/rest/rounds</string>
+    <string name="sync_field_workers_path" translatable="false">/api/rest/fieldworkers</string>
+    <string name="sync_individuals_path" translatable="false">/api/rest/individuals/cached</string>
+    <string name="sync_location_hierarchies_path" translatable="false">/api/rest/locationhierarchies</string>
+    <string name="sync_locations_path" translatable="false">/api/rest/locations/cached</string>
+    <string name="sync_memberships_path" translatable="false">/api/rest/memberships/cached</string>
+    <string name="sync_relationships_path" translatable="false">/api/rest/relationships/cached</string>
+    <string name="sync_social_groups_path" translatable="false">/api/rest/socialgroups/cached</string>
+    <string name="sync_visits_path" translatable="false">/api/rest/visits/cached</string>
 
     <!-- Details Fragment Values -->
     <string name="toggle_fragment_button_show_details">Show Details</string>
@@ -292,7 +292,7 @@
     <string name="form_type_pregnancy_outcome">Pregnancy Outcome</string>
     <string name="form_type_household_spraying">Spraying</string>
     <string name="form_type_super_ojo">Super Ojo</string>
-    <string name="form_type_dup_location">Dup. Location</string>
+    <string name="form_type_dup_location">Dup. Household</string>
     <string name="form_instance_list_header">Recent Forms</string>
     <string name="field_worker_home_menu_text">Field Worker Home</string>
     <string name="logout_menu_text">Logout</string>
@@ -317,5 +317,10 @@
     <string name="super_ojo">Super Ojo</string>
 
     <string name="duplicate_location">Duplicate Location</string>
+    <string name="databaseSync">Sync with CIMS Database</string>
+    <string name="form_instance_supervisor_approval">Approve</string>
+    <string name="supervisor_checkbox_header">Approved</string>
+    <string name="syncDatabase">Synchronize Database</string>
+    <string name="syncDatabaseMessage"> This procedure attempts to download CIMS entities to the device. Please be patient while the download is in progress.</string>
 
 </resources>
