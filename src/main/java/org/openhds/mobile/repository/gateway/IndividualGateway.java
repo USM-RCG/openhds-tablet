@@ -53,7 +53,7 @@ public class IndividualGateway extends Gateway<Individual> {
 
     public Query findByResidency(String residencyId) {
         return new Query(
-                tableUri, COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, residencyId, COLUMN_INDIVIDUAL_UUID);
+                tableUri, COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, residencyId, COLUMN_INDIVIDUAL_EXTID);
     }
 
     public Query findByExtIdPrefixDescending(String extIdPrefix) {

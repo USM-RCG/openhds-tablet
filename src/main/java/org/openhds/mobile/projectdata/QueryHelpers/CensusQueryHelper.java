@@ -76,7 +76,7 @@ public class CensusQueryHelper implements QueryHelper {
             case SECTOR_STATE:
                 LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
                 return locationGateway.getQueryResultList(contentResolver,
-                        locationGateway.findByHierarchyDescendingBuildingNumber(qr.getUuid()), childState);
+                        locationGateway.findByHierarchy(qr.getUuid()), childState);
             case HOUSEHOLD_STATE:
                 IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
                 return individualGateway.getQueryResultList(contentResolver,

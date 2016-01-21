@@ -43,7 +43,7 @@ public class LocationGateway extends Gateway<Location> {
     }
 
     public Query findByHierarchy(String hierarchyId) {
-        return new Query(tableUri, COLUMN_LOCATION_HIERARCHY_UUID, hierarchyId, COLUMN_LOCATION_UUID);
+        return new Query(tableUri, COLUMN_LOCATION_HIERARCHY_UUID, hierarchyId, COLUMN_LOCATION_EXTID);
     }
 
     // for Bioko

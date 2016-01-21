@@ -31,7 +31,7 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
     }
 
     public Query findByParent(String parentId) {
-        return new Query(tableUri, COLUMN_HIERARCHY_PARENT, parentId, COLUMN_HIERARCHY_UUID);
+        return new Query(tableUri, COLUMN_HIERARCHY_PARENT, parentId, COLUMN_HIERARCHY_EXTID);
     }
 
     private static class LocationHierarchyConverter implements Converter<LocationHierarchy> {
