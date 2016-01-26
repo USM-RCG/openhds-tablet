@@ -154,12 +154,15 @@ public class BiokoFormPayloadBuilders {
             String locationExtId = household.getExtId();
             String locationUuid = household.getUuid();
 
+            Location existing = locationGateway.getFirst(contentResolver,locationGateway.findById(locationUuid));
+
             formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, String.format("P%01d", 1));
 
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, locationUuid);
+            formPayload.put(ProjectFormFields.Locations.DESCRIPTION, existing.getDescription());
         }
     }
 }
