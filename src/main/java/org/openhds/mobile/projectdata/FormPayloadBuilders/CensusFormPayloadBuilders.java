@@ -36,9 +36,9 @@ public class CensusFormPayloadBuilders {
         LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
         LocationHierarchy sector = locationHierarchyGateway.getFirst(contentResolver,
                 locationHierarchyGateway.findById(sectorDataWrapper.getUuid()));
-        formPayload.put(ProjectFormFields.Locations.HIERERCHY_EXTID, sector.getExtId());
-        formPayload.put(ProjectFormFields.Locations.HIERERCHY_UUID, sector.getUuid());
-        formPayload.put(ProjectFormFields.Locations.HIERERCHY_PARENT_UUID, sector.getParentUuid());
+        formPayload.put(ProjectFormFields.Locations.HIERARCHY_EXTID, sector.getExtId());
+        formPayload.put(ProjectFormFields.Locations.HIERARCHY_UUID, sector.getUuid());
+        formPayload.put(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID, sector.getParentUuid());
         formPayload.put(ProjectFormFields.Locations.SECTOR_NAME, sector.getName());
 
         // map area name is <mapAreaName>

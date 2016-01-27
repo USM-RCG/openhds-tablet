@@ -39,7 +39,7 @@ public class CensusFormPayloadConsumers {
 
         LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
         LocationHierarchy mapArea = locationHierarchyGateway.getFirst(contentResolver,
-                locationHierarchyGateway.findById(formPayload.get(ProjectFormFields.Locations.HIERERCHY_PARENT_UUID)));
+                locationHierarchyGateway.findById(formPayload.get(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID)));
         String sectorName =  formPayload.get(ProjectFormFields.Locations.SECTOR_NAME);
         String sectorExtId = mapArea.getExtId() + sectorName;
         LocationHierarchy sector = locationHierarchyGateway.getFirst(contentResolver,
@@ -56,9 +56,9 @@ public class CensusFormPayloadConsumers {
 
             // Modify the payload to refer to the created sector
             formPayload.put(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NEEDS_REVIEW);
-            formPayload.put(ProjectFormFields.Locations.HIERERCHY_UUID, sector.getUuid());
-            formPayload.put(ProjectFormFields.Locations.HIERERCHY_PARENT_UUID, sector.getParentUuid());
-            formPayload.put(ProjectFormFields.Locations.HIERERCHY_EXTID, sector.getExtId());
+            formPayload.put(ProjectFormFields.Locations.HIERARCHY_UUID, sector.getUuid());
+            formPayload.put(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID, sector.getParentUuid());
+            formPayload.put(ProjectFormFields.Locations.HIERARCHY_EXTID, sector.getExtId());
         }
     }
 
