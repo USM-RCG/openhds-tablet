@@ -41,7 +41,7 @@ public class CensusFormPayloadConsumers {
         LocationHierarchy mapArea = locationHierarchyGateway.getFirst(contentResolver,
                 locationHierarchyGateway.findById(formPayload.get(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID)));
         String sectorName =  formPayload.get(ProjectFormFields.Locations.SECTOR_NAME);
-        String sectorExtId = mapArea.getExtId() + sectorName;
+        String sectorExtId = mapArea.getExtId().replaceFirst("^(M\\d+)\\b", "$1\\" + sectorName);
         LocationHierarchy sector = locationHierarchyGateway.getFirst(contentResolver,
                 locationHierarchyGateway.findByExtId(sectorExtId));
 
