@@ -148,7 +148,7 @@ public class BiokoFormPayloadBuilders {
             if (locationIterator.hasNext()) {
                 buildingNumber = locationIterator.next().getBuildingNumber() + 1;
             }
-            formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, String.format("E%02d", buildingNumber));
+            formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, String.format("E%03d", buildingNumber));
 
             DataWrapper household = navigateActivity.getHierarchyPath().get(HOUSEHOLD_STATE);
             String locationExtId = household.getExtId();
@@ -156,7 +156,7 @@ public class BiokoFormPayloadBuilders {
 
             Location existing = locationGateway.getFirst(contentResolver,locationGateway.findById(locationUuid));
 
-            formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, String.format("P%01d", 1));
+            formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, String.format("P%02d", 1));
 
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
