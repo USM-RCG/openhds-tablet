@@ -5,6 +5,7 @@ import com.github.batkinson.jrsync.zsync.IOUtil;
 import org.openhds.mobile.repository.gateway.Gateway;
 import org.openhds.mobile.task.parsing.entities.EntityParser;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -76,7 +77,7 @@ class ParserInputStream extends InputStream {
     long bytesRead;
 
     ParserInputStream(File f) throws FileNotFoundException {
-        this(new FileInputStream(f), f.length());
+        this(new BufferedInputStream(new FileInputStream(f)), f.length());
     }
 
     ParserInputStream(InputStream stream, long length) {
