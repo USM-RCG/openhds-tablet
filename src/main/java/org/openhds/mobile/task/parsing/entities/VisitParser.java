@@ -15,13 +15,11 @@ public class VisitParser extends EntityParser<Visit> {
     @Override
     protected Visit toEntity(DataPage dataPage) {
         Visit visit = new Visit();
-
-        visit.setExtId(dataPage.getFirstString(asList(pageName, "extId")));
         visit.setUuid(dataPage.getFirstString(asList(pageName, "uuid")));
-        visit.setLocationUuid(dataPage.getFirstString(asList(pageName, "visitLocation", "uuid")));
+        visit.setExtId(dataPage.getFirstString(asList(pageName, "extId")));
+        visit.setLocationUuid(dataPage.getFirstString(asList(pageName, "location")));
         visit.setVisitDate(dataPage.getFirstString(asList(pageName, "visitDate")));
-        visit.setFieldWorkerUuid(dataPage.getFirstString(asList(pageName, "collectedBy", "uuid")));
-
+        visit.setFieldWorkerUuid(dataPage.getFirstString(asList(pageName, "collectedBy")));
         return visit;
     }
 }

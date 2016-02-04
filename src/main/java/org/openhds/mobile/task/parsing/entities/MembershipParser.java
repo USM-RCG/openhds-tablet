@@ -15,12 +15,10 @@ public class MembershipParser extends EntityParser<Membership> {
     @Override
     protected Membership toEntity(DataPage dataPage) {
         Membership membership = new Membership();
-
         membership.setUuid(dataPage.getFirstString(asList(pageName, "uuid")));
-        membership.setIndividualUuid(dataPage.getFirstString(asList(pageName, "individual", "uuid")));
+        membership.setIndividualUuid(dataPage.getFirstString(asList(pageName, "indiv")));
         membership.setRelationshipToHead(dataPage.getFirstString(asList(pageName, "bIsToA")));
-        membership.setSocialGroupUuid(dataPage.getFirstString(asList(pageName, "socialGroup", "uuid")));
-
+        membership.setSocialGroupUuid(dataPage.getFirstString(asList(pageName, "socialGroup")));
         return membership;
     }
 }

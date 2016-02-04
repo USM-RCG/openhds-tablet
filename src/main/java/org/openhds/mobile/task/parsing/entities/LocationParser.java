@@ -15,27 +15,21 @@ public class LocationParser extends EntityParser<Location> {
     @Override
     protected Location toEntity(DataPage dataPage) {
         Location location = new Location();
-
         location.setUuid(dataPage.getFirstString(asList(pageName, "uuid")));
         location.setExtId(dataPage.getFirstString(asList(pageName, "extId")));
-        location.setHierarchyUuid(dataPage.getFirstString(asList(pageName, "locationHierarchy", "uuid")));
-        location.setHierarchyExtId(dataPage.getFirstString(asList(pageName, "locationHierarchy", "extId")));
-        location.setLatitude(dataPage.getFirstString(asList(pageName, "latitude")));
-        location.setLongitude(dataPage.getFirstString(asList(pageName, "longitude")));
-        location.setName(dataPage.getFirstString(asList(pageName, "locationName")));
-        location.setSectorName(dataPage.getFirstString(asList(pageName, "sectorName")));
-        location.setMapAreaName(dataPage.getFirstString(asList(pageName, "mapAreaName")));
-        location.setLocalityName(dataPage.getFirstString(asList(pageName, "localityName")));
-        location.setCommunityName(dataPage.getFirstString(asList(pageName, "communityName")));
-        location.setCommunityCode(dataPage.getFirstString(asList(pageName, "communityCode")));
-        location.setBuildingNumber(dataPage.getFirstInt(asList(pageName, "buildingNumber")));
-        location.setFloorNumber(dataPage.getFirstInt(asList(pageName, "floorNumber")));
+        location.setHierarchyUuid(dataPage.getFirstString(asList(pageName, "hierUuid")));
+        location.setHierarchyExtId(dataPage.getFirstString(asList(pageName, "hierExtId")));
+        location.setName(dataPage.getFirstString(asList(pageName, "name")));
         location.setDescription(dataPage.getFirstString(asList(pageName, "description")));
-        location.setLocationEvaluationStatus(dataPage.getFirstString(asList(pageName, "evaluationStatus")));
-        location.setLongitude(dataPage.getFirstString(asList(pageName, "longitude")));
+        location.setCommunityName(dataPage.getFirstString(asList(pageName, "community")));
+        location.setCommunityCode       (dataPage.getFirstString(asList(pageName, "communityCode")));
+        location.setLocalityName(dataPage.getFirstString(asList(pageName, "locality")));
+        location.setMapAreaName(dataPage.getFirstString(asList(pageName, "map")));
+        location.setSectorName(dataPage.getFirstString(asList(pageName, "sector")));
+        location.setBuildingNumber(dataPage.getFirstInt(asList(pageName, "building")));
+        location.setFloorNumber(dataPage.getFirstInt(asList(pageName, "floor")));
         location.setLatitude(dataPage.getFirstString(asList(pageName, "latitude")));
-
-
+        location.setLongitude(dataPage.getFirstString(asList(pageName, "longitude")));
         return location;
     }
 }

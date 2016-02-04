@@ -15,13 +15,11 @@ public class RelationshipParser extends EntityParser<Relationship> {
     @Override
     protected Relationship toEntity(DataPage dataPage) {
         Relationship relationship = new Relationship();
-
-        relationship.setIndividualAUuid(dataPage.getFirstString(asList(pageName, "individualA", "uuid")));
-        relationship.setIndividualBUuid(dataPage.getFirstString(asList(pageName, "individualB", "uuid")));
+        relationship.setUuid(dataPage.getFirstString(asList(pageName, "uuid")));
+        relationship.setIndividualAUuid(dataPage.getFirstString(asList(pageName, "indivA")));
+        relationship.setIndividualBUuid(dataPage.getFirstString(asList(pageName, "indivB")));
         relationship.setStartDate(dataPage.getFirstString(asList(pageName, "startDate")));
         relationship.setType(dataPage.getFirstString(asList(pageName, "aIsToB")));
-        relationship.setUuid(dataPage.getFirstString(asList(pageName, "uuid")));
-
         return relationship;
     }
 }

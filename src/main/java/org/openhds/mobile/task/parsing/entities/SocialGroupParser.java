@@ -15,12 +15,10 @@ public class SocialGroupParser extends EntityParser<SocialGroup> {
     @Override
     protected SocialGroup toEntity(DataPage dataPage) {
         SocialGroup socialGroup = new SocialGroup();
-
         socialGroup.setUuid(dataPage.getFirstString(asList(pageName, "uuid")));
-        socialGroup.setGroupHeadUuid(dataPage.getFirstString(asList(pageName, "groupHead", "uuid")));
-        socialGroup.setLocationUuid(dataPage.getFirstString(asList(pageName, "location", "uuid")));
-        socialGroup.setGroupName(dataPage.getFirstString(asList(pageName, "groupName")));
-
+        socialGroup.setGroupHeadUuid(dataPage.getFirstString(asList(pageName, "head")));
+        socialGroup.setLocationUuid(dataPage.getFirstString(asList(pageName, "location")));
+        socialGroup.setGroupName(dataPage.getFirstString(asList(pageName, "name")));
         return socialGroup;
     }
 }
