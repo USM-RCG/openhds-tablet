@@ -15,13 +15,11 @@ public class LocationHierarchyParser extends EntityParser<LocationHierarchy> {
     @Override
     protected LocationHierarchy toEntity(DataPage dataPage) {
         LocationHierarchy locationHierarchy = new LocationHierarchy();
-
         locationHierarchy.setUuid(dataPage.getFirstString(asList(pageName, "uuid")));
         locationHierarchy.setExtId(dataPage.getFirstString(asList(pageName, "extId")));
-        locationHierarchy.setLevel(dataPage.getFirstString(asList(pageName, "level", "name")));
         locationHierarchy.setName(dataPage.getFirstString(asList(pageName, "name")));
-        locationHierarchy.setParentUuid(dataPage.getFirstString(asList(pageName, "parent", "uuid")));
-
+        locationHierarchy.setLevel(dataPage.getFirstString(asList(pageName, "level")));
+        locationHierarchy.setParentUuid(dataPage.getFirstString(asList(pageName, "parent")));
         return locationHierarchy;
     }
 }

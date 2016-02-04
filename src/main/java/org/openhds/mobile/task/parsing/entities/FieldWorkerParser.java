@@ -15,14 +15,12 @@ public class FieldWorkerParser extends EntityParser<FieldWorker> {
     @Override
     protected FieldWorker toEntity(DataPage dataPage) {
         FieldWorker fieldWorker = new FieldWorker();
-
-        fieldWorker.setPasswordHash(dataPage.getFirstString(asList(pageName, "passwordHash")));
-        fieldWorker.setIdPrefix(dataPage.getFirstString(asList(pageName, "idPrefix")));
+        fieldWorker.setUuid(dataPage.getFirstString(asList(pageName, "uuid")));
         fieldWorker.setExtId(dataPage.getFirstString(asList(pageName, "extId")));
+        fieldWorker.setIdPrefix(dataPage.getFirstString(asList(pageName, "id")));
+        fieldWorker.setPasswordHash(dataPage.getFirstString(asList(pageName, "pass")));
         fieldWorker.setFirstName(dataPage.getFirstString(asList(pageName, "firstName")));
         fieldWorker.setLastName(dataPage.getFirstString(asList(pageName, "lastName")));
-        fieldWorker.setUuid(dataPage.getFirstString(asList(pageName, "uuid")));
-
         return fieldWorker;
     }
 }

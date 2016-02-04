@@ -105,9 +105,9 @@
     <string name="default_interop_server_url">https://cims-bioko.org/openhds</string>
     <string name="default_openhds_server_url">https://cims-bioko.org/openhds</string>
     <string name="supervisor_login_url" translatable="false">/api/rest/rounds</string>
-    <string name="sync_field_workers_path" translatable="false">/api/rest/fieldworkers</string>
+    <string name="sync_field_workers_path" translatable="false">/api/rest/fieldworkers/cached</string>
     <string name="sync_individuals_path" translatable="false">/api/rest/individuals/cached</string>
-    <string name="sync_location_hierarchies_path" translatable="false">/api/rest/locationhierarchies</string>
+    <string name="sync_location_hierarchies_path" translatable="false">/api/rest/locationhierarchies/cached</string>
     <string name="sync_locations_path" translatable="false">/api/rest/locations/cached</string>
     <string name="sync_memberships_path" translatable="false">/api/rest/memberships/cached</string>
     <string name="sync_relationships_path" translatable="false">/api/rest/relationships/cached</string>
