@@ -85,8 +85,8 @@ public class SupervisorLoginFragment extends Fragment implements
 
     private void authenticateSupervisor() {
         HttpTaskRequest httpTaskRequest = new HttpTaskRequest(
-                R.string.login_btn, getUrl(), null, getUsernameFromEditText(), getPasswordFromEditText());
-
+                getUrl(), null, getUsernameFromEditText(), getPasswordFromEditText()
+        );
         HttpTask httpTask = new HttpTask(new AuthenticateListener());
         httpTask.execute(httpTaskRequest);
     }

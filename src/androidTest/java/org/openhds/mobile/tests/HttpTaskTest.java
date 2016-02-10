@@ -35,7 +35,7 @@ public class HttpTaskTest  extends AndroidTestCase {
         // start a task to GET from the httpbin service
         httpTaskResponse = null;
         final String testUrl = TEST_GET_URL + "?" + TEST_GET_PARAM + "=" + TEST_GET_VALUE;
-        HttpTaskRequest httpTaskRequest = new HttpTaskRequest(0, testUrl, null, "", "");
+        HttpTaskRequest httpTaskRequest = new HttpTaskRequest(testUrl, null, "", "");
         HttpTask httpTask = new HttpTask(new ResponseHandler());
         httpTask.execute(httpTaskRequest);
 
@@ -62,7 +62,7 @@ public class HttpTaskTest  extends AndroidTestCase {
     public void testGetBadUrl() throws Exception {
         // start a task to GET from a bogus url
         httpTaskResponse = null;
-        HttpTaskRequest httpTaskRequest = new HttpTaskRequest(0, BAD_GET_URL, null, "", "");
+        HttpTaskRequest httpTaskRequest = new HttpTaskRequest(BAD_GET_URL, null, "", "");
         HttpTask httpTask = new HttpTask(new ResponseHandler());
         httpTask.execute(httpTaskRequest);
 

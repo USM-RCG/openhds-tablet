@@ -15,7 +15,6 @@ import java.io.File;
  */
 public class HttpTaskRequest {
 
-    private final int titleId;
     private final String url;
     private final String userName;
     private final String password;
@@ -23,26 +22,21 @@ public class HttpTaskRequest {
     private final String eTag;
     private final File file;
 
-    public HttpTaskRequest(int titleId, String url, String accept, String userName, String password) {
-        this(titleId, url, accept, userName, password, null);
+    public HttpTaskRequest(String url, String accept, String userName, String password) {
+        this(url, accept, userName, password, null);
     }
 
-    public HttpTaskRequest(int titleId, String url, String accept, String userName, String password, String eTag) {
-        this(titleId, url, accept, userName, password, eTag, null);
+    public HttpTaskRequest(String url, String accept, String userName, String password, String eTag) {
+        this(url, accept, userName, password, eTag, null);
     }
 
-    public HttpTaskRequest(int titleId, String url, String accept, String userName, String password, String eTag, File saveTo) {
-        this.titleId = titleId;
+    public HttpTaskRequest(String url, String accept, String userName, String password, String eTag, File saveTo) {
         this.url = url;
         this.accept = accept;
         this.userName = userName;
         this.password = password;
         this.eTag = eTag;
         file = saveTo;
-    }
-
-    public int getTitleId() {
-        return titleId;
     }
 
     public String getUrl() {
