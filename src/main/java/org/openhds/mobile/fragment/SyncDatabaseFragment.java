@@ -18,23 +18,19 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static android.text.format.DateUtils.SECOND_IN_MILLIS;
-import static android.text.format.DateUtils.WEEK_IN_MILLIS;
-import static android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE;
-import static android.text.format.DateUtils.getRelativeDateTimeString;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
+import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
+import static org.openhds.mobile.provider.OpenHDSProvider.getDatabaseHelper;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
 import static org.openhds.mobile.utilities.SyncUtils.SQLITE_MIME_TYPE;
 import static org.openhds.mobile.utilities.SyncUtils.hashFilename;
 import static org.openhds.mobile.utilities.SyncUtils.loadHash;
-import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
-import static org.apache.http.HttpStatus.SC_OK;
 import static org.openhds.mobile.utilities.SyncUtils.storeHash;
 import static org.openhds.mobile.utilities.SyncUtils.tempFilename;
-import static org.openhds.mobile.provider.OpenHDSProvider.getDatabaseHelper;
 
 /**
  * Allow user to check for db updates, download and apply them.
@@ -61,7 +57,7 @@ public class SyncDatabaseFragment extends Fragment {
 
     private void updateStatus() {
         String fpVal = getFingerprint();
-        fingerprint.setText(fpVal.length() > 8? fpVal.substring(0, 8) + '\u2026': fpVal);
+        fingerprint.setText(fpVal.length() > 8 ? fpVal.substring(0, 8) + '\u2026' : fpVal);
         lastUpdated.setText(getLastUpdated());
     }
 
@@ -124,16 +120,16 @@ public class SyncDatabaseFragment extends Fragment {
             if (response.getHttpStatus() == SC_NOT_MODIFIED) {
                 showLongToast(getActivity(), R.string.sync_state_noupdate);
             } else if (response.getHttpStatus() == SC_OK) {
-                File downloadedDbFile = getDatabaseTempFile(), dbFile = getDatabaseFile();
-                if (!downloadedDbFile.exists()) {
-                    showLongToast(getActivity(), "");
+                File dbTmpFile = getDatabaseTempFile(), dbFile = getDatabaseFile();
+                if (!dbTmpFile.exists()) {
+                    showLongToast(getActivity(), "Database download failed");
                 } else {
                     getDatabaseHelper(getActivity()).close();
-                    if (downloadedDbFile.renameTo(dbFile)) {
-                        storeHash(getFingerprintFile(), response.getETag());
-                        showLongToast(getActivity(), "Downloaded update, restarting app");
+                    if (!dbTmpFile.renameTo(dbFile)) {
+                        showLongToast(getActivity(), "Database rename failed");
                     } else {
-                        showLongToast(getActivity(), "Failed to install new db");
+                        storeHash(getFingerprintFile(), response.getETag());
+                        showLongToast(getActivity(), "Database updated");
                     }
                 }
             } else {
