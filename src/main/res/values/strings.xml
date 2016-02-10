@@ -105,14 +105,7 @@
     <string name="default_interop_server_url">https://cims-bioko.org/openhds</string>
     <string name="default_openhds_server_url">https://cims-bioko.org/openhds</string>
     <string name="supervisor_login_url" translatable="false">/api/rest/rounds</string>
-    <string name="sync_field_workers_path" translatable="false">/api/rest/fieldworkers/cached</string>
-    <string name="sync_individuals_path" translatable="false">/api/rest/individuals/cached</string>
-    <string name="sync_location_hierarchies_path" translatable="false">/api/rest/locationhierarchies/cached</string>
-    <string name="sync_locations_path" translatable="false">/api/rest/locations/cached</string>
-    <string name="sync_memberships_path" translatable="false">/api/rest/memberships/cached</string>
-    <string name="sync_relationships_path" translatable="false">/api/rest/relationships/cached</string>
-    <string name="sync_social_groups_path" translatable="false">/api/rest/socialgroups/cached</string>
-    <string name="sync_visits_path" translatable="false">/api/rest/visits/cached</string>
+    <string name="sync_database_path" translatable="false">/api/rest/mobiledb/cached</string>
 
     <!-- Details Fragment Values -->
     <string name="toggle_fragment_button_show_details">Show Details</string>
@@ -172,28 +165,20 @@
     <string name="search_field_worker_label">Find a Field Worker</string>
 
     <!-- Sync Labels-->
+    <string name="sync_database_updated_never">Never</string>
+    <string name="sync_database_no_fingerprint" translatable="false">-</string>
     <string name="sync_database_label">Sync Database</string>
     <string name="sync_database_canceled">canceled</string>
     <string name="sync_database_cache_cleared">Cache cleared</string>
     <string name="sync_database_description">Download data from the server</string>
-    <string name="sync_database_column_entity">Entity</string>
-    <string name="sync_database_column_status">Status</string>
-    <string name="sync_database_column_errors">Errors</string>
-    <string name="sync_database_column_action">Action</string>
+    <string name="sync_database_column_updated">Last Updated</string>
+    <string name="sync_database_column_fingerprint">Fingerprint</string>
     <string name="sync_database_button_sync">Sync</string>
     <string name="sync_database_button_cancel">Cancel</string>
     <string name="sync_database_button_waiting">Waiting</string>
-    <string name="sync_database_button_sync_all">Sync All</string>
+    <string name="sync_database_button_update">Update</string>
     <string name="sync_database_button_clear_cache">Clear Cache</string>
     <string name="sync_database_button_cancel_all">Cancel All</string>
-    <string name="sync_database_label_field_workers">Field Workers</string>
-    <string name="sync_database_label_individuals">Individuals</string>
-    <string name="sync_database_label_locations">Locations</string>
-    <string name="sync_database_label_location_hierarchies">Location Hier\'s</string>
-    <string name="sync_database_label_memberships">Memberships</string>
-    <string name="sync_database_label_relationships">Relationships</string>
-    <string name="sync_database_label_social_groups">Social Groups</string>
-    <string name="sync_database_label_visits">Visits</string>
 
     <!-- Sync state labels -->
     <string name="sync_state_metadata">Metadata</string>
@@ -202,8 +187,6 @@
     <string name="sync_state_build">Build</string>
     <string name="sync_state_synced">Synced</string>
     <string name="sync_state_download">Download</string>
-    <string name="sync_state_wiping">Wiping</string>
-    <string name="sync_state_parse">Parse</string>
     <string name="sync_state_complete">Complete</string>
     <string name="sync_state_canceled">Canceled</string>
     <string name="sync_state_noupdate">No Update</string>

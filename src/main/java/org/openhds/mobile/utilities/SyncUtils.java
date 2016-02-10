@@ -24,18 +24,14 @@ public class SyncUtils {
 
     private static final String TAG = SyncUtils.class.getName();
 
-    public static final String XML_MIME_TYPE = "application/xml";
+    public static final String SQLITE_MIME_TYPE = "application/x-sqlite3";
 
-    public static String hashFilename(String entityName) {
-        return String.format("%s.etag", entityName);
+    public static String hashFilename(String filename) {
+        return String.format("%s.etag", filename);
     }
 
-    public static String entityFilename(String entityName) {
-        return String.format("%s.xml", entityName);
-    }
-
-    public static String tempFilename(String entityName) {
-        return String.format("%s.xml-tmp", entityName);
+    public static String tempFilename(String filename) {
+        return String.format("%s.tmp", filename);
     }
 
     public static String loadHash(File hashFile) {
