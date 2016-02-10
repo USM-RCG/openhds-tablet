@@ -29,6 +29,7 @@ import android.util.Log;
  * This class is based on the NotPadProvider sample in the Android SDK
  */
 public class OpenHDSProvider extends ContentProvider {
+
     public static final String DATABASE_NAME = "openhds.db";
     public static final int DATABASE_VERSION = 13;
 
@@ -327,11 +328,14 @@ public class OpenHDSProvider extends ContentProvider {
                 OpenHDS.Memberships.COLUMN_MEMBERSHIP_RELATIONSHIP_TO_HEAD);
     }
 
-    private DatabaseHelper mOpenHelper;
+    private static DatabaseHelper dbHelper;
     private PasswordHelper passwordHelper;
 
-    public DatabaseHelper getDatabaseHelper() {
-        return mOpenHelper;
+    public static DatabaseHelper getDatabaseHelper(Context ctx) {
+        if (dbHelper == null) {
+            dbHelper = new DatabaseHelper(ctx.getApplicationContext());
+        }
+        return dbHelper;
     }
 
     public void setPasswordHelper(PasswordHelper passwordHelper) {
@@ -353,7 +357,7 @@ public class OpenHDSProvider extends ContentProvider {
         // Creates a new database helper object.
         // Note: database itself isn't opened until something tries to access it,
         // and it's only created if it doesn't already exist.
-        mOpenHelper = new DatabaseHelper(getContext());
+        dbHelper = getDatabaseHelper(getContext());
 
         return true;
     }
@@ -362,7 +366,7 @@ public class OpenHDSProvider extends ContentProvider {
     @Override
     public int bulkInsert(Uri uri, ContentValues[] values) {
         int inserted = -1;
-        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
             inserted = super.bulkInsert(uri, values);
@@ -489,7 +493,7 @@ public class OpenHDSProvider extends ContentProvider {
             orderBy = sortOrder;
         }
 
-        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor c = qb.query(db, // The database to query
                 projection, // The columns to return from the query
@@ -505,7 +509,7 @@ public class OpenHDSProvider extends ContentProvider {
     }
 
     private String[] addSocialGroupUuid(SQLiteQueryBuilder qb, String string) {
-        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
         // get all individuals at location
         Cursor c = db.query(OpenHDS.Individuals.TABLE_NAME,
                 new String[] { OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID },
@@ -634,7 +638,7 @@ public class OpenHDSProvider extends ContentProvider {
             values = new ContentValues();
         }
 
-        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         long rowId = db.insert(table, null, values);
 
@@ -649,7 +653,7 @@ public class OpenHDSProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String where, String[] whereArgs) {
-        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         String finalWhere;
 
         int count;
@@ -753,7 +757,7 @@ public class OpenHDSProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String where,
                       String[] whereArgs) {
-        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         int count;
         String finalWhere;
 

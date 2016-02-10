@@ -49,16 +49,15 @@ public abstract class GatewayTest<T> extends ProviderTestCase2<OpenHDSProvider> 
         provider.setPasswordHelper(new ConstantPasswordHelper());
 
         // make sure we have a fresh database for each test
-        SQLiteOpenHelper databaseHelper = provider.getDatabaseHelper();
+        SQLiteOpenHelper databaseHelper = provider.getDatabaseHelper(getContext());
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
         databaseHelper.onUpgrade(db, 0, 0);
     }
 
     @Override
     protected void tearDown() {
-        SQLiteOpenHelper databaseHelper = provider.getDatabaseHelper();
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
-        db.close();
+        SQLiteOpenHelper databaseHelper = provider.getDatabaseHelper(getContext());
+        databaseHelper.close();
     }
 
     public void testSafeToFindWhenEmpty() {
