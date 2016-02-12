@@ -1,6 +1,10 @@
 package org.openhds.mobile.utilities;
 
+import android.content.Context;
 import android.util.Log;
+
+import org.openhds.mobile.R;
+import org.openhds.mobile.task.http.HttpTaskRequest;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,10 +16,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import static com.github.batkinson.jrsync.zsync.IOUtil.BUFFER_SIZE;
 import static com.github.batkinson.jrsync.zsync.IOUtil.buffer;
 import static com.github.batkinson.jrsync.zsync.IOUtil.close;
+import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
+import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
+import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 
 /**
  * Dumping grounds for miscellaneous sync-related functions.
@@ -32,6 +41,37 @@ public class SyncUtils {
 
     public static String tempFilename(String filename) {
         return String.format("%s.tmp", filename);
+    }
+
+    public static File getDatabaseFile(Context ctx) {
+        return ctx.getDatabasePath(DATABASE_NAME);
+    }
+
+    public static File getDatabaseTempFile(Context ctx) {
+        return ctx.getDatabasePath(tempFilename(DATABASE_NAME));
+    }
+
+    public static File getFingerprintFile(Context ctx) {
+        return ctx.getDatabasePath(hashFilename(DATABASE_NAME));
+    }
+
+    public static String getFingerprint(Context ctx) {
+        String content = loadHash(getFingerprintFile(ctx));
+        return content != null ? content : "-";
+    }
+
+    public static HttpTaskRequest buildHttpRequest(Context ctx, String user, String pass) throws MalformedURLException {
+        return new HttpTaskRequest(
+                getSyncEndpoint(ctx).toExternalForm(), SQLITE_MIME_TYPE,
+                user, pass,
+                getFingerprint(ctx),
+                getDatabaseTempFile(ctx));
+    }
+
+    public static URL getSyncEndpoint(Context ctx) throws MalformedURLException {
+        String baseUrl = getPreferenceString(ctx, R.string.openhds_server_url_key, "");
+        String path = getResourceString(ctx, R.string.sync_database_path);
+        return new URL(baseUrl + path);
     }
 
     public static String loadHash(File hashFile) {

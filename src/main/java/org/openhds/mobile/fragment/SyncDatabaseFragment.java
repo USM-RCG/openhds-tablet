@@ -1,6 +1,8 @@
 package org.openhds.mobile.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,21 +18,18 @@ import org.openhds.mobile.task.http.HttpTaskResponse;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
 import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
 import static org.openhds.mobile.provider.OpenHDSProvider.getDatabaseHelper;
-import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
-import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
-import static org.openhds.mobile.utilities.SyncUtils.SQLITE_MIME_TYPE;
-import static org.openhds.mobile.utilities.SyncUtils.hashFilename;
-import static org.openhds.mobile.utilities.SyncUtils.loadHash;
+import static org.openhds.mobile.utilities.SyncUtils.buildHttpRequest;
+import static org.openhds.mobile.utilities.SyncUtils.getDatabaseFile;
+import static org.openhds.mobile.utilities.SyncUtils.getDatabaseTempFile;
+import static org.openhds.mobile.utilities.SyncUtils.getFingerprint;
+import static org.openhds.mobile.utilities.SyncUtils.getFingerprintFile;
 import static org.openhds.mobile.utilities.SyncUtils.storeHash;
-import static org.openhds.mobile.utilities.SyncUtils.tempFilename;
 
 /**
  * Allow user to check for db updates, download and apply them.
@@ -55,52 +54,16 @@ public class SyncDatabaseFragment extends Fragment {
         return view;
     }
 
-    private void updateStatus() {
-        String fpVal = getFingerprint();
-        fingerprint.setText(fpVal.length() > 8 ? fpVal.substring(0, 8) + '\u2026' : fpVal);
-        lastUpdated.setText(getLastUpdated());
-    }
-
-    private File getDatabaseFile() {
-        return getActivity().getDatabasePath(DATABASE_NAME);
-    }
-
-    private File getDatabaseTempFile() {
-        return getActivity().getDatabasePath(tempFilename(DATABASE_NAME));
-    }
-
-    private File getFingerprintFile() {
-        return getActivity().getDatabasePath(hashFilename(DATABASE_NAME));
-    }
-
-    public String getFingerprint() {
-        String content = loadHash(getFingerprintFile());
-        return content != null ? content : "-";
-    }
-
     public CharSequence getLastUpdated() {
-        File f = getFingerprintFile();
+        File f = getFingerprintFile(getActivity());
         return f.exists() ? getRelativeTimeSpanString(getActivity(), f.lastModified(), false) : "Never";
     }
 
-
-    /**
-     * Builds a sync request for efficiently updating local database content.
-     */
-    private HttpTaskRequest buildHttpRequest() throws MalformedURLException {
-        Bundle extras = getActivity().getIntent().getExtras();
-        String username = (String) extras.get(OpeningActivity.USERNAME_KEY);
-        String password = (String) extras.get(OpeningActivity.PASSWORD_KEY);
-        return new HttpTaskRequest(getSyncEndpoint().toExternalForm(), SQLITE_MIME_TYPE, username, password,
-                getFingerprint(), getDatabaseTempFile());
+    private void updateStatus() {
+        String fpVal = getFingerprint(getActivity());
+        fingerprint.setText(fpVal.length() > 8 ? fpVal.substring(0, 8) + '\u2026' : fpVal);
+        lastUpdated.setText(getLastUpdated());
     }
-
-    private URL getSyncEndpoint() throws MalformedURLException {
-        String baseUrl = getPreferenceString(getActivity(), R.string.openhds_server_url_key, "");
-        String path = getResourceString(getActivity(), R.string.sync_database_path);
-        return new URL(baseUrl + path);
-    }
-
 
     private class UpdateListener implements View.OnClickListener, HttpTask.HttpTaskResponseHandler {
 
@@ -108,7 +71,11 @@ public class SyncDatabaseFragment extends Fragment {
         public void onClick(View v) {
             HttpTask httpTask = new HttpTask(this);
             try {
-                HttpTaskRequest httpReq = buildHttpRequest();
+                Activity activity = getActivity();
+                Bundle extras = activity.getIntent().getExtras();
+                String username = (String) extras.get(OpeningActivity.USERNAME_KEY);
+                String password = (String) extras.get(OpeningActivity.PASSWORD_KEY);
+                HttpTaskRequest httpReq = buildHttpRequest(activity, username, password);
                 httpTask.execute(httpReq);
             } catch (MalformedURLException e) {
                 showLongToast(getActivity(), R.string.url_error);
@@ -117,23 +84,24 @@ public class SyncDatabaseFragment extends Fragment {
 
         @Override
         public void handleHttpTaskResponse(HttpTaskResponse response) {
+            Context ctx = getActivity();
             if (response.getHttpStatus() == SC_NOT_MODIFIED) {
-                showLongToast(getActivity(), R.string.sync_state_noupdate);
+                showLongToast(ctx, R.string.sync_state_noupdate);
             } else if (response.getHttpStatus() == SC_OK) {
-                File dbTmpFile = getDatabaseTempFile(), dbFile = getDatabaseFile();
+                File dbTmpFile = getDatabaseTempFile(ctx), dbFile = getDatabaseFile(ctx);
                 if (!dbTmpFile.exists()) {
-                    showLongToast(getActivity(), "Database download failed");
+                    showLongToast(ctx, "Database download failed");
                 } else {
-                    getDatabaseHelper(getActivity()).close();
+                    getDatabaseHelper(ctx).close();
                     if (!dbTmpFile.renameTo(dbFile)) {
-                        showLongToast(getActivity(), "Database rename failed");
+                        showLongToast(ctx, "Database rename failed");
                     } else {
-                        storeHash(getFingerprintFile(), response.getETag());
-                        showLongToast(getActivity(), "Database updated");
+                        storeHash(getFingerprintFile(ctx), response.getETag());
+                        showLongToast(ctx, "Database updated");
                     }
                 }
             } else {
-                showLongToast(getActivity(), "Sync failed: " + response.getMessage());
+                showLongToast(ctx, "Sync failed: " + response.getMessage());
             }
             updateStatus();
         }
