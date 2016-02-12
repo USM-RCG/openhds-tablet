@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
 import org.openhds.mobile.fragment.LoginPreferenceFragment;
@@ -30,7 +31,6 @@ public class OpeningActivity extends Activity {
         setContentView(R.layout.opening_activity);
 
         loginPrefContainer = (FrameLayout) findViewById(R.id.login_pref_container);
-
 
         if (null != savedInstanceState) {
             return;
