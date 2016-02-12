@@ -1,5 +1,7 @@
 package org.openhds.mobile.utilities;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.util.Log;
 
@@ -19,9 +21,12 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static android.content.ContentResolver.setIsSyncable;
+import static android.content.ContentResolver.setSyncAutomatically;
 import static com.github.batkinson.jrsync.zsync.IOUtil.BUFFER_SIZE;
 import static com.github.batkinson.jrsync.zsync.IOUtil.buffer;
 import static com.github.batkinson.jrsync.zsync.IOUtil.close;
+import static org.openhds.mobile.OpenHDS.AUTHORITY;
 import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
@@ -34,6 +39,8 @@ public class SyncUtils {
     private static final String TAG = SyncUtils.class.getName();
 
     public static final String SQLITE_MIME_TYPE = "application/x-sqlite3";
+
+    public static final String ACCOUNT_TYPE = "cims-bioko.org";
 
     public static String hashFilename(String filename) {
         return String.format("%s.etag", filename);
@@ -130,5 +137,31 @@ public class SyncUtils {
         } finally {
             close(out);
         }
+    }
+
+    /**
+     * Adds an account, which is required for synchronizing with the server, if none exist.
+     *
+     * @param ctx      app context, used to access the account manager
+     * @param username username of server account to sync with
+     * @param password password for specified username
+     * @return the created account, or null if no account was created
+     */
+    public static Account installAccount(Context ctx, String username, String password) {
+        AccountManager manager = AccountManager.get(ctx);
+        Account[] accounts = manager.getAccountsByType(ACCOUNT_TYPE);
+        if (accounts.length > 0) {
+            Log.i(TAG, "account exists: " + accounts[0].name);
+        } else {
+            Account account = new Account(username, ACCOUNT_TYPE);
+            if (manager.addAccountExplicitly(account, password, null)) {
+                Log.i(TAG, "added account " + username);
+                setIsSyncable(account, AUTHORITY, 1);
+                setSyncAutomatically(account, AUTHORITY, true);
+                return account;
+            }
+            Log.w(TAG, "failed to add account");
+        }
+        return null;
     }
 }

@@ -27,6 +27,7 @@ import java.util.List;
 
 import static org.openhds.mobile.utilities.LayoutUtils.makeButton;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
+import static org.openhds.mobile.utilities.SyncUtils.installAccount;
 
 public class SupervisorMainActivity extends Activity implements DeleteWarningDialogListener {
 
@@ -87,6 +88,11 @@ public class SupervisorMainActivity extends Activity implements DeleteWarningDia
         } else {
             checklistFragment = (ChecklistFragment) getFragmentManager().findFragmentByTag(CHECKLIST_FRAGMENT_TAG);
         }
+
+        Bundle extras = getIntent().getExtras();
+        String username = (String) extras.get(OpeningActivity.USERNAME_KEY);
+        String password = (String) extras.get(OpeningActivity.PASSWORD_KEY);
+        installAccount(this, username, password);
     }
 
     @Override
