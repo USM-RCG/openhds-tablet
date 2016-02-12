@@ -2,7 +2,7 @@
 <resources>
 
     <string name="amendments">Amendments</string>
-    <string name="app_name">CIMS Tablet</string>
+    <string name="app_name">CIMS</string>
     <string name="bad_authentication">Authentication Failed</string>
     <string name="bad_xml">Error parsing XML</string>
     <string name="changePassword">Change Password</string>
