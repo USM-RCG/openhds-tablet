@@ -47,26 +47,66 @@ public class SyncUtils {
 
     public static final String ACCOUNT_TYPE = "cims-bioko.org";
 
+    /**
+     * Generates a filename to use for storing the ETag header value for a file. The value generated is deterministic
+     * and will always generate the same name for a specified file.
+     *
+     * @param filename the original file name, without preceding path
+     * @return filename to store the etag value
+     */
     public static String hashFilename(String filename) {
         return String.format("%s.etag", filename);
     }
 
+    /**
+     * Generates a filename to use for storing temporary content, which may replace the content of the original file
+     * specified. The value is deterministic and will always generate the same name for the specified file.
+     *
+     * @param filename the original file name, without preceding path
+     * @return filename to store intermediate content
+     */
     public static String tempFilename(String filename) {
         return String.format("%s.tmp", filename);
     }
 
+    /**
+     * Returns the location of the sqlite database file used to store application data.
+     *
+     * @param ctx application context to use for determining database directory path
+     * @return a {@link File} object corresponding to the application's main sqlite database
+     */
     public static File getDatabaseFile(Context ctx) {
         return ctx.getDatabasePath(DATABASE_NAME);
     }
 
+    /**
+     * Returns the location of the temp file for the specified file.
+     *
+     * @param original {@link File} object corresponding to location of original file
+     * @return {@link File} object corresponding to the temp file location for the original
+     */
     public static File getTempFile(File original) {
         return new File(original.getParentFile(), tempFilename(original.getName()));
     }
 
+    /**
+     * Returns the location of the fingerprint file for the specified file.
+     *
+     * @param original {@link File} object corresponding to the location of the original file
+     * @return {@link File} object corresponding to the fingerprint file for the original
+     */
     public static File getFingerprintFile(File original) {
         return new File(original.getParentFile(), hashFilename(original.getName()));
     }
 
+    /**
+     * Returns the {@link URL} to use to fetch sqlite database updates from on the server. It is constructed based on
+     * the application's configured server endpoint.
+     *
+     * @param ctx application context to use for relevant config values
+     * @return a {@link URL} object corresponding to the sync endpoint for fetching app sqlite db updates
+     * @throws MalformedURLException when the constructed value is not a valid URL
+     */
     public static URL getSyncEndpoint(Context ctx) throws MalformedURLException {
         String baseUrl = getPreferenceString(ctx, R.string.openhds_server_url_key, "");
         String path = getResourceString(ctx, R.string.sync_database_path);
@@ -156,6 +196,12 @@ public class SyncUtils {
         return null;
     }
 
+    /**
+     * Returns whether there appears to be complete downloaded content to use for updating the app sqlite database.
+     *
+     * @param ctx the app context to use for determining content paths
+     * @return true if there appears to be temp content to replace app db, otherwise false
+     */
     public static boolean downloadedContentExists(Context ctx) {
         return getFingerprintFile(getTempFile(getDatabaseFile(ctx))).exists();
     }
@@ -164,10 +210,21 @@ public class SyncUtils {
         void downloadedUpdate();
     }
 
+    /**
+     * Interface for a simple status callback when a database update is successfully applied.
+     */
     public interface DatabaseInstallationListener {
         void installedUpdate();
     }
 
+    /**
+     * Returns the current fingerprint value for the currently installed app db. Note that this may not always be a
+     * valid file hash of the content file. Bad values aren't problematic, since the HTTP server will treat mismatches
+     * as a cache miss and return the content.
+     *
+     * @param ctx the app context to use for determiningg file paths
+     * @return the content of the fingerprint file for the app sqlite database
+     */
     public static String getDatabaseFingerprint(Context ctx) {
         return loadFirstLine(getFingerprintFile(getDatabaseFile(ctx)));
     }
