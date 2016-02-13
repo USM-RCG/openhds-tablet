@@ -67,7 +67,7 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
-    public void installedUpdate() {
+    public void installed() {
         Context ctx = getActivity();
         updateStatus();
         NotificationManager manager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);

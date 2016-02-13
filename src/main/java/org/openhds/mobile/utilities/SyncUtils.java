@@ -206,15 +206,18 @@ public class SyncUtils {
         return getFingerprintFile(getTempFile(getDatabaseFile(ctx))).exists();
     }
 
-    public interface DatabaseUpdateListener {
-        void downloadedUpdate();
+    /**
+     * Interface for a simple status callback when a database update is downloaded.
+     */
+    public interface DatabaseDownloadListener {
+        void downloaded();
     }
 
     /**
      * Interface for a simple status callback when a database update is successfully applied.
      */
     public interface DatabaseInstallationListener {
-        void installedUpdate();
+        void installed();
     }
 
     /**
@@ -241,7 +244,7 @@ public class SyncUtils {
      * <p/>
      * Add the ability to 'apply update' if temp fingerprint is present
      */
-    public static void downloadUpdate(Context ctx, String username, String password, DatabaseUpdateListener listener) {
+    public static void downloadUpdate(Context ctx, String username, String password, DatabaseDownloadListener listener) {
 
         File dbFile = getDatabaseFile(ctx), dbTempFile = getTempFile(dbFile);
 
@@ -268,7 +271,7 @@ public class SyncUtils {
                     streamToFile(httpConn.getInputStream(), dbTempFile);
                     store(fingerprintFile, fingerprint);  // install fingerprint after downloaded finishes
                     Log.i(TAG, "database downloaded");
-                    listener.downloadedUpdate();
+                    listener.downloaded();
                     break;
                 default:
                     Log.i(TAG, "unexpected status code " + result);
@@ -280,13 +283,20 @@ public class SyncUtils {
         }
     }
 
+    /**
+     * Replaces the application's sqlite database with previously downloaded content if present and reloads the content
+     * provider to make the updated content immediately available to the application.
+     *
+     * @param ctx      the app context to use for accessing relevant resources
+     * @param listener object to use for callback upon successful update
+     */
     public static void installUpdate(Context ctx, DatabaseInstallationListener listener) {
         File dbFile = getDatabaseFile(ctx), dbTempFile = getTempFile(dbFile),
                 dbFpFile = getFingerprintFile(dbFile), dbTempFpFile = getFingerprintFile(dbTempFile);
         if (downloadedContentExists(ctx)) {
             if (dbTempFile.renameTo(dbFile) && dbTempFpFile.renameTo(dbFpFile)) {
                 OpenHDSProvider.getDatabaseHelper(ctx).close();
-                listener.installedUpdate();
+                listener.installed();
             } else {
                 Log.e(TAG, "failed to install update");
             }
