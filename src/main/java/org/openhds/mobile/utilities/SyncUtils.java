@@ -6,7 +6,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.openhds.mobile.R;
-import org.openhds.mobile.task.http.HttpTaskRequest;
+import org.openhds.mobile.provider.OpenHDSProvider;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -26,10 +27,14 @@ import static android.content.ContentResolver.setSyncAutomatically;
 import static com.github.batkinson.jrsync.zsync.IOUtil.BUFFER_SIZE;
 import static com.github.batkinson.jrsync.zsync.IOUtil.buffer;
 import static com.github.batkinson.jrsync.zsync.IOUtil.close;
+import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.openhds.mobile.OpenHDS.AUTHORITY;
 import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
+import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
+import static org.openhds.mobile.utilities.HttpUtils.get;
 
 /**
  * Dumping grounds for miscellaneous sync-related functions.
@@ -54,25 +59,12 @@ public class SyncUtils {
         return ctx.getDatabasePath(DATABASE_NAME);
     }
 
-    public static File getDatabaseTempFile(Context ctx) {
-        return ctx.getDatabasePath(tempFilename(DATABASE_NAME));
+    public static File getTempFile(File original) {
+        return new File(original.getParentFile(), tempFilename(original.getName()));
     }
 
-    public static File getFingerprintFile(Context ctx) {
-        return ctx.getDatabasePath(hashFilename(DATABASE_NAME));
-    }
-
-    public static String getFingerprint(Context ctx) {
-        String content = loadHash(getFingerprintFile(ctx));
-        return content != null ? content : "-";
-    }
-
-    public static HttpTaskRequest buildHttpRequest(Context ctx, String user, String pass) throws MalformedURLException {
-        return new HttpTaskRequest(
-                getSyncEndpoint(ctx).toExternalForm(), SQLITE_MIME_TYPE,
-                user, pass,
-                getFingerprint(ctx),
-                getDatabaseTempFile(ctx));
+    public static File getFingerprintFile(File original) {
+        return new File(original.getParentFile(), hashFilename(original.getName()));
     }
 
     public static URL getSyncEndpoint(Context ctx) throws MalformedURLException {
@@ -81,39 +73,38 @@ public class SyncUtils {
         return new URL(baseUrl + path);
     }
 
-    public static String loadHash(File hashFile) {
-        String contentHash = null;
-        if (hashFile.exists() && hashFile.canRead()) {
+    private static String loadFirstLine(File file) {
+        String line = null;
+        if (file.exists() && file.canRead()) {
             try {
-                InputStream in = new FileInputStream(hashFile);
+                InputStream in = new FileInputStream(file);
                 BufferedReader buf = new BufferedReader(new InputStreamReader(in));
                 try {
-                    contentHash = buf.readLine();
+                    line = buf.readLine();
                 } finally {
                     close(in);
                 }
             } catch (FileNotFoundException e) {
-                Log.w(TAG, "hash file not found", e);
+                Log.w(TAG, "file " + file + " not found for reading");
             } catch (IOException e) {
-                Log.w(TAG, "failed to read hash file", e);
+                Log.w(TAG, "reading " + file + "failed", e);
             }
         }
-        return contentHash;
+        return line;
     }
 
-    public static void storeHash(File hashFile, String hash) {
-        if (!hashFile.exists() || (hashFile.exists() && hashFile.canWrite())) {
+    private static void store(File file, String s) {
+        if (!file.exists() || (file.exists() && file.canWrite())) {
+            OutputStream out = null;
             try {
-                OutputStream out = new FileOutputStream(hashFile);
-                try {
-                    PrintWriter writer = new PrintWriter(out);
-                    writer.println(hash == null ? "" : hash);
-                    writer.flush();
-                } finally {
-                    close(out);
-                }
+                out = new FileOutputStream(file);
+                PrintWriter writer = new PrintWriter(out);
+                writer.println(s == null ? "" : s);
+                writer.flush();
             } catch (FileNotFoundException e) {
-                Log.w(TAG, "hash file not found", e);
+                Log.w(TAG, "file: " + file + " not found for storing");
+            } finally {
+                close(out);
             }
         }
     }
@@ -163,5 +154,85 @@ public class SyncUtils {
             Log.w(TAG, "failed to add account");
         }
         return null;
+    }
+
+    public static boolean downloadedContentExists(Context ctx) {
+        return getFingerprintFile(getTempFile(getDatabaseFile(ctx))).exists();
+    }
+
+    public interface DatabaseUpdateListener {
+        void downloadedUpdate();
+    }
+
+    public interface DatabaseInstallationListener {
+        void installedUpdate();
+    }
+
+    public static String getDatabaseFingerprint(Context ctx) {
+        return loadFirstLine(getFingerprintFile(getDatabaseFile(ctx)));
+    }
+
+    /**
+     * Sync should work like this:
+     * <p/>
+     * Get latest database fingerprint: coalesce(fingerprint(dbtmp), fingerprint(db))
+     * If HTTP_OK:
+     * remove temp fingerprint file
+     * stream response to dbtmp
+     * store etag as temp fingerprint
+     * send notification that database can be updated (with intent to launch app)
+     * <p/>
+     * Add the ability to 'apply update' if temp fingerprint is present
+     */
+    public static void downloadUpdate(Context ctx, String username, String password, DatabaseUpdateListener listener) {
+
+        File dbFile = getDatabaseFile(ctx), dbTempFile = getTempFile(dbFile);
+
+        boolean downloadExists = downloadedContentExists(ctx);
+        String existingFingerprint = loadFirstLine(getFingerprintFile(
+                downloadExists ? getTempFile(getDatabaseFile(ctx)) : getDatabaseFile(ctx)
+        ));
+
+        try {
+            String creds = encodeBasicCreds(username, password);
+            HttpURLConnection httpConn = get(getSyncEndpoint(ctx), SQLITE_MIME_TYPE, creds, existingFingerprint);
+            int result = httpConn.getResponseCode();
+            switch (result) {
+                case SC_NOT_MODIFIED:
+                    Log.i(TAG, "no update found");
+                    break;
+                case SC_OK:
+                    File fingerprintFile = getFingerprintFile(dbTempFile);
+                    String fingerprint = httpConn.getHeaderField("ETag");
+                    Log.i(TAG, "update " + fingerprint + " found, fetching");
+                    if (fingerprintFile.exists() && !fingerprintFile.delete()) {
+                        Log.w(TAG, "failed to clear old fingerprint, user could install partial content!");
+                    }
+                    streamToFile(httpConn.getInputStream(), dbTempFile);
+                    store(fingerprintFile, fingerprint);  // install fingerprint after downloaded finishes
+                    Log.i(TAG, "database downloaded");
+                    listener.downloadedUpdate();
+                    break;
+                default:
+                    Log.i(TAG, "unexpected status code " + result);
+            }
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "invalid sync endpoint", e);
+        } catch (IOException e) {
+            Log.e(TAG, "sync io failure", e);
+        }
+    }
+
+    public static void installUpdate(Context ctx, DatabaseInstallationListener listener) {
+        File dbFile = getDatabaseFile(ctx), dbTempFile = getTempFile(dbFile),
+                dbFpFile = getFingerprintFile(dbFile), dbTempFpFile = getFingerprintFile(dbTempFile);
+        if (downloadedContentExists(ctx)) {
+            if (dbTempFile.renameTo(dbFile) && dbTempFpFile.renameTo(dbFpFile)) {
+                OpenHDSProvider.getDatabaseHelper(ctx).close();
+                listener.installedUpdate();
+            } else {
+                Log.e(TAG, "failed to install update");
+            }
+        }
     }
 }
