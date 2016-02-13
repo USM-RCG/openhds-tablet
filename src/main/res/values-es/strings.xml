@@ -274,5 +274,9 @@
     <string name="individual_last_name_label">Apellido</string>
     <string name="openhds_server_url_default_summary">Misma URL utilizada para CIMS Server a través del navegador Web</string>
     <string name="sync_database_updated_never">Nunca</string>
+    <string name="sync_database_updated">Base de datos actualizada</string>
+    <string name="sync_database_new_data">Los nuevos datos disponibles</string>
+    <string name="sync_database_new_data_instructions">Inicio de sesión como supervisor de aplicar la actualización</string>
+    <string name="sync_database_button_update">Actualizar</string>
 
 </resources>

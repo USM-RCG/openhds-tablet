@@ -50,7 +50,7 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
     private CharSequence getLastUpdated() {
         Context ctx = getActivity();
         File f = getFingerprintFile();
-        return f.exists() ? getRelativeTimeSpanString(ctx, f.lastModified(), false) : "Never";
+        return f.exists() ? getRelativeTimeSpanString(ctx, f.lastModified(), false) : ctx.getString(R.string.sync_database_updated_never);
     }
 
     private void updateStatus() {
@@ -72,6 +72,6 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
         updateStatus();
         NotificationManager manager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(42);
-        MessageUtils.showLongToast(ctx, "Database updated");
+        MessageUtils.showLongToast(ctx, ctx.getString(R.string.sync_database_updated));
     }
 }
