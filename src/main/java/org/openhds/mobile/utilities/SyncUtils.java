@@ -229,7 +229,8 @@ public class SyncUtils {
      * @return the content of the fingerprint file for the app sqlite database
      */
     public static String getDatabaseFingerprint(Context ctx) {
-        return loadFirstLine(getFingerprintFile(getDatabaseFile(ctx)));
+        String fingerprint = loadFirstLine(getFingerprintFile(getDatabaseFile(ctx)));
+        return fingerprint != null? fingerprint : ctx.getString(R.string.sync_database_no_fingerprint);
     }
 
     /**
