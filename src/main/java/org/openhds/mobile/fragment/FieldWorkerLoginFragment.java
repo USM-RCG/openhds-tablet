@@ -13,12 +13,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.mindrot.jbcrypt.BCrypt;
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.PortalActivity;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.FieldWorkerGateway;
-import org.mindrot.jbcrypt.BCrypt;
 
 import static android.text.InputType.TYPE_CLASS_TEXT;
 import static android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS;
@@ -34,11 +35,9 @@ public class FieldWorkerLoginFragment extends Fragment implements
     private EditText passwordEditText;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.generic_login_fragment, container,
-                false);
+        View v = inflater.inflate(R.layout.generic_login_fragment, container, false);
         TextView title = (TextView) v.findViewById(R.id.titleTextView);
         title.setText(R.string.fieldworker_login);
 
@@ -85,7 +84,7 @@ public class FieldWorkerLoginFragment extends Fragment implements
         ContentResolver contentResolver = getActivity().getContentResolver();
         FieldWorker fieldWorker = fieldWorkerGateway.getFirst(contentResolver, fieldWorkerGateway.findByExtId(username));
 
-        if (null == fieldWorker || !BCrypt.checkpw(password,fieldWorker.getPasswordHash())) {
+        if (null == fieldWorker || !BCrypt.checkpw(password, fieldWorker.getPasswordHash())) {
             showLongToast(getActivity(), R.string.field_worker_bad_credentials);
         } else {
             launchPortalActivity(fieldWorker);
