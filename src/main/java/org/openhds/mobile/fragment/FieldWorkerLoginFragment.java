@@ -20,6 +20,9 @@ import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.FieldWorkerGateway;
 import org.mindrot.jbcrypt.BCrypt;
 
+import static android.text.InputType.TYPE_CLASS_TEXT;
+import static android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS;
+import static android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
 
 public class FieldWorkerLoginFragment extends Fragment implements
@@ -43,6 +46,10 @@ public class FieldWorkerLoginFragment extends Fragment implements
         passwordEditText = (EditText) v.findViewById(R.id.passwordEditText);
         usernameEditText.setOnKeyListener(this);
         passwordEditText.setOnKeyListener(this);
+
+        // Field worker user names are all-caps, this locks soft keyboard into caps mode
+        usernameEditText.setInputType(TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_CAP_CHARACTERS);
+
         Button loginButton = (Button) v.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
         return v;
