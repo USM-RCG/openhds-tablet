@@ -176,12 +176,6 @@
     <string name="sync_database_description">Download data from the server</string>
     <string name="sync_database_column_updated">Last Updated</string>
     <string name="sync_database_column_fingerprint">Fingerprint</string>
-    <string name="sync_database_button_sync">Sync</string>
-    <string name="sync_database_button_cancel">Cancel</string>
-    <string name="sync_database_button_waiting">Waiting</string>
-    <string name="sync_database_button_update">Update</string>
-    <string name="sync_database_button_clear_cache">Clear Cache</string>
-    <string name="sync_database_button_cancel_all">Cancel All</string>
 
     <!-- Sync state labels -->
     <string name="sync_state_metadata">Metadata</string>
