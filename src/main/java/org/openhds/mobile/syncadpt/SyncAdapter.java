@@ -21,7 +21,7 @@ import static org.openhds.mobile.utilities.SyncUtils.downloadUpdate;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter implements SyncUtils.DatabaseDownloadListener {
 
-    private static final String TAG = SyncAdapter.class.getName();
+    public static final int SYNC_NOTIFICATION_ID = 42;
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -46,6 +46,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SyncUtil
                 .setContentTitle("New data available")
                 .setContentText("Login as supervisor to apply the update")
                 .setContentIntent(pending);
-        manager.notify(42, builder.getNotification());
+        manager.notify(SYNC_NOTIFICATION_ID, builder.getNotification());
     }
 }
