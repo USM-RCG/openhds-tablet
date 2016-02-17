@@ -293,7 +293,7 @@
     <string name="census_activity_title">Census Activity</string>
     <string name="bioko_activity_title">Bed Net Activity</string>
     <string name="update_activity_title">Update Activity</string>
-    <string name="launching_odk_collect">Launching ODKCollect...</string>
+    <string name="launching_odk_collect">Launching ODKCollect…</string>
     <string name="delete_button_label">Delete Selected</string>
     <string name="delete_forms_dialog_warning">Deleting forms may cause unexpected behavior. Are you sure?</string>
     <string name="delete_warning_dialog_cancel_label">Cancel</string>
