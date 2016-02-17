@@ -280,5 +280,6 @@
     <string name="sync_database_button_update">Actualizar</string>
     <string name="sync_database_column_updated">Última Actualización</string>
     <string name="sync_database_column_fingerprint">Huella Digital</string>
+    <string name="openhds_server_url_title">URL del servidor CIMS</string>
 
 </resources>
