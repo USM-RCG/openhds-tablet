@@ -43,8 +43,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SyncUtil
         PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification.Builder builder = new Notification.Builder(ctx)
                 .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle("New data available")
-                .setContentText("Login as supervisor to apply the update")
+                .setContentTitle(ctx.getString(R.string.sync_database_new_data))
+                .setContentText(ctx.getString(R.string.sync_database_new_data_instructions))
                 .setContentIntent(pending);
         manager.notify(SYNC_NOTIFICATION_ID, builder.getNotification());
     }
