@@ -278,5 +278,7 @@
     <string name="sync_database_new_data">Los nuevos datos disponibles</string>
     <string name="sync_database_new_data_instructions">Inicio de sesión como supervisor de aplicar la actualización</string>
     <string name="sync_database_button_update">Actualizar</string>
+    <string name="sync_database_column_updated">Última Actualización</string>
+    <string name="sync_database_column_fingerprint">Huella Digital</string>
 
 </resources>
