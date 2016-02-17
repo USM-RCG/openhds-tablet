@@ -146,9 +146,9 @@
     <string name="db_val_relation_to_head_type_other_relative">Otro Pariente</string>
     <string name="db_val_relation_to_head_type_dont_know">No sabe</string>
     <string name="db_val_nationality_equato_guinean">Ecuatoguineano</string>
-    <string name="db_val_nationality_other_african_country">Otro pais Africano</string>
+    <string name="db_val_nationality_other_african_country">Otro país Africano</string>
     <string name="db_val_nationality_asian">Asiatico</string>
-    <string name="db_val_nationality_other_non_african_country">Otro pais No-Africano</string>
+    <string name="db_val_nationality_other_non_african_country">Otro país No-Africano</string>
     <string name="db_val_nationality_other">Otro</string>
 
 

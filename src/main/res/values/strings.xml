@@ -230,7 +230,7 @@
     <string name="location_description_label">Description</string>
     <string name="location_status_label">Status</string>
     <string name="location_coordinates_label">Latitude/Longitude</string>
-    <string name="location_has_recieved_bednets_label">Has Recieved Bed Nets</string>
+    <string name="location_has_recieved_bednets_label">Has Received Bed Nets</string>
     <string name="location_spraying_status_label">Spraying Status</string>
 
 
