@@ -32,14 +32,10 @@
     <string name="send_to_odk_btn">Editar en ODK</string>
     <string name="syncDatabase">Sincronizar Base de Datos</string>
     <string name="syncDatabaseMessage">Este procedimiento intentará descargar entidades CIMS en el dispositivo. Por favor tenga paciencia mientras que la descarga está en curso</string>
-    <string name="sync_entities_failure">La Recopilacion de Entidades de CIMS ha fallado</string>
     <string name="sync_forms_successful">Impresos recopilado con éxito</string>
     <string name="sync_forms_failure">Recopilación de Impresos Falló</string>
     <string name="send_finalized_forms_description">Enviar Impresos Finalizados a ODKAggregate</string>
     <string name="send_finalized_forms_label">Enviar Impresos</string>
-    <string name="sync_entities_successful">La Recopilacion de Entidades de CIMS ha sido exitosa</string>
-    <string name="sync_interrupted">La Recopilacion de Entidades de CIMS ha sido interrumpida</string>
-    <string name="sync_restarting">Sincronización reiniciando</string>
     <string name="unable_to_connect">No se puede conectar</string>
     <string name="url_error">URL inválido!</string>
     <string name="update">Actualizar</string>
@@ -78,10 +74,7 @@
     <string name="supervisor_bad_credentials">Credenciales inválidas</string>
     <string name="preference_invalid_label">¡Inválido!</string>
     <string name="preference_invalid_warning">Valor de preferencia inválido</string>
-    <string name="sync_database_label">Sincronizar la Base de Datos</string>
     <string name="sync_database_description">Sincroniza los datos del censo con el servidor</string>
-    <string name="sync_field_worker_label">Sincronizar Encuestadores</string>
-    <string name="sync_field_worker_description">Sincronizas los Encuestadores con el servidor</string>
     <string name="field_worker_bad_credentials">Credenciales inválidas</string>
     <string name="region_label">Región</string>
     <string name="province_label">Provincia</string>

@@ -25,7 +25,6 @@
     <string name="login_btn">Login</string>
     <string name="logout_btn">Logout</string>
     <string name="main_txt">Form Management</string>
-    <string name="openhdswebservice" translatable="false">CIMS Web Service</string>
     <string name="owner_txt">Form Owner Id:</string>
     <string name="passwordHash">CIMS Password</string>
     <string name="retrieving_fieldworkers_interrupted">Retrieving Field Workers has been interrupted</string>
@@ -244,9 +243,7 @@
     <string name="census_portal_label">Start Census Activity</string>
     <string name="census_portal_description">Add new or edit existing data.</string>
 
-    <string name="title_activity_main">MainActivity</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_portal">PortalActivity</string>
     <string name="update_portal_label">Start Update Activity</string>
     <string name="update_portal_description">Conduct visits at locations and update changes since the last visit.</string>
 
