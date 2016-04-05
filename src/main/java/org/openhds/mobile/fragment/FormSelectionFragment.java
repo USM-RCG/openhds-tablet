@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import org.openhds.mobile.R;
-import org.openhds.mobile.model.form.FormBehaviour;
+import org.openhds.mobile.model.form.FormBehavior;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class FormSelectionFragment extends Fragment {
         this.selectionHandler = selectionHandler;
     }
 
-    public void createFormButtons(List<FormBehaviour> values) {
+    public void createFormButtons(List<FormBehavior> values) {
         formListAdapter = new FormSelectionListAdapter(getActivity(), R.layout.generic_list_item_white_text, values);
 
         ListView listView = (ListView) getActivity().findViewById(R.id.form_fragment_listview);
@@ -47,27 +47,27 @@ public class FormSelectionFragment extends Fragment {
     }
 
     public interface SelectionHandler {
-        void handleSelectedForm(FormBehaviour formBehaviour);
+        void handleSelectedForm(FormBehavior formBehavior);
     }
 
     private class FormClickListener implements OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            FormBehaviour form = formListAdapter.getItem(position);
+            FormBehavior form = formListAdapter.getItem(position);
             selectionHandler.handleSelectedForm(form);
         }
     }
 
-    private class FormSelectionListAdapter extends ArrayAdapter<FormBehaviour> {
+    private class FormSelectionListAdapter extends ArrayAdapter<FormBehavior> {
 
-        public FormSelectionListAdapter(Context context, int resource, List<FormBehaviour> objects) {
+        public FormSelectionListAdapter(Context context, int resource, List<FormBehavior> objects) {
             super(context, resource, objects);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            FormBehaviour form = formListAdapter.getItem(position);
+            FormBehavior form = formListAdapter.getItem(position);
 
             if (convertView == null) {
                 convertView = makeTextWithPayload(getActivity(), getString(form.getFormLabelId()), null,

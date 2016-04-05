@@ -1,6 +1,6 @@
 package org.openhds.mobile.projectdata.FormPayloadConsumers;
 
-import org.openhds.mobile.model.form.FormBehaviour;
+import org.openhds.mobile.model.form.FormBehavior;
 
 import java.util.Map;
 
@@ -13,12 +13,12 @@ import java.util.Map;
 public class ConsumerResults {
 
     private final boolean needsPostfill;
-    private final FormBehaviour followUpFormBehaviour;
+    private final FormBehavior followUpFormBehavior;
     private final Map<String, String> followUpFormHints;
 
-    public ConsumerResults(boolean needsPostfill, FormBehaviour followUpFormBehaviour, Map<String,String> followUpFormHints){
+    public ConsumerResults(boolean needsPostfill, FormBehavior followUpFormBehavior, Map<String,String> followUpFormHints){
         this.needsPostfill = needsPostfill;
-        this.followUpFormBehaviour = followUpFormBehaviour;
+        this.followUpFormBehavior = followUpFormBehavior;
         this.followUpFormHints = followUpFormHints;
     }
 
@@ -26,8 +26,8 @@ public class ConsumerResults {
         return needsPostfill;
     }
 
-    public FormBehaviour getFollowUpFormBehaviour() {
-        return followUpFormBehaviour;
+    public FormBehavior getFollowUpFormBehavior() {
+        return followUpFormBehavior;
     }
 
     public Map<String, String> getFollowUpFormHints() {

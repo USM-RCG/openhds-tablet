@@ -263,7 +263,7 @@ public class CensusFormPayloadConsumers {
             hints.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
             hints.put(ProjectFormFields.Individuals.INDIVIDUAL_UUID, formPayload.get(ProjectFormFields.General.ENTITY_UUID));
             hints.put(ProjectFormFields.Locations.LOCATION_EXTID, formPayload.get(ProjectFormFields.General.HOUSEHOLD_STATE_FIELD_NAME));
-            return new ConsumerResults(false, ProjectActivityBuilder.CensusActivityModule.visitPregObFormBehaviour, hints);
+            return new ConsumerResults(false, ProjectActivityBuilder.CensusActivityModule.visitPregObFormBehavior, hints);
         }
 
         return null;
@@ -287,7 +287,7 @@ public class CensusFormPayloadConsumers {
             navigateActivity.getPreviousConsumerResults().getFollowUpFormHints().put(ProjectFormFields.General.ENTITY_UUID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID));
             navigateActivity.getPreviousConsumerResults().getFollowUpFormHints().put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
 
-            return new ConsumerResults(false, ProjectActivityBuilder.CensusActivityModule.pregObFormBehaviour, navigateActivity.getPreviousConsumerResults().getFollowUpFormHints());
+            return new ConsumerResults(false, ProjectActivityBuilder.CensusActivityModule.pregObFormBehavior, navigateActivity.getPreviousConsumerResults().getFollowUpFormHints());
         }
 
         @Override

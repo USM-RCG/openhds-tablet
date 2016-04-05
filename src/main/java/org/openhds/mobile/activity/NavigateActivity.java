@@ -22,7 +22,7 @@ import org.openhds.mobile.fragment.navigate.VisitFragment;
 import org.openhds.mobile.fragment.navigate.detail.DefaultDetailFragment;
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
 import org.openhds.mobile.model.core.FieldWorker;
-import org.openhds.mobile.model.form.FormBehaviour;
+import org.openhds.mobile.model.form.FormBehavior;
 import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.model.update.Visit;
@@ -454,18 +454,18 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     }
 
     @Override
-    public void launchForm(FormBehaviour formBehaviour, Map<String,String> followUpFormHints) {
+    public void launchForm(FormBehavior formBehavior, Map<String,String> followUpFormHints) {
 
-        formHelper.setFormBehaviour(formBehaviour); // update activity's current form
+        formHelper.setFormBehavior(formBehavior); // update activity's current form
 
         if(followUpFormHints != null){
             Map<String, String> initialData = new HashMap<>();
             initialData.putAll(followUpFormHints);
-            formBehaviour.getFormPayloadBuilder().buildFormPayload(initialData, this);
+            formBehavior.getFormPayloadBuilder().buildFormPayload(initialData, this);
             formHelper.setFormFieldData(initialData);
         }
 
-        if (formBehaviour.getNeedsFormFieldSearch()) {
+        if (formBehavior.getNeedsFormFieldSearch()) {
             launchCurrentFormInSearchActivity();
         } else {
             launchCurrentFormInODK();
@@ -473,12 +473,12 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     }
 
     private void launchCurrentFormInODK() {
-        FormBehaviour formBehaviour = formHelper.getFormBehaviour();
-        if (formBehaviour != null && formBehaviour.getFormName() != null) {
+        FormBehavior formBehavior = formHelper.getFormBehavior();
+        if (formBehavior != null && formBehavior.getFormName() != null) {
             try {
                 FormInstance formInstance = formHelper.newFormInstance();
                 if (formInstance == null) {
-                    showShortToast(this, "Warning: Could not find '" + formBehaviour.getFormName() + "' form.");
+                    showShortToast(this, "Warning: Could not find '" + formBehavior.getFormName() + "' form.");
                 } else {
                     Intent intent = formHelper.buildEditFormInstanceIntent();
                     showShortToast(this, R.string.launching_odk_collect);
@@ -493,12 +493,12 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     }
 
     private void launchCurrentFormInSearchActivity() {
-        FormBehaviour formBehaviour = formHelper.getFormBehaviour();
-        if (null != formBehaviour) {
+        FormBehavior formBehavior = formHelper.getFormBehavior();
+        if (null != formBehavior) {
             // put form search plugins in the intent so we know what the user needs to search for
             Intent intent = new Intent(this, FormSearchActivity.class);
             intent.putParcelableArrayListExtra(
-                    FormSearchActivity.FORM_SEARCH_PLUGINS_KEY, formBehaviour.getFormSearchPluginModules());
+                    FormSearchActivity.FORM_SEARCH_PLUGINS_KEY, formBehavior.getFormSearchPluginModules());
             startActivityForResult(intent, SEARCH_ACTIVITY_REQUEST_CODE);
         }
     }
@@ -594,22 +594,22 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
             switch (requestCode) {
                 case ODK_ACTIVITY_REQUEST_CODE:
                     // consume form data that the user entered with ODK
-                    FormBehaviour formBehaviour = formHelper.getFormBehaviour();
+                    FormBehavior formBehavior = formHelper.getFormBehavior();
                     formHelper.checkFormInstanceStatus();
                     if (formHelper.getFinalizedFormFilePath() != null) {
 
                         // Tie the form instance to the hierarchy path
                         associateFormToPath(formHelper.getFinalizedFormFilePath());
 
-                        FormPayloadConsumer consumer = formBehaviour.getFormPayloadConsumer();
+                        FormPayloadConsumer consumer = formBehavior.getFormPayloadConsumer();
                         if (consumer != null) {
                             previousConsumerResults = consumer.consumeFormPayload(formHelper.fetchFormInstanceData(), this);
                             if (previousConsumerResults.needsPostfill()) {
                                 consumer.postFillFormPayload(formHelper.getFormFieldData());
                                 formHelper.updateExistingFormInstance();
                             }
-                            if (null != previousConsumerResults.getFollowUpFormBehaviour()){
-                                launchForm(previousConsumerResults.getFollowUpFormBehaviour(), previousConsumerResults.getFollowUpFormHints());
+                            if (null != previousConsumerResults.getFollowUpFormBehavior()){
+                                launchForm(previousConsumerResults.getFollowUpFormBehavior(), previousConsumerResults.getFollowUpFormHints());
                                 return;
                             }
                         }
@@ -695,10 +695,10 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
                 hierarchyButtonFragment.setButtonAllowed(state, true);
             }
 
-            List<FormBehaviour> filteredForms = builder.getFormsForState(state);
-            List<FormBehaviour> validForms = new ArrayList<>();
+            List<FormBehavior> filteredForms = builder.getFormsForState(state);
+            List<FormBehavior> validForms = new ArrayList<>();
 
-            for (FormBehaviour form : filteredForms) {
+            for (FormBehavior form : filteredForms) {
                 if (form.getFormFilter().amIValid(NavigateActivity.this)) {
                     validForms.add(form);
                 }
@@ -734,8 +734,8 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     // Receive a form that the user clicked in FormSelectionFragment.
     private class FormSelectionHandler implements FormSelectionFragment.SelectionHandler {
         @Override
-        public void handleSelectedForm(FormBehaviour formBehaviour) {
-            NavigateActivity.this.launchForm(formBehaviour, null);
+        public void handleSelectedForm(FormBehavior formBehavior) {
+            NavigateActivity.this.launchForm(formBehavior, null);
         }
     }
 }

@@ -190,7 +190,7 @@ public class UpdateFormPayloadConsumers {
             hints.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
             hints.put(ProjectFormFields.Individuals.INDIVIDUAL_UUID, formPayload.get(ProjectFormFields.General.ENTITY_UUID));
             hints.put(ProjectFormFields.Locations.LOCATION_EXTID, formPayload.get(ProjectFormFields.General.HOUSEHOLD_STATE_FIELD_NAME));
-            return new ConsumerResults(false, ProjectActivityBuilder.UpdateActivityModule.externalInMigrationFormBehaviour, hints);
+            return new ConsumerResults(false, ProjectActivityBuilder.UpdateActivityModule.externalInMigrationFormBehavior, hints);
         }
 
         @Override

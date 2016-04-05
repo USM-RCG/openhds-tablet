@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
-import org.openhds.mobile.model.form.FormBehaviour;
+import org.openhds.mobile.model.form.FormBehavior;
 import org.openhds.mobile.projectdata.QueryHelpers.QueryHelper;
 
 public interface NavigatePluginModule {
@@ -15,7 +15,7 @@ public interface NavigatePluginModule {
 
     HierarchyInfo getHierarchyInfo();
 
-	List<FormBehaviour> getFormsForState(String state);
+	List<FormBehavior> getFormsForState(String state);
 
 	Map<String, DetailFragment> getDetailFragsForStates();
 	

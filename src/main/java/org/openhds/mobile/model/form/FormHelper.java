@@ -36,7 +36,7 @@ import static org.openhds.mobile.repository.RepositoryUtils.LIKE_WILD_CARD;
 
 public class FormHelper {
 
-    private FormBehaviour formBehaviour;
+    private FormBehavior formBehavior;
     private Uri contentUri;
     private ContentResolver contentResolver;
     private Map<String, String> formFieldData;
@@ -50,12 +50,12 @@ public class FormHelper {
         return finalizedFormFilePath;
     }
 
-    public FormBehaviour getFormBehaviour() {
-        return formBehaviour;
+    public FormBehavior getFormBehavior() {
+        return formBehavior;
     }
 
-    public void setFormBehaviour(FormBehaviour formBehaviour) {
-        this.formBehaviour = formBehaviour;
+    public void setFormBehavior(FormBehavior formBehavior) {
+        this.formBehavior = formBehavior;
     }
 
     public Map<String, String> getFormFieldData() {
@@ -209,7 +209,7 @@ public class FormHelper {
         Cursor cursor = contentResolver.query(
                 FormsProviderAPI.FormsColumns.CONTENT_URI, columnNames,
                 FormsProviderAPI.FormsColumns.JR_FORM_ID + " " + LIKE + " ?",
-                new String[]{formBehaviour.getFormName() + LIKE_WILD_CARD}, null);
+                new String[]{formBehavior.getFormName() + LIKE_WILD_CARD}, null);
 
         // read the path and type for the new form instance
         if (cursor.moveToFirst()) {
@@ -265,7 +265,7 @@ public class FormHelper {
         }
 
         // write out the filled-in form instance
-        File editableFormFile = getExternalStorageXmlFile(formInstance.getFormName(), formBehaviour.getFormName(), ".xml");
+        File editableFormFile = getExternalStorageXmlFile(formInstance.getFormName(), formBehavior.getFormName(), ".xml");
         FileOutputStream fileOutputStream = new FileOutputStream(editableFormFile);
         XMLOutputter xmlOutput = new XMLOutputter();
         xmlOutput.setFormat(Format.getPrettyFormat());
