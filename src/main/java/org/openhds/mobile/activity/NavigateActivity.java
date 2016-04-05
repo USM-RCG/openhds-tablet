@@ -588,9 +588,9 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
 
     private void associateFormToPath(String formId) {
         String path = currentHierarchyPath();
-        DatabaseAdapter dbadpter = new DatabaseAdapter(this);
+        DatabaseAdapter dbAdapter = new DatabaseAdapter(this);
         if (formId != null) {
-            dbadpter.createAssociation(path, formId);
+            dbAdapter.createAssociation(path, formId);
         }
     }
 
