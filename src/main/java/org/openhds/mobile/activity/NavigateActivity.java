@@ -481,33 +481,21 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
 
     private void launchCurrentFormInODK() {
         FormBehaviour formBehaviour = formHelper.getFormBehaviour();
-        if (null != formBehaviour && null != formBehaviour.getFormName()) {
-
-            FormInstance formInstance;
+        if (formBehaviour != null && formBehaviour.getFormName() != null) {
             try {
-                formInstance = formHelper.newFormInstance();
+                FormInstance formInstance = formHelper.newFormInstance();
+                if (formInstance == null) {
+                    showShortToast(this, "Warning: Could not find '" + formBehaviour.getFormName() + "' form.");
+                } else {
+                    Intent intent = formHelper.buildEditFormInstanceIntent();
+                    showShortToast(this, R.string.launching_odk_collect);
+                    // clear currentResults to get the most up-to-date currentResults after the form is consumed
+                    currentResults = null;
+                    startActivityForResult(intent, ODK_ACTIVITY_REQUEST_CODE);
+                }
             } catch (Exception e) {
                 showShortToast(this, "Error creating Form instance: " + e.getMessage());
-                return;
             }
-
-            if(null == formInstance){
-                showShortToast(this, "Warning: Could not find '" + formBehaviour.getFormName() + "' form.");
-                return;
-            }
-
-            if(null == formInstance.getFormVersion()){
-                showShortToast(this, "Warning: form has no defined version number.");
-                return;
-            }
-
-            Intent intent = formHelper.buildEditFormInstanceIntent();
-            showShortToast(this, R.string.launching_odk_collect);
-
-            // clear currentResults to get the most up-to-date currentResults after the form is consumed
-            currentResults = null;
-
-            startActivityForResult(intent, ODK_ACTIVITY_REQUEST_CODE);
         }
     }
 
