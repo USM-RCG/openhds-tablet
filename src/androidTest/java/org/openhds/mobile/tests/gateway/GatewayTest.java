@@ -44,10 +44,6 @@ public abstract class GatewayTest<T> extends ProviderTestCase2<OpenHDSProvider> 
         this.provider = getProvider();
         this.contentResolver = getMockContentResolver();
 
-        // inject a password helper that uses a known password
-        // and doesn't use shared preferences (which are not enabled under ProviderTestCase2)
-        provider.setPasswordHelper(new ConstantPasswordHelper());
-
         // make sure we have a fresh database for each test
         SQLiteOpenHelper databaseHelper = provider.getDatabaseHelper(getContext());
         SQLiteDatabase db = databaseHelper.getWritableDatabase();

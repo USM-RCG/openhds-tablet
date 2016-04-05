@@ -3,7 +3,6 @@ package org.openhds.mobile.provider;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import org.openhds.mobile.OpenHDS;
 
@@ -11,8 +10,6 @@ import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -34,8 +31,6 @@ public class OpenHDSProvider extends ContentProvider {
     public static final int DATABASE_VERSION = 13;
 
     private static final String TAG = "OpenHDSProvider";
-    private static final String DATABASE_PASSWORD_KEY = "database-password";
-    private static final String DATABASE_SHARED_PREF = "openhds-provider";
 
     private static HashMap<String, String> individualsProjectionMap;
     private static HashMap<String, String> locationsProjectionMap;
@@ -329,17 +324,12 @@ public class OpenHDSProvider extends ContentProvider {
     }
 
     private static DatabaseHelper dbHelper;
-    private PasswordHelper passwordHelper;
 
     public static DatabaseHelper getDatabaseHelper(Context ctx) {
         if (dbHelper == null) {
             dbHelper = new DatabaseHelper(ctx.getApplicationContext());
         }
         return dbHelper;
-    }
-
-    public void setPasswordHelper(PasswordHelper passwordHelper) {
-        this.passwordHelper = passwordHelper;
     }
 
     /**
@@ -350,15 +340,10 @@ public class OpenHDSProvider extends ContentProvider {
      */
     @Override
     public boolean onCreate() {
-
-        // password helper that uses Android shared preferences
-        passwordHelper = new SharedPreferencesPasswordHelper();
-
         // Creates a new database helper object.
         // Note: database itself isn't opened until something tries to access it,
         // and it's only created if it doesn't already exist.
         dbHelper = getDatabaseHelper(getContext());
-
         return true;
     }
 
@@ -1118,34 +1103,6 @@ public class OpenHDSProvider extends ContentProvider {
                     + OpenHDS.HierarchyItems.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.Locations.TABLE_NAME);
             onCreate(db);
-        }
-    }
-
-    private class SharedPreferencesPasswordHelper implements PasswordHelper {
-
-        private String password;
-
-        @Override
-        public String getPassword() {
-
-            // already have cached password?
-            if (null != password) {
-                return password;
-            }
-
-            // find a saved password in shared preferences?
-            SharedPreferences sp = getContext().getSharedPreferences(DATABASE_SHARED_PREF, Context.MODE_PRIVATE);
-            password = sp.getString(DATABASE_PASSWORD_KEY, "");
-
-            // make a new password and save in shared preferences
-            if (password.isEmpty()) {
-                password = UUID.randomUUID().toString();
-                Editor editor = sp.edit();
-                editor.putString(DATABASE_PASSWORD_KEY, password);
-                editor.commit();
-            }
-
-            return password;
         }
     }
 }
