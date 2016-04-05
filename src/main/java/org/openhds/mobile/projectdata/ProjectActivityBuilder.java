@@ -273,7 +273,6 @@ public class ProjectActivityBuilder {
 
         @Override
         public QueryHelper getQueryHelper() {
-
             return new CensusQueryHelper();
         }
 
