@@ -1,8 +1,6 @@
 package org.openhds.mobile.provider;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.openhds.mobile.OpenHDS;
 
@@ -491,46 +489,6 @@ public class OpenHDSProvider extends ContentProvider {
 
         c.setNotificationUri(getContext().getContentResolver(), uri);
         return c;
-    }
-
-    private String[] addSocialGroupUuid(SQLiteQueryBuilder qb, String string) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        // get all individuals at location
-        Cursor c = db.query(OpenHDS.Individuals.TABLE_NAME,
-                new String[] { OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID },
-                OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID
-                        + " = ?", new String[] { string }, null, null, null);
-
-        // iterate over all individuals and collect their memberships
-        // this results in a subset of households at the location
-        Set<String> socialGroupUuids = new HashSet<>();
-        while (c.moveToNext()) {
-            Cursor c2 = db
-                    .query(OpenHDS.Memberships.TABLE_NAME,
-                            new String[] { OpenHDS.Memberships.COLUMN_SOCIAL_GROUP_UUID },
-                            OpenHDS.Memberships.COLUMN_INDIVIDUAL_UUID
-                                    + " = ?", new String[] { c.getString(0) },
-                            null, null, null);
-            while (c2.moveToNext()) {
-                socialGroupUuids.add(c2.getString(0));
-            }
-            c2.close();
-        }
-        c.close();
-
-        // generate the SQL IN clause with the subset of social group ids
-        StringBuilder placeholders = new StringBuilder();
-        if (socialGroupUuids.size() > 0) {
-            placeholders.append("?");
-        }
-
-        for (int i = 1; i < socialGroupUuids.size(); i++) {
-            placeholders.append(",?");
-        }
-
-        qb.appendWhere(OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_UUID + " IN ("
-                + placeholders.toString() + ")");
-        return socialGroupUuids.toArray(new String[socialGroupUuids.size()]);
     }
 
     @Override
