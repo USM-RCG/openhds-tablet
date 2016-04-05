@@ -456,27 +456,20 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     @Override
     public void launchForm(FormBehaviour formBehaviour, Map<String,String> followUpFormHints) {
 
+        formHelper.setFormBehaviour(formBehaviour); // update activity's current form
 
-        // use the given form as the current form
-        formHelper.setFormBehaviour(formBehaviour);
-
-
-        Map<String, String> formFieldData = new HashMap<>();
-        if(null != followUpFormHints){
-            formFieldData.putAll(followUpFormHints);
+        if(followUpFormHints != null){
+            Map<String, String> initialData = new HashMap<>();
+            initialData.putAll(followUpFormHints);
+            formBehaviour.getFormPayloadBuilder().buildFormPayload(initialData, this);
+            formHelper.setFormFieldData(initialData);
         }
 
-        formBehaviour.getFormPayloadBuilder().buildFormPayload(formFieldData, this);
-        formHelper.setFormFieldData(formFieldData);
-
-        // if needed, ask the user to search for required form field data
         if (formBehaviour.getNeedsFormFieldSearch()) {
             launchCurrentFormInSearchActivity();
-            return;
+        } else {
+            launchCurrentFormInODK();
         }
-
-        // otherwise, launch the form in ODK immediately
-        launchCurrentFormInODK();
     }
 
     private void launchCurrentFormInODK() {
