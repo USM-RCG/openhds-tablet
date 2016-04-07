@@ -8,12 +8,12 @@ import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.gateway.SocialGroupGateway;
 import org.openhds.mobile.utilities.IdHelper;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
+import static org.openhds.mobile.projectdata.FormPayloadBuilders.PayloadTools.formatDate;
 
 public class UpdateFormPayloadBuilders {
 
@@ -33,7 +33,7 @@ public class UpdateFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             PayloadTools.flagForReview(formPayload, false);
 
-            String visitDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+            String visitDate = formatDate(Calendar.getInstance());
             String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
             String locationUuid= ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
             String visitExtId = visitDate + "_" + locationExtId;
@@ -74,7 +74,7 @@ public class UpdateFormPayloadBuilders {
 
             formPayload.put(ProjectFormFields.InMigrations.IN_MIGRATION_TYPE, ProjectFormFields.InMigrations.IN_MIGRATION_INTERNAL);
 
-            String migrationDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+            String migrationDate = formatDate(Calendar.getInstance());
             formPayload.put(ProjectFormFields.InMigrations.IN_MIGRATION_DATE, migrationDate);
 
             return formPayload;
@@ -105,7 +105,7 @@ public class UpdateFormPayloadBuilders {
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID));
 
-            String migrationDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+            String migrationDate = formatDate(Calendar.getInstance());
             formPayload.put(ProjectFormFields.InMigrations.IN_MIGRATION_DATE, migrationDate);
 
             return formPayload;
@@ -122,7 +122,7 @@ public class UpdateFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, navigateActivity);
             PayloadTools.flagForReview(formPayload, false);
 
-            String outMigrationDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+            String outMigrationDate = formatDate(Calendar.getInstance());
 
             String individualExtId = navigateActivity.getHierarchyPath().get(INDIVIDUAL_STATE).getExtId();
             String individualUuid = navigateActivity.getHierarchyPath().get(INDIVIDUAL_STATE).getUuid();
@@ -184,7 +184,7 @@ public class UpdateFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             PayloadTools.flagForReview(formPayload, false);
 
-            String observationDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+            String observationDate = formatDate(Calendar.getInstance());
 
             String individualExtId;
             String individualUuid;

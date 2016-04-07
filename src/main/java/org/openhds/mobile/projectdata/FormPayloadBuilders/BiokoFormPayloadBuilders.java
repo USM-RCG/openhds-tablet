@@ -11,7 +11,6 @@ import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
 import org.openhds.mobile.repository.gateway.LocationGateway;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
+import static org.openhds.mobile.projectdata.FormPayloadBuilders.PayloadTools.formatTime;
 
 public class BiokoFormPayloadBuilders {
 
@@ -84,8 +84,7 @@ public class BiokoFormPayloadBuilders {
 
             FieldWorker fieldWorker = ctx.getCurrentFieldWorker();
             formPayload.put(ProjectFormFields.SprayHousehold.SUPERVISOR_EXT_ID, fieldWorker.getExtId());
-            formPayload.put(ProjectFormFields.SprayHousehold.SURVEY_DATE,
-                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
+            formPayload.put(ProjectFormFields.SprayHousehold.SURVEY_DATE, formatTime(Calendar.getInstance()));
 
 
             String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
@@ -111,8 +110,7 @@ public class BiokoFormPayloadBuilders {
 
             FieldWorker fieldWorker = ctx.getCurrentFieldWorker();
             formPayload.put(ProjectFormFields.SprayHousehold.SUPERVISOR_EXT_ID, fieldWorker.getExtId());
-            formPayload.put(ProjectFormFields.SuperOjo.OJO_DATE,
-                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
+            formPayload.put(ProjectFormFields.SuperOjo.OJO_DATE, formatTime(Calendar.getInstance()));
 
 
             String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
