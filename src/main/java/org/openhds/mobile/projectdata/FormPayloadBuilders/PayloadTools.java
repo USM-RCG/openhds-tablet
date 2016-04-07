@@ -50,4 +50,12 @@ public class PayloadTools {
     public static String formatDate(Calendar cal) {
         return new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
     }
+
+    public static String formatBuilding(int building, boolean includePrefix) {
+        return String.format("%s%03d", includePrefix? "E" : "", building);
+    }
+
+    public static String formatFloor(int floor, boolean includePrefix) {
+        return String.format("%s%02d", includePrefix? "P" : "", floor);
+    }
 }

@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
+import static org.openhds.mobile.projectdata.FormPayloadBuilders.PayloadTools.formatBuilding;
+import static org.openhds.mobile.projectdata.FormPayloadBuilders.PayloadTools.formatFloor;
 
 
 public class CensusFormPayloadBuilders {
@@ -51,7 +53,7 @@ public class CensusFormPayloadBuilders {
         formPayload.put(ProjectFormFields.Locations.LOCALITY_NAME, locality.getName());
 
         // default to 1 for <locationFloorNumber />
-        formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, String.format("%02d", 1));
+        formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, formatFloor(1, false));
 
         LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
 
@@ -77,7 +79,7 @@ public class CensusFormPayloadBuilders {
         }
 
         // Building numbers (E) are left-padded to be at least 3 digits long
-        formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, String.format("%03d", buildingNumber));
+        formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, formatBuilding(buildingNumber, false));
         formPayload.put(ProjectFormFields.Locations.COMMUNITY_NAME, communityName);
         formPayload.put(ProjectFormFields.Locations.COMMUNITY_CODE, communityCode);
         formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());

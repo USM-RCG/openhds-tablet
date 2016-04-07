@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
+import static org.openhds.mobile.projectdata.FormPayloadBuilders.PayloadTools.formatBuilding;
+import static org.openhds.mobile.projectdata.FormPayloadBuilders.PayloadTools.formatFloor;
 import static org.openhds.mobile.projectdata.FormPayloadBuilders.PayloadTools.formatTime;
 
 public class BiokoFormPayloadBuilders {
@@ -150,7 +152,7 @@ public class BiokoFormPayloadBuilders {
             if (locationIterator.hasNext()) {
                 buildingNumber = locationIterator.next().getBuildingNumber() + 1;
             }
-            formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, String.format("E%03d", buildingNumber));
+            formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, formatBuilding(buildingNumber, true));
 
             DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD_STATE);
             String locationExtId = household.getExtId();
@@ -158,7 +160,7 @@ public class BiokoFormPayloadBuilders {
 
             Location existing = locationGateway.getFirst(contentResolver,locationGateway.findById(locationUuid));
 
-            formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, String.format("P%02d", 1));
+            formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, formatFloor(1, true));
 
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
