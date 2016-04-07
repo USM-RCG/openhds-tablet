@@ -27,6 +27,7 @@ import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.model.update.Visit;
 import org.openhds.mobile.projectdata.FormPayloadBuilders.FormPayloadBuilder;
+import org.openhds.mobile.projectdata.FormPayloadBuilders.LaunchContext;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.ConsumerResults;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.FormPayloadConsumer;
 import org.openhds.mobile.projectdata.ModuleUiHelper;
@@ -50,7 +51,7 @@ import java.util.Map;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
-public class NavigateActivity extends Activity implements HierarchyNavigator {
+public class NavigateActivity extends Activity implements HierarchyNavigator, LaunchContext {
 
     private static final String TAG = NavigateActivity.class.getName();
 
@@ -467,17 +468,11 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
     }
 
     private Map<String, String> buildDataWithHints(FormBehavior behavior, Map<String, String> followUpHints) {
-        Map<String, String> formData = buildData(behavior.getFormPayloadBuilder());
+        Map<String, String> formData = behavior.getFormPayloadBuilder().buildPayload(this);
         if(followUpHints != null){
             formData.putAll(followUpHints);
         }
         return formData;
-    }
-
-    private Map<String, String> buildData(FormPayloadBuilder payloadBuilder) {
-        Map<String, String> initialData = new HashMap<>();
-        payloadBuilder.buildFormPayload(initialData, this);
-        return initialData;
     }
 
     private void launchCurrentFormInODK() {

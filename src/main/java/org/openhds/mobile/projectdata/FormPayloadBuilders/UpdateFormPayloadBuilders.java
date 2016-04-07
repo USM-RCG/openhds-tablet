@@ -2,7 +2,6 @@ package org.openhds.mobile.projectdata.FormPayloadBuilders;
 
 import android.content.ContentResolver;
 
-import org.openhds.mobile.activity.NavigateActivity;
 import org.openhds.mobile.model.core.SocialGroup;
 import org.openhds.mobile.projectdata.ProjectFormFields;
 import org.openhds.mobile.repository.DataWrapper;
@@ -11,6 +10,7 @@ import org.openhds.mobile.utilities.IdHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
@@ -26,18 +26,16 @@ public class UpdateFormPayloadBuilders {
     public static class StartAVisit implements FormPayloadBuilder {
 
         @Override
-        public void buildFormPayload(Map<String, String> formPayload,
-                                     NavigateActivity navigateActivity) {
+        public Map<String, String> buildPayload(LaunchContext ctx) {
 
-            PayloadTools.addMinimalFormPayload(formPayload, navigateActivity);
+            Map<String, String> formPayload = new HashMap<>();
+
+            PayloadTools.addMinimalFormPayload(formPayload, ctx);
             PayloadTools.flagForReview(formPayload, false);
 
-            String visitDate = new SimpleDateFormat("yyyy-MM-dd").format(
-                    Calendar.getInstance().getTime());
-            String locationExtId = navigateActivity.getHierarchyPath()
-                    .get(HOUSEHOLD_STATE).getExtId();
-            String locationUuid= navigateActivity.getHierarchyPath()
-                    .get(HOUSEHOLD_STATE).getUuid();
+            String visitDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
+            String locationUuid= ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
             String visitExtId = visitDate + "_" + locationExtId;
 
 
@@ -49,6 +47,7 @@ public class UpdateFormPayloadBuilders {
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, locationUuid);
 
+            return formPayload;
         }
     }
 
@@ -58,16 +57,18 @@ public class UpdateFormPayloadBuilders {
     public static class RegisterInternalInMigration implements FormPayloadBuilder {
 
         @Override
-        public void buildFormPayload(Map<String, String> formPayload, NavigateActivity navigateActivity) {
+        public Map<String, String> buildPayload(LaunchContext ctx) {
 
-            PayloadTools.addMinimalFormPayload(formPayload, navigateActivity);
+            Map<String, String> formPayload = new HashMap<>();
+
+            PayloadTools.addMinimalFormPayload(formPayload, ctx);
             PayloadTools.flagForReview(formPayload, false);
 
-            formPayload.put(ProjectFormFields.Visits.VISIT_EXTID, navigateActivity.getCurrentVisit().getExtId());
-            formPayload.put(ProjectFormFields.Visits.VISIT_UUID, navigateActivity.getCurrentVisit().getUuid());
+            formPayload.put(ProjectFormFields.Visits.VISIT_EXTID, ctx.getCurrentVisit().getExtId());
+            formPayload.put(ProjectFormFields.Visits.VISIT_UUID, ctx.getCurrentVisit().getUuid());
 
-            String locationExtId = navigateActivity.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
-            String locationUuid = navigateActivity.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
+            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
+            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
 
@@ -75,6 +76,8 @@ public class UpdateFormPayloadBuilders {
 
             String migrationDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
             formPayload.put(ProjectFormFields.InMigrations.IN_MIGRATION_DATE, migrationDate);
+
+            return formPayload;
         }
     }
 
@@ -82,16 +85,18 @@ public class UpdateFormPayloadBuilders {
     public static class RegisterExternalInMigration implements FormPayloadBuilder {
 
         @Override
-        public void buildFormPayload(Map<String, String> formPayload, NavigateActivity navigateActivity) {
+        public Map<String, String> buildPayload(LaunchContext ctx) {
 
-            PayloadTools.addMinimalFormPayload(formPayload, navigateActivity);
+            Map<String, String> formPayload = new HashMap<>();
+
+            PayloadTools.addMinimalFormPayload(formPayload, ctx);
             PayloadTools.flagForReview(formPayload, false);
 
-            formPayload.put(ProjectFormFields.Visits.VISIT_EXTID, navigateActivity.getCurrentVisit().getExtId());
-            formPayload.put(ProjectFormFields.Visits.VISIT_UUID, navigateActivity.getCurrentVisit().getUuid());
+            formPayload.put(ProjectFormFields.Visits.VISIT_EXTID, ctx.getCurrentVisit().getExtId());
+            formPayload.put(ProjectFormFields.Visits.VISIT_UUID, ctx.getCurrentVisit().getUuid());
 
-            String locationExtId = navigateActivity.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
-            String locationUuid = navigateActivity.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
+            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
+            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
 
@@ -102,25 +107,25 @@ public class UpdateFormPayloadBuilders {
 
             String migrationDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
             formPayload.put(ProjectFormFields.InMigrations.IN_MIGRATION_DATE, migrationDate);
+
+            return formPayload;
         }
     }
 
     public static class RegisterOutMigration implements FormPayloadBuilder {
 
         @Override
-        public void buildFormPayload(Map<String, String> formPayload,
-                                     NavigateActivity navigateActivity) {
+        public Map<String, String> buildPayload(LaunchContext navigateActivity) {
+
+            Map<String, String> formPayload = new HashMap<>();
 
             PayloadTools.addMinimalFormPayload(formPayload, navigateActivity);
             PayloadTools.flagForReview(formPayload, false);
 
-            String outMigrationDate = new SimpleDateFormat("yyyy-MM-dd").format(
-                    Calendar.getInstance().getTime());
+            String outMigrationDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
-            String individualExtId = navigateActivity.getHierarchyPath()
-                    .get(INDIVIDUAL_STATE).getExtId();
-            String individualUuid = navigateActivity.getHierarchyPath()
-                    .get(INDIVIDUAL_STATE).getUuid();
+            String individualExtId = navigateActivity.getHierarchyPath().get(INDIVIDUAL_STATE).getExtId();
+            String individualUuid = navigateActivity.getHierarchyPath().get(INDIVIDUAL_STATE).getUuid();
 
             formPayload.put(ProjectFormFields.OutMigrations.OUT_MIGRATION_DATE, outMigrationDate);
 
@@ -136,23 +141,23 @@ public class UpdateFormPayloadBuilders {
             formPayload.put(ProjectFormFields.Visits.VISIT_EXTID, navigateActivity.getCurrentVisit().getExtId());
             formPayload.put(ProjectFormFields.Visits.VISIT_UUID, navigateActivity.getCurrentVisit().getUuid());
 
-
+            return formPayload;
         }
     }
 
     public static class RegisterDeath implements FormPayloadBuilder {
 
         @Override
-        public void buildFormPayload(Map<String, String> formPayload,
-                                     NavigateActivity navigateActivity) {
+        public Map<String, String> buildPayload(LaunchContext ctx) {
 
-            PayloadTools.addMinimalFormPayload(formPayload, navigateActivity);
+            Map<String, String> formPayload = new HashMap<>();
+
+            PayloadTools.addMinimalFormPayload(formPayload, ctx);
             PayloadTools.flagForReview(formPayload, true);
 
             String individualExtId;
             String individualUuid;
-            DataWrapper dataWrapper = navigateActivity.getHierarchyPath()
-                    .get(INDIVIDUAL_STATE);
+            DataWrapper dataWrapper = ctx.getHierarchyPath().get(INDIVIDUAL_STATE);
             if (null != dataWrapper) {
                 individualExtId = dataWrapper.getExtId();
                 individualUuid = dataWrapper.getUuid();
@@ -162,27 +167,28 @@ public class UpdateFormPayloadBuilders {
                 formPayload.put(ProjectFormFields.General.ENTITY_EXTID, individualExtId);
             }
 
-            formPayload.put(ProjectFormFields.Visits.VISIT_EXTID, navigateActivity.getCurrentVisit().getExtId());
-            formPayload.put(ProjectFormFields.Visits.VISIT_UUID, navigateActivity.getCurrentVisit().getUuid());
+            formPayload.put(ProjectFormFields.Visits.VISIT_EXTID, ctx.getCurrentVisit().getExtId());
+            formPayload.put(ProjectFormFields.Visits.VISIT_UUID, ctx.getCurrentVisit().getUuid());
+
+            return formPayload;
         }
     }
 
     public static class RecordPregnancyObservation implements FormPayloadBuilder {
 
         @Override
-        public void buildFormPayload(Map<String, String> formPayload,
-                                     NavigateActivity navigateActivity) {
+        public Map<String, String> buildPayload(LaunchContext ctx) {
 
-            PayloadTools.addMinimalFormPayload(formPayload, navigateActivity);
+            Map<String, String> formPayload = new HashMap<>();
+
+            PayloadTools.addMinimalFormPayload(formPayload, ctx);
             PayloadTools.flagForReview(formPayload, false);
 
-            String observationDate = new SimpleDateFormat("yyyy-MM-dd").format(
-                    Calendar.getInstance().getTime());
+            String observationDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
             String individualExtId;
             String individualUuid;
-            DataWrapper dataWrapper = navigateActivity.getHierarchyPath()
-                    .get(INDIVIDUAL_STATE);
+            DataWrapper dataWrapper = ctx.getHierarchyPath().get(INDIVIDUAL_STATE);
             if (null == dataWrapper) {
                 individualExtId = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID);
                 individualUuid = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID);
@@ -196,48 +202,48 @@ public class UpdateFormPayloadBuilders {
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, individualUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, individualExtId);
 
-            formPayload.put(ProjectFormFields.Visits.VISIT_EXTID, navigateActivity.getCurrentVisit().getExtId());
-            formPayload.put(ProjectFormFields.Visits.VISIT_UUID, navigateActivity.getCurrentVisit().getUuid());
+            formPayload.put(ProjectFormFields.Visits.VISIT_EXTID, ctx.getCurrentVisit().getExtId());
+            formPayload.put(ProjectFormFields.Visits.VISIT_UUID, ctx.getCurrentVisit().getUuid());
 
             formPayload.put(ProjectFormFields.PregnancyObservation.PREGNANCY_OBSERVATION_RECORDED_DATE, observationDate);
 
+            return formPayload;
         }
     }
 
     public static class RecordPregnancyOutcome implements FormPayloadBuilder {
 
         @Override
-        public void buildFormPayload(Map<String, String> formPayload,
-                                     NavigateActivity navigateActivity) {
+        public Map<String, String> buildPayload(LaunchContext ctx) {
 
-            PayloadTools.addMinimalFormPayload(formPayload, navigateActivity);
+            Map<String, String> formPayload = new HashMap<>();
+
+            PayloadTools.addMinimalFormPayload(formPayload, ctx);
             PayloadTools.flagForReview(formPayload, false);
 
             SocialGroupGateway socialGroupGateway = new SocialGroupGateway();
-            SocialGroup socialGroup = socialGroupGateway.getFirst(navigateActivity.getContentResolver(),
-                    socialGroupGateway.findByLocationUuid(navigateActivity.getHierarchyPath()
-                            .get(HOUSEHOLD_STATE).getUuid()));
+            SocialGroup socialGroup = socialGroupGateway.getFirst(ctx.getContentResolver(),
+                    socialGroupGateway.findByLocationUuid(ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid()));
 
-            String motherExtId = navigateActivity.getHierarchyPath()
-                    .get(INDIVIDUAL_STATE).getExtId();
-            String motherUuid = navigateActivity.getHierarchyPath()
-                    .get(INDIVIDUAL_STATE).getUuid();
+            String motherExtId = ctx.getHierarchyPath().get(INDIVIDUAL_STATE).getExtId();
+            String motherUuid = ctx.getHierarchyPath().get(INDIVIDUAL_STATE).getUuid();
 
             formPayload.put(ProjectFormFields.PregnancyOutcome.MOTHER_UUID, motherUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, motherUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, motherExtId);
-            formPayload.put(ProjectFormFields.Visits.VISIT_UUID, navigateActivity.getCurrentVisit().getUuid());
+            formPayload.put(ProjectFormFields.Visits.VISIT_UUID, ctx.getCurrentVisit().getUuid());
             formPayload.put(ProjectFormFields.PregnancyOutcome.SOCIALGROUP_UUID, socialGroup.getUuid());
 
+            return formPayload;
         }
     }
 
     public static class AddIndividualFromInMigration implements FormPayloadBuilder {
 
         @Override
-        public void buildFormPayload(Map<String, String> formPayload,
-                                     NavigateActivity navigateActivity) {
+        public Map<String, String> buildPayload(LaunchContext navigateActivity) {
 
+            Map<String, String> formPayload = new HashMap<>();
 
             PayloadTools.addMinimalFormPayload(formPayload, navigateActivity);
             PayloadTools.flagForReview(formPayload, false);
@@ -246,15 +252,12 @@ public class UpdateFormPayloadBuilders {
 
             String individualExtId = IdHelper.generateIndividualExtId(navigateActivity.getContentResolver(), locationDataWrapper);
 
-            formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID,
-                    individualExtId);
+            formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, individualExtId);
 
             formPayload.put(ProjectFormFields.Individuals.HOUSEHOLD_UUID, navigateActivity.getCurrentSelection().getUuid());
 
-            formPayload.put(ProjectFormFields.General.ENTITY_EXTID,
-                    individualExtId);
-            formPayload.put(ProjectFormFields.General.ENTITY_UUID,
-                    IdHelper.generateEntityUuid());
+            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, individualExtId);
+            formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
 
             ContentResolver resolver = navigateActivity.getContentResolver();
 
@@ -274,7 +277,7 @@ public class UpdateFormPayloadBuilders {
                 formPayload.put(ProjectFormFields.Individuals.SOCIALGROUP_UUID, socialGroup.getUuid());
             }
 
-
+            return formPayload;
         }
 
     }

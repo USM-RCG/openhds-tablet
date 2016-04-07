@@ -1,6 +1,5 @@
 package org.openhds.mobile.projectdata.FormPayloadBuilders;
 
-import org.openhds.mobile.activity.NavigateActivity;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.projectdata.ProjectFormFields;
@@ -21,7 +20,7 @@ public class PayloadTools {
         }
     }
 
-    public static void addMinimalFormPayload(Map<String, String> formPayload, NavigateActivity navigateActivity) {
+    public static void addMinimalFormPayload(Map<String, String> formPayload, LaunchContext navigateActivity) {
 
         List<String> stateSequence = navigateActivity.getStateSequence();
         Map<String, DataWrapper> hierarchyPath = navigateActivity.getHierarchyPath();
