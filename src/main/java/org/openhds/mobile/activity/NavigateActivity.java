@@ -26,6 +26,7 @@ import org.openhds.mobile.model.form.FormBehavior;
 import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.model.update.Visit;
+import org.openhds.mobile.projectdata.FormPayloadBuilders.FormPayloadBuilder;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.ConsumerResults;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.FormPayloadConsumer;
 import org.openhds.mobile.projectdata.ModuleUiHelper;
@@ -455,22 +456,28 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
 
     @Override
     public void launchForm(FormBehavior formBehavior, Map<String,String> followUpFormHints) {
-
         formHelper.setFormBehavior(formBehavior); // update activity's current form
-
-        // pre-populate data
-        Map<String, String> initialData = new HashMap<>();
-        formHelper.setFormFieldData(initialData);
-        if(followUpFormHints != null){
-            initialData.putAll(followUpFormHints);
-        }
-        formBehavior.getFormPayloadBuilder().buildFormPayload(initialData, this);
-
-        if (formBehavior.getNeedsFormFieldSearch()) {
+        formHelper.setFormFieldData(buildDataWithHints(formBehavior, followUpFormHints));
+        boolean requiresSearch = formBehavior.getNeedsFormFieldSearch();
+        if (requiresSearch) {
             launchCurrentFormInSearchActivity();
         } else {
             launchCurrentFormInODK();
         }
+    }
+
+    private Map<String, String> buildDataWithHints(FormBehavior behavior, Map<String, String> followUpHints) {
+        Map<String, String> formData = buildData(behavior.getFormPayloadBuilder());
+        if(followUpHints != null){
+            formData.putAll(followUpHints);
+        }
+        return formData;
+    }
+
+    private Map<String, String> buildData(FormPayloadBuilder payloadBuilder) {
+        Map<String, String> initialData = new HashMap<>();
+        payloadBuilder.buildFormPayload(initialData, this);
+        return initialData;
     }
 
     private void launchCurrentFormInODK() {
