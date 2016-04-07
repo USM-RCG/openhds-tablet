@@ -458,12 +458,13 @@ public class NavigateActivity extends Activity implements HierarchyNavigator {
 
         formHelper.setFormBehavior(formBehavior); // update activity's current form
 
+        // pre-populate data
+        Map<String, String> initialData = new HashMap<>();
+        formHelper.setFormFieldData(initialData);
         if(followUpFormHints != null){
-            Map<String, String> initialData = new HashMap<>();
             initialData.putAll(followUpFormHints);
-            formBehavior.getFormPayloadBuilder().buildFormPayload(initialData, this);
-            formHelper.setFormFieldData(initialData);
         }
+        formBehavior.getFormPayloadBuilder().buildFormPayload(initialData, this);
 
         if (formBehavior.getNeedsFormFieldSearch()) {
             launchCurrentFormInSearchActivity();
