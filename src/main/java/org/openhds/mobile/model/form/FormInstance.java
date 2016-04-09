@@ -7,6 +7,8 @@ import java.util.List;
 
 import android.net.Uri;
 
+import org.openhds.mobile.provider.InstanceProviderAPI;
+
 public class FormInstance implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -16,6 +18,7 @@ public class FormInstance implements Serializable {
     private String fileName;
 	private String uriString;
     private String formVersion;
+	private String status;
 
     public String getFormVersion() {
         return formVersion;
@@ -51,6 +54,26 @@ public class FormInstance implements Serializable {
 
 	public void setUriString(String uriString) {
 		this.uriString = uriString;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public boolean isComplete() {
+		return InstanceProviderAPI.STATUS_COMPLETE.equals(status);
+	}
+
+	public boolean isSubmitted() {
+		return InstanceProviderAPI.STATUS_SUBMITTED.equals(status);
+	}
+
+	public boolean isIncomplete() {
+		return InstanceProviderAPI.STATUS_INCOMPLETE.equals(status);
 	}
 
 	public static List<File> toListOfFiles(List<FormInstance> formInstances) {

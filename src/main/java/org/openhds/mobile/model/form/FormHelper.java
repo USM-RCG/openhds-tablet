@@ -2,12 +2,10 @@ package org.openhds.mobile.model.form;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 
-import org.openhds.mobile.utilities.FormUtils;
+import org.openhds.mobile.utilities.OdkCollectHelper;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
@@ -16,24 +14,18 @@ import static org.openhds.mobile.utilities.FormUtils.formFile;
 import static org.openhds.mobile.utilities.FormUtils.generateODKForm;
 import static org.openhds.mobile.utilities.FormUtils.loadInstance;
 import static org.openhds.mobile.utilities.FormUtils.updateInstance;
-import static org.openhds.mobile.utilities.OdkCollectHelper.completedFormPath;
 
 public class FormHelper {
 
     private FormBehavior behavior;
-    private Uri instanceUri;
     private ContentResolver resolver;
     private Context ctx;
     private Map<String, String> formData;
-    private String completedFormPath;
+    private FormInstance instance;
 
     public FormHelper(Context ctx) {
         this.ctx = ctx;
         this.resolver = ctx.getContentResolver();
-    }
-
-    public String getCompletedFormPath() {
-        return completedFormPath;
     }
 
     public FormBehavior getBehavior() {
@@ -52,30 +44,20 @@ public class FormHelper {
         this.formData = formData;
     }
 
-    public Intent editIntent() {
-        return FormUtils.editIntent(instanceUri);
-    }
-
-    public boolean loadCompletedForm() {
-        try {
-            completedFormPath = completedFormPath(resolver, instanceUri);
-        } catch (FileNotFoundException e) {
-            completedFormPath = null;
-        }
-        return completedFormPath != null;
+    public FormInstance getInstance(Uri instanceUri) {
+        return instance = OdkCollectHelper.getInstance(resolver, instanceUri);
     }
 
     public void update() throws IOException {
-        updateInstance(formData, completedFormPath);
+        updateInstance(formData, instance.getFilePath());
     }
 
     public Map<String, String> fetch() throws IOException {
-        return formData = loadInstance(completedFormPath);
+        return formData = loadInstance(instance.getFilePath());
     }
 
-    public void newInstance() throws IOException {
-        this.completedFormPath = null;
+    public Uri newInstance() throws IOException {
         String formName = behavior.getFormName();
-        instanceUri = generateODKForm(resolver, formName, formData, formFile(ctx, formName, new Date()));
+        return generateODKForm(resolver, formName, formData, formFile(ctx, formName, new Date()));
     }
 }

@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
+import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 public class NavigateActivity extends Activity implements HierarchyNavigator, LaunchContext {
@@ -479,12 +480,10 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
         FormBehavior formBehavior = formHelper.getBehavior();
         if (formBehavior != null && formBehavior.getFormName() != null) {
             try {
-                formHelper.newInstance();
-                Intent intent = formHelper.editIntent();
-                showShortToast(this, R.string.launching_odk_collect);
                 // clear currentResults to get the most up-to-date currentResults after the form is consumed
                 currentResults = null;
-                startActivityForResult(intent, ODK_ACTIVITY_REQUEST_CODE);
+                showShortToast(this, R.string.launching_odk_collect);
+                startActivityForResult(editIntent(formHelper.newInstance()), ODK_ACTIVITY_REQUEST_CODE);
             } catch (Exception e) {
                 showShortToast(this, "failed to launch form: " + e.getMessage());
             }
@@ -592,8 +591,9 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 case ODK_ACTIVITY_REQUEST_CODE:
-                    if (formHelper.loadCompletedForm()) {
-                        associateFormToPath(formHelper.getCompletedFormPath());
+                    FormInstance instance = formHelper.getInstance(data.getData());
+                    if (instance.isComplete()) {
+                        associateFormToPath(instance.getFilePath());
                         FormPayloadConsumer consumer = formHelper.getBehavior().getFormPayloadConsumer();
                         if (consumer != null) {
                             try {
