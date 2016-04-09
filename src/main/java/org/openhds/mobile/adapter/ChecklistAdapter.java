@@ -52,7 +52,7 @@ public class ChecklistAdapter extends ArrayAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.form_instance_check_item_orange, null);
+            convertView = inflater.inflate(R.layout.form_instance_check_item, null);
         }
 
         // set up the basics to display the form instance info

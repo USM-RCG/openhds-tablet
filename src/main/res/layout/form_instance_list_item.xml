@@ -3,7 +3,6 @@
                 android:id="@+id/form_instance_list_item"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/form_list_drawable_orange"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingBottom="5dp"

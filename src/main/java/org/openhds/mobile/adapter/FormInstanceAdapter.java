@@ -31,7 +31,7 @@ public class FormInstanceAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.form_instance_list_item_orange, null);
+            convertView = inflater.inflate(R.layout.form_instance_list_item, null);
         }
 
         FormInstance instance = (FormInstance) formInstances[position];

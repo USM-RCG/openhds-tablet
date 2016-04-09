@@ -12,7 +12,7 @@
             android:layout_gravity="center_vertical"
             android:id="@+id/form_instance_item_area">
 
-        <include layout="@layout/form_instance_list_item_orange"/>
+        <include layout="@layout/form_instance_list_item"/>
 
     </FrameLayout>
 
@@ -23,6 +23,7 @@
             android:layout_gravity="center_vertical"
             android:focusable="false"
             android:saveEnabled="false"
-            android:paddingLeft="5dp" />
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
 
 </LinearLayout>
