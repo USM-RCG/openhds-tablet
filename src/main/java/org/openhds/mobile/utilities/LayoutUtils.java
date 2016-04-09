@@ -233,6 +233,13 @@ public class LayoutUtils {
 
         TextView formDateView = (TextView) view.findViewById(R.id.form_instance_list_date);
         formDateView.setText(date);
+
+        // Set background based on form status: need both to work with view re-use
+        if (!formInstance.isComplete()) {
+            view.setBackgroundResource(R.drawable.form_list_drawable_gray);
+        } else {
+            view.setBackgroundResource(R.drawable.form_list_drawable_orange);
+        }
     }
 
     private static String safeGetMapField(Map<String, String> map, String key) {

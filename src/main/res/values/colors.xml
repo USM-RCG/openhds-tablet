@@ -191,8 +191,6 @@
     <color name="GrayListItemFill">#CDCDCC</color>
     <color name="GrayListItemFillPressed">#FAF9F9</color>
     <color name="DetailFragGray">#4D464646</color>
-
-
-
+    <color name="IncompleteForm">#C6C6C6</color>
 
 </resources>
