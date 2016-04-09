@@ -112,7 +112,7 @@ public class DatabaseAdapter {
 			ContentValues cv = new ContentValues();
 			cv.put(KEY_TO_FORM, hierarchyPath);
 			cv.put(KEY_FORM_PATH, filePath);
-			id = db.insertOrThrow(ASSOCIATION_TABLE_NAME, null, cv);
+			id = db.replaceOrThrow(ASSOCIATION_TABLE_NAME, null, cv);
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
