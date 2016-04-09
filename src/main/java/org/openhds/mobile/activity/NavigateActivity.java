@@ -592,10 +592,9 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 case ODK_ACTIVITY_REQUEST_CODE:
-                    FormBehavior formBehavior = formHelper.getBehavior();
                     if (formHelper.loadCompletedForm()) {
                         associateFormToPath(formHelper.getCompletedFormPath());
-                        FormPayloadConsumer consumer = formBehavior.getFormPayloadConsumer();
+                        FormPayloadConsumer consumer = formHelper.getBehavior().getFormPayloadConsumer();
                         if (consumer != null) {
                             try {
                                 previousConsumerResults = consumer.consumeFormPayload(formHelper.fetch(), this);
