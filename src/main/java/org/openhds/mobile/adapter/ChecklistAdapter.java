@@ -2,7 +2,6 @@ package org.openhds.mobile.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -110,13 +109,5 @@ public class ChecklistAdapter extends ArrayAdapter {
         this.formInstanceList = formInstanceList;
         initializeCheckBoxes(this.formInstanceList);
         notifyDataSetChanged();
-    }
-
-    public List<Boolean> getCheckList() {
-        return checkList;
-    }
-
-    public void setCheckList(List<Boolean> checkList) {
-        this.checkList = checkList;
     }
 }
