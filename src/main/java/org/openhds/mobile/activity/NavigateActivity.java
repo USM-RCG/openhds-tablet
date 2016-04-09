@@ -73,7 +73,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
     private static final String TOGGLE_FRAGMENT_TAG = "hierarchyToggleFragment";
     private static final String DETAIL_FRAGMENT_TAG = "hierarchyDetailFragment";
     private static final String VISIT_FRAGMENT_TAG = "hierarchyVisitFragment";
-    private static final String VIEW_RECENT_FORM_TAG="viewPathFormsFragment";
+    private static final String VIEW_PATH_FORM_FRAGMENT_TAG ="viewPathFormsFragment";
     private static final String VISIT_KEY = "visitKey";
     private static final String HIERARCHY_PATH_KEYS = "hierarchyPathKeys";
     private static final String HIERARCHY_PATH_VALUES = "hierarchyPathValues";
@@ -143,7 +143,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
                         .add(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG)
                         .add(R.id.right_column_top, formFragment, FORM_FRAGMENT_TAG)
                         .add(R.id.right_column_bottom, visitFragment, VISIT_FRAGMENT_TAG)
-                        .add(R.id.view_column_bottom, viewPathFormsFragment, VIEW_RECENT_FORM_TAG)
+                        .add(R.id.view_column_bottom, viewPathFormsFragment, VIEW_PATH_FORM_FRAGMENT_TAG)
                         .commit();
             } else {
 
@@ -160,13 +160,13 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
 
                 defaultDetailFragment = new DefaultDetailFragment();
                 valueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
-                viewPathFormsFragment = (ViewPathFormsFragment) fragmentManager.findFragmentByTag(VIEW_RECENT_FORM_TAG);
+                viewPathFormsFragment = (ViewPathFormsFragment) fragmentManager.findFragmentByTag(VIEW_PATH_FORM_FRAGMENT_TAG);
 
                 // draw details if valuefrag is null, the drawing of valuefrag is
                 // handled in onResume().
                 if (null == valueFragment) {
                     valueFragment = new DataSelectionFragment();
-                    viewPathFormsFragment = (ViewPathFormsFragment) fragmentManager.findFragmentByTag(VIEW_RECENT_FORM_TAG);
+                    viewPathFormsFragment = (ViewPathFormsFragment) fragmentManager.findFragmentByTag(VIEW_PATH_FORM_FRAGMENT_TAG);
                     detailFragment = (DetailFragment) fragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG);
                     detailFragment.setNavigateActivity(this);
                 }
