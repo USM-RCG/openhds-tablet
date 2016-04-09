@@ -35,8 +35,6 @@ public class PortalActivity extends Activity implements OnClickListener {
 
     private static final String TAG = PortalActivity.class.getName();
 
-    private static final String SEARCH_FRAGMENT_TAG = "searchFragment";
-
     private FieldWorker currentFieldWorker;
     private ListView formInstanceView;
     private List<FormInstance> formInstances;
