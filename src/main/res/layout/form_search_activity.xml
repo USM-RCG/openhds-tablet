@@ -22,9 +22,7 @@
                 android:orientation="vertical"
                 android:divider="@android:color/transparent"
                 android:listSelector="@android:color/transparent"
-                android:dividerHeight="15dp"
-                                             />
-        />
+                android:dividerHeight="15dp" />
 
         <Button
                 android:id="@+id/done_button"
