@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 
@@ -67,9 +68,8 @@ public class ChecklistAdapter extends ArrayAdapter {
                 public void onClick(View v) {
                     FormInstance selected = (FormInstance) v.getTag();
                     Uri uri = Uri.parse(selected.getUriString());
-                    Intent intent = new Intent(Intent.ACTION_EDIT, uri);
                     showShortToast(getContext(), R.string.launching_odk_collect);
-                    ((Activity) getContext()).startActivityForResult(intent, 0);
+                    ((Activity) getContext()).startActivityForResult(editIntent(uri), 0);
                 }
             });
 

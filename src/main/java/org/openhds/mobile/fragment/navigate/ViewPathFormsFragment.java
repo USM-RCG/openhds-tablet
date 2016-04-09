@@ -1,7 +1,6 @@
 package org.openhds.mobile.fragment.navigate;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +15,7 @@ import org.openhds.mobile.model.form.FormInstance;
 
 import java.util.List;
 
+import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 
@@ -33,15 +33,10 @@ public class ViewPathFormsFragment extends Fragment {
         instanceList.setOnItemClickListener(new ClickListener());
     }
 
-    private void launch(FormInstance instance, String action) {
-        Uri uri = Uri.parse(instance.getUriString());
-        Intent intent = new Intent(action, uri);
-        startActivityForResult(intent, 0);
-    }
-
     private void launchEdit(FormInstance selected) {
-        launch(selected, Intent.ACTION_EDIT);
+        Uri uri = Uri.parse(selected.getUriString());
         showShortToast(getActivity(), R.string.launching_odk_collect);
+        startActivityForResult(editIntent(uri), 0);
     }
 
     private class ClickListener implements AdapterView.OnItemClickListener {

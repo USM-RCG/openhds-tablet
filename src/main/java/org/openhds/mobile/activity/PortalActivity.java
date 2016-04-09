@@ -27,6 +27,7 @@ import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.util.List;
 
+import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
@@ -139,9 +140,8 @@ public class PortalActivity extends Activity implements OnClickListener {
             if (position > 0 && position <= formInstances.size()) {
                 FormInstance selected = formInstances.get(position - 1);
                 Uri uri = Uri.parse(selected.getUriString());
-                Intent intent = new Intent(Intent.ACTION_EDIT, uri);
                 showShortToast(PortalActivity.this, R.string.launching_odk_collect);
-                startActivityForResult(intent, 0);
+                startActivityForResult(editIntent(uri), 0);
             }
         }
     }
