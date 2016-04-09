@@ -11,13 +11,16 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import org.openhds.mobile.R;
-import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.projectdata.ProjectFormFields;
 import org.openhds.mobile.projectdata.ProjectResources;
 
+import java.io.IOException;
 import java.util.Map;
+
+import static org.openhds.mobile.utilities.FormUtils.loadInstance;
 
 public class LayoutUtils {
 
@@ -208,11 +211,11 @@ public class LayoutUtils {
     }
 
     // Set up a form list item based on a given form instance.
-    public static void configureFormListItem(Context context, View view, FormInstance formInstance) {
+    public static void configureFormListItem(Context context, View view, FormInstance formInstance) throws IOException {
         // get the data we want to display
         int formTypeLocalizedId= ProjectResources.FormType.getFormTypeStringId(formInstance.getFormName());
         String formTypeName = context.getResources().getString(formTypeLocalizedId);
-        Map<String, String> instanceData = FormHelper.fetchFormInstanceData(formInstance.getFilePath());
+        Map<String, String> instanceData = loadInstance(formInstance.getFilePath());
 
         String entityId = safeGetMapField(instanceData, ProjectFormFields.General.ENTITY_EXTID);
         String fieldWorker = safeGetMapField(instanceData, ProjectFormFields.General.FIELD_WORKER_EXTID);

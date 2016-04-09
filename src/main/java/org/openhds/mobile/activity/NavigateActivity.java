@@ -26,7 +26,6 @@ import org.openhds.mobile.model.form.FormBehavior;
 import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.model.update.Visit;
-import org.openhds.mobile.projectdata.FormPayloadBuilders.FormPayloadBuilder;
 import org.openhds.mobile.projectdata.FormPayloadBuilders.LaunchContext;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.ConsumerResults;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.FormPayloadConsumer;
@@ -40,6 +39,7 @@ import org.openhds.mobile.utilities.OdkCollectHelper;
 import org.openhds.mobile.utilities.StateMachine;
 import org.openhds.mobile.utilities.StateMachine.StateListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -457,8 +457,8 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
 
     @Override
     public void launchForm(FormBehavior formBehavior, Map<String,String> followUpFormHints) {
-        formHelper.setFormBehavior(formBehavior); // update activity's current form
-        formHelper.setFormFieldData(buildDataWithHints(formBehavior, followUpFormHints));
+        formHelper.setBehavior(formBehavior); // update activity's current form
+        formHelper.setData(buildDataWithHints(formBehavior, followUpFormHints));
         boolean requiresSearch = formBehavior.getNeedsFormFieldSearch();
         if (requiresSearch) {
             launchCurrentFormInSearchActivity();
@@ -476,27 +476,23 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
     }
 
     private void launchCurrentFormInODK() {
-        FormBehavior formBehavior = formHelper.getFormBehavior();
+        FormBehavior formBehavior = formHelper.getBehavior();
         if (formBehavior != null && formBehavior.getFormName() != null) {
             try {
-                FormInstance formInstance = formHelper.newFormInstance();
-                if (formInstance == null) {
-                    showShortToast(this, "Warning: Could not find '" + formBehavior.getFormName() + "' form.");
-                } else {
-                    Intent intent = formHelper.buildEditFormInstanceIntent();
-                    showShortToast(this, R.string.launching_odk_collect);
-                    // clear currentResults to get the most up-to-date currentResults after the form is consumed
-                    currentResults = null;
-                    startActivityForResult(intent, ODK_ACTIVITY_REQUEST_CODE);
-                }
+                formHelper.newInstance();
+                Intent intent = formHelper.editIntent();
+                showShortToast(this, R.string.launching_odk_collect);
+                // clear currentResults to get the most up-to-date currentResults after the form is consumed
+                currentResults = null;
+                startActivityForResult(intent, ODK_ACTIVITY_REQUEST_CODE);
             } catch (Exception e) {
-                showShortToast(this, "Error creating Form instance: " + e.getMessage());
+                showShortToast(this, "failed to launch form: " + e.getMessage());
             }
         }
     }
 
     private void launchCurrentFormInSearchActivity() {
-        FormBehavior formBehavior = formHelper.getFormBehavior();
+        FormBehavior formBehavior = formHelper.getBehavior();
         if (null != formBehavior) {
             // put form search plugins in the intent so we know what the user needs to search for
             Intent intent = new Intent(this, FormSearchActivity.class);
@@ -596,29 +592,30 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 case ODK_ACTIVITY_REQUEST_CODE:
-                    // consume form data that the user entered with ODK
-                    FormBehavior formBehavior = formHelper.getFormBehavior();
-                    formHelper.checkFormInstanceStatus();
-                    if (formHelper.getFinalizedFormFilePath() != null) {
-
-                        // Tie the form instance to the hierarchy path
-                        associateFormToPath(formHelper.getFinalizedFormFilePath());
-
+                    FormBehavior formBehavior = formHelper.getBehavior();
+                    if (formHelper.loadCompletedForm()) {
+                        associateFormToPath(formHelper.getCompletedFormPath());
                         FormPayloadConsumer consumer = formBehavior.getFormPayloadConsumer();
                         if (consumer != null) {
-                            previousConsumerResults = consumer.consumeFormPayload(formHelper.fetchFormInstanceData(), this);
-                            if (previousConsumerResults.needsPostfill()) {
-                                consumer.postFillFormPayload(formHelper.getFormFieldData());
-                                formHelper.updateExistingFormInstance();
-                            }
-                            if (null != previousConsumerResults.getFollowUpFormBehavior()){
-                                launchForm(previousConsumerResults.getFollowUpFormBehavior(), previousConsumerResults.getFollowUpFormHints());
-                                return;
+                            try {
+                                previousConsumerResults = consumer.consumeFormPayload(formHelper.fetch(), this);
+                                if (previousConsumerResults.needsPostfill()) {
+                                    consumer.postFillFormPayload(formHelper.getData());
+                                    try {
+                                        formHelper.update();
+                                    } catch (IOException ue) {
+                                        showShortToast(this, "Update failed: " + ue.getMessage());
+                                    }
+                                }
+                                if (previousConsumerResults.getFollowUpFormBehavior() != null) {
+                                    launchForm(previousConsumerResults.getFollowUpFormBehavior(), previousConsumerResults.getFollowUpFormHints());
+                                }
+                            } catch (IOException e) {
+                                showShortToast(this, "Read failed: " + e.getMessage());
                             }
                         }
                     }
-
-                    return;
+                    break;
 
                 case SEARCH_ACTIVITY_REQUEST_CODE:
                     // data intent contains the form fields and values that the user just search for
@@ -627,11 +624,12 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
 
                     // merge searched fields with the existing form payload
                     for (FormSearchPluginModule plugin : formSearchPluginModules) {
-                        formHelper.getFormFieldData().put(plugin.getFieldName(), plugin.getFieldValue());
+                        formHelper.getData().put(plugin.getFieldName(), plugin.getFieldValue());
                     }
 
                     // now let the user finish filling in the form in ODK
                     launchCurrentFormInODK();
+                    break;
             }
         }
     }

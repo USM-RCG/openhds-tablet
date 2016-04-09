@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -16,20 +17,23 @@ import org.openhds.mobile.fragment.DeleteWarningDialogFragment;
 import org.openhds.mobile.fragment.DeleteWarningDialogListener;
 import org.openhds.mobile.fragment.LoginPreferenceFragment;
 import org.openhds.mobile.fragment.SyncDatabaseFragment;
-import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.repository.search.FormSearchPluginModule;
 import org.openhds.mobile.repository.search.SearchUtils;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.openhds.mobile.utilities.FormUtils.isFormReviewed;
 import static org.openhds.mobile.utilities.LayoutUtils.makeButton;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 import static org.openhds.mobile.utilities.SyncUtils.installAccount;
 
 public class SupervisorMainActivity extends Activity implements DeleteWarningDialogListener {
+
+    private static final String TAG = SupervisorMainActivity.class.getName();
 
     private static final String CHECKLIST_FRAGMENT_TAG = "checklistFragment";
     private static final String SYNC_FRAGMENT_TAG = "syncDatabaseFragment";
@@ -117,8 +121,12 @@ public class SupervisorMainActivity extends Activity implements DeleteWarningDia
 
         List<FormInstance> allFormInstances = OdkCollectHelper.getAllUnsentFormInstances(this.getContentResolver());
         for (FormInstance instance: allFormInstances) {
-            if (!FormHelper.isFormReviewed(instance.getFilePath())) {
-                OdkCollectHelper.setStatusIncomplete(this.getContentResolver(), Uri.parse(instance.getUriString()));
+            try {
+                if (!isFormReviewed(instance.getFilePath())) {
+                    OdkCollectHelper.setStatusIncomplete(this.getContentResolver(), Uri.parse(instance.getUriString()));
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "failure sending approved forms, form: " + instance.getFilePath(), e);
             }
         }
         showShortToast(this, R.string.launching_odk_collect);

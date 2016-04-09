@@ -4,16 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+
 import org.openhds.mobile.R;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.utilities.LayoutUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,8 @@ import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 
 public class ChecklistAdapter extends ArrayAdapter {
+
+    private final String TAG = ChecklistAdapter.class.getName();
 
     private List<FormInstance> formInstanceList;
     private List<Boolean> checkList;
@@ -51,35 +56,36 @@ public class ChecklistAdapter extends ArrayAdapter {
 
         // set up the basics to display the form instance info
         FormInstance instance = formInstanceList.get(position);
-        LayoutUtils.configureFormListItem(super.getContext(), convertView, instance);
+        try {
+            LayoutUtils.configureFormListItem(super.getContext(), convertView, instance);
 
-        // add callback when the form instance info is pressed
-        ViewGroup itemArea = (ViewGroup) convertView.findViewById(R.id.form_instance_item_area);
-        itemArea.setTag(instance);
-        itemArea.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FormInstance selected = (FormInstance) v.getTag();
-                Uri uri = Uri.parse(selected.getUriString());
-                Intent intent = new Intent(Intent.ACTION_EDIT, uri);
-                showShortToast(getContext(), R.string.launching_odk_collect);
-                ((Activity) getContext()).startActivityForResult(intent, 0);
-            }
-        });
+            // add callback when the form instance info is pressed
+            ViewGroup itemArea = (ViewGroup) convertView.findViewById(R.id.form_instance_item_area);
+            itemArea.setTag(instance);
+            itemArea.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FormInstance selected = (FormInstance) v.getTag();
+                    Uri uri = Uri.parse(selected.getUriString());
+                    Intent intent = new Intent(Intent.ACTION_EDIT, uri);
+                    showShortToast(getContext(), R.string.launching_odk_collect);
+                    ((Activity) getContext()).startActivityForResult(intent, 0);
+                }
+            });
 
-        // add callback when the checkbox is checked
-        CheckBox checkBoxView = (CheckBox) convertView.findViewById(R.id.form_instance_check_box);
-        checkBoxView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                checkList.set(position, isChecked);
-            }
-        });
-        checkBoxView.setChecked(checkList.get(position));
-
-
+            // add callback when the checkbox is checked
+            CheckBox checkBoxView = (CheckBox) convertView.findViewById(R.id.form_instance_check_box);
+            checkBoxView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    checkList.set(position, isChecked);
+                }
+            });
+            checkBoxView.setChecked(checkList.get(position));
+        } catch (IOException e) {
+            Log.e(TAG, "failed to setup checklist item", e);
+        }
         return convertView;
-
     }
 
     public List<FormInstance> getCheckedForms() {

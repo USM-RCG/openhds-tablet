@@ -3,6 +3,7 @@ package org.openhds.mobile.fragment;
 import android.app.*;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +14,22 @@ import android.widget.TextView;
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.SupervisorMainActivity;
 import org.openhds.mobile.adapter.ChecklistAdapter;
-import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.projectdata.ProjectFormFields;
 import org.openhds.mobile.projectdata.ProjectResources;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.openhds.mobile.utilities.FormUtils.getFormElement;
+import static org.openhds.mobile.utilities.FormUtils.updateFormElement;
+
 public class ChecklistFragment extends Fragment {
+
+    private final String TAG = ChecklistFragment.class.getName();
 
     public static String DELETE_MODE = "delete";
     public static String APPROVE_MODE = "approve";
@@ -140,10 +146,14 @@ public class ChecklistFragment extends Fragment {
         List<FormInstance> formInstances = OdkCollectHelper.getAllUnsentFormInstances(getActivity().getContentResolver());
         List<FormInstance> needApproval = new ArrayList<>();
 
-        for (FormInstance instance : formInstances ) {
-            String needsReview = FormHelper.getFormTagValue(ProjectFormFields.General.NEEDS_REVIEW, instance.getFilePath());
-            if (ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(needsReview)) {
-                needApproval.add(instance);
+        for (FormInstance instance : formInstances) {
+            try {
+                String needsReview = getFormElement(ProjectFormFields.General.NEEDS_REVIEW, instance.getFilePath());
+                if (ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(needsReview)) {
+                    needApproval.add(instance);
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "failure during approval setup, form: " + instance.getFilePath(), e);
             }
         }
 
@@ -186,9 +196,13 @@ public class ChecklistFragment extends Fragment {
 
     private void approveForms(List<FormInstance> forms) {
         for (FormInstance instance: forms) {
-            FormHelper.setFormTagValue(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NO_REVIEW_NEEDED,
-                    instance.getFilePath());
-            OdkCollectHelper.setStatusComplete(getActivity().getContentResolver(), Uri.parse(instance.getUriString()));
+            try {
+                updateFormElement(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NO_REVIEW_NEEDED,
+                        instance.getFilePath());
+                OdkCollectHelper.setStatusComplete(getActivity().getContentResolver(), Uri.parse(instance.getUriString()));
+            } catch (IOException e) {
+                Log.e(TAG, "failed to mark form approved", e);
+            }
         }
     }
 

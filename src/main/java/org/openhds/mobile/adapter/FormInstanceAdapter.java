@@ -2,6 +2,7 @@ package org.openhds.mobile.adapter;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,11 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.utilities.LayoutUtils;
 
+import java.io.IOException;
+
 public class FormInstanceAdapter extends ArrayAdapter {
+
+    private final String TAG = FormInstanceAdapter.class.getName();
 
     private Object[] formInstances;
     private LayoutInflater inflater;
@@ -30,8 +35,11 @@ public class FormInstanceAdapter extends ArrayAdapter {
         }
 
         FormInstance instance = (FormInstance) formInstances[position];
-        LayoutUtils.configureFormListItem(super.getContext(), convertView, instance);
+        try {
+            LayoutUtils.configureFormListItem(super.getContext(), convertView, instance);
+        } catch (IOException e) {
+            Log.e(TAG, "failed to configure form list item", e);
+        }
         return convertView;
     }
-
 }
