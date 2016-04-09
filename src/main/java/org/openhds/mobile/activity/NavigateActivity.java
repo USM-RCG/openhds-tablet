@@ -592,8 +592,8 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
             switch (requestCode) {
                 case ODK_ACTIVITY_REQUEST_CODE:
                     FormInstance instance = formHelper.getInstance(data.getData());
+                    associateFormToPath(instance.getFilePath());
                     if (instance.isComplete()) {
-                        associateFormToPath(instance.getFilePath());
                         FormPayloadConsumer consumer = formHelper.getBehavior().getFormPayloadConsumer();
                         if (consumer != null) {
                             try {
