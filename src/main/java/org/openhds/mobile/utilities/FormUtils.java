@@ -1,9 +1,9 @@
 package org.openhds.mobile.utilities;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Environment;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -40,6 +40,8 @@ import static org.openhds.mobile.utilities.OdkCollectHelper.registerInstance;
  * consolidates the repetition and minimizes the surface area depending on jdom classes.
  */
 public class FormUtils {
+
+    public static final String FILE_EXTENSION = ".xml";
 
     /**
      * Loads the specified XML file into a jdom2 {@link Document} object.
@@ -96,17 +98,27 @@ public class FormUtils {
     }
 
     /**
+     * Constructs the location to store form instances for the given form name, by convention. It generates locations
+     * on external storage since ODK Collect and this application communicate through the file system. Both applications
+     * must be able to read and write to the location.
+     *
+     * @param ctx  the application context used to determine external files location
+     * @param name the form name to use as a subdirectory
+     * @return the filesystem location to store instances of the named form at
+     */
+    public static File formDir(Context ctx, String name) {
+        return ctx.getExternalFilesDir(name);
+    }
+
+    /**
      * Constructs a {@link File} object specifying the location to store a form.
      *
-     * @param instanceName  the odk instance id
-     * @param time
-     * @param fileExtension
-     * @return
+     * @param name the odk instance id (or form name)
+     * @param time the creation time of the form
+     * @return the filesystem location to save/load the form
      */
-    public static File formFile(String instanceName, Date time, String fileExtension) {
-        return new File(Environment.getExternalStorageDirectory(), "Android" + File.separator
-                + "data" + File.separator + "org.openhds.mobile" + File.separator + "files" + File.separator
-                + instanceName + File.separator + formFilename(instanceName, time, fileExtension));
+    public static File formFile(Context ctx, String name, Date time) {
+        return new File(formDir(ctx, name), formFilename(name, time, FILE_EXTENSION));
     }
 
     /**
@@ -129,16 +141,13 @@ public class FormUtils {
      * Saves the given {@link Document} as a form in the application's conventional repository format, creating any
      * intermediate directories as needed.
      *
-     * @param form the {@link Document} containing the form data
-     * @param name
-     * @return the {@link File} representing the saved form's location
+     * @param form     the {@link Document} containing the form data
+     * @param location the file system location to save the form at
      * @throws IOException
      */
-    public static File saveForm(Document form, String name) throws IOException {
-        File formFile = formFile(name, new Date(), ".xml");
-        makeDirs(formFile);
-        domToFile(form, formFile);
-        return formFile;
+    public static void saveForm(Document form, File location) throws IOException {
+        makeDirs(location);
+        domToFile(form, location);
     }
 
     /**
@@ -279,18 +288,19 @@ public class FormUtils {
      * @param resolver
      * @param name     the odk form instance id of the blank form to use as template
      * @param values   name/value pairs specifying values to merge with the blank form
+     * @param location the filesystem location to save the generated form to, it must be accessible to ODK Collect
      * @return the content {@link Uri} of the form registered with ODK
      * @throws IOException
      */
-    public static Uri generateODKForm(ContentResolver resolver, String name, Map<String, String> values)
+    public static Uri generateODKForm(ContentResolver resolver, String name, Map<String, String> values, File location)
             throws IOException {
         FormInstance template = getBlankInstance(resolver, name);
         if (template != null) {
             String tName = template.getFormName(), tVersion = template.getFormVersion(), tPath = template.getFilePath();
             File tFile = new File(tPath);
             try {
-                File instance = saveForm(genInstanceDoc(tFile, values), tName);
-                return registerInstance(resolver, instance, instance.getName(), tName, tVersion);
+                saveForm(genInstanceDoc(tFile, values), location);
+                return registerInstance(resolver, location, location.getName(), tName, tVersion);
             } catch (JDOMException e) {
                 throw new IOException("failed to fill out form", e);
             }

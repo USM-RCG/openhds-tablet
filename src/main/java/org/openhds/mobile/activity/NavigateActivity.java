@@ -106,7 +106,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
 
             builder = ProjectActivityBuilder.Module.valueOf(currentModuleName).newInstance();
             hierarchyPath = new HashMap<>();
-            formHelper = new FormHelper(getContentResolver());
+            formHelper = new FormHelper(this);
             stateMachine = new StateMachine(new HashSet<>(getStateSequence()), getStateSequence().get(0));
 
             for (String state : getStateSequence()) {

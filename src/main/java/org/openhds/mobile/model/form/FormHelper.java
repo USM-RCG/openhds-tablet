@@ -1,6 +1,7 @@
 package org.openhds.mobile.model.form;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -8,8 +9,10 @@ import org.openhds.mobile.utilities.FormUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
+import static org.openhds.mobile.utilities.FormUtils.formFile;
 import static org.openhds.mobile.utilities.FormUtils.generateODKForm;
 import static org.openhds.mobile.utilities.FormUtils.loadInstance;
 import static org.openhds.mobile.utilities.FormUtils.updateInstance;
@@ -20,11 +23,13 @@ public class FormHelper {
     private FormBehavior behavior;
     private Uri instanceUri;
     private ContentResolver resolver;
+    private Context ctx;
     private Map<String, String> formData;
     private String completedFormPath;
 
-    public FormHelper(ContentResolver resolver) {
-        this.resolver = resolver;
+    public FormHelper(Context ctx) {
+        this.ctx = ctx;
+        this.resolver = ctx.getContentResolver();
     }
 
     public String getCompletedFormPath() {
@@ -70,6 +75,7 @@ public class FormHelper {
 
     public void newInstance() throws IOException {
         this.completedFormPath = null;
-        instanceUri = generateODKForm(resolver, behavior.getFormName(), formData);
+        String formName = behavior.getFormName();
+        instanceUri = generateODKForm(resolver, formName, formData, formFile(ctx, formName, new Date()));
     }
 }
