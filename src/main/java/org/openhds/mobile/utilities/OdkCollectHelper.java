@@ -59,62 +59,22 @@ public class OdkCollectHelper {
         return formInstance;
     }
 
-    public static List<FormInstance> getAllFormInstances(ContentResolver resolver) {
-
-        ArrayList<FormInstance> formInstances = new ArrayList<>();
-        Cursor cursor = resolver.query(CONTENT_URI, new String[]{
-                InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH,
-                InstanceProviderAPI.InstanceColumns._ID,
-                InstanceProviderAPI.InstanceColumns.JR_FORM_ID,
-                InstanceProviderAPI.InstanceColumns.DISPLAY_NAME}, null, null, null);
-
-        if (null == cursor) {
-            return null;
-        }
-
-        while (cursor.moveToNext()) {
-            FormInstance formInstance = new FormInstance();
-            String filePath, formName, fileName;
-            filePath = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
-            Uri uri = Uri.withAppendedPath(CONTENT_URI, cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)));
-            formName = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_FORM_ID));
-            fileName = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME));
-            formInstance.setFilePath(filePath);
-            formInstance.setFormName(formName);
-            formInstance.setFileName(fileName);
-            formInstance.setUriString(uri.toString());
-            formInstances.add(formInstance);
-        }
-        cursor.close();
-        return formInstances;
-    }
-
-    public static void deleteInstance(ContentResolver resolver, Uri uri, String filePath) {
-        resolver.delete(uri, InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH + "=?", new String[]{filePath});
-    }
-
     public static void setStatusSubmitted(ContentResolver resolver, Uri uri) {
-
         ContentValues cv = new ContentValues();
         cv.put(InstanceProviderAPI.InstanceColumns.STATUS, InstanceProviderAPI.STATUS_SUBMITTED);
         resolver.update(uri, cv, null, null);
-
     }
 
     public static void setStatusIncomplete(ContentResolver resolver, Uri uri) {
-
         ContentValues cv = new ContentValues();
         cv.put(InstanceProviderAPI.InstanceColumns.STATUS, InstanceProviderAPI.STATUS_INCOMPLETE);
         resolver.update(uri, cv, null, null);
-
     }
 
     public static void setStatusComplete(ContentResolver resolver, Uri uri) {
-
         ContentValues cv = new ContentValues();
         cv.put(InstanceProviderAPI.InstanceColumns.STATUS, InstanceProviderAPI.STATUS_COMPLETE);
         resolver.update(uri, cv, null, null);
-
     }
 
     public static String makePlaceholders(int len) {
@@ -170,6 +130,7 @@ public class OdkCollectHelper {
 
     /**
      * Registers the given XML file as a form instance with ODK Collect.
+     *
      * @param resolver
      * @param instance
      * @param name
@@ -190,7 +151,7 @@ public class OdkCollectHelper {
      * Retrieves metadata for the blank form identified by the specified form id.
      *
      * @param resolver
-     * @param formId the form id as specified on the form's data instance element
+     * @param formId   the form id as specified on the form's data instance element
      * @return a {@link FormInstance} object containing the matching form's metadata or null if none was found.
      */
     public static FormInstance getBlankInstance(ContentResolver resolver, String formId) {
