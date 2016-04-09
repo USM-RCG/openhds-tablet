@@ -23,7 +23,6 @@ import org.openhds.mobile.repository.gateway.FieldWorkerGateway;
 
 import static android.text.InputType.TYPE_CLASS_TEXT;
 import static android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS;
-import static android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
 
 public class FieldWorkerLoginFragment extends Fragment implements
