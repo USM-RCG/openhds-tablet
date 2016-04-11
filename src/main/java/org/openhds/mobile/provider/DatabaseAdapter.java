@@ -22,36 +22,36 @@ public class DatabaseAdapter {
 	public static final String KEY_SUPERVISOR_NAME = "username";
 	public static final String KEY_SUPERVISOR_PASS = "password";
 
-	private static final String ASSOCIATION_TABLE_NAME = "path_to_forms";
-	public static final String  KEY_PATH_ID = "path_id";
-	public static final String  KEY_TO_FORM = "hierarchyPath";
+	private static final String FORM_PATH_TABLE_NAME = "path_to_forms";
+	public static final String FORM_PATH_IDX_NAME = "path_id";
+	public static final String KEY_HIER_PATH = "hierarchyPath";
 	public static final String  KEY_FORM_PATH = "formPath";
 
-	private static final String USER_DB_CREATE = "CREATE TABLE "
+	private static final String USER_CREATE = "CREATE TABLE "
 			+ SUPERVISOR_TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY, "
 			+ KEY_SUPERVISOR_NAME + " TEXT, " + KEY_SUPERVISOR_PASS + " TEXT)";
 
-	private static final String ASSOCIATION_DB_CREATE = "CREATE TABLE "
-			+ ASSOCIATION_TABLE_NAME + " (" + KEY_TO_FORM + " TEXT, " + KEY_FORM_PATH + " TEXT, CONSTRAINT "
-			+ KEY_PATH_ID + " UNIQUE (" + KEY_TO_FORM + ", " +KEY_FORM_PATH +" ) )" ;
+	private static final String FORM_PATH_CREATE = "CREATE TABLE "
+			+ FORM_PATH_TABLE_NAME + " (" + KEY_HIER_PATH + " TEXT, " + KEY_FORM_PATH + " TEXT, CONSTRAINT "
+			+ FORM_PATH_IDX_NAME + " UNIQUE (" + KEY_HIER_PATH + ", " +KEY_FORM_PATH +" ) )" ;
 
-	private static DatabaseAdapter INSTANCE;
+	private static DatabaseAdapter instance;
 
 	public static synchronized DatabaseAdapter getInstance(Context ctx) {
-		if (INSTANCE == null) {
-			INSTANCE = new DatabaseAdapter(ctx);
+		if (instance == null) {
+			instance = new DatabaseAdapter(ctx);
 		}
-		return INSTANCE;
+		return instance;
 	}
 
-	private DatabaseHelper dbHelper;
+	private DatabaseHelper helper;
 
 	protected DatabaseAdapter(Context context) {
-		dbHelper = new DatabaseHelper(context);
+		helper = new DatabaseHelper(context);
 	}
 
 	public Supervisor findSupervisorByUsername(String username) {
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		SQLiteDatabase db = helper.getReadableDatabase();
 		String[] columns = {KEY_ID, KEY_SUPERVISOR_NAME, KEY_SUPERVISOR_PASS};
 		String where = String.format("%s = ?", KEY_SUPERVISOR_NAME);
 		String[] whereArgs = {username};
@@ -73,7 +73,7 @@ public class DatabaseAdapter {
 	}
 
 	public long addSupervisor(Supervisor u) {
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		SQLiteDatabase db = helper.getWritableDatabase();
 		db.beginTransaction();
 		try {
 			ContentValues cv = new ContentValues();
@@ -88,7 +88,7 @@ public class DatabaseAdapter {
 	}
 
 	public int deleteSupervisor(Supervisor u) {
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		SQLiteDatabase db = helper.getWritableDatabase();
 		int rowCount = -1;
 		db.beginTransaction();
 		try {
@@ -103,13 +103,13 @@ public class DatabaseAdapter {
 	}
 
 	public long createAssociation(String hierarchyPath, String filePath) {
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		SQLiteDatabase db = helper.getWritableDatabase();
 		db.beginTransaction();
 		try {
 			ContentValues cv = new ContentValues();
-			cv.put(KEY_TO_FORM, hierarchyPath);
+			cv.put(KEY_HIER_PATH, hierarchyPath);
 			cv.put(KEY_FORM_PATH, filePath);
-			long id = db.replaceOrThrow(ASSOCIATION_TABLE_NAME, null, cv);
+			long id = db.replaceOrThrow(FORM_PATH_TABLE_NAME, null, cv);
 			db.setTransactionSuccessful();
 			return id;
 		} finally {
@@ -118,12 +118,12 @@ public class DatabaseAdapter {
 	}
 
 	public Collection<String> findAssociatedPath(String hierarchyPath) {
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		SQLiteDatabase db = helper.getReadableDatabase();
 		Set<String> formPaths = new HashSet<>();
 		String[] columns = {KEY_FORM_PATH};
-		String where = String.format("%s = ?", KEY_TO_FORM);
+		String where = String.format("%s = ?", KEY_HIER_PATH);
 		String[] whereArgs = {hierarchyPath};
-		Cursor cursor = db.query(ASSOCIATION_TABLE_NAME, columns, where, whereArgs, null, null, null);
+		Cursor cursor = db.query(FORM_PATH_TABLE_NAME, columns, where, whereArgs, null, null, null);
 		if (cursor != null) {
 			try {
 				while (cursor.moveToNext()) {
@@ -137,10 +137,10 @@ public class DatabaseAdapter {
 	}
 
 	public Collection<String> findAllAssociatedPaths() {
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		SQLiteDatabase db = helper.getReadableDatabase();
 		Set<String> associatedPaths = new HashSet<>();
 		String[] columns = {KEY_FORM_PATH};
-		Cursor cursor = db.query(ASSOCIATION_TABLE_NAME, columns, null, null, null, null, null);
+		Cursor cursor = db.query(FORM_PATH_TABLE_NAME, columns, null, null, null, null, null);
 		if (cursor != null) {
 			try {
 				while (cursor.moveToNext()) {
@@ -154,12 +154,12 @@ public class DatabaseAdapter {
 	}
 
 	public void deleteAssociatedPath(String sentFilepath) {
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		SQLiteDatabase db = helper.getWritableDatabase();
 		db.beginTransaction();
 		try {
 			String where = String.format("%s = ?", KEY_FORM_PATH);
 			String[] whereArgs = {sentFilepath};
-			db.delete(ASSOCIATION_TABLE_NAME, where, whereArgs);
+			db.delete(FORM_PATH_TABLE_NAME, where, whereArgs);
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
@@ -174,8 +174,8 @@ public class DatabaseAdapter {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			db.execSQL(USER_DB_CREATE);
-			db.execSQL(ASSOCIATION_DB_CREATE);
+			db.execSQL(USER_CREATE);
+			db.execSQL(FORM_PATH_CREATE);
 		}
 
 		@Override
