@@ -476,7 +476,6 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
 
     private void launchEdit() {
         try {
-            currentResults = null; // force update of results: form consumers may add records
             showShortToast(this, R.string.launching_odk_collect);
             startActivityForResult(editIntent(formHelper.newInstance()), ODK_ACTIVITY_REQUEST_CODE);
         } catch (Exception e) {
@@ -587,6 +586,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
                         FormPayloadConsumer consumer = formHelper.getBehavior().getFormPayloadConsumer();
                         if (consumer != null) {
                             try {
+                                clearResults();
                                 previousConsumerResults = consumer.consumeFormPayload(formHelper.fetch(), this);
                                 if (previousConsumerResults.needsPostfill()) {
                                     consumer.postFillFormPayload(formHelper.getData());
@@ -621,6 +621,14 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
                     break;
             }
         }
+    }
+
+    /**
+     * Resets the cached results for the current hierarchy position. Calling this prior to hierarchySetup ensures
+     * that any changes to the database will be reflected in the user interface once hierarchySetup terminates.
+     */
+    private void clearResults() {
+        currentResults = null;
     }
 
     public DataWrapper getCurrentSelection() {
