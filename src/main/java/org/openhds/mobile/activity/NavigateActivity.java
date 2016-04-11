@@ -366,10 +366,6 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
         return hierarchyPath;
     }
 
-    public List<DataWrapper> getCurrentResults() {
-        return currentResults;
-    }
-
     public String getState() {
         return stateMachine.getState();
     }
