@@ -37,7 +37,6 @@ public class DatabaseAdapter {
 			+ KEY_PATH_ID + " UNIQUE (" + KEY_TO_FORM + ", " +KEY_FORM_PATH +" ) )" ;
 
 	private DatabaseHelper dbHelper;
-	private SQLiteDatabase database;
 
 	public DatabaseAdapter(Context context) {
 		dbHelper = new DatabaseHelper(context);
@@ -169,14 +168,6 @@ public class DatabaseAdapter {
 		db.setTransactionSuccessful();
 		db.endTransaction();
 		db.close();
-	}
-
-	public SQLiteDatabase getDatabase() {
-		return database;
-	}
-
-	public void setDatabase(SQLiteDatabase database) {
-		this.database = database;
 	}
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {
