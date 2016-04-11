@@ -453,14 +453,16 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
     }
 
     @Override
-    public void launchForm(FormBehavior formBehavior, Map<String,String> followUpFormHints) {
+    public void launchForm(FormBehavior formBehavior, Map<String, String> followUpFormHints) {
         formHelper.setBehavior(formBehavior); // update activity's current form
-        formHelper.setData(buildDataWithHints(formBehavior, followUpFormHints));
-        boolean requiresSearch = formBehavior.getNeedsFormFieldSearch();
-        if (requiresSearch) {
-            launchCurrentFormInSearchActivity();
-        } else {
-            launchCurrentFormInODK();
+        if (formBehavior != null) {
+            formHelper.setData(buildDataWithHints(formBehavior, followUpFormHints));
+            boolean requiresSearch = formBehavior.getNeedsFormFieldSearch();
+            if (requiresSearch) {
+                launchSearch();
+            } else {
+                launchEdit();
+            }
         }
     }
 
@@ -472,29 +474,21 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
         return formData;
     }
 
-    private void launchCurrentFormInODK() {
-        FormBehavior formBehavior = formHelper.getBehavior();
-        if (formBehavior != null && formBehavior.getFormName() != null) {
-            try {
-                // clear currentResults to get the most up-to-date currentResults after the form is consumed
-                currentResults = null;
-                showShortToast(this, R.string.launching_odk_collect);
-                startActivityForResult(editIntent(formHelper.newInstance()), ODK_ACTIVITY_REQUEST_CODE);
-            } catch (Exception e) {
-                showShortToast(this, "failed to launch form: " + e.getMessage());
-            }
+    private void launchEdit() {
+        try {
+            currentResults = null; // force update of results: form consumers may add records
+            showShortToast(this, R.string.launching_odk_collect);
+            startActivityForResult(editIntent(formHelper.newInstance()), ODK_ACTIVITY_REQUEST_CODE);
+        } catch (Exception e) {
+            showShortToast(this, "failed to launch form: " + e.getMessage());
         }
     }
 
-    private void launchCurrentFormInSearchActivity() {
-        FormBehavior formBehavior = formHelper.getBehavior();
-        if (null != formBehavior) {
-            // put form search plugins in the intent so we know what the user needs to search for
-            Intent intent = new Intent(this, FormSearchActivity.class);
-            intent.putParcelableArrayListExtra(
-                    FormSearchActivity.FORM_SEARCH_PLUGINS_KEY, formBehavior.getFormSearchPluginModules());
-            startActivityForResult(intent, SEARCH_ACTIVITY_REQUEST_CODE);
-        }
+    private void launchSearch() {
+        Intent intent = new Intent(this, FormSearchActivity.class);
+        ArrayList<FormSearchPluginModule> searchModules = formHelper.getBehavior().getFormSearchPluginModules();
+        intent.putParcelableArrayListExtra(FormSearchActivity.FORM_SEARCH_PLUGINS_KEY, searchModules);
+        startActivityForResult(intent, SEARCH_ACTIVITY_REQUEST_CODE);
     }
 
     private void showValueFragment() {
@@ -623,7 +617,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
                     }
 
                     // now let the user finish filling in the form in ODK
-                    launchCurrentFormInODK();
+                    launchEdit();
                     break;
             }
         }
