@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import org.openhds.mobile.model.core.Supervisor;
 
@@ -53,119 +52,103 @@ public class DatabaseAdapter {
 
 	public Supervisor findSupervisorByUsername(String username) {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		String[] columns = {KEY_ID, KEY_SUPERVISOR_NAME, KEY_SUPERVISOR_PASS};
+		String where = String.format("%s = ?", KEY_SUPERVISOR_NAME);
+		String[] whereArgs = {username};
+		Cursor cursor = db.query(SUPERVISOR_TABLE_NAME, columns, where, whereArgs, null, null, null);
 		Supervisor user = null;
-		try {
-			Cursor c = db.query(SUPERVISOR_TABLE_NAME, new String[] { KEY_ID,
-					KEY_SUPERVISOR_NAME, KEY_SUPERVISOR_PASS },
-					KEY_SUPERVISOR_NAME + " = ?", new String[] { username },
-					null, null, null);
-			boolean found = c.moveToNext();
-			if (!found) {
-				c.close();
-				return null;
+		if (cursor != null) {
+			try {
+				if (cursor.moveToNext()) {
+					user = new Supervisor();
+					user.setId(cursor.getLong(cursor.getColumnIndex(KEY_ID)));
+					user.setName(cursor.getString(cursor.getColumnIndex(KEY_SUPERVISOR_NAME)));
+					user.setPassword(cursor.getString(cursor.getColumnIndex(KEY_SUPERVISOR_PASS)));
+				}
+			} finally {
+				cursor.close();
 			}
-
-			user = new Supervisor();
-			user.setId(c.getLong(c.getColumnIndex(KEY_ID)));
-			user.setName(c.getString(c.getColumnIndex(KEY_SUPERVISOR_NAME)));
-			user.setPassword(c.getString(c.getColumnIndex(KEY_SUPERVISOR_PASS)));
-			c.close();
-		} catch (Exception e) {
-			Log.w("findUserByUsername", e.getMessage());
-		} finally {
-			db.close();
 		}
 		return user;
 	}
 
 	public long addSupervisor(Supervisor u) {
-		long id = -1;
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
 		try {
 			ContentValues cv = new ContentValues();
 			cv.put(KEY_SUPERVISOR_NAME, u.getName());
 			cv.put(KEY_SUPERVISOR_PASS, u.getPassword());
-
-			id = db.insert(SUPERVISOR_TABLE_NAME, null, cv);
+			long id = db.insert(SUPERVISOR_TABLE_NAME, null, cv);
 			db.setTransactionSuccessful();
+			return id;
 		} finally {
 			db.endTransaction();
 		}
-
-		db.close();
-		return id;
 	}
 
 	public int deleteSupervisor(Supervisor u) {
-		int rowCount = -1;
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		int rowCount = -1;
 		db.beginTransaction();
 		try {
-			rowCount = db.delete(SUPERVISOR_TABLE_NAME, KEY_SUPERVISOR_NAME + " = ?", new String[]{u.getName()});
+			String where = String.format("%s = ?", KEY_SUPERVISOR_NAME);
+			String[] whereArgs = {u.getName()};
+			rowCount = db.delete(SUPERVISOR_TABLE_NAME, where, whereArgs);
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
 		}
-
-		db.close();
 		return rowCount;
 	}
 
 	public long createAssociation(String hierarchyPath, String filePath) {
-		long id = -1;
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
 		try {
 			ContentValues cv = new ContentValues();
 			cv.put(KEY_TO_FORM, hierarchyPath);
 			cv.put(KEY_FORM_PATH, filePath);
-			id = db.replaceOrThrow(ASSOCIATION_TABLE_NAME, null, cv);
+			long id = db.replaceOrThrow(ASSOCIATION_TABLE_NAME, null, cv);
 			db.setTransactionSuccessful();
+			return id;
 		} finally {
 			db.endTransaction();
-			db.close();
 		}
-		return id;
 	}
 
 	public Collection<String> findAssociatedPath(String hierarchyPath) {
-		Set<String> formPaths = new HashSet<>();
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		try {
-			Cursor cursor = db.query(ASSOCIATION_TABLE_NAME, new String[]{KEY_FORM_PATH},
-					KEY_TO_FORM + "= ?", new String[]{hierarchyPath}, null, null, null);
-			if (cursor == null) {
-				return null;
+		Set<String> formPaths = new HashSet<>();
+		String[] columns = {KEY_FORM_PATH};
+		String where = String.format("%s = ?", KEY_TO_FORM);
+		String[] whereArgs = {hierarchyPath};
+		Cursor cursor = db.query(ASSOCIATION_TABLE_NAME, columns, where, whereArgs, null, null, null);
+		if (cursor != null) {
+			try {
+				while (cursor.moveToNext()) {
+					formPaths.add(cursor.getString(cursor.getColumnIndex(KEY_FORM_PATH)));
+				}
+			} finally {
+				cursor.close();
 			}
-			while (cursor.moveToNext()) {
-				String formPath;
-				formPath = cursor.getString(cursor.getColumnIndex(KEY_FORM_PATH));
-				formPaths.add(formPath);
-			}
-			cursor.close();
-		} catch (Exception e) {
-			Log.w("findUserByUsername", e.getMessage());
 		}
 		return formPaths;
 	}
 
 	public Collection<String> findAllAssociatedPaths() {
-		Set<String> associatedPaths = new HashSet<>();
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		try {
-			Cursor cursor = db.query(ASSOCIATION_TABLE_NAME, new String[]{KEY_FORM_PATH}, null, null, null, null, null);
-			if (cursor == null) {
-				return null;
+		Set<String> associatedPaths = new HashSet<>();
+		String[] columns = {KEY_FORM_PATH};
+		Cursor cursor = db.query(ASSOCIATION_TABLE_NAME, columns, null, null, null, null, null);
+		if (cursor != null) {
+			try {
+				while (cursor.moveToNext()) {
+					associatedPaths.add(cursor.getString(cursor.getColumnIndex(KEY_FORM_PATH)));
+				}
+			} finally {
+				cursor.close();
 			}
-			while (cursor.moveToNext()) {
-				String formPath;
-				formPath = cursor.getString(cursor.getColumnIndex(KEY_FORM_PATH));
-				associatedPaths.add(formPath);
-			}
-			cursor.close();
-		} catch (Exception e) {
-			Log.w("findUserByUsername", e.getMessage());
 		}
 		return associatedPaths;
 	}
@@ -173,10 +156,14 @@ public class DatabaseAdapter {
 	public void deleteAssociatedPath(String sentFilepath) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		db.beginTransaction();
-		db.delete(ASSOCIATION_TABLE_NAME, KEY_FORM_PATH + " = ?", new String[]{"" + sentFilepath});
-		db.setTransactionSuccessful();
-		db.endTransaction();
-		db.close();
+		try {
+			String where = String.format("%s = ?", KEY_FORM_PATH);
+			String[] whereArgs = {sentFilepath};
+			db.delete(ASSOCIATION_TABLE_NAME, where, whereArgs);
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
 	}
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {
