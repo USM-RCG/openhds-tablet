@@ -36,9 +36,18 @@ public class DatabaseAdapter {
 			+ ASSOCIATION_TABLE_NAME + " (" + KEY_TO_FORM + " TEXT, " + KEY_FORM_PATH + " TEXT, CONSTRAINT "
 			+ KEY_PATH_ID + " UNIQUE (" + KEY_TO_FORM + ", " +KEY_FORM_PATH +" ) )" ;
 
+	private static DatabaseAdapter INSTANCE;
+
+	public static synchronized DatabaseAdapter getInstance(Context ctx) {
+		if (INSTANCE == null) {
+			INSTANCE = new DatabaseAdapter(ctx);
+		}
+		return INSTANCE;
+	}
+
 	private DatabaseHelper dbHelper;
 
-	public DatabaseAdapter(Context context) {
+	protected DatabaseAdapter(Context context) {
 		dbHelper = new DatabaseHelper(context);
 	}
 

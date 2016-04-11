@@ -333,7 +333,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
     }
 
     private void disAssociateSentForms() {
-        DatabaseAdapter dbAdapter = new DatabaseAdapter(this);
+        DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance(this);
         Collection<String> paths = dbAdapter.findAllAssociatedPaths();
         List<String> sentFormPaths = OdkCollectHelper.getSentFormPaths(getContentResolver(), paths);
         if (!sentFormPaths.isEmpty()) {
@@ -347,7 +347,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
     private void populateFormsForPath() {
         List<FormInstance> forms;
         ContentResolver resolver = getContentResolver();
-        DatabaseAdapter dbAdpt = new DatabaseAdapter(this);
+        DatabaseAdapter dbAdpt = DatabaseAdapter.getInstance(this);
         Collection associatedPaths = dbAdpt.findAssociatedPath(currentHierarchyPath());
         if (!associatedPaths.isEmpty()) {
             forms = OdkCollectHelper.getByPaths(resolver, associatedPaths);
@@ -579,7 +579,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
 
     private void associateFormToPath(String formId) {
         String path = currentHierarchyPath();
-        DatabaseAdapter dbAdapter = new DatabaseAdapter(this);
+        DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance(this);
         if (formId != null) {
             dbAdapter.createAssociation(path, formId);
         }

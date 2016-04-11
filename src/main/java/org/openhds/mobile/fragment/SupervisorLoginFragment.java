@@ -46,7 +46,7 @@ public class SupervisorLoginFragment extends Fragment implements
         passwordEditText.setOnKeyListener(this);
         Button loginButton = (Button) v.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
-        databaseAdapter = new DatabaseAdapter(getActivity());
+        databaseAdapter = DatabaseAdapter.getInstance(getActivity());
 
         return v;
     }
