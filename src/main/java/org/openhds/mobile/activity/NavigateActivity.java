@@ -308,7 +308,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
             String previousState = getStateSequence().get(stateIndex - 1);
             DataWrapper previousSelection = hierarchyPath.get(previousState);
             currentSelection = previousSelection;
-            if(null == currentResults) {
+            if(currentResults == null) {
                 currentResults = builder.getQueryHelper().getChildren(getContentResolver(), previousSelection, state);
             }
         }
