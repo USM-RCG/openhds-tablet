@@ -10,7 +10,10 @@ import org.openhds.mobile.model.core.Supervisor;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import static org.openhds.mobile.utilities.SQLUtils.makePlaceholders;
 
 public class DatabaseAdapter {
 
@@ -103,13 +106,13 @@ public class DatabaseAdapter {
         return rowCount;
     }
 
-    public long createAssociation(String hierarchyPath, String filePath) {
+    public long attachFormToHierarchy(String hierarchyPath, String formPath) {
         SQLiteDatabase db = helper.getWritableDatabase();
         db.beginTransaction();
         try {
             ContentValues cv = new ContentValues();
             cv.put(KEY_HIER_PATH, hierarchyPath);
-            cv.put(KEY_FORM_PATH, filePath);
+            cv.put(KEY_FORM_PATH, formPath);
             long id = db.replaceOrThrow(FORM_PATH_TABLE_NAME, null, cv);
             db.setTransactionSuccessful();
             return id;
@@ -118,7 +121,7 @@ public class DatabaseAdapter {
         }
     }
 
-    public Collection<String> findAssociatedPath(String hierarchyPath) {
+    public Collection<String> findFormsForHierarchy(String hierarchyPath) {
         SQLiteDatabase db = helper.getReadableDatabase();
         Set<String> formPaths = new HashSet<>();
         String[] columns = {KEY_FORM_PATH};
@@ -137,33 +140,18 @@ public class DatabaseAdapter {
         return formPaths;
     }
 
-    public Collection<String> findAllAssociatedPaths() {
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Set<String> associatedPaths = new HashSet<>();
-        String[] columns = {KEY_FORM_PATH};
-        Cursor cursor = db.query(FORM_PATH_TABLE_NAME, columns, null, null, null, null, null);
-        if (cursor != null) {
+    public void detachFromHierarchy(List<String> formPaths) {
+        if (!formPaths.isEmpty()) {
+            SQLiteDatabase db = helper.getWritableDatabase();
+            db.beginTransaction();
             try {
-                while (cursor.moveToNext()) {
-                    associatedPaths.add(cursor.getString(cursor.getColumnIndex(KEY_FORM_PATH)));
-                }
+                String where = String.format("%s in (%s)", KEY_FORM_PATH, makePlaceholders(formPaths.size()));
+                String[] whereArgs = formPaths.toArray(new String[formPaths.size()]);
+                db.delete(FORM_PATH_TABLE_NAME, where, whereArgs);
+                db.setTransactionSuccessful();
             } finally {
-                cursor.close();
+                db.endTransaction();
             }
-        }
-        return associatedPaths;
-    }
-
-    public void deleteAssociatedPath(String sentFilepath) {
-        SQLiteDatabase db = helper.getWritableDatabase();
-        db.beginTransaction();
-        try {
-            String where = String.format("%s = ?", KEY_FORM_PATH);
-            String[] whereArgs = {sentFilepath};
-            db.delete(FORM_PATH_TABLE_NAME, where, whereArgs);
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
         }
     }
 

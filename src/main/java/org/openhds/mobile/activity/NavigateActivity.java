@@ -2,7 +2,6 @@ package org.openhds.mobile.activity;
 
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,7 +41,6 @@ import org.openhds.mobile.utilities.StateMachine.StateListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -325,41 +323,39 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
             showDetailFragment();
             detailToggleFragment.setButtonHighlighted(true);
         }
-        updateAssociatedForms();
+        updateAttachedForms();
 
         if(null != getCurrentVisit()){
             visitFragment.setButtonEnabled(true);
         }
     }
 
-    private void disAssociateSentForms() {
-        DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance(this);
-        Collection<String> paths = dbAdapter.findAllAssociatedPaths();
-        List<String> sentFormPaths = OdkCollectHelper.getSentFormPaths(getContentResolver(), paths);
-        if (!sentFormPaths.isEmpty()) {
-            for (String sf : sentFormPaths) {
-                dbAdapter.deleteAssociatedPath(sf);
+    private void updateAttachedForms() {
+        List<FormInstance> unsentForms = new ArrayList<>();
+        List<String> sentFormPaths = new ArrayList<>();
+        for (FormInstance attachedForm : getAttachedForms(currentHierarchyPath())) {
+            if (attachedForm.isSubmitted()) {
+                sentFormPaths.add(attachedForm.getFilePath());
+            } else {
+                unsentForms.add(attachedForm);
             }
         }
+        detachFormsFromHierarchy(sentFormPaths);
+        populateFormView(unsentForms);
     }
 
-    @SuppressWarnings("unchecked")
-    private void populateFormsForPath() {
-        List<FormInstance> forms;
-        ContentResolver resolver = getContentResolver();
-        DatabaseAdapter dbAdpt = DatabaseAdapter.getInstance(this);
-        Collection associatedPaths = dbAdpt.findAssociatedPath(currentHierarchyPath());
-        if (!associatedPaths.isEmpty()) {
-            forms = OdkCollectHelper.getByPaths(resolver, associatedPaths);
-        } else {
-            forms = Collections.EMPTY_LIST;
-        }
-        viewPathFormsFragment.populateRecentFormInstanceListView(forms);
+    void detachFormsFromHierarchy(List<String> formPaths) {
+        DatabaseAdapter.getInstance(this).detachFromHierarchy(formPaths);
     }
 
-    private void updateAssociatedForms() {
-        disAssociateSentForms();
-        populateFormsForPath();
+    private void populateFormView(List<FormInstance> forms) {
+        viewPathFormsFragment.populate(forms);
+    }
+
+    private List<FormInstance> getAttachedForms(String hierarchyPath) {
+        DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance(this);
+        Collection<String> attachedPaths = dbAdapter.findFormsForHierarchy(hierarchyPath);
+        return OdkCollectHelper.getByPaths(getContentResolver(), attachedPaths);
     }
 
     public Map<String, DataWrapper> getHierarchyPath() {
@@ -570,7 +566,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
         String path = currentHierarchyPath();
         DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance(this);
         if (formId != null) {
-            dbAdapter.createAssociation(path, formId);
+            dbAdapter.attachFormToHierarchy(path, formId);
         }
     }
 
@@ -701,7 +697,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
                     validForms.add(form);
                 }
             }
-            updateAssociatedForms();
+            updateAttachedForms();
 
             if (shouldShowDetailFragment()) {
                 showDetailFragment();

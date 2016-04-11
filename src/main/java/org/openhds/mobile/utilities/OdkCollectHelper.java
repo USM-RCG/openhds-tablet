@@ -8,7 +8,6 @@ import android.net.Uri;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.provider.FormsProviderAPI;
 import org.openhds.mobile.provider.InstanceProviderAPI;
-import org.openhds.mobile.repository.Query;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,6 +17,7 @@ import java.util.List;
 import static org.openhds.mobile.provider.InstanceProviderAPI.InstanceColumns.CONTENT_URI;
 import static org.openhds.mobile.repository.RepositoryUtils.LIKE;
 import static org.openhds.mobile.repository.RepositoryUtils.LIKE_WILD_CARD;
+import static org.openhds.mobile.utilities.SQLUtils.makePlaceholders;
 
 public class OdkCollectHelper {
 
@@ -77,55 +77,24 @@ public class OdkCollectHelper {
         resolver.update(uri, cv, null, null);
     }
 
-    public static String makePlaceholders(int len) {
-        if (len < 1) {
-            throw new RuntimeException("No placeholders");
-        } else {
-            StringBuilder sb = new StringBuilder(len * 2 - 1);
-            sb.append("?");
-            for (int i = 1; i < len; i++) {
-                sb.append(",?");
-            }
-            return sb.toString();
-        }
-    }
-
-    public static List<FormInstance> getByPaths(ContentResolver resolver, Collection<String> ids) {
+    public static List<FormInstance> getByPaths(ContentResolver resolver, Collection<String> formPaths) {
         ArrayList<FormInstance> formInstances = new ArrayList<>();
-        Cursor cursor = resolver.query(CONTENT_URI,INSTANCE_COLUMNS,
-                InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH
-                        + " IN (" + makePlaceholders(ids.size()) + ")",
-                ids.toArray(new String[ids.size()]), null);
-        if (cursor != null) {
-            try {
-                while (cursor.moveToNext()) {
-                    formInstances.add(instanceFromCursor(cursor));
+        if (!formPaths.isEmpty()) {
+            String where = InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH +
+                    " IN (" + makePlaceholders(formPaths.size()) + ")";
+            String[] whereArgs = formPaths.toArray(new String[formPaths.size()]);
+            Cursor cursor = resolver.query(CONTENT_URI, INSTANCE_COLUMNS, where, whereArgs, null);
+            if (cursor != null) {
+                try {
+                    while (cursor.moveToNext()) {
+                        formInstances.add(instanceFromCursor(cursor));
+                    }
+                } finally {
+                    cursor.close();
                 }
-            } finally {
-                cursor.close();
             }
         }
         return formInstances;
-    }
-
-    public static List<String> getSentFormPaths(ContentResolver resolver, Collection<String> ids) {
-        ArrayList<String> sentPaths = new ArrayList<>();
-        for (String path : ids) {
-            Query query = new Query(CONTENT_URI,
-                    new String[]{InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, InstanceProviderAPI.InstanceColumns.STATUS},
-                    new String[]{path, InstanceProviderAPI.STATUS_SUBMITTED}, null, "=");
-            Cursor cursor = query.select(resolver);
-            if (null == cursor) {
-                return null;
-            }
-            if (cursor.moveToFirst()) {
-                String sentPath;
-                sentPath = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
-                sentPaths.add(sentPath);
-            }
-            cursor.close();
-        }
-        return sentPaths;
     }
 
     /**

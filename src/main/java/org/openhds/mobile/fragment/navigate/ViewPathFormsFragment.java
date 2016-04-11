@@ -26,7 +26,7 @@ public class ViewPathFormsFragment extends Fragment {
         return inflater.inflate(R.layout.view_form_fragment, container, false);
     }
 
-    public void populateRecentFormInstanceListView(List<FormInstance> formsForPath) {
+    public void populate(List<FormInstance> formsForPath) {
         FormInstanceAdapter adapter = new FormInstanceAdapter(getActivity(), R.id.form_instance_list_item, formsForPath.toArray());
         ListView instanceList = (ListView) getActivity().findViewById(R.id.path_forms_form_right_column);
         instanceList.setAdapter(adapter);
