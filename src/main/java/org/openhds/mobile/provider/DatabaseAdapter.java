@@ -19,13 +19,13 @@ public class DatabaseAdapter {
 
 	private static final String SUPERVISOR_TABLE_NAME = "openhds_supervisor";
 	private static final String KEY_ID = "_id";
-	public static final String KEY_SUPERVISOR_NAME = "username";
-	public static final String KEY_SUPERVISOR_PASS = "password";
+	private static final String KEY_SUPERVISOR_NAME = "username";
+	private static final String KEY_SUPERVISOR_PASS = "password";
 
 	private static final String FORM_PATH_TABLE_NAME = "path_to_forms";
-	public static final String FORM_PATH_IDX_NAME = "path_id";
-	public static final String KEY_HIER_PATH = "hierarchyPath";
-	public static final String  KEY_FORM_PATH = "formPath";
+	private static final String FORM_PATH_IDX_NAME = "path_id";
+	private static final String KEY_HIER_PATH = "hierarchyPath";
+	private static final String KEY_FORM_PATH = "formPath";
 
 	private static final String USER_CREATE = "CREATE TABLE "
 			+ SUPERVISOR_TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY, "
