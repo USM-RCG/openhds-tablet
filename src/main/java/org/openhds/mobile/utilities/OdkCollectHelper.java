@@ -15,8 +15,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.openhds.mobile.provider.InstanceProviderAPI.InstanceColumns.CONTENT_URI;
-import static org.openhds.mobile.repository.RepositoryUtils.LIKE;
-import static org.openhds.mobile.repository.RepositoryUtils.LIKE_WILD_CARD;
 import static org.openhds.mobile.utilities.SQLUtils.makePlaceholders;
 
 public class OdkCollectHelper {
@@ -128,8 +126,8 @@ public class OdkCollectHelper {
         final String[] columns = {FormsProviderAPI.FormsColumns.JR_FORM_ID,
                 FormsProviderAPI.FormsColumns.FORM_FILE_PATH,
                 FormsProviderAPI.FormsColumns.JR_VERSION};
-        final String where = FormsProviderAPI.FormsColumns.JR_FORM_ID + " " + LIKE + " ?";
-        final String[] whereArgs = {formId + LIKE_WILD_CARD};
+        final String where = FormsProviderAPI.FormsColumns.JR_FORM_ID + " = ?";
+        final String[] whereArgs = {formId};
         Cursor cursor = resolver.query(FormsProviderAPI.FormsColumns.CONTENT_URI, columns, where, whereArgs, null);
         if (cursor != null) {
             try {
