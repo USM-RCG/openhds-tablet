@@ -86,6 +86,17 @@ public class FormUtils {
     }
 
     /**
+     * Constructs the base name for a form. This is used to construct file and directory names.
+     *
+     * @param name the form id of the form
+     * @param time the creation time of the form
+     * @return the common base name used in file/dir name construction
+     */
+    public static String formBaseName(String name, Date time) {
+        return String.format("%s%s", name, formatTime(time));
+    }
+
+    /**
      * Constructs the filename for a form.
      *
      * @param instanceId    the ODK instance id
@@ -106,8 +117,8 @@ public class FormUtils {
      * @param name the form name to use as a subdirectory
      * @return the filesystem location to store instances of the named form at
      */
-    public static File formDir(Context ctx, String name) {
-        return ctx.getExternalFilesDir(name);
+    public static File formDir(Context ctx, String name, Date time) {
+        return ctx.getExternalFilesDir(formBaseName(name, time));
     }
 
     /**
