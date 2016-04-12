@@ -99,13 +99,12 @@ public class FormUtils {
     /**
      * Constructs the filename for a form.
      *
-     * @param instanceId    the ODK instance id
-     * @param time          the form creation time
-     * @param fileExtension the file extension to use
+     * @param name the ODK instance id
+     * @param time the form creation time
      * @return the formatted file name to use for the form
      */
-    public static String formFilename(String instanceId, Date time, String fileExtension) {
-        return String.format("%s%s%s", instanceId, formatTime(time), fileExtension);
+    public static String formFilename(String name, Date time) {
+        return String.format("%s%s", formBaseName(name, time), FILE_EXTENSION);
     }
 
     /**
@@ -129,7 +128,7 @@ public class FormUtils {
      * @return the filesystem location to save/load the form
      */
     public static File formFile(Context ctx, String name, Date time) {
-        return new File(formDir(ctx, name), formFilename(name, time, FILE_EXTENSION));
+        return new File(formDir(ctx, name, time), formFilename(name, time));
     }
 
     /**
