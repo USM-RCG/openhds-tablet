@@ -33,7 +33,7 @@ import static org.openhds.mobile.utilities.SyncUtils.installAccount;
 
 public class SupervisorMainActivity extends Activity implements DeleteWarningDialogListener {
 
-    private static final String TAG = SupervisorMainActivity.class.getName();
+    private static final String TAG = SupervisorMainActivity.class.getSimpleName();
 
     private static final String CHECKLIST_FRAGMENT_TAG = "checklistFragment";
     private static final String SYNC_FRAGMENT_TAG = "syncDatabaseFragment";

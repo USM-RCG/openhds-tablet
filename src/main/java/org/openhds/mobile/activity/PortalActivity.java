@@ -33,7 +33,7 @@ import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 public class PortalActivity extends Activity implements OnClickListener {
 
-    private static final String TAG = PortalActivity.class.getName();
+    private static final String TAG = PortalActivity.class.getSimpleName();
 
     private FieldWorker currentFieldWorker;
     private ListView formInstanceView;

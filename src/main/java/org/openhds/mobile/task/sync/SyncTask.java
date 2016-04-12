@@ -35,7 +35,7 @@ public class SyncTask extends AsyncTask<SyncRequest, TaskStatus, SyncResult> {
 
     public static final String UNSUPPORTED_RESPONSE = "Unsupported Response";
 
-    private final String TAG = SyncTask.class.getName();
+    private final String TAG = SyncTask.class.getSimpleName();
 
     public interface Listener {
         void handleResult(SyncResult result);

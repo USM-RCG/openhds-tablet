@@ -52,7 +52,7 @@ import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 public class NavigateActivity extends Activity implements HierarchyNavigator, LaunchContext {
 
-    private static final String TAG = NavigateActivity.class.getName();
+    private static final String TAG = NavigateActivity.class.getSimpleName();
 
     private static final int ODK_ACTIVITY_REQUEST_CODE = 0;
     private static final int SEARCH_ACTIVITY_REQUEST_CODE = 1;

@@ -41,7 +41,7 @@ import static org.openhds.mobile.utilities.HttpUtils.get;
  */
 public class SyncUtils {
 
-    private static final String TAG = SyncUtils.class.getName();
+    private static final String TAG = SyncUtils.class.getSimpleName();
 
     public static final String SQLITE_MIME_TYPE = "application/x-sqlite3";
 

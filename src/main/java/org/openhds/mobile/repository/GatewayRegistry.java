@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class GatewayRegistry {
 
-    private static final String TAG = GatewayRegistry.class.getName();
+    private static final String TAG = GatewayRegistry.class.getSimpleName();
 
     private static final Map<String, Gateway> SINGLETONS;
 

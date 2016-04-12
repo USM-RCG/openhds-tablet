@@ -29,7 +29,7 @@ import static org.openhds.mobile.utilities.FormUtils.updateFormElement;
 
 public class ChecklistFragment extends Fragment {
 
-    private final String TAG = ChecklistFragment.class.getName();
+    private final String TAG = ChecklistFragment.class.getSimpleName();
 
     public static String DELETE_MODE = "delete";
     public static String APPROVE_MODE = "approve";
