@@ -1,9 +1,9 @@
 package org.openhds.mobile.utilities;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -107,17 +107,24 @@ public class FormUtils {
         return String.format("%s%s", formBaseName(name, time), FILE_EXTENSION);
     }
 
+    public static File getODKDir() {
+        return new File(Environment.getExternalStorageDirectory(), "odk");
+    }
+
+    public static File getInstancesDir() {
+        return new File(getODKDir(), "cims-instances");
+    }
+
     /**
      * Constructs the location to store form instances for the given form name, by convention. It generates locations
      * on external storage since ODK Collect and this application communicate through the file system. Both applications
      * must be able to read and write to the location.
      *
-     * @param ctx  the application context used to determine external files location
      * @param name the form name to use as a subdirectory
      * @return the filesystem location to store instances of the named form at
      */
-    public static File formDir(Context ctx, String name, Date time) {
-        return ctx.getExternalFilesDir(formBaseName(name, time));
+    public static File formDir(String name, Date time) {
+        return new File(getInstancesDir(), formBaseName(name, time));
     }
 
     /**
@@ -127,8 +134,8 @@ public class FormUtils {
      * @param time the creation time of the form
      * @return the filesystem location to save/load the form
      */
-    public static File formFile(Context ctx, String name, Date time) {
-        return new File(formDir(ctx, name, time), formFilename(name, time));
+    public static File formFile(String name, Date time) {
+        return new File(formDir(name, time), formFilename(name, time));
     }
 
     /**

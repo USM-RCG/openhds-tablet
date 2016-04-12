@@ -58,6 +58,6 @@ public class FormHelper {
 
     public Uri newInstance() throws IOException {
         String formName = behavior.getFormName();
-        return generateODKForm(resolver, formName, formData, formFile(ctx, formName, new Date()));
+        return generateODKForm(resolver, formName, formData, formFile(formName, new Date()));
     }
 }
