@@ -153,7 +153,7 @@ public class ChecklistFragment extends Fragment {
                     needApproval.add(instance);
                 }
             } catch (IOException e) {
-                Log.e(TAG, "failure during approval setup, form: " + instance.getFilePath(), e);
+                Log.e(TAG, "failure during approval setup: " + e.getMessage());
             }
         }
 
@@ -201,7 +201,7 @@ public class ChecklistFragment extends Fragment {
                         instance.getFilePath());
                 OdkCollectHelper.setStatusComplete(getActivity().getContentResolver(), Uri.parse(instance.getUriString()));
             } catch (IOException e) {
-                Log.e(TAG, "failed to mark form approved", e);
+                Log.e(TAG, "failed to mark form approved: " + e.getMessage());
             }
         }
     }
