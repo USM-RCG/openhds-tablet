@@ -57,12 +57,6 @@ public class OdkCollectHelper {
         return formInstance;
     }
 
-    public static void setStatusSubmitted(ContentResolver resolver, Uri uri) {
-        ContentValues cv = new ContentValues();
-        cv.put(InstanceProviderAPI.InstanceColumns.STATUS, InstanceProviderAPI.STATUS_SUBMITTED);
-        resolver.update(uri, cv, null, null);
-    }
-
     public static void setStatusIncomplete(ContentResolver resolver, Uri uri) {
         ContentValues cv = new ContentValues();
         cv.put(InstanceProviderAPI.InstanceColumns.STATUS, InstanceProviderAPI.STATUS_INCOMPLETE);
@@ -164,5 +158,33 @@ public class OdkCollectHelper {
             }
         }
         return metadata;
+    }
+
+    /**
+     * Converts a collection of {@link FormInstance}s to an array of file system paths. This is often handy when working
+     * with ODK's instance content provider.
+     *
+     * @param forms list of forms
+     * @return array of file system paths in order of the provided forms
+     */
+    public static String[] formPaths(Collection<FormInstance> forms) {
+        String[] paths = new String[forms.size()];
+        int index = 0;
+        for (FormInstance form : forms)
+            paths[index++] = form.getFilePath();
+        return paths;
+    }
+
+    /**
+     * Deletes the list of {@link FormInstance}s using ODKs instance provider. This will delete froms from its db and
+     * from the file system.
+     *
+     * @param resolver
+     * @param forms    list of forms
+     * @return the number of forms removed
+     */
+    public static int deleteFormInstances(ContentResolver resolver, Collection<FormInstance> forms) {
+        String where = String.format("%s IN (%s)", InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, makePlaceholders(forms.size()));
+        return resolver.delete(CONTENT_URI, where, formPaths(forms));
     }
 }

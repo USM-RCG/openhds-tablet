@@ -1,6 +1,6 @@
 package org.openhds.mobile.fragment;
 
-import android.app.*;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.SupervisorMainActivity;
 import org.openhds.mobile.adapter.ChecklistAdapter;
@@ -19,13 +20,13 @@ import org.openhds.mobile.projectdata.ProjectFormFields;
 import org.openhds.mobile.projectdata.ProjectResources;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.openhds.mobile.utilities.FormUtils.getFormElement;
 import static org.openhds.mobile.utilities.FormUtils.updateFormElement;
+import static org.openhds.mobile.utilities.OdkCollectHelper.deleteFormInstances;
 
 public class ChecklistFragment extends Fragment {
 
@@ -162,16 +163,17 @@ public class ChecklistFragment extends Fragment {
     }
 
     public void processDeleteRequest(boolean showDialog) {
-
         if (showDialog) {
-            ((SupervisorMainActivity)getActivity()).createWarningDialog();
+            ((SupervisorMainActivity) getActivity()).createWarningDialog();  // smells like a coupling problem
         } else {
-            List<FormInstance> formsToDelete = adapter.getCheckedForms();
-            deleteForms(formsToDelete);
-
-            List<FormInstance> allForms = adapter.getFormInstanceList();
-            allForms.removeAll(formsToDelete);
-            adapter.resetFormInstanceList(allForms);
+            List<FormInstance> formsToDelete = adapter.getCheckedForms(), allForms = adapter.getFormInstanceList();
+            int deleted = deleteFormInstances(getActivity().getContentResolver(), formsToDelete);
+            if (deleted != formsToDelete.size()) {
+                Log.w(TAG, String.format("wrong number of forms deleted: expected %d, got %d", formsToDelete.size(), deleted));
+            }
+            if (allForms.removeAll(formsToDelete)) {
+                adapter.resetFormInstanceList(allForms);
+            }
         }
     }
 
@@ -203,15 +205,6 @@ public class ChecklistFragment extends Fragment {
             } catch (IOException e) {
                 Log.e(TAG, "failed to mark form approved: " + e.getMessage());
             }
-        }
-    }
-
-    private void deleteForms(List<FormInstance> forms) {
-        for (FormInstance instance: forms) {
-            File instanceFile = new File(instance.getFilePath());
-            instanceFile.delete();
-            OdkCollectHelper.setStatusSubmitted(getActivity().getContentResolver(), Uri.parse(instance.getUriString()));
-            //OdkCollectHelper.deleteInstance(getActivity().getContentResolver(), Uri.parse(instance.getUriString()), instance.getFilePath());
         }
     }
 
