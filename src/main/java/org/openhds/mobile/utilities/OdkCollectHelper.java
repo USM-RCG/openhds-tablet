@@ -72,8 +72,7 @@ public class OdkCollectHelper {
     public static List<FormInstance> getByPaths(ContentResolver resolver, Collection<String> formPaths) {
         ArrayList<FormInstance> formInstances = new ArrayList<>();
         if (!formPaths.isEmpty()) {
-            String where = InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH +
-                    " IN (" + makePlaceholders(formPaths.size()) + ")";
+            String where = String.format("%s IN (%s)", InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, makePlaceholders(formPaths.size()));
             String[] whereArgs = formPaths.toArray(new String[formPaths.size()]);
             Cursor cursor = resolver.query(CONTENT_URI, INSTANCE_COLUMNS, where, whereArgs, null);
             if (cursor != null) {
