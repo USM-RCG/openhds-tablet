@@ -2,6 +2,7 @@ package org.openhds.mobile.utilities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +24,8 @@ import java.util.Map;
 import static org.openhds.mobile.utilities.FormUtils.loadInstance;
 
 public class LayoutUtils {
+
+    private static final String TAG = LayoutUtils.class.getSimpleName();
 
     // Create a new Button with the given description, name, tag, and listener.
     public static Button makeButton(Activity activity, int descriptionId, int buttonNameId, Object buttonTag,
@@ -211,39 +214,42 @@ public class LayoutUtils {
     }
 
     // Set up a form list item based on a given form instance.
-    public static void configureFormListItem(Context context, View view, FormInstance formInstance) throws IOException {
-        // get the data we want to display
-        int formTypeLocalizedId= ProjectResources.FormType.getFormTypeStringId(formInstance.getFormName());
-        String formTypeName = context.getResources().getString(formTypeLocalizedId);
-        Map<String, String> instanceData = loadInstance(formInstance.getFilePath());
+    public static void configureFormListItem(Context context, View view, FormInstance formInstance) {
 
-        String entityId = safeGetMapField(instanceData, ProjectFormFields.General.ENTITY_EXTID);
-        String fieldWorker = safeGetMapField(instanceData, ProjectFormFields.General.FIELD_WORKER_EXTID);
-        String date = safeGetMapField(instanceData, ProjectFormFields.General.COLLECTION_DATE_TIME);
-
-        // stuff values into the view widget
-        TextView formTypeView = (TextView) view.findViewById(R.id.form_instance_list_type);
-        formTypeView.setText(formTypeName);
-
-        TextView formIdView = (TextView) view.findViewById(R.id.form_instance_list_id);
-        formIdView.setText(entityId);
-
-        TextView fieldWorkerView = (TextView) view.findViewById(R.id.form_instance_list_fieldworker);
-        fieldWorkerView.setText(fieldWorker);
-
-        TextView formDateView = (TextView) view.findViewById(R.id.form_instance_list_date);
-        formDateView.setText(date);
-
-        // Set background based on form status: need both to work with view re-use
+        // Set background based on form status
         if (!formInstance.isComplete()) {
             view.setBackgroundResource(R.drawable.form_list_drawable_gray);
         } else {
             view.setBackgroundResource(R.drawable.form_list_drawable_orange);
         }
+
+        // Set form name
+        int formTypeLocalizedId = ProjectResources.FormType.getFormTypeStringId(formInstance.getFormName());
+        String formTypeName = context.getResources().getString(formTypeLocalizedId);
+        TextView formTypeView = (TextView) view.findViewById(R.id.form_instance_list_type);
+        formTypeView.setText(formTypeName);
+
+        // Extract and set values contained within the form instance
+        try {
+            Map<String, String> instanceData = loadInstance(formInstance.getFilePath());
+
+            String entityId = instanceData.get(ProjectFormFields.General.ENTITY_EXTID);
+            setText(view.findViewById(R.id.form_instance_list_id), entityId);
+
+            String fieldWorker = instanceData.get(ProjectFormFields.General.FIELD_WORKER_EXTID);
+            setText(view.findViewById(R.id.form_instance_list_fieldworker), fieldWorker);
+
+            String date = instanceData.get(ProjectFormFields.General.COLLECTION_DATE_TIME);
+            setText(view.findViewById(R.id.form_instance_list_date), date);
+
+        } catch (IOException e) {
+            view.setBackgroundResource(R.drawable.form_list_drawable_red);
+            Log.w(TAG, e.getMessage());
+        }
     }
 
-    private static String safeGetMapField(Map<String, String> map, String key) {
-        return null == map || !map.containsKey(key) ? "" : map.get(key);
+    private static void setText(View view, String value) {
+        ((TextView) view).setText(value == null? "": value);
     }
 
 }
