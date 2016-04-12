@@ -74,13 +74,13 @@ public class FormUtils {
     }
 
     /**
-     * Formats the specified {@link Date} object for use in form xml file names.
+     * Formats the specified {@link Date} object for use in form file names.
      *
      * @param time the time of form creation
-     * @return a formatted {@link String} acceptable for use in a form xml file name
+     * @return a formatted {@link String} acceptable for use in a form file name
      */
     public static String formatTime(Date time) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss", Locale.getDefault());
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss", Locale.getDefault());
         df.setTimeZone(TimeZone.getDefault());
         return df.format(time);
     }
