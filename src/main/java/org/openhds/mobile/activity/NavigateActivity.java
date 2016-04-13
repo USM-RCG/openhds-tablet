@@ -15,8 +15,8 @@ import org.openhds.mobile.fragment.DataSelectionFragment;
 import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
 import org.openhds.mobile.fragment.FormSelectionFragment;
 import org.openhds.mobile.fragment.navigate.DetailToggleFragment;
+import org.openhds.mobile.fragment.navigate.FormListFragment;
 import org.openhds.mobile.fragment.navigate.HierarchyButtonFragment;
-import org.openhds.mobile.fragment.navigate.ViewPathFormsFragment;
 import org.openhds.mobile.fragment.navigate.VisitFragment;
 import org.openhds.mobile.fragment.navigate.detail.DefaultDetailFragment;
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
@@ -64,7 +64,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
     private DetailFragment defaultDetailFragment;
     private DetailFragment detailFragment;
     private VisitFragment visitFragment;
-    private ViewPathFormsFragment viewPathFormsFragment;
+    private FormListFragment formListFragment;
 
     private static final String HIERARCHY_BUTTON_FRAGMENT_TAG = "hierarchyButtonFragment";
     private static final String VALUE_FRAGMENT_TAG = "hierarchyValueFragment";
@@ -72,7 +72,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
     private static final String TOGGLE_FRAGMENT_TAG = "hierarchyToggleFragment";
     private static final String DETAIL_FRAGMENT_TAG = "hierarchyDetailFragment";
     private static final String VISIT_FRAGMENT_TAG = "hierarchyVisitFragment";
-    private static final String VIEW_PATH_FORM_FRAGMENT_TAG ="viewPathFormsFragment";
+    private static final String VIEW_PATH_FORM_FRAGMENT_TAG ="formListFragment";
     private static final String VISIT_KEY = "visitKey";
     private static final String HIERARCHY_PATH_KEYS = "hierarchyPathKeys";
     private static final String HIERARCHY_PATH_VALUES = "hierarchyPathValues";
@@ -134,7 +134,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
                 defaultDetailFragment = new DefaultDetailFragment();
                 visitFragment = new VisitFragment();
                 visitFragment.setNavigateActivity(this);
-                viewPathFormsFragment = new ViewPathFormsFragment();
+                formListFragment = new FormListFragment();
 
                 getFragmentManager().beginTransaction()
                         .add(R.id.left_column_top, hierarchyButtonFragment, HIERARCHY_BUTTON_FRAGMENT_TAG)
@@ -142,7 +142,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
                         .add(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG)
                         .add(R.id.right_column_top, formFragment, FORM_FRAGMENT_TAG)
                         .add(R.id.right_column_bottom, visitFragment, VISIT_FRAGMENT_TAG)
-                        .add(R.id.view_column_bottom, viewPathFormsFragment, VIEW_PATH_FORM_FRAGMENT_TAG)
+                        .add(R.id.view_column_bottom, formListFragment, VIEW_PATH_FORM_FRAGMENT_TAG)
                         .commit();
             } else {
 
@@ -158,18 +158,16 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
                 visitFragment.setNavigateActivity(this);
 
                 defaultDetailFragment = new DefaultDetailFragment();
-                valueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
-                viewPathFormsFragment = (ViewPathFormsFragment) fragmentManager.findFragmentByTag(VIEW_PATH_FORM_FRAGMENT_TAG);
 
-                // draw details if valuefrag is null, the drawing of valuefrag is
-                // handled in onResume().
-                if (null == valueFragment) {
+                valueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
+                if (valueFragment == null) {
                     valueFragment = new DataSelectionFragment();
-                    viewPathFormsFragment = (ViewPathFormsFragment) fragmentManager.findFragmentByTag(VIEW_PATH_FORM_FRAGMENT_TAG);
                     detailFragment = (DetailFragment) fragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG);
                     detailFragment.setNavigateActivity(this);
                 }
                 valueFragment.setSelectionHandler(new ValueSelectionHandler());
+
+                formListFragment = (FormListFragment) fragmentManager.findFragmentByTag(VIEW_PATH_FORM_FRAGMENT_TAG);
 
                 ArrayList<String> hierarchyPathKeys = savedInstanceState.getStringArrayList(HIERARCHY_PATH_KEYS);
                 for (String key : hierarchyPathKeys) {
@@ -349,7 +347,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
     }
 
     private void populateFormView(List<FormInstance> forms) {
-        viewPathFormsFragment.populate(forms);
+        formListFragment.populate(forms);
     }
 
     private List<FormInstance> getAttachedForms(String hierarchyPath) {

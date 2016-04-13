@@ -9,29 +9,35 @@ import android.widget.ArrayAdapter;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.model.form.FormInstance;
-import org.openhds.mobile.utilities.LayoutUtils;
 
-public class FormInstanceAdapter extends ArrayAdapter {
+import java.util.List;
 
-    private Object[] formInstances;
+import static org.openhds.mobile.utilities.LayoutUtils.configureFormListItem;
+
+public class FormInstanceAdapter extends ArrayAdapter<FormInstance> {
+
+    private List<FormInstance> instances;
     private LayoutInflater inflater;
 
     @SuppressWarnings("unchecked")
-    public FormInstanceAdapter(Context context, int resource, Object[] formInstances) {
-        super(context, resource, formInstances);
-        this.formInstances = formInstances;
+    public FormInstanceAdapter(Context context, int resource, List<FormInstance> instances) {
+        super(context, resource, instances);
+        this.instances = instances;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.form_instance_list_item, null);
         }
-
-        LayoutUtils.configureFormListItem(getContext(), convertView, (FormInstance) formInstances[position]);
-
+        configureFormListItem(getContext(), convertView, instances.get(position));
         return convertView;
+    }
+
+    public void populate(List<FormInstance> formsForPath) {
+        instances.clear();
+        instances.addAll(formsForPath);
+        notifyDataSetChanged();
     }
 }

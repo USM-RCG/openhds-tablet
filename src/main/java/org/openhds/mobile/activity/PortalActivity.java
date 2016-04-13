@@ -2,7 +2,6 @@ package org.openhds.mobile.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -10,34 +9,27 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import org.openhds.mobile.R;
-import org.openhds.mobile.adapter.FormInstanceAdapter;
 import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
+import org.openhds.mobile.fragment.navigate.FormListFragment;
 import org.openhds.mobile.model.core.FieldWorker;
-import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.projectdata.ModuleUiHelper;
 import org.openhds.mobile.projectdata.NavigatePluginModule;
 import org.openhds.mobile.projectdata.ProjectActivityBuilder;
-import org.openhds.mobile.utilities.OdkCollectHelper;
 
-import java.util.List;
-
-import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
-import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
+import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInstances;
 
 public class PortalActivity extends Activity implements OnClickListener {
 
     private static final String TAG = PortalActivity.class.getSimpleName();
 
     private FieldWorker currentFieldWorker;
-    private ListView formInstanceView;
-    private List<FormInstance> formInstances;
+    private FormListFragment formListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +60,11 @@ public class PortalActivity extends Activity implements OnClickListener {
             }
         }
 
-        // fill the right column with a list of recent form instances
-        formInstanceView = (ListView) findViewById(R.id.portal_right_column);
+        formListFragment = (FormListFragment) getFragmentManager().findFragmentById(R.id.portal_form_list);
+
         TextView header = (TextView) this.getLayoutInflater().inflate(R.layout.generic_header, null);
         header.setText(R.string.form_instance_list_header);
-        header.setVisibility(View.VISIBLE);
-        formInstanceView.addHeaderView(header);
-        populateFormInstanceListView();
+        formListFragment.addHeaderView(header);
     }
 
     @Override
@@ -88,7 +78,6 @@ public class PortalActivity extends Activity implements OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent();
         switch (item.getItemId()) {
-
             case R.id.logout_menu_button:
                 intent.setClass(this, OpeningActivity.class);
                 startActivity(intent);
@@ -116,29 +105,7 @@ public class PortalActivity extends Activity implements OnClickListener {
         populateFormInstanceListView();
     }
 
-    // Display a list of recent form instances not yet sent to the ODK server
     private void populateFormInstanceListView() {
-        formInstances = OdkCollectHelper.getAllUnsentFormInstances(getContentResolver());
-        if (formInstances != null && !formInstances.isEmpty()) {
-            FormInstanceAdapter adapter = new FormInstanceAdapter(
-                    this, R.id.form_instance_list_item, formInstances.toArray());
-            formInstanceView.setAdapter(adapter);
-            formInstanceView.setOnItemClickListener(new FormInstanceClickListener());
-        }
-    }
-
-    // Launch an intent for ODK Collect when user clicks on a form instance.
-    private class FormInstanceClickListener implements AdapterView.OnItemClickListener {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            if (position > 0 && position <= formInstances.size()) {
-                FormInstance selected = formInstances.get(position - 1);
-                Uri uri = Uri.parse(selected.getUriString());
-                showShortToast(PortalActivity.this, R.string.launching_odk_collect);
-                startActivityForResult(editIntent(uri), 0);
-            }
-        }
+        formListFragment.populate(getAllUnsentFormInstances(getContentResolver()));
     }
 }
