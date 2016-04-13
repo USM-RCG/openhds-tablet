@@ -288,7 +288,7 @@
     <string name="delete_label">Delete</string>
     <string name="deleted">Deleted</string>
     <string name="delete_forms_dialog_warning">Deleting forms may cause unexpected behavior. Are you sure?</string>
-    <string name="delete_warning_dialog_cancel_label">Cancel</string>
+    <string name="cancel_label">Cancel</string>
     <string name="delete_dialog_warning_title">Warning</string>
     <string name="uuid">UUID</string>
     <string name="db_val_age_not_applicable">n/a</string>

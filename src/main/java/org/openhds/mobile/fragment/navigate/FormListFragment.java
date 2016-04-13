@@ -82,7 +82,10 @@ public class FormListFragment extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         removeForm(selected);
                     }
-                }).create().show();
+                })
+                .setNegativeButton(R.string.cancel_label, null)
+                .create()
+                .show();
     }
 
     private class ClickListener implements AdapterView.OnItemClickListener {

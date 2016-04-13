@@ -62,7 +62,9 @@ public class ChecklistFragment extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         deleteSelected();
                     }
-                }).create();
+                })
+                .setNegativeButton(R.string.cancel_label, null)
+                .create();
         return fragmentLayout;
     }
 

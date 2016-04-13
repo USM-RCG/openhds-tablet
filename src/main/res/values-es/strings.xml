@@ -252,7 +252,7 @@
     <string name="delete_label">Borrar</string>
     <string name="deleted">Borrado</string>
     <string name="delete_forms_dialog_warning">Eliminación de los impresos puede provocar un comportamiento inesperado. Estás seguro?</string>
-    <string name="delete_warning_dialog_cancel_label">Cancelar</string>
+    <string name="cancel_label">Cancelar</string>
     <string name="delete_dialog_warning_title">¡Aviso!</string>
 
     <string name="delete_recent_forms_label">Eliminar Impresos</string>
