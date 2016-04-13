@@ -1,8 +1,10 @@
 package org.openhds.mobile.fragment.navigate;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -71,6 +73,18 @@ public class FormListFragment extends Fragment {
         }
     }
 
+    private void confirmDelete(final FormInstance selected) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.delete_forms_dialog_warning)
+                .setTitle(R.string.delete_dialog_warning_title)
+                .setPositiveButton(R.string.delete_form_btn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        removeForm(selected);
+                    }
+                }).create().show();
+    }
+
     private class ClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -91,11 +105,11 @@ public class FormListFragment extends Fragment {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        FormInstance selected = getItem(info.position);
+        final FormInstance selected = getItem(info.position);
         if (selected != null) {
             switch (item.getItemId()) {
                 case R.id.delete_form:
-                    removeForm(selected);
+                    confirmDelete(selected);
                     return true;
                 case R.id.edit_form:
                     editForm(selected);
