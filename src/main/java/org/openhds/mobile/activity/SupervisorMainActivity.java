@@ -116,7 +116,6 @@ public class SupervisorMainActivity extends Activity {
     }
 
     public void sendApprovedForms() {
-
         List<FormInstance> allFormInstances = OdkCollectHelper.getAllUnsentFormInstances(this.getContentResolver());
         for (FormInstance instance: allFormInstances) {
             try {

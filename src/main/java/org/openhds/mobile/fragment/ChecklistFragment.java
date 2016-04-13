@@ -79,7 +79,6 @@ public class ChecklistFragment extends Fragment {
     }
 
     private void setupDeleteMode() {
-
         currentMode = ChecklistFragment.DELETE_MODE;
         adapter = setupDeleteAdapter();
         listView.setAdapter(adapter);
@@ -105,18 +104,14 @@ public class ChecklistFragment extends Fragment {
         }
 
         secondaryListButton.setVisibility(View.INVISIBLE);
-
     }
 
     private ChecklistAdapter setupDeleteAdapter() {
-
         List<FormInstance> formInstances = OdkCollectHelper.getAllUnsentFormInstances(getActivity().getContentResolver());
         return new ChecklistAdapter(getActivity(), R.id.form_instance_check_item_orange, formInstances);
-
     }
 
     private void setupApproveMode() {
-
         currentMode = ChecklistFragment.APPROVE_MODE;
         adapter = setupApproveAdapter();
         listView.setAdapter(adapter);
@@ -147,12 +142,9 @@ public class ChecklistFragment extends Fragment {
         secondaryListButton.setTag(R.string.supervisor_approve_all);
         secondaryListButton.setVisibility(View.VISIBLE);
         secondaryListButton.setBackgroundResource(R.drawable.census_form_selector_orange);
-
-
     }
 
     private ChecklistAdapter setupApproveAdapter() {
-
         List<FormInstance> formInstances = OdkCollectHelper.getAllUnsentFormInstances(getActivity().getContentResolver());
         List<FormInstance> needApproval = new ArrayList<>();
 
@@ -168,7 +160,6 @@ public class ChecklistFragment extends Fragment {
         }
 
         return new ChecklistAdapter(getActivity(), R.id.form_instance_check_item_orange, needApproval);
-
     }
 
     public void deleteSelected() {
@@ -183,22 +174,18 @@ public class ChecklistFragment extends Fragment {
     }
 
     private void processApproveSelectedRequest() {
-
         List<FormInstance> approvedForms = adapter.getCheckedForms();
         approveForms(approvedForms);
 
         List<FormInstance> allForms = adapter.getFormInstanceList();
         allForms.removeAll(approvedForms);
         adapter.resetFormInstanceList(allForms);
-
     }
 
     private void processApproveAllRequest() {
-
         List<FormInstance> approvedForms = adapter.getFormInstanceList();
         approveForms(approvedForms);
         adapter.resetFormInstanceList(new ArrayList<FormInstance>());
-
     }
 
     private void approveForms(List<FormInstance> forms) {
