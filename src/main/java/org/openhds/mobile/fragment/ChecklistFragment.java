@@ -1,6 +1,8 @@
 package org.openhds.mobile.fragment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.openhds.mobile.R;
-import org.openhds.mobile.activity.SupervisorMainActivity;
 import org.openhds.mobile.adapter.ChecklistAdapter;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.projectdata.ProjectFormFields;
@@ -46,15 +47,23 @@ public class ChecklistFragment extends Fragment {
     private Button primaryListButton;
     private Button secondaryListButton;
 
+    private AlertDialog deleteConfirmDialog;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         fragmentLayout = (RelativeLayout) inflater.inflate(R.layout.supervisor_edit_form_fragment_layout, container, false);
         listView = (ListView) fragmentLayout.findViewById(R.id.checklist_fragment_listview);
         setupApproveMode();
-
+        deleteConfirmDialog = new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.delete_forms_dialog_warning)
+                .setTitle(R.string.delete_dialog_warning_title)
+                .setPositiveButton(R.string.delete_form_btn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        deleteSelected();
+                    }
+                }).create();
         return fragmentLayout;
-
     }
 
     public void resetCurrentMode() {
@@ -162,18 +171,14 @@ public class ChecklistFragment extends Fragment {
 
     }
 
-    public void processDeleteRequest(boolean showDialog) {
-        if (showDialog) {
-            ((SupervisorMainActivity) getActivity()).createWarningDialog();  // smells like a coupling problem
-        } else {
-            List<FormInstance> formsToDelete = adapter.getCheckedForms(), allForms = adapter.getFormInstanceList();
-            int deleted = deleteFormInstances(getActivity().getContentResolver(), formsToDelete);
-            if (deleted != formsToDelete.size()) {
-                Log.w(TAG, String.format("wrong number of forms deleted: expected %d, got %d", formsToDelete.size(), deleted));
-            }
-            if (allForms.removeAll(formsToDelete)) {
-                adapter.resetFormInstanceList(allForms);
-            }
+    public void deleteSelected() {
+        List<FormInstance> formsToDelete = adapter.getCheckedForms(), allForms = adapter.getFormInstanceList();
+        int deleted = deleteFormInstances(getActivity().getContentResolver(), formsToDelete);
+        if (deleted != formsToDelete.size()) {
+            Log.w(TAG, String.format("wrong number of forms deleted: expected %d, got %d", formsToDelete.size(), deleted));
+        }
+        if (allForms.removeAll(formsToDelete)) {
+            adapter.resetFormInstanceList(allForms);
         }
     }
 
@@ -213,7 +218,7 @@ public class ChecklistFragment extends Fragment {
         public void onClick(View v) {
             Integer tag = (Integer) v.getTag();
             if (tag.equals(R.string.delete_button_label)) {
-                processDeleteRequest(true);
+                deleteConfirmDialog.show();
             } else if (tag.equals(R.string.supervisor_approve_selected)) {
                 processApproveSelectedRequest();
             } else if(tag.equals(R.string.supervisor_approve_all)) {

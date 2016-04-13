@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.ChecklistFragment;
-import org.openhds.mobile.fragment.DeleteWarningDialogFragment;
-import org.openhds.mobile.fragment.DeleteWarningDialogListener;
 import org.openhds.mobile.fragment.LoginPreferenceFragment;
 import org.openhds.mobile.fragment.SyncDatabaseFragment;
 import org.openhds.mobile.model.form.FormInstance;
@@ -31,7 +29,7 @@ import static org.openhds.mobile.utilities.LayoutUtils.makeButton;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 import static org.openhds.mobile.utilities.SyncUtils.installAccount;
 
-public class SupervisorMainActivity extends Activity implements DeleteWarningDialogListener {
+public class SupervisorMainActivity extends Activity {
 
     private static final String TAG = SupervisorMainActivity.class.getSimpleName();
 
@@ -131,23 +129,6 @@ public class SupervisorMainActivity extends Activity implements DeleteWarningDia
         }
         showShortToast(this, R.string.launching_odk_collect);
         startActivity(new Intent(Intent.ACTION_EDIT));
-    }
-
-    public void createWarningDialog() {
-        DeleteWarningDialogFragment warning = new DeleteWarningDialogFragment();
-        warning.show(getFragmentManager(), "DeleteWarningDialogFragment");
-    }
-
-    public void onDialogPositiveClick(DialogFragment dialogFragment) {
-
-        checklistFragment.processDeleteRequest(false);
-
-    }
-
-    public void onDialogNegativeClick(DialogFragment dialogFragment) {
-
-        //do nothing?
-
     }
 
     private class ButtonClickListener implements OnClickListener {
