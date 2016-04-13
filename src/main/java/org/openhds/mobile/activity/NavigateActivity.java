@@ -112,7 +112,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
                 stateMachine.registerListener(state, new HierarchyStateListener());
             }
 
-            if (null == savedInstanceState) {
+            if (savedInstanceState == null) {
 
                 if (null != getIntent().getStringArrayListExtra(HIERARCHY_PATH_KEYS)) {
                     ArrayList<String> hierarchyPathKeys = getIntent().getStringArrayListExtra(HIERARCHY_PATH_KEYS);

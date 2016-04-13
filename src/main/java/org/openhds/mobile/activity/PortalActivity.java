@@ -90,12 +90,9 @@ public class PortalActivity extends Activity implements OnClickListener {
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(this, NavigateActivity.class);
-
         intent.putExtra(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA, currentFieldWorker);
-
         String activityName = (String) v.getTag();
         intent.putExtra(ProjectActivityBuilder.ACTIVITY_MODULE_EXTRA, activityName);
-
         startActivity(intent);
     }
 
