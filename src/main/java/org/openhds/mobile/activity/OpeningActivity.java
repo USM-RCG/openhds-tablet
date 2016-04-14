@@ -3,16 +3,13 @@ package org.openhds.mobile.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.FrameLayout;
 
 import org.openhds.mobile.R;
-import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
-import org.openhds.mobile.fragment.LoginPreferenceFragment;
-import org.openhds.mobile.fragment.SupervisorLoginFragment;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static org.openhds.mobile.utilities.ConfigUtils.getAppFullName;
 
 public class OpeningActivity extends Activity {
@@ -20,48 +17,25 @@ public class OpeningActivity extends Activity {
     public static final String USERNAME_KEY = "usernameKey";
     public static final String PASSWORD_KEY = "passwordKey";
 
-    private FrameLayout loginPrefContainer;
+    private FrameLayout prefsLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setTitle(getAppFullName(this));
-
         setContentView(R.layout.opening_activity);
-
-        loginPrefContainer = (FrameLayout) findViewById(R.id.login_pref_container);
-
-        if (null != savedInstanceState) {
-            return;
-        }
-
-        getFragmentManager()
-                .beginTransaction()
-                .add(R.id.login_pref_container, new LoginPreferenceFragment())
-                .add(R.id.field_worker_login_container, new FieldWorkerLoginFragment())
-                .add(R.id.supervisor_login_container, new SupervisorLoginFragment())
-                .commit();
+        prefsLayout = (FrameLayout) findViewById(R.id.login_pref_container);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.login_menu, menu);
+        getMenuInflater().inflate(R.menu.login_menu, menu);
         return super.onCreateOptionsMenu(menu);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        boolean isShowingPreferences = View.VISIBLE == loginPrefContainer
-                .getVisibility();
-        if (isShowingPreferences) {
-            loginPrefContainer.setVisibility(View.GONE);
-        } else {
-            loginPrefContainer.setVisibility(View.VISIBLE);
-        }
+        prefsLayout.setVisibility(prefsLayout.getVisibility() == VISIBLE ? GONE : VISIBLE);
         return true;
     }
 }
