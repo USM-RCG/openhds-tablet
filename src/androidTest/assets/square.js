@@ -1,0 +1,1 @@
+var answer = (function (x) { return x * x; })(9);
