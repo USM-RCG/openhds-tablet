@@ -15,7 +15,7 @@
 
     <application android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:theme="@style/AppTheme">
 
-        <provider android:name="org.openhds.mobile.provider.OpenHDSProvider" android:authorities="org.openhds.Application" android:exported="false" />
+        <provider android:name=".provider.OpenHDSProvider" android:authorities="org.openhds.Application" android:exported="false" />
 
         <uses-library android:name="com.google.android.maps"/>
 
@@ -26,20 +26,20 @@
             </intent-filter>
         </activity>
 
-        <activity android:label="@string/app_name" android:name="org.openhds.mobile.activity.NavigateActivity"/>
-        <activity android:label="@string/app_name" android:name="org.openhds.mobile.activity.SupervisorMainActivity"/>
-        <activity android:label="@string/app_name" android:name="org.openhds.mobile.activity.PortalActivity"/>
-        <activity android:label="@string/app_name" android:name="org.openhds.mobile.activity.FormSearchActivity"/>
         <activity android:label="@string/app_name" android:name=".activity.OpeningActivity" android:windowSoftInputMode="adjustResize" />
+        <activity android:label="@string/app_name" android:name=".activity.NavigateActivity"/>
+        <activity android:label="@string/app_name" android:name=".activity.SupervisorMainActivity"/>
+        <activity android:label="@string/app_name" android:name=".activity.PortalActivity"/>
+        <activity android:label="@string/app_name" android:name=".activity.FormSearchActivity"/>
 
-        <service android:name="org.openhds.mobile.syncadpt.AuthenticatorService">
+        <service android:name=".syncadpt.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
             <meta-data android:name="android.accounts.AccountAuthenticator" android:resource="@xml/authenticator" />
         </service>
 
-        <service android:name="org.openhds.mobile.syncadpt.SyncService" android:exported="true" android:process=":sync">
+        <service android:name=".syncadpt.SyncService" android:exported="true" android:process=":sync">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
