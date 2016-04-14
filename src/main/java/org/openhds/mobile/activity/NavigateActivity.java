@@ -257,7 +257,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
             return true;
         }
         if(item.getItemId() == R.id.field_worker_home_menu_button) {
-            intent.setClass(this, PortalActivity.class);
+            intent.setClass(this, FieldWorkerActivity.class);
             intent.putExtra(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA, getCurrentFieldWorker());
             startActivity(intent);
             return true;

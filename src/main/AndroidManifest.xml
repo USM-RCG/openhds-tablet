@@ -29,7 +29,7 @@
         <activity android:label="@string/app_name" android:name=".activity.LoginActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:label="@string/app_name" android:name=".activity.NavigateActivity"/>
         <activity android:label="@string/app_name" android:name=".activity.SupervisorActivity"/>
-        <activity android:label="@string/app_name" android:name=".activity.PortalActivity"/>
+        <activity android:label="@string/app_name" android:name=".activity.FieldWorkerActivity"/>
         <activity android:label="@string/app_name" android:name=".activity.FormSearchActivity"/>
 
         <service android:name=".syncadpt.AuthenticatorService">

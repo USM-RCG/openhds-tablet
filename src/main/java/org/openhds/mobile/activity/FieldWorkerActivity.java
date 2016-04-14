@@ -24,9 +24,9 @@ import org.openhds.mobile.projectdata.ProjectActivityBuilder;
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInstances;
 
-public class PortalActivity extends Activity implements OnClickListener {
+public class FieldWorkerActivity extends Activity implements OnClickListener {
 
-    private static final String TAG = PortalActivity.class.getSimpleName();
+    private static final String TAG = FieldWorkerActivity.class.getSimpleName();
 
     private FieldWorker currentFieldWorker;
     private FormListFragment formListFragment;

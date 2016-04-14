@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.openhds.mobile.R;
-import org.openhds.mobile.activity.PortalActivity;
+import org.openhds.mobile.activity.FieldWorkerActivity;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.FieldWorkerGateway;
@@ -91,7 +91,7 @@ public class FieldWorkerLoginFragment extends Fragment implements
     }
 
     private void launchPortalActivity(FieldWorker fieldWorker) {
-        Intent intent = new Intent(getActivity(), PortalActivity.class);
+        Intent intent = new Intent(getActivity(), FieldWorkerActivity.class);
         intent.putExtra(FIELD_WORKER_EXTRA, fieldWorker);
         startActivity(intent);
     }
