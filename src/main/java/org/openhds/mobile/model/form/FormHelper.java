@@ -19,12 +19,10 @@ public class FormHelper {
 
     private FormBehavior behavior;
     private ContentResolver resolver;
-    private Context ctx;
     private Map<String, String> formData;
     private FormInstance instance;
 
     public FormHelper(Context ctx) {
-        this.ctx = ctx;
         this.resolver = ctx.getContentResolver();
     }
 
