@@ -15,7 +15,7 @@ import android.widget.TextView;
 import org.apache.http.HttpStatus;
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.LoginActivity;
-import org.openhds.mobile.activity.SupervisorMainActivity;
+import org.openhds.mobile.activity.SupervisorActivity;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.model.core.Supervisor;
 import org.openhds.mobile.task.SupervisorLoginTask;
@@ -129,7 +129,7 @@ public class SupervisorLoginFragment extends Fragment implements
     }
 
     private void launchSupervisorMainActivity() {
-        Intent intent = new Intent(getActivity(), SupervisorMainActivity.class);
+        Intent intent = new Intent(getActivity(), SupervisorActivity.class);
         intent.putExtra(LoginActivity.USERNAME_KEY, getUsernameFromEditText());
         intent.putExtra(LoginActivity.PASSWORD_KEY, getPasswordFromEditText());
         startActivity(intent);

@@ -28,9 +28,9 @@ import static org.openhds.mobile.utilities.LayoutUtils.makeButton;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 import static org.openhds.mobile.utilities.SyncUtils.installAccount;
 
-public class SupervisorMainActivity extends Activity {
+public class SupervisorActivity extends Activity {
 
-    private static final String TAG = SupervisorMainActivity.class.getSimpleName();
+    private static final String TAG = SupervisorActivity.class.getSimpleName();
 
     private static final String CHECKLIST_FRAGMENT_TAG = "checklistFragment";
     private static final String SYNC_FRAGMENT_TAG = "syncDatabaseFragment";
