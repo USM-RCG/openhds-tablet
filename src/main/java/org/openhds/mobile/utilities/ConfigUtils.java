@@ -1,38 +1,38 @@
 package org.openhds.mobile.utilities;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.preference.PreferenceManager;
+
 import org.openhds.mobile.R;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class ConfigUtils {
 
-    public static final String FORM_ID = "form_id";
-
     public static String getResourceString(Context context, int id) {
-        return (context.getString(id));
+        return context.getString(id);
     }
 
     public static String getPreferenceString(Context context, int key, String defaultValue) {
-        String keyString = getResourceString(context, key);
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getString(keyString, defaultValue);
+        return getDefaultSharedPreferences(context).getString(getResourceString(context, key), defaultValue);
     }
 
     public static String getPreferenceString(Context context, String key, String defaultValue) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getString(key, defaultValue);
+        return getDefaultSharedPreferences(context).getString(key, defaultValue);
+    }
+
+    public static String getVersion(Context ctx) throws PackageManager.NameNotFoundException {
+        return ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
+    }
+
+    public static String getAppName(Context context) {
+        return getResourceString(context, R.string.app_name);
     }
 
     public static String getAppFullName(Context context) {
-        String packageName = context.getPackageName();
-        String appName = getResourceString(context, R.string.app_name);
+        String appName = getAppName(context);
         try {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
-            return appName + " " + packageInfo.versionName;
-
+            return String.format("%s %s", appName, getVersion(context));
         } catch (PackageManager.NameNotFoundException e) {
             return appName;
         }
