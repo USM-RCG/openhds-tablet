@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:label="@string/app_name" android:name=".activity.OpeningActivity" android:windowSoftInputMode="adjustResize" />
+        <activity android:label="@string/app_name" android:name=".activity.LoginActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:label="@string/app_name" android:name=".activity.NavigateActivity"/>
         <activity android:label="@string/app_name" android:name=".activity.SupervisorMainActivity"/>
         <activity android:label="@string/app_name" android:name=".activity.PortalActivity"/>

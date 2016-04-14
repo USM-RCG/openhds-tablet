@@ -252,7 +252,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
         Intent intent = new Intent();
 
         if(item.getItemId() == R.id.logout_menu_button) {
-            intent.setClass(this, OpeningActivity.class);
+            intent.setClass(this, LoginActivity.class);
             startActivity(intent);
             return true;
         }

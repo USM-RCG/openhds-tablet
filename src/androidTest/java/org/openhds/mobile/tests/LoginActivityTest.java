@@ -1,7 +1,7 @@
 package org.openhds.mobile.tests;
 
 import android.test.ActivityInstrumentationTestCase2;
-import org.openhds.mobile.activity.OpeningActivity;
+import org.openhds.mobile.activity.LoginActivity;
 
 /**
  * This is a simple framework for a test of an Application.  See
@@ -10,13 +10,13 @@ import org.openhds.mobile.activity.OpeningActivity;
  * <p/>
  * To run this test, you can type:
  * adb shell am instrument -w \
- * -e class org.openhds.mobile.tests.OpeningActivityTest \
+ * -e class org.openhds.mobile.tests.LoginActivityTest \
  * org.openhds.mobile.tests/android.test.InstrumentationTestRunner
  */
-public class OpeningActivityTest extends ActivityInstrumentationTestCase2<OpeningActivity> {
+public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginActivity> {
 
-    public OpeningActivityTest() {
-        super(OpeningActivity.class);
+    public LoginActivityTest() {
+        super(LoginActivity.class);
     }
 
     public void testNothing() {

@@ -79,7 +79,7 @@ public class PortalActivity extends Activity implements OnClickListener {
         Intent intent = new Intent();
         switch (item.getItemId()) {
             case R.id.logout_menu_button:
-                intent.setClass(this, OpeningActivity.class);
+                intent.setClass(this, LoginActivity.class);
                 startActivity(intent);
                 return true;
             default:

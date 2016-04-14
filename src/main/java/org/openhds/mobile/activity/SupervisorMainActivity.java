@@ -1,7 +1,6 @@
 package org.openhds.mobile.activity;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -92,8 +91,8 @@ public class SupervisorMainActivity extends Activity {
         }
 
         Bundle extras = getIntent().getExtras();
-        String username = (String) extras.get(OpeningActivity.USERNAME_KEY);
-        String password = (String) extras.get(OpeningActivity.PASSWORD_KEY);
+        String username = (String) extras.get(LoginActivity.USERNAME_KEY);
+        String password = (String) extras.get(LoginActivity.PASSWORD_KEY);
         installAccount(this, username, password);
     }
 

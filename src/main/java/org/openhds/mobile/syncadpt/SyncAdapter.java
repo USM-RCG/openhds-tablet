@@ -13,7 +13,7 @@ import android.content.SyncResult;
 import android.os.Bundle;
 
 import org.openhds.mobile.R;
-import org.openhds.mobile.activity.OpeningActivity;
+import org.openhds.mobile.activity.LoginActivity;
 import org.openhds.mobile.utilities.SyncUtils;
 
 import static org.openhds.mobile.utilities.SyncUtils.downloadUpdate;
@@ -39,7 +39,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SyncUtil
     public void downloaded() {
         Context ctx = getContext();
         NotificationManager manager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent intent = new Intent(ctx, OpeningActivity.class);
+        Intent intent = new Intent(ctx, LoginActivity.class);
         PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification.Builder builder = new Notification.Builder(ctx)
                 .setSmallIcon(R.drawable.ic_launcher)

@@ -12,7 +12,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.openhds.mobile.utilities.ConfigUtils.getAppFullName;
 
-public class OpeningActivity extends Activity {
+public class LoginActivity extends Activity {
 
     public static final String USERNAME_KEY = "usernameKey";
     public static final String PASSWORD_KEY = "passwordKey";
