@@ -51,7 +51,7 @@ public class FormUtils {
      * @throws JDOMException
      * @throws IOException
      */
-    public static Document domFromFile(File file) throws JDOMException, IOException {
+    private static Document domFromFile(File file) throws JDOMException, IOException {
         return new SAXBuilder().build(file);
     }
 
@@ -62,7 +62,7 @@ public class FormUtils {
      * @param dest the file specifying the target location to save to
      * @throws IOException
      */
-    public static void domToFile(Document doc, File dest) throws IOException {
+    private static void domToFile(Document doc, File dest) throws IOException {
         FileOutputStream out = new FileOutputStream(dest);
         try {
             XMLOutputter xmlOutput = new XMLOutputter();
@@ -79,7 +79,7 @@ public class FormUtils {
      * @param time the time of form creation
      * @return a formatted {@link String} acceptable for use in a form file name
      */
-    public static String formatTime(Date time) {
+    private static String formatTime(Date time) {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss", Locale.getDefault());
         df.setTimeZone(TimeZone.getDefault());
         return df.format(time);
@@ -92,7 +92,7 @@ public class FormUtils {
      * @param time the creation time of the form
      * @return the common base name used in file/dir name construction
      */
-    public static String formBaseName(String name, Date time) {
+    private static String formBaseName(String name, Date time) {
         return String.format("%s%s", name, formatTime(time));
     }
 
@@ -103,11 +103,11 @@ public class FormUtils {
      * @param time the form creation time
      * @return the formatted file name to use for the form
      */
-    public static String formFilename(String name, Date time) {
+    private static String formFilename(String name, Date time) {
         return String.format("%s%s", formBaseName(name, time), FILE_EXTENSION);
     }
 
-    public static File getODKDir() {
+    private static File getODKDir() {
         return new File(Environment.getExternalStorageDirectory(), "odk");
     }
 
@@ -143,7 +143,7 @@ public class FormUtils {
      *
      * @param file the {@link File} object representing the file to save
      */
-    public static void makeDirs(File file) throws IOException {
+    private static void makeDirs(File file) throws IOException {
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {
             boolean created = parentDir.mkdirs();
@@ -153,7 +153,6 @@ public class FormUtils {
         }
     }
 
-
     /**
      * Saves the given {@link Document} as a form in the application's conventional repository format, creating any
      * intermediate directories as needed.
@@ -162,7 +161,7 @@ public class FormUtils {
      * @param location the file system location to save the form at
      * @throws IOException
      */
-    public static void saveForm(Document form, File location) throws IOException {
+    private static void saveForm(Document form, File location) throws IOException {
         makeDirs(location);
         domToFile(form, location);
     }
@@ -195,7 +194,7 @@ public class FormUtils {
      * @throws JDOMException
      * @throws IOException
      */
-    public static Document genInstanceDoc(File templateForm, Map<String, String> data) throws IOException, JDOMException {
+    private static Document genInstanceDoc(File templateForm, Map<String, String> data) throws IOException, JDOMException {
         Document template = domFromFile(templateForm), completed = new Document();
         Element templateRoot = template.getRootElement();
         for (Element templateData : descendants(templateRoot, new ElementFilter("data", templateRoot.getNamespace("")))) {
