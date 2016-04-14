@@ -50,9 +50,9 @@ import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
-public class NavigateActivity extends Activity implements HierarchyNavigator, LaunchContext {
+public class HierarchyNavigatorActivity extends Activity implements HierarchyNavigator, LaunchContext {
 
-    private static final String TAG = NavigateActivity.class.getSimpleName();
+    private static final String TAG = HierarchyNavigatorActivity.class.getSimpleName();
 
     private static final int ODK_ACTIVITY_REQUEST_CODE = 0;
     private static final int SEARCH_ACTIVITY_REQUEST_CODE = 1;
@@ -264,7 +264,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
         }
 
         if(null != menuItemTags.get(item)) {
-            intent.setClass(this, NavigateActivity.class);
+            intent.setClass(this, HierarchyNavigatorActivity.class);
             intent.putExtra(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA, getCurrentFieldWorker());
             intent.putExtra(ProjectActivityBuilder.ACTIVITY_MODULE_EXTRA, menuItemTags.get(item));
             intent.putParcelableArrayListExtra(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
@@ -368,7 +368,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
 
         DataWrapper selected = hierarchyPath.get(state);
         if (null == selected) {
-            String stateLabel = getResourceString(NavigateActivity.this, getStateLabels().get(state));
+            String stateLabel = getResourceString(HierarchyNavigatorActivity.this, getStateLabels().get(state));
             hierarchyButtonFragment.setButtonLabel(state, stateLabel, null, true);
             hierarchyButtonFragment.setButtonHighlighted(state, true);
         } else {
@@ -691,7 +691,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
             List<FormBehavior> validForms = new ArrayList<>();
 
             for (FormBehavior form : filteredForms) {
-                if (form.getFormFilter().amIValid(NavigateActivity.this)) {
+                if (form.getFormFilter().amIValid(HierarchyNavigatorActivity.this)) {
                     validForms.add(form);
                 }
             }
@@ -719,7 +719,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
     private class ValueSelectionHandler implements DataSelectionFragment.SelectionHandler {
         @Override
         public void handleSelectedData(DataWrapper dataWrapper) {
-            NavigateActivity.this.stepDown(dataWrapper);
+            HierarchyNavigatorActivity.this.stepDown(dataWrapper);
         }
     }
 
@@ -727,7 +727,7 @@ public class NavigateActivity extends Activity implements HierarchyNavigator, La
     private class FormSelectionHandler implements FormSelectionFragment.SelectionHandler {
         @Override
         public void handleSelectedForm(FormBehavior formBehavior) {
-            NavigateActivity.this.launchForm(formBehavior, null);
+            HierarchyNavigatorActivity.this.launchForm(formBehavior, null);
         }
     }
 }

@@ -1,6 +1,6 @@
 package org.openhds.mobile.projectdata.FormPayloadConsumers;
 
-import org.openhds.mobile.activity.NavigateActivity;
+import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.LocationGateway;
@@ -13,7 +13,7 @@ public class BiokoFormPayloadConsumers {
 
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
-                                                  NavigateActivity navigateActivity) {
+                                                  HierarchyNavigatorActivity navigateActivity) {
 
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
 
@@ -37,7 +37,7 @@ public class BiokoFormPayloadConsumers {
         public static final String SPRAY_EVAL_KEY = "evaluation";
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, NavigateActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
 
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
 
@@ -60,7 +60,7 @@ public class BiokoFormPayloadConsumers {
     public static class SuperOjo implements FormPayloadConsumer {
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, NavigateActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
             return new ConsumerResults(false, null, null);
         }
 
@@ -72,7 +72,7 @@ public class BiokoFormPayloadConsumers {
 
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
-                                                  NavigateActivity navigateActivity) {
+                                                  HierarchyNavigatorActivity navigateActivity) {
             return new ConsumerResults(false, null, null);
         }
 

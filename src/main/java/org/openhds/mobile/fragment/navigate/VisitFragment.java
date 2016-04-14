@@ -4,7 +4,7 @@ import static org.openhds.mobile.utilities.LayoutUtils.configureTextWithPayload;
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 
 import org.openhds.mobile.R;
-import org.openhds.mobile.activity.NavigateActivity;
+import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -17,7 +17,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
 public class VisitFragment extends Fragment implements OnClickListener {
-	NavigateActivity navigateActivity;
+	HierarchyNavigatorActivity navigateActivity;
 
 	private static final int BUTTON_MARGIN = 10;
 
@@ -38,7 +38,7 @@ public class VisitFragment extends Fragment implements OnClickListener {
 		return toggleContainer;
 	}
 
-	public void setNavigateActivity(NavigateActivity navigateActivity) {
+	public void setNavigateActivity(HierarchyNavigatorActivity navigateActivity) {
 		this.navigateActivity = navigateActivity;
 	}
 

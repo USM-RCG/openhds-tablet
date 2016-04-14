@@ -2,7 +2,7 @@ package org.openhds.mobile.projectdata.FormPayloadConsumers;
 
 import android.content.ContentResolver;
 
-import org.openhds.mobile.activity.NavigateActivity;
+import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.model.core.LocationHierarchy;
@@ -69,7 +69,7 @@ public class CensusFormPayloadConsumers {
     }
 
     private static Individual insertOrUpdateIndividual(
-            Map<String, String> formPayLoad, NavigateActivity navigateActivity) {
+            Map<String, String> formPayLoad, HierarchyNavigatorActivity navigateActivity) {
 
         Individual individual = IndividualFormAdapter.fromForm(formPayLoad);
         individual.setEndType(ProjectResources.Individual.RESIDENCY_END_TYPE_NA);
@@ -84,7 +84,7 @@ public class CensusFormPayloadConsumers {
     public static class AddLocation implements FormPayloadConsumer {
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, NavigateActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
             ContentResolver contentResolver = navigateActivity.getContentResolver();
             ensureLocationSectorExists(formPayload, contentResolver);
             insertOrUpdateLocation(formPayload, contentResolver);
@@ -100,7 +100,7 @@ public class CensusFormPayloadConsumers {
     public static class EvaluateLocation implements FormPayloadConsumer {
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, NavigateActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
 
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
 
@@ -124,7 +124,7 @@ public class CensusFormPayloadConsumers {
 
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
-                                                  NavigateActivity navigateActivity) {
+                                                  HierarchyNavigatorActivity navigateActivity) {
 
             Map<String, DataWrapper> hierarchyPath = navigateActivity
                     .getHierarchyPath();
@@ -178,7 +178,7 @@ public class CensusFormPayloadConsumers {
 
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
-                                                  NavigateActivity navigateActivity) {
+                                                  HierarchyNavigatorActivity navigateActivity) {
 
             Map<String, DataWrapper> hierarchyPath = navigateActivity
                     .getHierarchyPath();
@@ -239,7 +239,7 @@ public class CensusFormPayloadConsumers {
 
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
-                                                  NavigateActivity navigateActivity) {
+                                                  HierarchyNavigatorActivity navigateActivity) {
             new AddMemberOfHousehold().consumeFormPayload(formPayload,
                     navigateActivity);
             return new ConsumerResults(false, null, null);
@@ -273,7 +273,7 @@ public class CensusFormPayloadConsumers {
     public static class ChainedVisitForPregnancyObservation implements FormPayloadConsumer {
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, NavigateActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
 
             Visit visit = VisitFormAdapter.fromForm(formPayload);
 
@@ -300,7 +300,7 @@ public class CensusFormPayloadConsumers {
     public static class ChainedPregnancyObservation implements FormPayloadConsumer {
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, NavigateActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
 
             // Since this is happening as part of a sequence it made sense to me to automatically close the
             // visit after completion of the sequence.

@@ -49,7 +49,7 @@ public class ProjectActivityBuilder {
         }
     }
 
-    // These modules are passed to NavigateActivity and inject it project specific data and hierarchy information
+    // These modules are passed to HierarchyNavigatorActivity and inject it project specific data and hierarchy information
     public static class BiokoActivityModule implements NavigatePluginModule {
 
         private static final Map<String, List<FormBehavior>> formsForStates = new HashMap<>();

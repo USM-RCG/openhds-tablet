@@ -2,7 +2,7 @@ package org.openhds.mobile.projectdata.FormPayloadConsumers;
 
 import android.content.ContentResolver;
 
-import org.openhds.mobile.activity.NavigateActivity;
+import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.model.core.Membership;
@@ -34,7 +34,7 @@ public class UpdateFormPayloadConsumers {
     public static class StartAVisit implements FormPayloadConsumer {
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, NavigateActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
 
             Visit visit = VisitFormAdapter.fromForm(formPayload);
 
@@ -57,7 +57,7 @@ public class UpdateFormPayloadConsumers {
     public static class RegisterDeath implements FormPayloadConsumer {
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, NavigateActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
 
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
             ContentResolver contentResolver = navigateActivity.getContentResolver();
@@ -81,7 +81,7 @@ public class UpdateFormPayloadConsumers {
 
     public static class RegisterOutMigration implements FormPayloadConsumer {
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, NavigateActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
             // update the individual's residency end type
             String individualUuid = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID);
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
@@ -104,7 +104,7 @@ public class UpdateFormPayloadConsumers {
 
     public static class RegisterInMigration implements FormPayloadConsumer {
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, NavigateActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
             // find the migrating individual
             String individualUuid = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID);
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
@@ -137,7 +137,7 @@ public class UpdateFormPayloadConsumers {
 
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
-                                                  NavigateActivity navigateActivity) {
+                                                  HierarchyNavigatorActivity navigateActivity) {
 
             Map<String, DataWrapper> hierarchyPath = navigateActivity
                     .getHierarchyPath();

@@ -1,6 +1,6 @@
 package org.openhds.mobile.projectdata.FormFilters;
 
-import org.openhds.mobile.activity.NavigateActivity;
+import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.projectdata.ProjectResources;
 import org.openhds.mobile.repository.DataWrapper;
@@ -20,7 +20,7 @@ public class UpdateFormFilters {
     public static class StartAVisit implements FormFilter {
 
         @Override
-        public boolean amIValid(NavigateActivity navigateActivity) {
+        public boolean amIValid(HierarchyNavigatorActivity navigateActivity) {
             return navigateActivity.getCurrentVisit() == null;
         }
     }
@@ -28,7 +28,7 @@ public class UpdateFormFilters {
     public static class RegisterInMigration implements FormFilter {
 
         @Override
-        public boolean amIValid(NavigateActivity navigateActivity) {
+        public boolean amIValid(HierarchyNavigatorActivity navigateActivity) {
 
             if (null == navigateActivity.getCurrentVisit()) {
                 return false;
@@ -44,7 +44,7 @@ public class UpdateFormFilters {
     public static class RegisterOutMigration implements FormFilter {
 
         @Override
-        public boolean amIValid(NavigateActivity navigateActivity) {
+        public boolean amIValid(HierarchyNavigatorActivity navigateActivity) {
 
             Individual selectedIndividual = getCurrentSelectedIndividual(navigateActivity);
 
@@ -59,7 +59,7 @@ public class UpdateFormFilters {
     public static class RegisterDeath implements FormFilter {
 
         @Override
-        public boolean amIValid(NavigateActivity navigateActivity) {
+        public boolean amIValid(HierarchyNavigatorActivity navigateActivity) {
 
             Individual selectedIndividual = getCurrentSelectedIndividual(navigateActivity);
 
@@ -74,7 +74,7 @@ public class UpdateFormFilters {
     public static class RecordPregnancyObservation implements FormFilter {
 
         @Override
-        public boolean amIValid(NavigateActivity navigateActivity) {
+        public boolean amIValid(HierarchyNavigatorActivity navigateActivity) {
 
             Individual selectedIndividual = getCurrentSelectedIndividual(navigateActivity);
 
@@ -90,7 +90,7 @@ public class UpdateFormFilters {
     public static class RecordPregnancyOutcome implements FormFilter {
 
         @Override
-        public boolean amIValid(NavigateActivity navigateActivity) {
+        public boolean amIValid(HierarchyNavigatorActivity navigateActivity) {
 
             Individual selectedIndividual = getCurrentSelectedIndividual(navigateActivity);
 
@@ -103,7 +103,7 @@ public class UpdateFormFilters {
         }
     }
 
-    private static Individual getCurrentSelectedIndividual(NavigateActivity navigateActivity) {
+    private static Individual getCurrentSelectedIndividual(HierarchyNavigatorActivity navigateActivity) {
 
         Map<String, DataWrapper> hierarchyPath = navigateActivity.getHierarchyPath();
         String individualExtId =

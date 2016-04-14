@@ -1,6 +1,6 @@
 package org.openhds.mobile.projectdata.FormFilters;
 
-import org.openhds.mobile.activity.NavigateActivity;
+import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.GatewayRegistry;
@@ -18,7 +18,7 @@ import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
 public class CensusFormFilters {
 
 	private static boolean hasHeadOfHousehold(
-			NavigateActivity navigateActivity,
+			HierarchyNavigatorActivity navigateActivity,
 			Map<String, DataWrapper> hierarchyPath) {
 
 		String locationUuid = hierarchyPath.get(HOUSEHOLD_STATE).getUuid();
@@ -30,7 +30,7 @@ public class CensusFormFilters {
     public static class AddLocation implements FormFilter {
 
         @Override
-        public boolean amIValid(NavigateActivity navigateActivity) {
+        public boolean amIValid(HierarchyNavigatorActivity navigateActivity) {
 
             return true;
         }
@@ -39,7 +39,7 @@ public class CensusFormFilters {
     public static class EvaluateLocation implements FormFilter {
 
         @Override
-        public boolean amIValid(NavigateActivity navigateActivity) {
+        public boolean amIValid(HierarchyNavigatorActivity navigateActivity) {
 
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
 
@@ -53,7 +53,7 @@ public class CensusFormFilters {
     public static class AddHeadOfHousehold implements FormFilter {
 
 		@Override
-		public boolean amIValid(NavigateActivity navigateActivity) {
+		public boolean amIValid(HierarchyNavigatorActivity navigateActivity) {
 
 			return !CensusFormFilters.hasHeadOfHousehold(navigateActivity,
 					navigateActivity.getHierarchyPath());
@@ -63,7 +63,7 @@ public class CensusFormFilters {
 	public static class AddMemberOfHousehold implements FormFilter {
 
 		@Override
-		public boolean amIValid(NavigateActivity navigateActivity) {
+		public boolean amIValid(HierarchyNavigatorActivity navigateActivity) {
 
 			return CensusFormFilters.hasHeadOfHousehold(navigateActivity,
 					navigateActivity.getHierarchyPath());
@@ -73,7 +73,7 @@ public class CensusFormFilters {
 	public static class EditIndividual implements FormFilter {
 
 		@Override
-		public boolean amIValid(NavigateActivity navigateActivity) {
+		public boolean amIValid(HierarchyNavigatorActivity navigateActivity) {
 
 			return true;
 		}
