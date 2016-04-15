@@ -1,9 +1,10 @@
 package org.openhds.mobile.utilities;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Environment;
+import android.util.Log;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -16,6 +17,7 @@ import org.jdom2.output.XMLOutputter;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.projectdata.ProjectFormFields;
 import org.openhds.mobile.projectdata.ProjectResources;
+import org.openhds.mobile.provider.DatabaseAdapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,8 +33,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import static android.os.Environment.getExternalStorageDirectory;
+import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInstances;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getBlankInstance;
+import static org.openhds.mobile.utilities.OdkCollectHelper.moveInstance;
 import static org.openhds.mobile.utilities.OdkCollectHelper.registerInstance;
 
 /**
@@ -40,6 +47,8 @@ import static org.openhds.mobile.utilities.OdkCollectHelper.registerInstance;
  * consolidates the repetition and minimizes the surface area depending on jdom classes.
  */
 public class FormUtils {
+
+    private static final String TAG = FormUtils.class.getSimpleName();
 
     public static final String FILE_EXTENSION = ".xml";
 
@@ -108,7 +117,7 @@ public class FormUtils {
     }
 
     private static File getODKDir() {
-        return new File(Environment.getExternalStorageDirectory(), "odk");
+        return new File(getExternalStorageDirectory(), "odk");
     }
 
     public static File getInstancesDir() {
@@ -322,6 +331,58 @@ public class FormUtils {
             }
         } else {
             throw new FileNotFoundException("form " + name + " not found");
+        }
+    }
+
+    /**
+     * Migrates unsent form instances from the pre-2.3 instance storage format.
+     * <p/>
+     * Specifically, it performs the following:
+     * <ul>
+     * <li>Using the ODK content provider, lookup unsent form instances</li>
+     * <li>For each form instance with a path under the old form directory:</li>
+     * <ul>
+     * <li>Using the existing file name, create an instance directory under the new form root</li>
+     * <li>Move the form instance file from the existing path to the new directory</li>
+     * <li>Update the form instance's path to the new location using the ODK content provider</li>
+     * </ul>
+     * </ul>
+     * <p/>
+     * The existing form paths look like:
+     * <p/>
+     * {Environment.getExternalStorageDirectory()}/Android/data/org.openhds.mobile/files/{formid}/{formid}YYYY-MM-DD_HH:MM:SS.xml
+     * <p/>
+     * Where {formid} is the id from the form such as 'duplicate_location' or 'location'.
+     * <p/>
+     * The new form paths look like:
+     * <p/>
+     * {Environment.getExternalStorageDirectory()}/odk/cims-instances/{formid}YYYY-MM-DD_HH-MM-SS/{formid}YYYY-MM-DD_HH-MM-SS.xml
+     *
+     * @param ctx used to perform lookup and update form instances in ODK and local databases
+     */
+    public static void migrateTo23Storage(Context ctx) {
+        ContentResolver resolver = ctx.getContentResolver();
+        File oldRoot = new File(getExternalStorageDirectory(), "Android/data/org.openhds.mobile/files");
+        String oldRootPath = oldRoot.getAbsolutePath();
+        if (oldRoot.exists() && oldRoot.isDirectory()) {
+            Pattern oldSuffixPattern = Pattern.compile("(\\w+\\d{4}-\\d{2}-\\d{2}_\\d{2}:\\d{2}:\\d{2}).xml$");
+            for (FormInstance instance : getAllUnsentFormInstances(resolver)) {
+                String existingPath = instance.getFilePath();
+                if (existingPath != null && existingPath.startsWith(oldRootPath)) {
+                    Matcher oldSuffixMatcher = oldSuffixPattern.matcher(existingPath);
+                    if (oldSuffixMatcher.find()) {
+                        String newBaseName = oldSuffixMatcher.group(1).replace(':', '-');
+                        File newDir = new File(getInstancesDir(), newBaseName);
+                        try {
+                            File newFile = new File(newDir, newBaseName + FILE_EXTENSION);
+                            moveInstance(resolver, instance, newFile);
+                            DatabaseAdapter.getInstance(ctx).updateAttachedPath(existingPath, newFile.getAbsolutePath());
+                        } catch (IOException e) {
+                            Log.w(TAG, "v2.3 migration error - " + e.getMessage());
+                        }
+                    }
+                }
+            }
         }
     }
 

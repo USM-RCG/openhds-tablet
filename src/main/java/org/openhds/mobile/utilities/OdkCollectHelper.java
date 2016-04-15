@@ -10,6 +10,8 @@ import org.openhds.mobile.provider.FormsProviderAPI;
 import org.openhds.mobile.provider.InstanceProviderAPI;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -175,7 +177,7 @@ public class OdkCollectHelper {
     }
 
     /**
-     * Deletes the list of {@link FormInstance}s using ODKs instance provider. This will delete froms from its db and
+     * Deletes the list of {@link FormInstance}s using ODKs instance provider. This will delete forms from its db and
      * from the file system.
      *
      * @param resolver
@@ -186,4 +188,44 @@ public class OdkCollectHelper {
         String where = String.format("%s IN (%s)", InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, makePlaceholders(forms.size()));
         return resolver.delete(CONTENT_URI, where, formPaths(forms));
     }
+
+    /**
+     * Moves the specified form instance from its current filesystem location to the specified filesystem location,
+     * creating directories if necessary and updating ODK's reference to the file using its instance form provider.
+     *
+     * @param resolver content resolver to use for using ODK content provider
+     * @param instance the {@link FormInstance} to move
+     * @param dest     a {@link File} representing the new location
+     */
+    public static void moveInstance(ContentResolver resolver, FormInstance instance, File dest) throws IOException {
+
+        File source = new File(instance.getFilePath());
+        if (!source.exists())
+            throw new FileNotFoundException("instance file doesn't exist: " + source);
+
+        File destDir = dest.getParentFile();
+        if (!destDir.exists() && !destDir.mkdirs())
+            throw new IOException("failed to create destination dir: " + destDir);
+
+        if (source.renameTo(dest)) {
+            instance.setFilePath(dest.getAbsolutePath());
+            updatePath(resolver, Uri.parse(instance.getUriString()), instance.getFilePath());
+        } else {
+            throw new IOException(String.format("failed to move form %s to %s", source, dest));
+        }
+    }
+
+    /**
+     * Updates the filesystem path of the instance at specified {@link Uri}.
+     *
+     * @param resolver the content resolve to use for the update
+     * @param uri      the uri to the instance to update
+     * @param path     the new filesystem path of the instance
+     */
+    public static void updatePath(ContentResolver resolver, Uri uri, String path) {
+        ContentValues cv = new ContentValues();
+        cv.put(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, path);
+        resolver.update(uri, cv, null, null);
+    }
+
 }

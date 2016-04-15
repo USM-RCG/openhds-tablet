@@ -121,6 +121,29 @@ public class DatabaseAdapter {
         }
     }
 
+    /**
+     * Updates all attachment records referencing an old filesystem path to a new filesystem path.
+     *
+     * @param oldPath the old filesystem path
+     * @param newPath the new filesystem path
+     * @return the number of records updated
+     */
+    public long updateAttachedPath(String oldPath, String newPath) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_FORM_PATH, newPath);
+            final String where = String.format("%s = ?", KEY_FORM_PATH);
+            final String[] whereArgs = {oldPath};
+            long updateCount = db.update(FORM_PATH_TABLE_NAME, cv, where, whereArgs);
+            db.setTransactionSuccessful();
+            return updateCount;
+        } finally {
+            db.endTransaction();
+        }
+    }
+
     public Collection<String> findFormsForHierarchy(String hierarchyPath) {
         SQLiteDatabase db = helper.getReadableDatabase();
         Set<String> formPaths = new HashSet<>();
