@@ -49,20 +49,16 @@ public class VisitFragment extends Fragment implements OnClickListener {
 	}
 
 	public void setButtonEnabled(boolean isEnabled) {
-
-		if (null == layout) {
-			return;
-		}
-		if (isEnabled) {
-			layout.setVisibility(ViewGroup.VISIBLE);
-			layout.setBackgroundResource(R.drawable.visit_selector);
-			configureTextWithPayload(getActivity(), layout, getResources()
-                            .getString(R.string.finish_visit), null,
-                    null, null,true );
-			layout.setClickable(true);
-
-		} else {
-			layout.setVisibility(ViewGroup.INVISIBLE);
+		if (layout != null) {
+			if (isEnabled) {
+				layout.setVisibility(ViewGroup.VISIBLE);
+				layout.setBackgroundResource(R.drawable.visit_selector);
+				configureTextWithPayload(getActivity(), layout,
+						getResources().getString(R.string.finish_visit), null, null, null, true);
+				layout.setClickable(true);
+			} else {
+				layout.setVisibility(ViewGroup.GONE);
+			}
 		}
 	}
 }

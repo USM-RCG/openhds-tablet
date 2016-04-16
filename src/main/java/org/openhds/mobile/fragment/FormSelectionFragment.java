@@ -72,6 +72,7 @@ public class FormSelectionFragment extends Fragment {
             if (convertView == null) {
                 convertView = makeTextWithPayload(getActivity(), getString(form.getFormLabelId()), null,
                         form.getFormLabelId(), null, null, formSelectionDrawableId, null, null,true);
+                convertView.setPadding(0, 10, 0, 10); // Make the buttons thicker for easier selection
             }
 
             configureTextWithPayload(getActivity(),
