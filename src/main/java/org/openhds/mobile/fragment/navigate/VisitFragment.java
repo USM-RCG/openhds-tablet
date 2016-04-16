@@ -17,7 +17,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
 public class VisitFragment extends Fragment implements OnClickListener {
-	HierarchyNavigatorActivity navigateActivity;
+	HierarchyNavigatorActivity navigateActivity; // FIXME: a strong smell, fragments should be self-contained
 
 	private static final int BUTTON_MARGIN = 10;
 
@@ -30,7 +30,6 @@ public class VisitFragment extends Fragment implements OnClickListener {
 		layout = makeTextWithPayload(getActivity(), null, null, null, this, toggleContainer, 0, null, null, true);
 		LayoutParams params = (LayoutParams) layout.getLayoutParams();
 		params.setMargins(0, 0, 0, BUTTON_MARGIN);
-
 		return toggleContainer;
 	}
 
