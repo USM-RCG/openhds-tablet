@@ -61,10 +61,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
         }
 
         formListFragment = (FormListFragment) getFragmentManager().findFragmentById(R.id.portal_form_list);
-
-        TextView header = (TextView) this.getLayoutInflater().inflate(R.layout.generic_header, null);
-        header.setText(R.string.form_instance_list_header);
-        formListFragment.addHeaderView(header);
+        formListFragment.setHeaderText(R.string.form_instance_list_header);
     }
 
     @Override

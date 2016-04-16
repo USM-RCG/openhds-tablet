@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.adapter.FormInstanceAdapter;
@@ -22,6 +23,8 @@ import org.openhds.mobile.model.form.FormInstance;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static java.util.Arrays.asList;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
@@ -30,6 +33,7 @@ import static org.openhds.mobile.utilities.OdkCollectHelper.deleteFormInstances;
 
 public class FormListFragment extends Fragment {
 
+    TextView headerView;
     ListView listView;
     FormInstanceAdapter adapter;
 
@@ -38,6 +42,7 @@ public class FormListFragment extends Fragment {
         Activity activity = getActivity();
         adapter = new FormInstanceAdapter(activity, R.id.form_instance_list_item, new ArrayList<FormInstance>());
         View layout = inflater.inflate(R.layout.form_list_fragment, container, false);
+        headerView = (TextView) layout.findViewById(R.id.form_list_header);
         listView = (ListView) layout.findViewById(R.id.form_list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new ClickListener());
@@ -45,9 +50,12 @@ public class FormListFragment extends Fragment {
         return layout;
     }
 
-    public void addHeaderView(View header) {
-        if (listView != null) {
-            listView.addHeaderView(header, null, false);
+    public void setHeaderText(Integer resourceId) {
+        if (resourceId != null) {
+            headerView.setText(resourceId);
+            headerView.setVisibility(VISIBLE);
+        } else {
+            headerView.setVisibility(GONE);
         }
     }
 
