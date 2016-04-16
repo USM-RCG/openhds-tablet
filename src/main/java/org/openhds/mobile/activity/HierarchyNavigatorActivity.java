@@ -141,8 +141,8 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                         .add(R.id.left_column_bottom, detailToggleFragment, TOGGLE_FRAGMENT_TAG)
                         .add(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG)
                         .add(R.id.right_column_top, formFragment, FORM_FRAGMENT_TAG)
-                        .add(R.id.right_column_bottom, visitFragment, VISIT_FRAGMENT_TAG)
-                        .add(R.id.view_column_bottom, formListFragment, VIEW_PATH_FORM_FRAGMENT_TAG)
+                        .add(R.id.right_column_middle, visitFragment, VISIT_FRAGMENT_TAG)
+                        .add(R.id.right_column_bottom, formListFragment, VIEW_PATH_FORM_FRAGMENT_TAG)
                         .commit();
             } else {
 
