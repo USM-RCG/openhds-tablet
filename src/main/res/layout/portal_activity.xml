@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <FrameLayout
         android:id="@+id/portal_left_column"
         android:layout_width="0px"
         android:layout_height="match_parent"
         android:layout_weight="4"
-        android:paddingTop="20dp" />
+        android:layout_marginTop="20dp" />
 
     <LinearLayout
         android:id="@+id/portal_middle_column"
@@ -26,11 +26,22 @@
         android:paddingRight="15dp"
         />
 
-    <fragment
-        android:name="org.openhds.mobile.fragment.navigate.FormListFragment"
-        android:id="@+id/portal_form_list"
-        android:layout_height="wrap_content"
+    <FrameLayout
+        android:id="@+id/portal_right_column"
         android:layout_width="0px"
-        android:layout_weight="4"/>
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="5dp">
+
+        <fragment
+            android:name="org.openhds.mobile.fragment.navigate.FormListFragment"
+            android:id="@+id/portal_form_list"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+
+    </FrameLayout>
 
 </LinearLayout>

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import org.openhds.mobile.R;
@@ -36,10 +37,11 @@ public class FormSelectionFragment extends Fragment {
 
     public void createFormButtons(List<FormBehavior> values) {
         formListAdapter = new FormSelectionListAdapter(getActivity(), R.layout.generic_list_item_white_text, values);
-
         ListView listView = (ListView) getActivity().findViewById(R.id.form_fragment_listview);
         listView.setAdapter(formListAdapter);
         listView.setOnItemClickListener(new FormClickListener());
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)listView.getLayoutParams();
+        params.setMargins(0, 0, 0, values.isEmpty()? 0 : 10);  // Add bottom margin only when we have content
     }
 
     public void setFormSelectionDrawableId(int formSelectionDrawableId) {
