@@ -26,12 +26,8 @@ public class VisitFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
-		LinearLayout toggleContainer = (LinearLayout) inflater.inflate(
-				R.layout.visit_fragment, container, false);
-
-		layout = makeTextWithPayload(getActivity(), null, null, null, this,
-                toggleContainer, 0, null, null, true);
+		LinearLayout toggleContainer = (LinearLayout) inflater.inflate(R.layout.visit_fragment, container, false);
+		layout = makeTextWithPayload(getActivity(), null, null, null, this, toggleContainer, 0, null, null, true);
 		LayoutParams params = (LayoutParams) layout.getLayoutParams();
 		params.setMargins(0, 0, 0, BUTTON_MARGIN);
 
@@ -44,7 +40,6 @@ public class VisitFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		navigateActivity.finishVisit();
 	}
 
