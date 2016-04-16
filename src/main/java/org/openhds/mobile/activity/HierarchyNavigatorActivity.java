@@ -323,9 +323,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         }
         updateAttachedForms();
 
-        if(null != getCurrentVisit()){
-            visitFragment.setButtonEnabled(true);
-        }
+        visitFragment.setButtonEnabled(getCurrentVisit() != null);
     }
 
     private void updateAttachedForms() {
