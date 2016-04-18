@@ -6,6 +6,8 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.openhds.mobile.R;
+import org.openhds.mobile.projectdata.HierarchyInfo;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -136,5 +138,34 @@ public class RhinoTest extends ActivityTestCase {
             Context.exit();
         }
         assertEquals(4, adder.add(1, 3));
+    }
+
+    public void testJavaScriptHierInfo() throws IOException {
+        InputStream scriptStream = getInstrumentation().getContext().getAssets().open("hierarchy.js");
+        Reader scriptReader = new InputStreamReader(scriptStream);
+        Context ctx = Context.enter();
+        ctx.setOptimizationLevel(-1);
+        HierarchyInfo info;
+        try {
+            Scriptable scope = ctx.initStandardObjects();
+            ctx.evaluateReader(scope, scriptReader, getName(), 1, null);
+            info = (HierarchyInfo) Context.jsToJava(scope.get("info", null), HierarchyInfo.class);
+        } finally {
+            Context.exit();
+        }
+
+        assertEquals("biokoHierarchy", info.getHierarchyName());
+
+        assertNotNull(info.getStateSequence());
+        String levelName = info.getStateSequence().get(5);
+        assertEquals("mapArea", levelName);
+
+        assertNotNull(info.getStateLabels());
+        assertNotNull(info.getStateLabels().get(levelName));
+        int label = info.getStateLabels().get(levelName);
+        assertEquals(R.string.map_area_label, label);
+
+        String levelLabel = getInstrumentation().getTargetContext().getString(label);
+        assertEquals("Map Area", levelLabel);
     }
 }
