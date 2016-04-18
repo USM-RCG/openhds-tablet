@@ -3,6 +3,7 @@ package org.openhds.mobile.tests.rhino;
 import android.test.ActivityTestCase;
 
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
@@ -78,5 +79,62 @@ public class RhinoTest extends ActivityTestCase {
         } finally {
             Context.exit();
         }
+    }
+
+    public interface Adder {
+        int add(int x, int y);
+    }
+
+    public void testImplementJavaInterface() {
+        String script = "var adder = new org.openhds.mobile.tests.rhino.RhinoTest.Adder({ add: function(x, y) { return x + y } });";
+        Context ctx = Context.enter();
+        ctx.setOptimizationLevel(-1);
+        try {
+            Scriptable scope = ctx.initStandardObjects();
+            ctx.evaluateString(scope, script, getName(), 1, null);
+            Adder adder = (Adder) Context.jsToJava(scope.get("adder", null), Adder.class);
+            assertEquals(4, adder.add(1, 3));
+        } finally {
+            Context.exit();
+        }
+    }
+
+    public void testCompiledScript() {
+        String script = "var adder = new org.openhds.mobile.tests.rhino.RhinoTest.Adder({ add: function(x, y) { return x + y } });";
+        Context ctx = Context.enter();
+        ctx.setOptimizationLevel(-1);
+        Scriptable scope;
+        Script compiled;
+        try {
+            scope = ctx.initStandardObjects();
+            compiled = ctx.compileString(script, getName(), 1, null);
+        } finally {
+            Context.exit();
+        }
+
+        ctx = Context.enter();
+        ctx.setOptimizationLevel(-1);
+        try {
+            compiled.exec(ctx, scope);
+            Adder adder = (Adder) Context.jsToJava(scope.get("adder", null), Adder.class);
+            assertEquals(4, adder.add(1, 3));
+        } finally {
+            Context.exit();
+        }
+    }
+
+    public void testGeneratedObjectUsableWithoutContext() {
+        String script = "var adder = new org.openhds.mobile.tests.rhino.RhinoTest.Adder({ add: function(x, y) { return x + y } });";
+        Context ctx = Context.enter();
+        ctx.setOptimizationLevel(-1);
+        Adder adder;
+        try {
+            Scriptable scope = ctx.initStandardObjects();
+            ctx.evaluateString(scope, script, getName(), 1, null);
+            adder = (Adder) Context.jsToJava(scope.get("adder", null), Adder.class);
+        } finally {
+            Context.exit();
+        }
+        assertEquals(4, adder.add(1, 3));
     }
 }
