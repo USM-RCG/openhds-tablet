@@ -1,14 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/value_with_label_container"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp">
+                android:layout_height="wrap_content">
 
     <CheckedTextView
             android:id="@+id/label_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:text = "Label"/>
 
@@ -16,10 +15,10 @@
             android:id="@+id/delimiter_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:layout_toRightOf="@id/label_text"
-            android:text = " : "/>
+            android:text = ":"/>
 
     <CheckedTextView
             android:id="@+id/value_text"
@@ -29,4 +28,5 @@
             android:textStyle="normal"
             android:layout_below="@id/label_text"
             android:text = "value"/>
+
 </RelativeLayout>

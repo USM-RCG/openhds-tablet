@@ -10,9 +10,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:orientation="vertical"
-            android:paddingTop="20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:layout_margin="10dp">
 
         <ListView
                 android:id="@+id/form_search_list_view"
@@ -22,7 +20,7 @@
                 android:orientation="vertical"
                 android:divider="@android:color/transparent"
                 android:listSelector="@android:color/transparent"
-                android:dividerHeight="15dp" />
+                android:dividerHeight="10dp" />
 
         <Button
                 android:id="@+id/done_button"
@@ -42,14 +40,13 @@
             android:layout_width="0px"
             android:layout_height="match_parent"
             android:layout_weight="5"
-            android:background="@drawable/gray_middle_column_drawable"
-            android:paddingTop="20dp" />
+            android:background="@drawable/gray_middle_column_drawable" />
 
     <FrameLayout
             android:id="@+id/form_search_right_column"
             android:layout_width="0px"
             android:layout_height="match_parent"
             android:layout_weight="4"
-            android:paddingTop="20dp" />
+            android:layout_margin="10dp" />
 
 </LinearLayout>

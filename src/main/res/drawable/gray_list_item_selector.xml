@@ -2,24 +2,17 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_pressed="true">
-
         <shape android:shape="rectangle">
-            <corners
-                    android:radius="20dp"
-                    />
-            <solid
-                    android:color="@color/GrayListItemFillPressed"
-                    />
+            <corners android:radius="10dp"/>
+            <padding android:bottom="5dp" android:right="5dp" android:left="5dp" android:top="5dp"/>
+            <solid android:color="@color/GrayListItemFillPressed"/>
         </shape>
     </item>
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
-            <corners
-                    android:radius="20dp"
-                    />
-            <solid
-                    android:color="@color/GrayListItemFill"
-                    />
+            <corners android:radius="10dp"/>
+            <padding android:bottom="5dp" android:right="5dp" android:left="5dp" android:top="5dp"/>
+            <solid android:color="@color/GrayListItemFill"/>
         </shape>
     </item>
 
