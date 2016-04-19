@@ -190,7 +190,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         setTitle(getString(uiHelper.getModuleTitleStringId()));
         hierarchyButtonFragment.setHiearchySelectionDrawableId(uiHelper.getHierarchySelectionDrawableId());
         valueFragment.setDataSelectionDrawableId(uiHelper.getDataSelectionDrawableId());
-        formFragment.setFormSelectionDrawableId(uiHelper.getFormSelectionDrawableId());
+        formFragment.setFormSelectionDrawableId(R.drawable.form_selector);
         View middleColumn = findViewById(R.id.middle_column);
         middleColumn.setBackgroundResource(uiHelper.getMiddleColumnDrawableId());
 

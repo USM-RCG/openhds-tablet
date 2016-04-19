@@ -81,11 +81,6 @@ public class ProjectActivityBuilder {
             }
 
             @Override
-            public int getFormSelectionDrawableId() {
-                return R.drawable.bioko_form_selector;
-            }
-
-            @Override
             public int getHierarchySelectionDrawableId() {
                 return R.drawable.bioko_hierarchy_selector;
             }
@@ -190,11 +185,6 @@ public class ProjectActivityBuilder {
             @Override
             public int getDataSelectionDrawableId() {
                 return R.drawable.census_data_selector;
-            }
-
-            @Override
-            public int getFormSelectionDrawableId() {
-                return R.drawable.census_form_selector_orange;
             }
 
             @Override
@@ -324,11 +314,6 @@ public class ProjectActivityBuilder {
             @Override
             public int getDataSelectionDrawableId() {
                 return R.drawable.update_data_selector;
-            }
-
-            @Override
-            public int getFormSelectionDrawableId() {
-                return R.drawable.update_form_selector;
             }
 
             @Override

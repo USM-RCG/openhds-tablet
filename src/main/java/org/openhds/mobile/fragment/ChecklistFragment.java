@@ -98,7 +98,7 @@ public class ChecklistFragment extends Fragment {
         primaryListButton.setText(R.string.delete_button_label);
         primaryListButton.setTag(R.string.delete_button_label);
         primaryListButton.setVisibility(View.VISIBLE);
-        primaryListButton.setBackgroundResource(R.drawable.census_form_selector_red);
+        primaryListButton.setBackgroundResource(R.drawable.form_selector_red);
 
         if (null == secondaryListButton) {
             secondaryListButton = (Button) fragmentLayout.findViewById(R.id.checklist_fragment_secondary_button);
@@ -132,8 +132,7 @@ public class ChecklistFragment extends Fragment {
         primaryListButton.setText(R.string.supervisor_approve_selected);
         primaryListButton.setTag(R.string.supervisor_approve_selected);
         primaryListButton.setVisibility(View.VISIBLE);
-        primaryListButton.setBackgroundResource(R.drawable.census_form_selector_orange);
-
+        primaryListButton.setBackgroundResource(R.drawable.form_selector);
 
         if (null == secondaryListButton) {
             secondaryListButton = (Button) fragmentLayout.findViewById(R.id.checklist_fragment_secondary_button);
@@ -143,7 +142,7 @@ public class ChecklistFragment extends Fragment {
         secondaryListButton.setText(R.string.supervisor_approve_all);
         secondaryListButton.setTag(R.string.supervisor_approve_all);
         secondaryListButton.setVisibility(View.VISIBLE);
-        secondaryListButton.setBackgroundResource(R.drawable.census_form_selector_orange);
+        secondaryListButton.setBackgroundResource(R.drawable.form_selector);
     }
 
     private ChecklistAdapter setupApproveAdapter() {

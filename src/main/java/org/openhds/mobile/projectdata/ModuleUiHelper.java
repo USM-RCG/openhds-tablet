@@ -14,11 +14,8 @@ public interface ModuleUiHelper {
     int getModuleDescriptionStringId();
     int getModulePortalDrawableId();
     int getModuleTitleStringId();
-
     int getDataSelectionDrawableId();
-    int getFormSelectionDrawableId();
     int getHierarchySelectionDrawableId();
-
     int getMiddleColumnDrawableId();
 
 }

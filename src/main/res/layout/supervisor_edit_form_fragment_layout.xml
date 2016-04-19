@@ -12,7 +12,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignTop="@+id/checklist_fragment_primary_button"
             android:layout_toRightOf="@+id/view"
-            android:background="@drawable/census_form_selector_orange"
+            android:background="@drawable/form_selector"
             android:textAppearance="@android:style/TextAppearance.Large.Inverse"/>
 
     <View
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/view"
-            android:background="@drawable/census_form_selector_orange"
+            android:background="@drawable/form_selector"
             android:textAppearance="@android:style/TextAppearance.Large.Inverse"/>
 
     <TextView
