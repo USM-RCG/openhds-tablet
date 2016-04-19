@@ -27,6 +27,7 @@ import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInst
 public class FieldWorkerActivity extends Activity implements OnClickListener {
 
     private static final String TAG = FieldWorkerActivity.class.getSimpleName();
+    public static final int MODULE_SPACING = 5;
 
     private FieldWorker currentFieldWorker;
     private FormListFragment formListFragment;
@@ -54,7 +55,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
                         module.name(), this, activitiesLayout,
                         R.drawable.data_selector, null, null,true);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-                params.setMargins(0, 0, 0, 20);
+                params.setMargins(0, 0, 0, MODULE_SPACING);
             } catch (Exception e) {
                 Log.e(TAG, "failed to create launcher for module " + module.name(), e);
             }

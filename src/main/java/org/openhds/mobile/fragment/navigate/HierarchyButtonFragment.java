@@ -23,7 +23,7 @@ import android.widget.RelativeLayout;
 public class HierarchyButtonFragment extends Fragment {
 
 	// for some reason margin in layout XML is ignored
-	private static final int BUTTON_MARGIN = 10;
+	private static final int BUTTON_MARGIN = 5;
 
 	private HierarchyNavigator navigator;
 	private Map<String, RelativeLayout> viewsForStates;

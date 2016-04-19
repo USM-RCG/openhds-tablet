@@ -2,33 +2,19 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_pressed="true">
-
         <shape android:shape="rectangle">
-            <corners
-                    android:radius="15dp"
-                    />
-            <solid
-                    android:color="@color/BiokoDataFillPressed"
-                    />
-
-            <stroke
-                    android:width="3dp"
-                    android:color="@color/BiokoDataBorder"
-                    />
+            <corners android:radius="10dp"/>
+            <padding android:top="5dp" android:right="5dp" android:bottom="5dp" android:left="5dp"/>
+            <solid android:color="@color/BiokoDataFillPressed"/>
+            <stroke android:width="3dp" android:color="@color/BiokoDataBorder"/>
         </shape>
     </item>
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
-            <corners
-                    android:radius="20dp"
-                    />
-            <solid
-                    android:color="@color/BiokoDataFill"
-                    />
-            <stroke
-                    android:width="3dp"
-                    android:color="@color/BiokoDataBorder"
-                    />
+            <corners android:radius="10dp"/>
+            <padding android:top="5dp" android:right="5dp" android:bottom="5dp" android:left="5dp"/>
+            <solid android:color="@color/BiokoDataFill"/>
+            <stroke android:width="3dp" android:color="@color/BiokoDataBorder"/>
         </shape>
     </item>
 
