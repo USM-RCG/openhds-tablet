@@ -45,7 +45,6 @@ public class DetailToggleFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		navigateActivity.toggleMiddleFragment();
 	}
 
@@ -57,14 +56,6 @@ public class DetailToggleFragment extends Fragment implements OnClickListener {
 			return;
 		}
 		if (!isEnabled) {
-			// use this if you want it to be grayed out instead of invisible
-			//
-			// layout.setBackgroundColor(getResources().getColor(R.color.Gray));
-			// configureTextWithPayload(getActivity(), layout, getResources()
-			// .getString(R.string.toggle_fragment_button_none), null,
-			// null, null);
-			// layout.setClickable(false);
-
 			layout.setVisibility(ViewGroup.INVISIBLE);
 		} else {
 			layout.setVisibility(ViewGroup.VISIBLE);
