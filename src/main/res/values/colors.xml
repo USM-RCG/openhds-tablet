@@ -160,9 +160,6 @@
     <color name="RedFillPressed">#F76775</color>
     <color name="RedFillMissing">#B3D72E3E</color>
 
-    <color name="BiokoHierarchyBorder">#7b7b7b</color>
-    <color name="BiokoHierarchyFill">#919191</color>
-    <color name="BiokoHierarchyFillPressed">#ababab</color>
     <color name="BiokoDataBorder">#7b7b7b</color>
     <color name="BiokoDataFill">#919191</color>
     <color name="BiokoDataFillPressed">#ababab</color>

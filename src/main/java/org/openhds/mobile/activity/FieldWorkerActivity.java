@@ -52,7 +52,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
                         getString(moduleInfo.getModuleLabelStringId()),
                         getString(moduleInfo.getModuleDescriptionStringId()),
                         module.name(), this, activitiesLayout,
-                        R.drawable.hierarchy_selector, null, null,true);
+                        R.drawable.data_selector, null, null,true);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
                 params.setMargins(0, 0, 0, 20);
             } catch (Exception e) {
