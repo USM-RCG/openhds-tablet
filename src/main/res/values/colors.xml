@@ -160,13 +160,12 @@
     <color name="RedFillPressed">#F76775</color>
     <color name="RedFillMissing">#B3D72E3E</color>
 
-    <color name="BiokoHierarchyBorder">#218D0B</color>
-    <color name="BiokoHierarchyFill">#41BA28</color>
-    <color name="BiokoHierarchyFillPressed">#6FD559</color>
-    <color name="BiokoDataBorder">#218D0B</color>
-    <color name="BiokoDataFill">#B341BA28</color>
-    <color name="BiokoDataFillPressed">#B36FD559</color>
-    <color name="BiokoMiddleColumnFill">#4DA9EB9C</color>
+    <color name="BiokoHierarchyBorder">#7b7b7b</color>
+    <color name="BiokoHierarchyFill">#919191</color>
+    <color name="BiokoHierarchyFillPressed">#ababab</color>
+    <color name="BiokoDataBorder">#7b7b7b</color>
+    <color name="BiokoDataFill">#919191</color>
+    <color name="BiokoDataFillPressed">#ababab</color>
 
     <color name="FormHierarchyBorder">#A84F0D</color>
     <color name="FormHierarchyFill">#DF7A30</color>
