@@ -188,8 +188,8 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     private void setActivityVisualTheme(ModuleUiHelper uiHelper){
 
         setTitle(getString(uiHelper.getModuleTitleStringId()));
-        hierarchyButtonFragment.setHiearchySelectionDrawableId(uiHelper.getHierarchySelectionDrawableId());
-        valueFragment.setDataSelectionDrawableId(uiHelper.getDataSelectionDrawableId());
+        hierarchyButtonFragment.setHiearchySelectionDrawableId(R.drawable.hierarchy_selector);
+        valueFragment.setDataSelectionDrawableId(R.drawable.data_selector);
         formFragment.setFormSelectionDrawableId(R.drawable.form_selector);
         View middleColumn = findViewById(R.id.middle_column);
         middleColumn.setBackgroundResource(R.drawable.gray_middle_column_drawable);
@@ -235,7 +235,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                     ModuleUiHelper uiHelper = instance.getModuleUiHelper();
                     // ...add a menu item and give it a tag for the click handler
                     MenuItem menuItem = menu.add(uiHelper.getModuleTitleStringId());
-                    menuItem.setIcon(uiHelper.getModulePortalDrawableId());
+                    menuItem.setIcon(R.drawable.hierarchy_selector);
                     menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                     menuItemTags.put(menuItem, module.name());
                 }

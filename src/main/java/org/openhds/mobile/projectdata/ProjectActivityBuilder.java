@@ -66,23 +66,8 @@ public class ProjectActivityBuilder {
             }
 
             @Override
-            public int getModulePortalDrawableId() {
-                return R.drawable.bioko_hierarchy_selector;
-            }
-
-            @Override
             public int getModuleTitleStringId() {
                 return R.string.bioko_activity_title;
-            }
-
-            @Override
-            public int getDataSelectionDrawableId() {
-                return R.drawable.bioko_data_selector;
-            }
-
-            @Override
-            public int getHierarchySelectionDrawableId() {
-                return R.drawable.bioko_hierarchy_selector;
             }
         }
 
@@ -156,7 +141,6 @@ public class ProjectActivityBuilder {
         private static final Map<String, List<FormBehavior>> formsForStates = new HashMap<>();
         private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<>();
         public static class CensusUiHelper implements ModuleUiHelper {
-
             @Override
             public int getModuleLabelStringId() {
                 return R.string.census_portal_label;
@@ -168,23 +152,8 @@ public class ProjectActivityBuilder {
             }
 
             @Override
-            public int getModulePortalDrawableId() {
-                return R.drawable.census_hierarchy_selector;
-            }
-
-            @Override
             public int getModuleTitleStringId() {
                 return R.string.census_activity_title;
-            }
-
-            @Override
-            public int getDataSelectionDrawableId() {
-                return R.drawable.census_data_selector;
-            }
-
-            @Override
-            public int getHierarchySelectionDrawableId() {
-                return R.drawable.census_hierarchy_selector;
             }
         }
 
@@ -280,7 +249,6 @@ public class ProjectActivityBuilder {
         private static final Map<String, List<FormBehavior>> formsForStates = new HashMap<>();
         private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<>();
         public static class UpdateUiHelper implements ModuleUiHelper {
-
             @Override
             public int getModuleLabelStringId() {
                 return R.string.update_portal_label;
@@ -292,25 +260,9 @@ public class ProjectActivityBuilder {
             }
 
             @Override
-            public int getModulePortalDrawableId() {
-                return R.drawable.update_hierarchy_selector;
-            }
-
-            @Override
             public int getModuleTitleStringId() {
                 return R.string.update_activity_title;
             }
-
-            @Override
-            public int getDataSelectionDrawableId() {
-                return R.drawable.update_data_selector;
-            }
-
-            @Override
-            public int getHierarchySelectionDrawableId() {
-                return R.drawable.update_hierarchy_selector;
-            }
-
         }
 
 

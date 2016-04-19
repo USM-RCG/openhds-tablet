@@ -12,9 +12,6 @@ public interface ModuleUiHelper {
 
     int getModuleLabelStringId();
     int getModuleDescriptionStringId();
-    int getModulePortalDrawableId();
     int getModuleTitleStringId();
-    int getDataSelectionDrawableId();
-    int getHierarchySelectionDrawableId();
 
 }
