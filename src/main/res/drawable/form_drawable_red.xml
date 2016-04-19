@@ -4,10 +4,10 @@
             android:radius="20dp"
             />
     <solid
-            android:color="@color/UpdateHierarchyFill"
+            android:color="@color/RedFill"
             />
     <stroke
             android:width="3dp"
-            android:color="@color/UpdateHierarchyBorder"
+            android:color="@color/RedBorder"
             />
 </shape>

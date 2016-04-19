@@ -155,21 +155,10 @@
     <color name="DarkerAcidGray">#222222</color>
     <color name="CustomMediumGray">#adadad</color>
 
-    <color name="CensusHierarchyBorder">#271674</color>
-    <color name="CensusHierarchyFill">#43309A</color>
-    <color name="CensusHierarchyFillPressed">#6757B1</color>
-    <color name="CensusDataBorder">#271674</color>
-    <color name="CensusDataFill">#B343309A</color>
-    <color name="CensusDataFillPressed">#B36757B1</color>
-    <color name="CensusMiddleColumnFill">#4DA599D9</color>
-
-    <color name="UpdateHierarchyBorder">#A30C1B</color>
-    <color name="UpdateHierarchyFill">#D72E3E</color>
-    <color name="UpdateHierarchyFillPressed">#F76775</color>
-    <color name="UpdateDataBorder">#A30C1B</color>
-    <color name="UpdateDataFill">#B3D72E3E</color>
-    <color name="UpdateDataFillPressed">#B3F76775</color>
-    <color name="UpdateMiddleColumnFill">#4DFBA6AE</color>
+    <color name="RedBorder">#A30C1B</color>
+    <color name="RedFill">#D72E3E</color>
+    <color name="RedFillPressed">#F76775</color>
+    <color name="RedFillMissing">#B3D72E3E</color>
 
     <color name="BiokoHierarchyBorder">#218D0B</color>
     <color name="BiokoHierarchyFill">#41BA28</color>

@@ -101,7 +101,7 @@ public class FormSearchActivity extends Activity {
 
         private static final int LABEL_COLOR = R.color.BiokoDataFill;
         private static final int VALUE_COLOR = R.color.BiokoDataBorder;
-        private static final int MISSING_COLOR = R.color.UpdateDataFill;
+        private static final int MISSING_COLOR = R.color.RedFillMissing;
 
         public SearchPluginListAdapter(Context context, int resource, List<FormSearchPluginModule> objects) {
             super(context, resource, objects);
