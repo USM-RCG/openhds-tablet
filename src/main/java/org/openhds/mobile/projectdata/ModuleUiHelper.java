@@ -16,6 +16,5 @@ public interface ModuleUiHelper {
     int getModuleTitleStringId();
     int getDataSelectionDrawableId();
     int getHierarchySelectionDrawableId();
-    int getMiddleColumnDrawableId();
 
 }

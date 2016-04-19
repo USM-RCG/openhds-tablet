@@ -84,11 +84,6 @@ public class ProjectActivityBuilder {
             public int getHierarchySelectionDrawableId() {
                 return R.drawable.bioko_hierarchy_selector;
             }
-
-            @Override
-            public int getMiddleColumnDrawableId() {
-                return R.drawable.bioko_middle_column_drawable;
-            }
         }
 
         static {
@@ -190,11 +185,6 @@ public class ProjectActivityBuilder {
             @Override
             public int getHierarchySelectionDrawableId() {
                 return R.drawable.census_hierarchy_selector;
-            }
-
-            @Override
-            public int getMiddleColumnDrawableId() {
-                return R.drawable.census_middle_column_drawable;
             }
         }
 
@@ -321,10 +311,6 @@ public class ProjectActivityBuilder {
                 return R.drawable.update_hierarchy_selector;
             }
 
-            @Override
-            public int getMiddleColumnDrawableId() {
-                return R.drawable.update_middle_column_drawable;
-            }
         }
 
 
