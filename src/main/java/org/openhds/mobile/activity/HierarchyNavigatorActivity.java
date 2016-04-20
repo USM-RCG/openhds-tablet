@@ -78,7 +78,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     private static final String HIERARCHY_PATH_VALUES = "hierarchyPathValues";
     private static final String CURRENT_RESULTS_KEY = "currentResults";
 
-    NavigatePluginModule builder;
+    private NavigatePluginModule builder;
 
     private FormHelper formHelper;
     private StateMachine stateMachine;
