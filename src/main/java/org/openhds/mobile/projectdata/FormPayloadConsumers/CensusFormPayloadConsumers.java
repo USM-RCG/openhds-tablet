@@ -9,11 +9,11 @@ import org.openhds.mobile.model.core.LocationHierarchy;
 import org.openhds.mobile.model.core.Membership;
 import org.openhds.mobile.model.core.Relationship;
 import org.openhds.mobile.model.core.SocialGroup;
+import org.openhds.mobile.model.form.FormBehavior;
 import org.openhds.mobile.model.update.Visit;
 import org.openhds.mobile.projectdata.FormAdapters.IndividualFormAdapter;
 import org.openhds.mobile.projectdata.FormAdapters.LocationFormAdapter;
 import org.openhds.mobile.projectdata.FormAdapters.VisitFormAdapter;
-import org.openhds.mobile.projectdata.ProjectActivityBuilder;
 import org.openhds.mobile.projectdata.ProjectFormFields;
 import org.openhds.mobile.projectdata.ProjectResources;
 import org.openhds.mobile.repository.DataWrapper;
@@ -120,7 +120,11 @@ public class CensusFormPayloadConsumers {
         }
     }
 
-    public static class AddMemberOfHousehold implements FormPayloadConsumer {
+    public static class AddMemberOfHousehold extends PregnancyPayloadConsumer {
+
+        public AddMemberOfHousehold(FormBehavior followUp) {
+            super(followUp);
+        }
 
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
@@ -160,9 +164,8 @@ public class CensusFormPayloadConsumers {
             Membership membership = new Membership(individual, socialGroup, relationshipType, formPayload.get(ProjectFormFields.Individuals.MEMBERSHIP_UUID));
             membershipGateway.insertOrUpdate(contentResolver, membership);
 
-            ConsumerResults pregnantResults;
-            if(null !=  (pregnantResults = checkIfPregnant(formPayload))){
-                return pregnantResults;
+            if(containsPregnancy(formPayload)){
+                return getPregnancyResult(formPayload);
             }
             return new ConsumerResults(false, null, null);
         }
@@ -174,7 +177,11 @@ public class CensusFormPayloadConsumers {
         }
     }
 
-    public static class AddHeadOfHousehold implements FormPayloadConsumer {
+    public static class AddHeadOfHousehold extends PregnancyPayloadConsumer {
+
+        public AddHeadOfHousehold(FormBehavior followUp) {
+            super(followUp);
+        }
 
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
@@ -220,9 +227,8 @@ public class CensusFormPayloadConsumers {
             Relationship relationship = new Relationship(individual, individual, relationshipType, startDate, formPayload.get(ProjectFormFields.Individuals.RELATIONSHIP_UUID));
             relationshipGateway.insertOrUpdate(contentResolver, relationship);
 
-            ConsumerResults pregnantResults;
-            if(null !=  (pregnantResults = checkIfPregnant(formPayload))){
-                return pregnantResults;
+            if(containsPregnancy(formPayload)) {
+                return getPregnancyResult(formPayload);
             }
             return new ConsumerResults(true, null, null);
         }
@@ -235,42 +241,39 @@ public class CensusFormPayloadConsumers {
 
     }
 
-    public static class EditIndividual implements FormPayloadConsumer {
+    public abstract static class PregnancyPayloadConsumer implements FormPayloadConsumer {
 
-        @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
-                                                  HierarchyNavigatorActivity navigateActivity) {
-            new AddMemberOfHousehold().consumeFormPayload(formPayload,
-                    navigateActivity);
-            return new ConsumerResults(false, null, null);
+        private FormBehavior followUp;
 
+        public PregnancyPayloadConsumer(FormBehavior followUp) {
+            this.followUp = followUp;
         }
 
-        @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
-            // TODO Auto-generated method stub
-
+        protected boolean containsPregnancy(Map<String, String> formPayload) {
+            return "Yes".equals(formPayload.get(ProjectFormFields.Individuals.IS_PREGNANT_FLAG));
         }
 
-    }
+        protected ConsumerResults getPregnancyResult(Map<String, String> payload) {
+            return new ConsumerResults(false, followUp, getPregnancyHints(payload));
+        }
 
-    private static ConsumerResults checkIfPregnant(Map<String,String> formPayload){
-
-        String pregnant = formPayload.get(ProjectFormFields.Individuals.IS_PREGNANT_FLAG);
-
-        if(null != pregnant && pregnant.equals("Yes")) {
+        private Map<String, String> getPregnancyHints(Map<String, String> payload) {
             Map<String, String> hints = new HashMap<>();
-            hints.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
-            hints.put(ProjectFormFields.Individuals.INDIVIDUAL_UUID, formPayload.get(ProjectFormFields.General.ENTITY_UUID));
-            hints.put(ProjectFormFields.Locations.LOCATION_EXTID, formPayload.get(ProjectFormFields.General.HOUSEHOLD_STATE_FIELD_NAME));
-            return new ConsumerResults(false, ProjectActivityBuilder.CensusActivityModule.visitPregObFormBehavior, hints);
+            hints.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, payload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
+            hints.put(ProjectFormFields.Individuals.INDIVIDUAL_UUID, payload.get(ProjectFormFields.General.ENTITY_UUID));
+            hints.put(ProjectFormFields.Locations.LOCATION_EXTID, payload.get(ProjectFormFields.General.HOUSEHOLD_STATE_FIELD_NAME));
+            return hints;
         }
-
-        return null;
     }
 
     // Used for Form Launch Sequences
     public static class ChainedVisitForPregnancyObservation implements FormPayloadConsumer {
+
+        private FormBehavior followUp;
+
+        public ChainedVisitForPregnancyObservation(FormBehavior followUp) {
+            this.followUp = followUp;
+        }
 
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
@@ -287,7 +290,7 @@ public class CensusFormPayloadConsumers {
             navigateActivity.getPreviousConsumerResults().getFollowUpFormHints().put(ProjectFormFields.General.ENTITY_UUID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID));
             navigateActivity.getPreviousConsumerResults().getFollowUpFormHints().put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
 
-            return new ConsumerResults(false, ProjectActivityBuilder.CensusActivityModule.pregObFormBehavior, navigateActivity.getPreviousConsumerResults().getFollowUpFormHints());
+            return new ConsumerResults(false, followUp, navigateActivity.getPreviousConsumerResults().getFollowUpFormHints());
         }
 
         @Override

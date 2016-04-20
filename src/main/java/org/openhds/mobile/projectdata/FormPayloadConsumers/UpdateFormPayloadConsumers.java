@@ -8,11 +8,12 @@ import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.model.core.Membership;
 import org.openhds.mobile.model.core.Relationship;
 import org.openhds.mobile.model.core.SocialGroup;
+import org.openhds.mobile.model.form.FormBehavior;
 import org.openhds.mobile.model.update.Visit;
 
 import org.openhds.mobile.projectdata.FormAdapters.IndividualFormAdapter;
 import org.openhds.mobile.projectdata.FormAdapters.VisitFormAdapter;
-import org.openhds.mobile.projectdata.ProjectActivityBuilder;
+import org.openhds.mobile.projectdata.NavigatorConfig;
 import org.openhds.mobile.projectdata.ProjectFormFields;
 import org.openhds.mobile.projectdata.ProjectResources;
 import org.openhds.mobile.repository.DataWrapper;
@@ -135,6 +136,12 @@ public class UpdateFormPayloadConsumers {
 
     public static class AddIndividualFromInMigration implements FormPayloadConsumer {
 
+        private FormBehavior followUp;
+
+        public AddIndividualFromInMigration(FormBehavior followUp) {
+            this.followUp = followUp;
+        }
+
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
                                                   HierarchyNavigatorActivity navigateActivity) {
@@ -190,7 +197,7 @@ public class UpdateFormPayloadConsumers {
             hints.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
             hints.put(ProjectFormFields.Individuals.INDIVIDUAL_UUID, formPayload.get(ProjectFormFields.General.ENTITY_UUID));
             hints.put(ProjectFormFields.Locations.LOCATION_EXTID, formPayload.get(ProjectFormFields.General.HOUSEHOLD_STATE_FIELD_NAME));
-            return new ConsumerResults(false, ProjectActivityBuilder.UpdateActivityModule.externalInMigrationFormBehavior, hints);
+            return new ConsumerResults(false, followUp, hints);
         }
 
         @Override

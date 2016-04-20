@@ -6,7 +6,7 @@ import org.openhds.mobile.model.form.FormBehavior;
 import java.util.List;
 import java.util.Map;
 
-public interface NavigatePluginModule {
+public interface NavigatorModule {
 
     String getLaunchLabel();
 

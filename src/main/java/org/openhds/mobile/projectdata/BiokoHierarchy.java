@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Defines the "hierarchy" for the {@link ProjectActivityBuilder}'s
- * {@link NavigatePluginModule}s. It is simply the list of state names, state
+ * Defines the "hierarchy" for the {@link NavigatorConfig}'s
+ * {@link NavigatorModule}s. It is simply the list of state names, state
  * labels (for UI), and state sequence.
  */
 public class BiokoHierarchy implements HierarchyInfo {

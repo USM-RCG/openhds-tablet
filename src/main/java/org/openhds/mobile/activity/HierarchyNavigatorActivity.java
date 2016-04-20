@@ -28,8 +28,8 @@ import org.openhds.mobile.model.update.Visit;
 import org.openhds.mobile.projectdata.FormPayloadBuilders.LaunchContext;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.ConsumerResults;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.FormPayloadConsumer;
-import org.openhds.mobile.projectdata.NavigatePluginModule;
-import org.openhds.mobile.projectdata.ProjectActivityBuilder;
+import org.openhds.mobile.projectdata.NavigatorConfig;
+import org.openhds.mobile.projectdata.NavigatorModule;
 import org.openhds.mobile.projectdata.QueryHelpers.CensusQueryHelper;
 import org.openhds.mobile.projectdata.QueryHelpers.QueryHelper;
 import org.openhds.mobile.provider.DatabaseAdapter;
@@ -79,7 +79,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     private static final String HIERARCHY_PATH_VALUES = "hierarchyPathValues";
     private static final String CURRENT_RESULTS_KEY = "currentResults";
 
-    private NavigatePluginModule builder;
+    private NavigatorModule currentModule;
 
     private FormHelper formHelper;
     private StateMachine stateMachine;
@@ -109,7 +109,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
         try {
 
-            builder = ProjectActivityBuilder.Module.valueOf(currentModuleName).newInstance();
+            currentModule = NavigatorConfig.getInstance().getModule(currentModuleName);
             hierarchyPath = new HashMap<>();
             formHelper = new FormHelper(this);
             stateMachine = new StateMachine(new HashSet<>(getStateSequence()), getStateSequence().get(0));
@@ -183,15 +183,15 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                 setCurrentVisit((Visit) savedInstanceState.get(VISIT_KEY));
             }
 
-            setActivityVisualTheme(builder);
+            configure(currentModule);
 
         } catch (Exception e) {
             Log.e(TAG, "failed to create navigation module by name " + currentModuleName, e);
         }
     }
 
-    // Takes in a NavigatePluginModule's (builder) ModuleUiHelper and sets all the fragment's drawables
-    private void setActivityVisualTheme(NavigatePluginModule module){
+    // Sets all the fragment's drawables based on the configured module
+    private void configure(NavigatorModule module){
         setTitle(module.getActivityTitle());
         hierarchyButtonFragment.setHiearchySelectionDrawableId(R.drawable.data_selector);
         valueFragment.setDataSelectionDrawableId(R.drawable.data_selector);
@@ -230,20 +230,12 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         menuItemTags = new HashMap<>();
 
         // Configures the menu for switching between inactive modules (ones other than the 'current' one)
-        String currentHierarchy = builder.getHierarchyInfo().getHierarchyName();
-        for(ProjectActivityBuilder.Module module : ProjectActivityBuilder.Module.values()){
-            try {
-                NavigatePluginModule instance = module.newInstance();
-                // If the module matches the current module's hierarchy...
-                if(instance.getHierarchyInfo().getHierarchyName().equals(currentHierarchy) && !module.name().equals(currentModuleName)){
-                    // ...add a menu item and give it a tag for the click handler
-                    MenuItem menuItem = menu.add(instance.getActivityTitle());
-                    menuItem.setIcon(R.drawable.data_selector);
-                    menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-                    menuItemTags.put(menuItem, module.name());
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "failed to create options menu for module " + module.name(), e);
+        for (NavigatorModule module : NavigatorConfig.getInstance().getModules()) {
+            if (!module.getActivityTitle().equals(currentModuleName)) {
+                MenuItem menuItem = menu.add(module.getActivityTitle());
+                menuItem.setIcon(R.drawable.data_selector);
+                menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                menuItemTags.put(menuItem, module.getActivityTitle());
             }
         }
         return super.onCreateOptionsMenu(menu);
@@ -380,12 +372,12 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
     @Override
     public Map<String, Integer> getStateLabels() {
-        return builder.getHierarchyInfo().getStateLabels();
+        return currentModule.getHierarchyInfo().getStateLabels();
     }
 
     @Override
     public List<String> getStateSequence() {
-        return builder.getHierarchyInfo().getStateSequence();
+        return currentModule.getHierarchyInfo().getStateSequence();
     }
 
     @Override
@@ -513,7 +505,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
     private DetailFragment getDetailFragmentForCurrentState() {
 
-        if (null != (detailFragment = builder.getDetailFragsForStates().get(getState()))) {
+        if (null != (detailFragment = currentModule.getDetailFragsForStates().get(getState()))) {
             return detailFragment;
         }
         return defaultDetailFragment;
@@ -524,7 +516,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     private void updateToggleButton() {
-        if (null != builder.getDetailFragsForStates().get(getState()) && !shouldShowDetailFragment()) {
+        if (null != currentModule.getDetailFragsForStates().get(getState()) && !shouldShowDetailFragment()) {
 
             detailToggleFragment.setButtonEnabled(true);
             if (!valueFragment.isAdded()) {
@@ -688,7 +680,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                 hierarchyButtonFragment.setButtonAllowed(state, true);
             }
 
-            List<FormBehavior> filteredForms = builder.getFormsForState(state);
+            List<FormBehavior> filteredForms = currentModule.getFormsForState(state);
             List<FormBehavior> validForms = new ArrayList<>();
 
             for (FormBehavior form : filteredForms) {

@@ -3,11 +3,10 @@ package org.openhds.mobile.model.form;
 import org.openhds.mobile.projectdata.FormFilters.FormFilter;
 import org.openhds.mobile.projectdata.FormPayloadBuilders.FormPayloadBuilder;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.FormPayloadConsumer;
+import org.openhds.mobile.projectdata.NavigatorConfig;
 import org.openhds.mobile.repository.search.FormSearchPluginModule;
 
 import java.util.ArrayList;
-
-import static org.openhds.mobile.projectdata.ProjectActivityBuilder.getString;
 
 public class FormBehavior {
 
@@ -48,7 +47,7 @@ public class FormBehavior {
     }
 
     public String getLabel() {
-        return getString(labelKey);
+        return NavigatorConfig.getInstance().getString(labelKey);
     }
 
     public FormFilter getFormFilter() {

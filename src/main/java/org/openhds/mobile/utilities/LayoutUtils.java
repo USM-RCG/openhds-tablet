@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.model.form.FormInstance;
-import org.openhds.mobile.projectdata.ProjectActivityBuilder;
+import org.openhds.mobile.projectdata.NavigatorConfig;
 import org.openhds.mobile.projectdata.ProjectFormFields;
 
 import java.io.IOException;
@@ -224,7 +224,7 @@ public class LayoutUtils {
         }
 
         // Set form name
-        String formTypeName = ProjectActivityBuilder.FormType.getLabel(formInstance.getFormName());
+        String formTypeName = NavigatorConfig.getInstance().getFormLabel(formInstance.getFormName());
         TextView formTypeView = (TextView) view.findViewById(R.id.form_instance_list_type);
         formTypeView.setText(formTypeName);
 

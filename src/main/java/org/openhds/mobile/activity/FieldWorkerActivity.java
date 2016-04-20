@@ -3,7 +3,6 @@ package org.openhds.mobile.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,8 +15,8 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
 import org.openhds.mobile.fragment.navigate.FormListFragment;
 import org.openhds.mobile.model.core.FieldWorker;
-import org.openhds.mobile.projectdata.NavigatePluginModule;
-import org.openhds.mobile.projectdata.ProjectActivityBuilder;
+import org.openhds.mobile.projectdata.NavigatorConfig;
+import org.openhds.mobile.projectdata.NavigatorModule;
 
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInstances;
@@ -45,18 +44,11 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
 
         // fill the middle column with a button for each available activity
         LinearLayout activitiesLayout = (LinearLayout) findViewById(R.id.portal_middle_column);
-        for (ProjectActivityBuilder.Module module : ProjectActivityBuilder.Module.values()) {
-            try {
-                NavigatePluginModule instance = module.newInstance();
-                RelativeLayout layout = makeTextWithPayload(this,
-                        instance.getLaunchLabel(), instance.getLaunchDescription(),
-                        module.name(), this, activitiesLayout,
-                        R.drawable.data_selector, null, null,true);
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-                params.setMargins(0, 0, 0, MODULE_SPACING);
-            } catch (Exception e) {
-                Log.e(TAG, "failed to create launcher for module " + module.name(), e);
-            }
+        for (NavigatorModule module : NavigatorConfig.getInstance().getModules()) {
+            RelativeLayout layout = makeTextWithPayload(this, module.getLaunchLabel(), module.getLaunchDescription(),
+                    module.getActivityTitle(), this, activitiesLayout, R.drawable.data_selector, null, null, true);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
+            params.setMargins(0, 0, 0, MODULE_SPACING);
         }
 
         formListFragment = (FormListFragment) getFragmentManager().findFragmentById(R.id.portal_form_list);
