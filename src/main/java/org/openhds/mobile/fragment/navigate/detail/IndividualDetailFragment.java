@@ -123,15 +123,16 @@ public class IndividualDetailFragment extends DetailFragment {
                 individual.getPointOfContactPhoneNumber(),
                 labelColor, valueColor, R.color.NA_Gray));
 
-        // Memberships
-        for (Membership membership : memberships) {
-
-            membershipInfoContainer.addView(makeLargeTextWithValueAndLabel(
-                    getActivity(),
-                    R.string.individual_relationship_to_head_label,
-                    getString(ProjectResources.Relationship.getRelationshipStringId(membership.getRelationshipToHead())),
-                    labelColor, valueColor, R.color.NA_Gray));
-
+        if (!memberships.isEmpty()) {
+            for (Membership membership : memberships) {
+                membershipInfoContainer.addView(makeLargeTextWithValueAndLabel(
+                        getActivity(),
+                        R.string.individual_relationship_to_head_label,
+                        getString(ProjectResources.Relationship.getRelationshipStringId(membership.getRelationshipToHead())),
+                        labelColor, valueColor, R.color.NA_Gray));
+            }
+        } else {
+            membershipInfoContainer.setVisibility(View.GONE);
         }
     }
 
