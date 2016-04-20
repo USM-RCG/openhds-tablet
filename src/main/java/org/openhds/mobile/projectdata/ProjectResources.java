@@ -183,49 +183,4 @@ public class ProjectResources {
 
     }
 
-    public static final class FormType {
-
-        //provides a mapping between JR form id and android string resource id
-        // FIXME: This duplicates the information in ProjectActivityBuilder
-
-        private static final Map<String, Integer> FormType = new HashMap<>();
-
-        private static final String FORM_TYPE_INDIVIDUAL = "individual";
-        private static final String FORM_TYPE_LOCATION = "location";
-        private static final String FORM_TYPE_VISIT = "visit";
-        private static final String FORM_TYPE_IN_MIGRATION = "in_migration";
-        private static final String FORM_TYPE_OUT_MIGRATION = "out_migration";
-        private static final String FORM_TYPE_BED_NET = "bed_net";
-        private static final String FORM_TYPE_DEATH = "death";
-        private static final String FORM_TYPE_PREGNANCY_OBSERVATION = "pregnancy_observation";
-        private static final String FORM_TYPE_PREGNANCY_OUTCOME = "pregnancy_outcome";
-        private static final String FORM_TYPE_LOCATION_EVALUATION = "location_evaluation";
-        private static final String FORM_TYPE_HOUSEHOLD_SPRAYING = "spraying";
-        private static final String FORM_TYPE_SUPER_OJO = "super_ojo";
-        private static final String FORM_TYPE_DUP_LOCATION = "duplicate_location";
-
-        static {
-            FormType.put(FORM_TYPE_INDIVIDUAL, R.string.form_type_individual);
-            FormType.put(FORM_TYPE_LOCATION, R.string.form_type_location);
-            FormType.put(FORM_TYPE_VISIT, R.string.form_type_visit);
-            FormType.put(FORM_TYPE_IN_MIGRATION, R.string.form_type_in_migration);
-            FormType.put(FORM_TYPE_OUT_MIGRATION, R.string.form_type_out_migration);
-            FormType.put(FORM_TYPE_BED_NET, R.string.form_type_bed_net);
-            FormType.put(FORM_TYPE_DEATH, R.string.form_type_death);
-            FormType.put(FORM_TYPE_PREGNANCY_OBSERVATION, R.string.form_type_pregnancy_observation);
-            FormType.put(FORM_TYPE_PREGNANCY_OUTCOME, R.string.form_type_pregnancy_outcome);
-            FormType.put(FORM_TYPE_LOCATION_EVALUATION, R.string.form_type_location_evaluation);
-            FormType.put(FORM_TYPE_HOUSEHOLD_SPRAYING, R.string.form_type_household_spraying);
-            FormType.put(FORM_TYPE_SUPER_OJO, R.string.form_type_super_ojo);
-            FormType.put(FORM_TYPE_DUP_LOCATION, R.string.form_type_dup_location);
-        }
-
-        public static int getFormTypeStringId(String key) {
-            if (FormType.containsKey(key)) {
-                return FormType.get(key);
-            } else {
-                return R.string.form_type_other;
-            }
-        }
-    }
 }

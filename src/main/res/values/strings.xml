@@ -232,21 +232,6 @@
 
     <string name="action_settings">Settings</string>
 
-    <!-- Form Types -->
-    <string name="form_type_other">Other</string>
-    <string name="form_type_individual">Individual</string>
-    <string name="form_type_location">Location</string>
-    <string name="form_type_visit">Visit</string>
-    <string name="form_type_out_migration">Out Migration</string>
-    <string name="form_type_in_migration">In Migration</string>
-    <string name="form_type_bed_net">Bed Net</string>
-    <string name="form_type_death">Death</string>
-    <string name="form_type_location_evaluation">Location Evaluation</string>
-    <string name="form_type_pregnancy_observation">Pregnancy Observation</string>
-    <string name="form_type_pregnancy_outcome">Pregnancy Outcome</string>
-    <string name="form_type_household_spraying">Spraying</string>
-    <string name="form_type_super_ojo">Super Ojo</string>
-    <string name="form_type_dup_location">Dup. Household</string>
     <string name="form_instance_list_header">Recent Forms</string>
     <string name="field_worker_home_menu_text">Field Worker Home</string>
     <string name="logout_menu_text">Logout</string>

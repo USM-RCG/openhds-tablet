@@ -342,4 +342,37 @@ public class ProjectActivityBuilder {
             return formsForState;
         }
     }
+
+    public static final class FormType {
+
+        private static final Map<String, String> labels = new HashMap<>();
+
+        static {
+            String[][] mappings = {
+                    {"individual", "individualFormLabel"},
+                    {"location", "locationFormLabel"},
+                    {"visit", "visitFormLabel"},
+                    {"in_migration", "inMigrationFormLabel"},
+                    {"out_migration", "outMigrationFormLabel"},
+                    {"bed_net", "bedNetFormLabel"},
+                    {"death", "deathFormLabel"},
+                    {"pregnancy_observation", "pregnancyObservationFormLabel"},
+                    {"pregnancy_outcome", "pregnancyOutcomeFormLabel"},
+                    {"location_evaluation", "locationEvaluationFormLabel"},
+                    {"spraying", "sprayingFormLabel"},
+                    {"super_ojo", "superOjoFormLabel"},
+                    {"duplicate_location", "duplicateLocationFormLabel"}};
+            for (String[] mapping : mappings) {
+                labels.put(mapping[0], mapping[1]);
+            }
+        }
+
+        public static String getLabel(String formId) {
+            if (labels.containsKey(formId)) {
+                return getString(labels.get(formId));
+            } else {
+                return formId;
+            }
+        }
+    }
 }
