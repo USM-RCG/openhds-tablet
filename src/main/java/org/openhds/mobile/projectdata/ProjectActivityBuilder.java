@@ -29,8 +29,6 @@ import static org.openhds.mobile.projectdata.BiokoHierarchy.INDIVIDUAL_STATE;
 
 public class ProjectActivityBuilder {
 
-    public static final String ACTIVITY_MODULE_EXTRA = "ACTIVITY_MODULE_EXTRA";
-
     public enum Module {
 
         CENSUS(CensusActivityModule.class),

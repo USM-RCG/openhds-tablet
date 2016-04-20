@@ -105,7 +105,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
         FieldWorker fieldWorker = (FieldWorker) getIntent().getExtras().get(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA);
         setCurrentFieldWorker(fieldWorker);
-        currentModuleName = (String) getIntent().getExtras().get(ProjectActivityBuilder.ACTIVITY_MODULE_EXTRA);
+        currentModuleName = (String) getIntent().getExtras().get(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA);
 
         try {
 
@@ -269,7 +269,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         if(null != menuItemTags.get(item)) {
             intent.setClass(this, HierarchyNavigatorActivity.class);
             intent.putExtra(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA, getCurrentFieldWorker());
-            intent.putExtra(ProjectActivityBuilder.ACTIVITY_MODULE_EXTRA, menuItemTags.get(item));
+            intent.putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, menuItemTags.get(item));
             intent.putParcelableArrayListExtra(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
 
             ArrayList<String> hierarchyPathKeys = new ArrayList<>(hierarchyPath.keySet());

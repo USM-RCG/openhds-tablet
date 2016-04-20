@@ -24,6 +24,8 @@ import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInst
 
 public class FieldWorkerActivity extends Activity implements OnClickListener {
 
+    public static final String ACTIVITY_MODULE_EXTRA = "ACTIVITY_MODULE_EXTRA";
+
     private static final String TAG = FieldWorkerActivity.class.getSimpleName();
     public static final int MODULE_SPACING = 5;
 
@@ -86,7 +88,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
         Intent intent = new Intent(this, HierarchyNavigatorActivity.class);
         intent.putExtra(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA, currentFieldWorker);
         String activityName = (String) v.getTag();
-        intent.putExtra(ProjectActivityBuilder.ACTIVITY_MODULE_EXTRA, activityName);
+        intent.putExtra(ACTIVITY_MODULE_EXTRA, activityName);
         startActivity(intent);
     }
 
