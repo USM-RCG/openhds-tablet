@@ -7,10 +7,12 @@ import org.openhds.mobile.repository.search.FormSearchPluginModule;
 
 import java.util.ArrayList;
 
+import static org.openhds.mobile.projectdata.ProjectActivityBuilder.getString;
+
 public class FormBehavior {
 
     private String formName;
-    private int formLabelId;
+    private String labelKey;
     private FormFilter formFilter;
     private FormPayloadBuilder formPayloadBuilder;
     private FormPayloadConsumer formPayloadConsumer;
@@ -19,22 +21,22 @@ public class FormBehavior {
     private ArrayList<FormSearchPluginModule> formSearchPluginModules;
 
     public FormBehavior(String formName,
-                        int formLabelId,
+                        String labelKey,
                         FormFilter formFilter,
                         FormPayloadBuilder formMapper,
                         FormPayloadConsumer formPayloadConsumer) {
-        this(formName, formLabelId, formFilter, formMapper, formPayloadConsumer, null);
+        this(formName, labelKey, formFilter, formMapper, formPayloadConsumer, null);
     }
 
     public FormBehavior(String formName,
-                        int formLabelId,
+                        String labelKey,
                         FormFilter formFilter,
                         FormPayloadBuilder formMapper,
                         FormPayloadConsumer formPayloadConsumer,
                         ArrayList<FormSearchPluginModule> formSearchPluginModules) {
 
         this.formName = formName;
-        this.formLabelId = formLabelId;
+        this.labelKey = labelKey;
         this.formFilter = formFilter;
         this.formPayloadBuilder = formMapper;
         this.formPayloadConsumer = formPayloadConsumer;
@@ -45,8 +47,8 @@ public class FormBehavior {
         return formName;
     }
 
-    public int getFormLabelId() {
-        return formLabelId;
+    public String getLabel() {
+        return getString(labelKey);
     }
 
     public FormFilter getFormFilter() {

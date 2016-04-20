@@ -11,13 +11,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
 import org.openhds.mobile.fragment.navigate.FormListFragment;
 import org.openhds.mobile.model.core.FieldWorker;
-import org.openhds.mobile.projectdata.ModuleUiHelper;
 import org.openhds.mobile.projectdata.NavigatePluginModule;
 import org.openhds.mobile.projectdata.ProjectActivityBuilder;
 
@@ -48,10 +46,8 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
         for (ProjectActivityBuilder.Module module : ProjectActivityBuilder.Module.values()) {
             try {
                 NavigatePluginModule instance = module.newInstance();
-                ModuleUiHelper moduleInfo = instance.getModuleUiHelper();
                 RelativeLayout layout = makeTextWithPayload(this,
-                        getString(moduleInfo.getModuleLabelStringId()),
-                        getString(moduleInfo.getModuleDescriptionStringId()),
+                        instance.getLaunchLabel(), instance.getLaunchDescription(),
                         module.name(), this, activitiesLayout,
                         R.drawable.data_selector, null, null,true);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();

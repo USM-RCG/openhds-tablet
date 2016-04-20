@@ -93,10 +93,6 @@
     <string name="household_label">Household</string>
     <string name="individual_label">Individual</string>
     <string name="bottom_label">Bottom</string>
-    <string name="create_location">Create new Household</string>
-    <string name="create_head_of_household_label">Create Head of Household</string>
-    <string name="evaluate_location_label">Evaluate Location</string>
-    <string name="add_member_of_household_label">Add Member of Household</string>
     <string name="edit_individual_label">Edit Individual</string>
     <string name="house_of_prefix">House of</string>
 
@@ -232,26 +228,9 @@
     <string name="social_group_member_count">Number of Household Members</string>
 
     <!-- UpdateActivity FormBehavior Labels -->
-    <string name="start_a_visit">Start A Visit</string>
     <string name="finish_visit">Finish Visit</string>
-    <string name="out_migration">Register Out-Migration</string>
-    <string name="register_death">Register a Death</string>
-    <string name="internal_in_migration">Register Internal In-Migration</string>
-    <string name="external_in_migration">Register External In-Migration</string>
-
-    <!-- NavigateModuleInfo Strings -->
-    <string name="census_portal_label">Start Census Activity</string>
-    <string name="census_portal_description">Add new or edit existing data.</string>
 
     <string name="action_settings">Settings</string>
-    <string name="update_portal_label">Start Update Activity</string>
-    <string name="update_portal_description">Conduct visits at locations and update changes since the last visit.</string>
-
-    <!-- Bednet Strings -->
-    <string name="distribute_bednets">Distribute Bednets</string>
-    <string name="spray_household">Record Household Spraying</string>
-    <string name="bioko_portal_label">Start Spraying and Bed Net Activity</string>
-    <string name="bioko_portal_description">Record household IRS spraying and bed net distributions</string>
 
     <!-- Form Types -->
     <string name="form_type_other">Other</string>
@@ -277,11 +256,6 @@
     <string name="supervisor_approve_all"> Approve All </string>
     <string name="supervisor_approve_selected"> Approve Selected </string>
     <string name="sub_district_label">Subdistrict</string>
-    <string name="record_pregnancy_observation">Record a Pregnancy Observation</string>
-    <string name="record_pregnancy_outcome">Record a Pregnancy Outcome</string>
-    <string name="census_activity_title">Census Activity</string>
-    <string name="bioko_activity_title">Bed Net Activity</string>
-    <string name="update_activity_title">Update Activity</string>
     <string name="launching_odk_collect">Launching ODKCollect…</string>
     <string name="delete_button_label">Delete Selected</string>
     <string name="edit_label">Edit</string>
@@ -292,9 +266,6 @@
     <string name="delete_dialog_warning_title">Warning</string>
     <string name="uuid">UUID</string>
     <string name="db_val_age_not_applicable">n/a</string>
-    <string name="super_ojo">Super Ojo</string>
-
-    <string name="duplicate_location">Duplicate Location</string>
     <string name="databaseSync">Sync with CIMS Database</string>
     <string name="form_instance_supervisor_approval">Approve</string>
     <string name="supervisor_checkbox_header">Approved</string>

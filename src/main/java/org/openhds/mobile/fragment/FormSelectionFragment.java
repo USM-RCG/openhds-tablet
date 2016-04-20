@@ -72,13 +72,13 @@ public class FormSelectionFragment extends Fragment {
             FormBehavior form = formListAdapter.getItem(position);
 
             if (convertView == null) {
-                convertView = makeTextWithPayload(getActivity(), getString(form.getFormLabelId()), null,
-                        form.getFormLabelId(), null, null, formSelectionDrawableId, null, null, true);
+                convertView = makeTextWithPayload(getActivity(), form.getLabel(), null,
+                        form.getLabel(), null, null, formSelectionDrawableId, null, null, true);
                 convertView.setPadding(0, 10, 0, 10); // Make the buttons thicker for easier selection
             }
 
             configureTextWithPayload(getActivity(),
-                    (RelativeLayout) convertView, getString(form.getFormLabelId()), null, null, null, true);
+                    (RelativeLayout) convertView, form.getLabel(), null, null, null, true);
 
             return convertView;
         }

@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import static org.openhds.mobile.projectdata.BiokoHierarchy.BOTTOM_STATE;
 import static org.openhds.mobile.projectdata.BiokoHierarchy.HOUSEHOLD_STATE;
@@ -47,52 +48,40 @@ public class ProjectActivityBuilder {
         }
     }
 
+    public static String getString(String key) {
+        return ResourceBundle.getBundle("modulestrings").getString(key);
+    }
+
     // These modules are passed to HierarchyNavigatorActivity and inject it project specific data and hierarchy information
     public static class BiokoActivityModule implements NavigatePluginModule {
 
         private static final Map<String, List<FormBehavior>> formsForStates = new HashMap<>();
         private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<>();
-        public static class BiokoUiHelper implements ModuleUiHelper {
-            @Override
-            public int getModuleLabelStringId() {
-                return R.string.bioko_portal_label;
-            }
-
-            @Override
-            public int getModuleDescriptionStringId() {
-                return R.string.bioko_portal_description;
-            }
-
-            @Override
-            public int getModuleTitleStringId() {
-                return R.string.bioko_activity_title;
-            }
-        }
 
         static {
 
             List<FormBehavior> individualForms = new ArrayList<>();
 
             individualForms.add(new FormBehavior("bed_net",
-                    R.string.distribute_bednets,
+                    "bioko.bednetsLabel",
                     new BiokoFormFilters.DistributeBednets(),
                     new BiokoFormPayloadBuilders.DistributeBednets(),
                     new BiokoFormPayloadConsumers.DistributeBednets()));
 
             individualForms.add(new FormBehavior("spraying",
-                    R.string.spray_household,
+                    "bioko.sprayingLabel",
                     new BiokoFormFilters.SprayHousehold(),
                     new BiokoFormPayloadBuilders.SprayHousehold(),
                     new BiokoFormPayloadConsumers.SprayHousehold()));
 
             individualForms.add(new FormBehavior("super_ojo",
-                    R.string.super_ojo,
+                    "bioko.superOjoLabel",
                     new BiokoFormFilters.SuperOjo(),
                     new BiokoFormPayloadBuilders.SuperOjo(),
                     new BiokoFormPayloadConsumers.SuperOjo()));
 
             individualForms.add(new FormBehavior("duplicate_location",
-                    R.string.duplicate_location,
+                    "bioko.duplicateLocationLabel",
                     new BiokoFormFilters.DuplicateLocation(),
                     new BiokoFormPayloadBuilders.DuplicateLocation(),
                     new BiokoFormPayloadConsumers.DuplicateLocation()));
@@ -106,8 +95,18 @@ public class ProjectActivityBuilder {
         }
 
         @Override
-        public ModuleUiHelper getModuleUiHelper() {
-            return new BiokoUiHelper();
+        public String getLaunchLabel() {
+            return getString("bioko.launchTitle");
+        }
+
+        @Override
+        public String getLaunchDescription() {
+            return getString("bioko.launchDescription");
+        }
+
+        @Override
+        public String getActivityTitle() {
+            return getString("bioko.activityTitle");
         }
 
         @Override
@@ -133,22 +132,6 @@ public class ProjectActivityBuilder {
 
         private static final Map<String, List<FormBehavior>> formsForStates = new HashMap<>();
         private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<>();
-        public static class CensusUiHelper implements ModuleUiHelper {
-            @Override
-            public int getModuleLabelStringId() {
-                return R.string.census_portal_label;
-            }
-
-            @Override
-            public int getModuleDescriptionStringId() {
-                return R.string.census_portal_description;
-            }
-
-            @Override
-            public int getModuleTitleStringId() {
-                return R.string.census_activity_title;
-            }
-        }
 
         public static FormBehavior visitPregObFormBehavior;
 
@@ -156,22 +139,37 @@ public class ProjectActivityBuilder {
 
         public static FormBehavior addLocationFormBehavior;
 
+        @Override
+        public String getLaunchLabel() {
+            return getString("census.launchTitle");
+        }
+
+        @Override
+        public String getLaunchDescription() {
+            return getString("census.launchDescription");
+        }
+
+        @Override
+        public String getActivityTitle() {
+            return getString("census.activityTitle");
+        }
+
         static {
 
             visitPregObFormBehavior = new FormBehavior("visit",
-                    R.string.start_a_visit,
+                    "shared.visitLabel",
                     new UpdateFormFilters.StartAVisit(),
                     new UpdateFormPayloadBuilders.StartAVisit(),
                     new CensusFormPayloadConsumers.ChainedVisitForPregnancyObservation());
 
             pregObFormBehavior = new FormBehavior("pregnancy_observation",
-                    R.string.record_pregnancy_observation,
+                    "shared.pregnancyObservationLabel",
                     new UpdateFormFilters.RecordPregnancyObservation(),
                     new UpdateFormPayloadBuilders.RecordPregnancyObservation(),
                     new CensusFormPayloadConsumers.ChainedPregnancyObservation());
 
             addLocationFormBehavior = new FormBehavior("location",
-                    R.string.create_location,
+                    "census.locationLabel",
                     new CensusFormFilters.AddLocation(),
                     new CensusFormPayloadBuilders.AddLocation(),
                     new CensusFormPayloadConsumers.AddLocation());
@@ -182,19 +180,19 @@ public class ProjectActivityBuilder {
             householdFormList.add(addLocationFormBehavior);
 
             individualFormList.add(new FormBehavior("location_evaluation",
-                    R.string.evaluate_location_label,
+                    "census.evaluateLocationLabel",
                     new CensusFormFilters.EvaluateLocation(),
                     new CensusFormPayloadBuilders.EvaluateLocation(),
                     new CensusFormPayloadConsumers.EvaluateLocation()));
 
             individualFormList.add(new FormBehavior("individual",
-                    R.string.create_head_of_household_label,
+                    "census.headOfHousholdLabel",
                     new CensusFormFilters.AddHeadOfHousehold(),
                     new CensusFormPayloadBuilders.AddHeadOfHousehold(),
                     new CensusFormPayloadConsumers.AddHeadOfHousehold()));
 
             individualFormList.add(new FormBehavior("individual",
-                    R.string.add_member_of_household_label,
+                    "census.householdMemberLabel",
                     new CensusFormFilters.AddMemberOfHousehold(),
                     new CensusFormPayloadBuilders.AddMemberOfHousehold(),
                     new CensusFormPayloadConsumers.AddMemberOfHousehold()));
@@ -211,11 +209,6 @@ public class ProjectActivityBuilder {
         @Override
         public Map<String, DetailFragment> getDetailFragsForStates() {
             return detailFragsForStates;
-        }
-
-        @Override
-        public ModuleUiHelper getModuleUiHelper() {
-            return new CensusUiHelper();
         }
 
         @Override
@@ -236,25 +229,24 @@ public class ProjectActivityBuilder {
 
         private static final Map<String, List<FormBehavior>> formsForStates = new HashMap<>();
         private static final Map<String, DetailFragment> detailFragsForStates = new HashMap<>();
-        public static class UpdateUiHelper implements ModuleUiHelper {
-            @Override
-            public int getModuleLabelStringId() {
-                return R.string.update_portal_label;
-            }
-
-            @Override
-            public int getModuleDescriptionStringId() {
-                return R.string.update_portal_description;
-            }
-
-            @Override
-            public int getModuleTitleStringId() {
-                return R.string.update_activity_title;
-            }
-        }
-
 
         public static FormBehavior externalInMigrationFormBehavior;
+
+
+        @Override
+        public String getLaunchLabel() {
+            return getString("update.launchTitle");
+        }
+
+        @Override
+        public String getLaunchDescription() {
+            return getString("update.launchDescription");
+        }
+
+        @Override
+        public String getActivityTitle() {
+            return getString("update.activityTitle");
+        }
 
         static {
 
@@ -263,7 +255,7 @@ public class ProjectActivityBuilder {
 
             // Start a Visit FormBehavior
             individualFormList.add(new FormBehavior("visit",
-                    R.string.start_a_visit,
+                    "shared.visitLabel",
                     new UpdateFormFilters.StartAVisit(),
                     new UpdateFormPayloadBuilders.StartAVisit(),
                     new UpdateFormPayloadConsumers.StartAVisit()));
@@ -272,45 +264,43 @@ public class ProjectActivityBuilder {
             ArrayList<FormSearchPluginModule> searches = new ArrayList<>();
             searches.add(SearchUtils.getIndividualPlugin(ProjectFormFields.Individuals.INDIVIDUAL_UUID, R.string.search_individual_label));
             individualFormList.add(new FormBehavior("in_migration",
-                    R.string.internal_in_migration,
+                    "update.internalInMigrationLabel",
                     new UpdateFormFilters.RegisterInMigration(),
                     new UpdateFormPayloadBuilders.RegisterInternalInMigration(),
                     new UpdateFormPayloadConsumers.RegisterInMigration(),
                     searches));
 
-
             // Register an External InMigration form (chained after individual form)
-                    externalInMigrationFormBehavior = new FormBehavior("in_migration",
-                    R.string.external_in_migration,
+            externalInMigrationFormBehavior = new FormBehavior("in_migration",
+                    "update.externalInMigrationLabel",
                     new UpdateFormFilters.RegisterInMigration(),
                     new UpdateFormPayloadBuilders.RegisterExternalInMigration(),
                     new UpdateFormPayloadConsumers.RegisterInMigration());
 
-
             // Register an Individual for External InMigration (chained with in_migration form)
             individualFormList.add(new FormBehavior("individual",
-                    R.string.external_in_migration,
+                    "update.externalInMigrationLabel",
                     new UpdateFormFilters.RegisterInMigration(),
                     new UpdateFormPayloadBuilders.AddIndividualFromInMigration(),
                     new UpdateFormPayloadConsumers.AddIndividualFromInMigration()));
 
             // Register an OutMigration FormBehavior
             bottomFormList.add(new FormBehavior("out_migration",
-                    R.string.out_migration,
+                    "update.outMigrationLabel",
                     new UpdateFormFilters.RegisterOutMigration(),
                     new UpdateFormPayloadBuilders.RegisterOutMigration(),
                     new UpdateFormPayloadConsumers.RegisterOutMigration()));
 
             // Register a Death FormBehavior
             bottomFormList.add(new FormBehavior("death",
-                    R.string.register_death,
+                    "update.deathLabel",
                     new UpdateFormFilters.RegisterDeath(),
                     new UpdateFormPayloadBuilders.RegisterDeath(),
                     new UpdateFormPayloadConsumers.RegisterDeath()));
 
             // Register a Pregnancy Observation FormBehavior
             bottomFormList.add(new FormBehavior("pregnancy_observation",
-                    R.string.record_pregnancy_observation,
+                    "shared.pregnancyObservationLabel",
                     new UpdateFormFilters.RecordPregnancyObservation(),
                     new UpdateFormPayloadBuilders.RecordPregnancyObservation(),
                     null));
@@ -319,7 +309,7 @@ public class ProjectActivityBuilder {
             ArrayList<FormSearchPluginModule> daddySearch = new ArrayList<>();
             daddySearch.add(SearchUtils.getIndividualPlugin(ProjectFormFields.PregnancyOutcome.FATHER_UUID, R.string.search_father_label));
             bottomFormList.add(new FormBehavior("pregnancy_outcome",
-                    R.string.record_pregnancy_outcome,
+                    "update.pregnancyOutcomeLabel",
                     new UpdateFormFilters.RecordPregnancyOutcome(),
                     new UpdateFormPayloadBuilders.RecordPregnancyOutcome(),
                     null,
@@ -337,11 +327,6 @@ public class ProjectActivityBuilder {
         @Override
         public Map<String, DetailFragment> getDetailFragsForStates() {
             return detailFragsForStates;
-        }
-
-        @Override
-        public ModuleUiHelper getModuleUiHelper() {
-            return new UpdateUiHelper();
         }
 
         @Override

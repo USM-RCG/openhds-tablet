@@ -85,10 +85,6 @@
     <string name="household_label">Hogar</string>
     <string name="individual_label">Individuo</string>
     <string name="bottom_label">Fondo</string>
-    <string name="create_location">Crear un Domicilio</string>
-    <string name="create_head_of_household_label">Crear Jefe del Hogar </string>
-    <string name="evaluate_location_label">Evaluar la Locación</string>
-    <string name="add_member_of_household_label">Agregar un Miembro del Hogar</string>
     <string name="edit_individual_label">Editar Individuo</string>
     <string name="house_of_prefix">Casa de</string>
 
@@ -195,26 +191,9 @@
     <string name="social_group_member_count">Número de Miembros del Hogar</string>
 
     <!-- UpdateActivity FormBehavior Labels -->
-    <string name="start_a_visit">Empezar la Visita</string>
     <string name="finish_visit">Terminar la Visita</string>
-    <string name="out_migration">Registrar Enmigración del Hogar</string>
-    <string name="register_death">Registrar fallecimiento</string>
-    <string name="internal_in_migration">Registra Inmigración al Hogar (Internal)</string>
-    <string name="external_in_migration">Registra Inmigración al Hogar (External)</string>
-    <string name="record_pregnancy_observation">Registrar observación de embarazo en el hogar</string>
-    <string name="record_pregnancy_outcome">Registrar el resultado del embarazo</string>
 
-    <!-- NavigateModuleInfo Strings -->
-    <string name="census_portal_label">Iniciar Censo</string>
-    <string name="census_portal_description">Agregar o editar dato existense</string>
-
-    <string name="update_portal_label">Iniciar Actualización de Datos</string>
-    <string name="update_portal_description">Realizar visitas en locaciónes y actualizar datos desde la ultima visita</string>
-
-    <!-- Bednet Strings -->
-    <string name="distribute_bednets">Distribuir Telas Mosquiteras</string>
-    <string name="bioko_portal_label">Iniciar Rociamiento o Distribución de Telas Mosquiteras</string>
-    <string name="bioko_portal_description">Registrar la rociamiento de locaciónes o la distribución de telas mosquiteras</string>
+    <string name="action_settings">Configuración</string>
 
     <!-- Form Types -->
     <string name="form_type_other">Otro</string>
@@ -231,8 +210,6 @@
     <string name="form_type_household_spraying">Rociamiento</string>
     <string name="form_type_super_ojo">Super Ojo</string>
 
-    <string name="spray_household">Registrar Rociamiento</string>
-
     <string name="field_worker_home_menu_text">Encuestador Inicio</string>
     <string name="logout_menu_text">Terminar Sesión</string>
     <string name="form_instance_list_header">Formularios Recientes</string>
@@ -243,9 +220,6 @@
     <string name="supervisor_approve_all">Aprobar Todo</string>
     <string name="supervisor_approve_selected">Aprobar Seleccionado</string>
     <string name="sub_district_label">Subdistrito</string>
-    <string name="census_activity_title">Actividad de Censo</string>
-    <string name="bioko_activity_title">Actividad de Rociamiento y Telas</string>
-    <string name="update_activity_title">Actividad Actualización</string>
     <string name="launching_odk_collect">Iniciando ODKCollect…</string>
     <string name="delete_button_label">Eliminar</string>
     <string name="edit_label">Editar</string>
@@ -261,10 +235,7 @@
     <string name="approve_recent_forms_description">Aprobar los impresos desde la última sincronización</string>
     <string name="uuid">UUID</string>
     <string name="db_val_age_not_applicable">n/a</string>
-    <string name="super_ojo">Super Ojo</string>
     <string name="form_type_dup_location">Casa Duplicada</string>
-    <string name="duplicate_location">Casa Duplicada</string>
-    <string name="action_settings">Configuración</string>
     <string name="bad_xml">Error de análisis XML</string>
     <string name="individual_first_name_label">Nombre</string>
     <string name="individual_last_name_label">Apellido</string>

@@ -28,7 +28,6 @@ import org.openhds.mobile.model.update.Visit;
 import org.openhds.mobile.projectdata.FormPayloadBuilders.LaunchContext;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.ConsumerResults;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.FormPayloadConsumer;
-import org.openhds.mobile.projectdata.ModuleUiHelper;
 import org.openhds.mobile.projectdata.NavigatePluginModule;
 import org.openhds.mobile.projectdata.ProjectActivityBuilder;
 import org.openhds.mobile.projectdata.QueryHelpers.CensusQueryHelper;
@@ -184,7 +183,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                 setCurrentVisit((Visit) savedInstanceState.get(VISIT_KEY));
             }
 
-            setActivityVisualTheme(builder.getModuleUiHelper());
+            setActivityVisualTheme(builder);
 
         } catch (Exception e) {
             Log.e(TAG, "failed to create navigation module by name " + currentModuleName, e);
@@ -192,15 +191,13 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     // Takes in a NavigatePluginModule's (builder) ModuleUiHelper and sets all the fragment's drawables
-    private void setActivityVisualTheme(ModuleUiHelper uiHelper){
-
-        setTitle(getString(uiHelper.getModuleTitleStringId()));
+    private void setActivityVisualTheme(NavigatePluginModule module){
+        setTitle(module.getActivityTitle());
         hierarchyButtonFragment.setHiearchySelectionDrawableId(R.drawable.data_selector);
         valueFragment.setDataSelectionDrawableId(R.drawable.data_selector);
         formFragment.setFormSelectionDrawableId(R.drawable.form_selector);
         View middleColumn = findViewById(R.id.middle_column);
         middleColumn.setBackgroundResource(R.drawable.gray_middle_column_drawable);
-
     }
 
     @Override
@@ -239,9 +236,8 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                 NavigatePluginModule instance = module.newInstance();
                 // If the module matches the current module's hierarchy...
                 if(instance.getHierarchyInfo().getHierarchyName().equals(currentHierarchy) && !module.name().equals(currentModuleName)){
-                    ModuleUiHelper uiHelper = instance.getModuleUiHelper();
                     // ...add a menu item and give it a tag for the click handler
-                    MenuItem menuItem = menu.add(uiHelper.getModuleTitleStringId());
+                    MenuItem menuItem = menu.add(instance.getActivityTitle());
                     menuItem.setIcon(R.drawable.data_selector);
                     menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                     menuItemTags.put(menuItem, module.name());
