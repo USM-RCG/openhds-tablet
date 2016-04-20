@@ -5,11 +5,8 @@ import java.util.Map;
 
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
 import org.openhds.mobile.model.form.FormBehavior;
-import org.openhds.mobile.projectdata.QueryHelpers.QueryHelper;
 
 public interface NavigatePluginModule {
-
-	QueryHelper getQueryHelper();
 
     ModuleUiHelper getModuleUiHelper();
 

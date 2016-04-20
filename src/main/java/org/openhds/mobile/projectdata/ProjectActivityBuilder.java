@@ -13,8 +13,6 @@ import org.openhds.mobile.projectdata.FormPayloadBuilders.UpdateFormPayloadBuild
 import org.openhds.mobile.projectdata.FormPayloadConsumers.BiokoFormPayloadConsumers;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.CensusFormPayloadConsumers;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.UpdateFormPayloadConsumers;
-import org.openhds.mobile.projectdata.QueryHelpers.CensusQueryHelper;
-import org.openhds.mobile.projectdata.QueryHelpers.QueryHelper;
 import org.openhds.mobile.repository.search.FormSearchPluginModule;
 import org.openhds.mobile.repository.search.SearchUtils;
 
@@ -105,11 +103,6 @@ public class ProjectActivityBuilder {
             // shown when you click a specific individual which is technically
             // in the bottom state.
             detailFragsForStates.put(BOTTOM_STATE,  new IndividualDetailFragment());
-        }
-
-        @Override
-        public QueryHelper getQueryHelper() {
-            return new CensusQueryHelper();
         }
 
         @Override
@@ -218,11 +211,6 @@ public class ProjectActivityBuilder {
         @Override
         public Map<String, DetailFragment> getDetailFragsForStates() {
             return detailFragsForStates;
-        }
-
-        @Override
-        public QueryHelper getQueryHelper() {
-            return new CensusQueryHelper();
         }
 
         @Override
@@ -349,12 +337,6 @@ public class ProjectActivityBuilder {
         @Override
         public Map<String, DetailFragment> getDetailFragsForStates() {
             return detailFragsForStates;
-        }
-
-        @Override
-        public QueryHelper getQueryHelper() {
-
-            return new CensusQueryHelper();
         }
 
         @Override

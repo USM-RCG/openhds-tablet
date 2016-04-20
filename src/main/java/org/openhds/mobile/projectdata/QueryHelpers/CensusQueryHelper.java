@@ -11,7 +11,15 @@ import org.openhds.mobile.repository.gateway.LocationHierarchyGateway;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.openhds.mobile.projectdata.BiokoHierarchy.*;
+import static org.openhds.mobile.projectdata.BiokoHierarchy.DISTRICT_STATE;
+import static org.openhds.mobile.projectdata.BiokoHierarchy.HOUSEHOLD_STATE;
+import static org.openhds.mobile.projectdata.BiokoHierarchy.INDIVIDUAL_STATE;
+import static org.openhds.mobile.projectdata.BiokoHierarchy.LOCALITY_STATE;
+import static org.openhds.mobile.projectdata.BiokoHierarchy.MAP_AREA_STATE;
+import static org.openhds.mobile.projectdata.BiokoHierarchy.PROVINCE_STATE;
+import static org.openhds.mobile.projectdata.BiokoHierarchy.REGION_STATE;
+import static org.openhds.mobile.projectdata.BiokoHierarchy.SECTOR_STATE;
+import static org.openhds.mobile.projectdata.BiokoHierarchy.SUB_DISTRICT_STATE;
 
 public class CensusQueryHelper implements QueryHelper {
 
@@ -25,7 +33,16 @@ public class CensusQueryHelper implements QueryHelper {
     public static final String MAP_AREA_HIERARCHY_LEVEL_NAME = "MapArea";
     public static final String SECTOR_HIERARCHY_LEVEL_NAME = "Sector";
 
-    public CensusQueryHelper() {}
+    private static QueryHelper instance;
+
+    protected CensusQueryHelper() {}
+
+    public static synchronized QueryHelper getInstance() {
+        if (instance == null) {
+            instance = new CensusQueryHelper();
+        }
+        return instance;
+    }
 
     public List<DataWrapper> getAll(ContentResolver contentResolver, String state) {
         LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();

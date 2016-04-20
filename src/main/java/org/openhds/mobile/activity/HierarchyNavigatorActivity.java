@@ -31,6 +31,8 @@ import org.openhds.mobile.projectdata.FormPayloadConsumers.FormPayloadConsumer;
 import org.openhds.mobile.projectdata.ModuleUiHelper;
 import org.openhds.mobile.projectdata.NavigatePluginModule;
 import org.openhds.mobile.projectdata.ProjectActivityBuilder;
+import org.openhds.mobile.projectdata.QueryHelpers.CensusQueryHelper;
+import org.openhds.mobile.projectdata.QueryHelpers.QueryHelper;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.search.FormSearchPluginModule;
@@ -91,11 +93,16 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     private String currentModuleName;
     private ConsumerResults previousConsumerResults;
 
+    private QueryHelper queryHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.navigate_activity);
+
+        queryHelper = CensusQueryHelper.getInstance();
 
         FieldWorker fieldWorker = (FieldWorker) getIntent().getExtras().get(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA);
         setCurrentFieldWorker(fieldWorker);
@@ -297,7 +304,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         String state = getStateSequence().get(stateIndex);
         if (stateIndex == 0) {
             hierarchyButtonFragment.setButtonAllowed(state, true);
-            currentResults = builder.getQueryHelper().getAll(getContentResolver(), getStateSequence().get(0));
+            currentResults = queryHelper.getAll(getContentResolver(), getStateSequence().get(0));
             updateToggleButton();
 
         } else {
@@ -305,7 +312,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             DataWrapper previousSelection = hierarchyPath.get(previousState);
             currentSelection = previousSelection;
             if(currentResults == null) {
-                currentResults = builder.getQueryHelper().getChildren(getContentResolver(), previousSelection, state);
+                currentResults = queryHelper.getChildren(getContentResolver(), previousSelection, state);
             }
         }
 
@@ -410,13 +417,13 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         // prepare to stepDown() from this target state
         if (0 == targetIndex) {
             // root of the hierarchy
-            currentResults = builder.getQueryHelper().getAll(getContentResolver(), getStateSequence().get(0));
+            currentResults = queryHelper.getAll(getContentResolver(), getStateSequence().get(0));
         } else {
             // middle of the hierarchy
             String previousState = getStateSequence().get(targetIndex - 1);
             DataWrapper previousSelection = hierarchyPath.get(previousState);
             currentSelection = previousSelection;
-            currentResults = builder.getQueryHelper().getChildren(getContentResolver(), previousSelection, targetState);
+            currentResults = queryHelper.getChildren(getContentResolver(), previousSelection, targetState);
         }
         stateMachine.transitionTo(targetState);
 
@@ -437,7 +444,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             String nextState = getStateSequence().get(currentIndex + 1);
 
             currentSelection = selected;
-            currentResults = builder.getQueryHelper().getChildren(getContentResolver(), selected, nextState);
+            currentResults = queryHelper.getChildren(getContentResolver(), selected, nextState);
 
             hierarchyPath.put(currentState, selected);
             stateMachine.transitionTo(nextState);
