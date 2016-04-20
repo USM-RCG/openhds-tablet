@@ -176,6 +176,11 @@
     <color name="GrayListItemFill">#CDCDCC</color>
     <color name="GrayListItemFillPressed">#FAF9F9</color>
     <color name="DetailFragGray">#4D464646</color>
-    <color name="IncompleteForm">#C6C6C6</color>
+    <color name="IncompleteForm">#b3b3b3</color>
+    <color name="IncompleteFormPressed">#bfbfbf</color>
+    <color name="CompleteForm">#FFAA6B</color>
+    <color name="CompleteFormPressed">#ffb780</color>
+    <color name="InvalidForm">#F76775</color>
+    <color name="InvalidFormPressed">#f77c88</color>
 
 </resources>
