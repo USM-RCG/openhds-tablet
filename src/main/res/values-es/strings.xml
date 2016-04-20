@@ -242,7 +242,7 @@
     <string name="supervisor_checkbox_header">Aprobado</string>
     <string name="supervisor_approve_all">Aprobar Todo</string>
     <string name="supervisor_approve_selected">Aprobar Seleccionado</string>
-    <string name="sub_district_label">SubDistrito</string>
+    <string name="sub_district_label">Subdistrito</string>
     <string name="census_activity_title">Actividad de Censo</string>
     <string name="bioko_activity_title">Actividad de Rociamiento y Telas</string>
     <string name="update_activity_title">Actividad Actualización</string>

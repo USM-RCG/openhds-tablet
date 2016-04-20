@@ -276,7 +276,7 @@
 
     <string name="supervisor_approve_all"> Approve All </string>
     <string name="supervisor_approve_selected"> Approve Selected </string>
-    <string name="sub_district_label">SubDistrict</string>
+    <string name="sub_district_label">Subdistrict</string>
     <string name="record_pregnancy_observation">Record a Pregnancy Observation</string>
     <string name="record_pregnancy_outcome">Record a Pregnancy Outcome</string>
     <string name="census_activity_title">Census Activity</string>
