@@ -18,34 +18,6 @@ public class IndividualGatewayTest extends GatewayTest<Individual> {
         this.individualGateway = (IndividualGateway) this.gateway;
     }
 
-    // find individuals with similar ids
-    public void testFindByExtIdPrefix() {
-        Query query = individualGateway.findByExtIdPrefixDescending("TEST");
-        List<Individual> shouldBeEmpty = individualGateway.getList(contentResolver, query);
-        assertEquals(0, shouldBeEmpty.size());
-
-        Individual individual1 = makeTestEntity("TEST1", "test 1");
-        Individual individual2 = makeTestEntity("TEST2", "test 2");
-        Individual individual3 = makeTestEntity("TRIAL3", "test 3");
-
-        individualGateway.insertOrUpdate(contentResolver, individual1);
-        individualGateway.insertOrUpdate(contentResolver, individual2);
-        individualGateway.insertOrUpdate(contentResolver, individual3);
-
-        query = individualGateway.findByExtIdPrefixDescending("DOESNOTEXIST");
-        shouldBeEmpty = individualGateway.getList(contentResolver, query);
-        assertEquals(0, shouldBeEmpty.size());
-
-        query = individualGateway.findByExtIdPrefixDescending("TEST");
-        List<Individual> byPrefix = individualGateway.getList(contentResolver, query);
-        assertEquals(2, byPrefix.size());
-
-        query = individualGateway.findByExtIdPrefixDescending("TRIAL");
-        byPrefix = individualGateway.getList(contentResolver, query);
-        assertEquals(1, byPrefix.size());
-        assertEquals("TRIAL3", byPrefix.get(0).getExtId());
-    }
-
     // find individuals with the same residency
     public void testFindByResidency() {
         Query query = individualGateway.findByResidency("FINDME");

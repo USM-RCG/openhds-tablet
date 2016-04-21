@@ -63,13 +63,12 @@ public class UpdateFormPayloadConsumers {
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
             ContentResolver contentResolver = navigateActivity.getContentResolver();
 
-            String individualExtId = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID);
-            Individual deceasedIndividual = individualGateway.getFirst(contentResolver,
-                    individualGateway.findByExtIdPrefixDescending(individualExtId));
+            String uuid = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID);
+            Individual individual = individualGateway.getFirst(contentResolver, individualGateway.findById(uuid));
 
-            deceasedIndividual.setEndType(ProjectResources.Individual.END_TYPE_DEATH);
+            individual.setEndType(ProjectResources.Individual.END_TYPE_DEATH);
 
-            individualGateway.insertOrUpdate(contentResolver, deceasedIndividual);
+            individualGateway.insertOrUpdate(contentResolver, individual);
 
             return new ConsumerResults(false, null, null);
         }

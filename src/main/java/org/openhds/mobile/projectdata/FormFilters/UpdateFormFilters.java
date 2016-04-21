@@ -60,9 +60,9 @@ public class UpdateFormFilters {
     }
 
     private static Individual getIndividual(LaunchContext ctx) {
-        String extId = ctx.getHierarchyPath().get(INDIVIDUAL_STATE).getExtId();
+        String uuid = ctx.getHierarchyPath().get(INDIVIDUAL_STATE).getUuid();
         IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-        return individualGateway.getFirst(ctx.getContentResolver(), individualGateway.findByExtIdPrefixDescending(extId));
+        return individualGateway.getFirst(ctx.getContentResolver(), individualGateway.findById(uuid));
     }
 
     private static boolean couldObservePregnancy(LaunchContext ctx) {

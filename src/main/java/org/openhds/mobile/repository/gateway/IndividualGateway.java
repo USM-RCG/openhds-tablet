@@ -56,12 +56,6 @@ public class IndividualGateway extends Gateway<Individual> {
                 tableUri, COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, residencyId, COLUMN_INDIVIDUAL_EXTID);
     }
 
-    public Query findByExtIdPrefixDescending(String extIdPrefix) {
-        final String[] columnNames = {COLUMN_INDIVIDUAL_EXTID};
-        final String[] columnValues = {extIdPrefix + LIKE_WILD_CARD};
-        return new Query(tableUri, columnNames, columnValues, COLUMN_INDIVIDUAL_EXTID + " DESC", LIKE);
-    }
-
     private static class IndividualConverter implements Converter<Individual> {
 
         @Override
