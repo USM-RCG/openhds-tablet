@@ -59,6 +59,6 @@ public class FormBehavior {
     }
 
     public boolean getNeedsFormFieldSearch() {
-        return null != formSearchPluginModules && formSearchPluginModules.size() > 0;
+        return searchPluginModules != null && searchPluginModules.size() > 0;
     }
 }
