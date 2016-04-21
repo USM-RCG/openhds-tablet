@@ -31,6 +31,7 @@ import static java.util.ResourceBundle.getBundle;
 import static org.openhds.mobile.navconfig.BiokoHierarchy.BOTTOM_STATE;
 import static org.openhds.mobile.navconfig.BiokoHierarchy.HOUSEHOLD_STATE;
 import static org.openhds.mobile.navconfig.BiokoHierarchy.INDIVIDUAL_STATE;
+import static org.openhds.mobile.navconfig.forms.filters.InvertedFilter.invert;
 
 /**
  * The configuration source for hierarchy navigation, form display and form data binding for the field worker section of
@@ -265,7 +266,7 @@ class CensusModule extends AbstractNavigatorModule {
                 new CensusFormPayloadConsumers.AddHeadOfHousehold(visitPregObFormBehavior)));
 
         individualFormList.add(new FormBehavior("individual", "census.householdMemberLabel",
-                new CensusFormFilters.AddMemberOfHousehold(),
+                invert(new CensusFormFilters.AddHeadOfHousehold()),
                 new CensusFormPayloadBuilders.AddMemberOfHousehold(),
                 new CensusFormPayloadConsumers.AddMemberOfHousehold(visitPregObFormBehavior)));
 

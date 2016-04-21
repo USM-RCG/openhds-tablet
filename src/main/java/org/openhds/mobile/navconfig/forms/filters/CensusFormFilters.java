@@ -28,24 +28,13 @@ public class CensusFormFilters {
         }
     }
 
-    private static boolean hasHeadOfHousehold(LaunchContext ctx) {
-        String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
-        SocialGroupGateway socialGroupGateway = GatewayRegistry.getSocialGroupGateway();
-        return socialGroupGateway.getFirst(ctx.getContentResolver(),
-                socialGroupGateway.findByLocationUuid(locationUuid)) != null;
-    }
-
     public static class AddHeadOfHousehold implements FormFilter {
         @Override
         public boolean shouldDisplay(LaunchContext ctx) {
-            return !hasHeadOfHousehold(ctx);
-        }
-    }
-
-    public static class AddMemberOfHousehold implements FormFilter {
-        @Override
-        public boolean shouldDisplay(LaunchContext ctx) {
-            return hasHeadOfHousehold(ctx);
+            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
+            SocialGroupGateway socialGroupGateway = GatewayRegistry.getSocialGroupGateway();
+            return socialGroupGateway.getFirst(ctx.getContentResolver(),
+                    socialGroupGateway.findByLocationUuid(locationUuid)) == null;
         }
     }
 }
