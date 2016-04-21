@@ -32,6 +32,13 @@ import static org.openhds.mobile.projectdata.BiokoHierarchy.BOTTOM_STATE;
 import static org.openhds.mobile.projectdata.BiokoHierarchy.HOUSEHOLD_STATE;
 import static org.openhds.mobile.projectdata.BiokoHierarchy.INDIVIDUAL_STATE;
 
+/**
+ * The configuration source for hierarchy navigation, form display and form data binding for the field worker section of
+ * the application.
+ *
+ * @see org.openhds.mobile.activity.FieldWorkerActivity
+ * @see org.openhds.mobile.activity.HierarchyNavigatorActivity
+ */
 public class NavigatorConfig {
 
     private static NavigatorConfig instance;
@@ -49,6 +56,9 @@ public class NavigatorConfig {
         initFormLabels();
     }
 
+    /*
+     * Define the navigation modules. They will show up in the interface in the order specified.
+     */
     private void initModules() {
         modules = new LinkedHashMap<>();
         for (NavigatorModule module : asList(new CensusModule(this), new UpdateModule(this), new BiokoModule(this))) {
@@ -56,6 +66,10 @@ public class NavigatorConfig {
         }
     }
 
+    /*
+     * Define the labels to use for rendering stored forms in the UI. It defines the mapping from jr form id to resource
+     * bundle key for the label.
+     */
     private void initFormLabels() {
         formLabels = new HashMap<>();
         String[][] mappings = {
@@ -84,10 +98,21 @@ public class NavigatorConfig {
         return instance;
     }
 
+    /**
+     * Gets all configured navigator modules.
+     *
+     * @return a list of configured {@link NavigatorModule}s in definition order
+     */
     public Collection<NavigatorModule> getModules() {
         return unmodifiableCollection(modules.values());
     }
 
+    /**
+     * Returns the label for the specified form id.
+     *
+     * @param formId the instance id (jrId) of the form
+     * @return the label describing the form type
+     */
     public String getFormLabel(String formId) {
         if (formLabels.containsKey(formId)) {
             return getString(formLabels.get(formId));
@@ -96,6 +121,12 @@ public class NavigatorConfig {
         }
     }
 
+    /**
+     * Get a localized string from the modular {@link java.util.ResourceBundle}.
+     *
+     * @param key the resource key for a localized string
+     * @return the string, localized for the current {@link java.util.Locale}
+     */
     public String getString(String key) {
         return getBundle("modulestrings").getString(key);
     }
@@ -106,6 +137,9 @@ public class NavigatorConfig {
 }
 
 
+/**
+ * Basic functionality for {@NavigatorModules}.
+ */
 abstract class AbstractNavigatorModule implements NavigatorModule {
 
     protected final Map<String, List<FormBehavior>> formsForStates = new HashMap<>();
@@ -116,6 +150,9 @@ abstract class AbstractNavigatorModule implements NavigatorModule {
         this.config = config;
     }
 
+    /*
+     * Forwards localized string lookups to the config from which the module was defined.
+     */
     protected String getString(String key) {
         return config.getString(key);
     }
@@ -177,7 +214,7 @@ class BiokoModule extends AbstractNavigatorModule {
                 new BiokoFormPayloadConsumers.DuplicateLocation()));
 
         formsForStates.put(INDIVIDUAL_STATE, individualForms);
-        detailFragsForStates.put(BOTTOM_STATE,  new IndividualDetailFragment());
+        detailFragsForStates.put(BOTTOM_STATE, new IndividualDetailFragment());
     }
 
     @Override
