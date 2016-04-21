@@ -6,7 +6,6 @@ import org.openhds.mobile.fragment.navigate.detail.IndividualDetailFragment;
 import org.openhds.mobile.model.form.FormBehavior;
 import org.openhds.mobile.projectdata.FormFilters.BiokoFormFilters;
 import org.openhds.mobile.projectdata.FormFilters.CensusFormFilters;
-import org.openhds.mobile.projectdata.FormFilters.NullFilter;
 import org.openhds.mobile.projectdata.FormFilters.UpdateFormFilters;
 import org.openhds.mobile.projectdata.FormPayloadBuilders.BiokoFormPayloadBuilders;
 import org.openhds.mobile.projectdata.FormPayloadBuilders.CensusFormPayloadBuilders;
@@ -241,7 +240,7 @@ class CensusModule extends AbstractNavigatorModule {
         List<FormBehavior> individualFormList = new ArrayList<>();
 
         FormBehavior pregObFormBehavior = new FormBehavior("pregnancy_observation", "shared.pregnancyObservationLabel",
-                new UpdateFormFilters.RecordPregnancyObservation(),
+                new UpdateFormFilters.PregnancyFilter(),
                 new UpdateFormPayloadBuilders.RecordPregnancyObservation(),
                 new CensusFormPayloadConsumers.ChainedPregnancyObservation());
 
@@ -330,19 +329,19 @@ class UpdateModule extends AbstractNavigatorModule {
 
         // Register an OutMigration FormBehavior
         bottomFormList.add(new FormBehavior("out_migration", "update.outMigrationLabel",
-                new UpdateFormFilters.RegisterOutMigration(),
+                new UpdateFormFilters.DeathOrOutMigrationFilter(),
                 new UpdateFormPayloadBuilders.RegisterOutMigration(),
                 new UpdateFormPayloadConsumers.RegisterOutMigration()));
 
         // Register a Death FormBehavior
         bottomFormList.add(new FormBehavior("death", "update.deathLabel",
-                new UpdateFormFilters.RegisterDeath(),
+                new UpdateFormFilters.DeathOrOutMigrationFilter(),
                 new UpdateFormPayloadBuilders.RegisterDeath(),
                 new UpdateFormPayloadConsumers.RegisterDeath()));
 
         // Register a Pregnancy Observation FormBehavior
         bottomFormList.add(new FormBehavior("pregnancy_observation", "shared.pregnancyObservationLabel",
-                new UpdateFormFilters.RecordPregnancyObservation(),
+                new UpdateFormFilters.PregnancyFilter(),
                 new UpdateFormPayloadBuilders.RecordPregnancyObservation(),
                 null));
 
@@ -350,7 +349,7 @@ class UpdateModule extends AbstractNavigatorModule {
         ArrayList<FormSearchPluginModule> daddySearch = new ArrayList<>();
         daddySearch.add(SearchUtils.getIndividualPlugin(ProjectFormFields.PregnancyOutcome.FATHER_UUID, R.string.search_father_label));
         bottomFormList.add(new FormBehavior("pregnancy_outcome", "update.pregnancyOutcomeLabel",
-                new UpdateFormFilters.RecordPregnancyOutcome(),
+                new UpdateFormFilters.PregnancyFilter(),
                 new UpdateFormPayloadBuilders.RecordPregnancyOutcome(),
                 null, daddySearch));
 

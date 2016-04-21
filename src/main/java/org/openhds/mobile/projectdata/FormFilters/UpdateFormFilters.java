@@ -26,14 +26,7 @@ public class UpdateFormFilters {
         }
     }
 
-    public static class RegisterOutMigration implements FormFilter {
-        @Override
-        public boolean shouldDisplay(LaunchContext ctx) {
-            return couldObserveDeathOrOutMigration(ctx);
-        }
-    }
-
-    public static class RegisterDeath implements FormFilter {
+    public static class DeathOrOutMigrationFilter implements FormFilter {
         @Override
         public boolean shouldDisplay(LaunchContext ctx) {
             return couldObserveDeathOrOutMigration(ctx);
@@ -45,14 +38,7 @@ public class UpdateFormFilters {
         return ctx.getCurrentVisit() != null && !isDeceased(indiv) && !isOutMigrated(indiv);
     }
 
-    public static class RecordPregnancyObservation implements FormFilter {
-        @Override
-        public boolean shouldDisplay(LaunchContext ctx) {
-            return couldObservePregnancy(ctx);
-        }
-    }
-
-    public static class RecordPregnancyOutcome implements FormFilter {
+    public static class PregnancyFilter implements FormFilter {
         @Override
         public boolean shouldDisplay(LaunchContext ctx) {
             return couldObservePregnancy(ctx);
