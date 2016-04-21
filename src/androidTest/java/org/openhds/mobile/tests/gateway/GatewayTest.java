@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.test.ProviderTestCase2;
 import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.provider.OpenHDSProvider;
-import org.openhds.mobile.provider.PasswordHelper;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.gateway.Gateway;
 
@@ -21,13 +20,6 @@ public abstract class GatewayTest<T> extends ProviderTestCase2<OpenHDSProvider> 
     protected OpenHDSProvider provider;
     protected ContentResolver contentResolver;
     protected Gateway<T> gateway;
-
-    private class ConstantPasswordHelper implements PasswordHelper {
-        @Override
-        public String getPassword() {
-            return TEST_PASSWORD;
-        }
-    }
 
     // subclass constructor must provide specific gateway implementation
     public GatewayTest(Gateway<T> gateway) {
