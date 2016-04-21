@@ -29,19 +29,16 @@ public class UpdateFormFilters {
     public static class DeathOrOutMigrationFilter implements FormFilter {
         @Override
         public boolean shouldDisplay(LaunchContext ctx) {
-            return couldObserveDeathOrOutMigration(ctx);
+            Individual indiv = getIndividual(ctx);
+            return ctx.getCurrentVisit() != null && !isDeceased(indiv) && !isOutMigrated(indiv);
         }
-    }
-
-    private static boolean couldObserveDeathOrOutMigration(LaunchContext ctx) {
-        Individual indiv = getIndividual(ctx);
-        return ctx.getCurrentVisit() != null && !isDeceased(indiv) && !isOutMigrated(indiv);
     }
 
     public static class PregnancyFilter implements FormFilter {
         @Override
         public boolean shouldDisplay(LaunchContext ctx) {
-            return couldObservePregnancy(ctx);
+            Individual indiv = getIndividual(ctx);
+            return ctx.getCurrentVisit() != null && isFemale(indiv) && !isDeceased(indiv) && !isOutMigrated(indiv);
         }
     }
 
@@ -49,11 +46,6 @@ public class UpdateFormFilters {
         String uuid = ctx.getHierarchyPath().get(INDIVIDUAL_STATE).getUuid();
         IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
         return individualGateway.getFirst(ctx.getContentResolver(), individualGateway.findById(uuid));
-    }
-
-    private static boolean couldObservePregnancy(LaunchContext ctx) {
-        Individual indiv = getIndividual(ctx);
-        return ctx.getCurrentVisit() != null && isFemale(indiv) && !isDeceased(indiv) && !isOutMigrated(indiv);
     }
 
     private static boolean isDeceased(Individual individual) {
