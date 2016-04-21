@@ -88,18 +88,19 @@ public class UpdateFormPayloadConsumers {
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
             Individual individual = individualGateway.getFirst(ctx.getContentResolver(),
                     individualGateway.findById(individualUuid));
-            if (null == individual) {
-                return new ConsumerResults(true, null, null);
+
+            if (individual != null) {
+
+                // update the individual's residency
+                String locationUuid = formPayload.get(ProjectFormFields.Locations.LOCATION_UUID);
+                individual.setCurrentResidenceUuid(locationUuid);
+                individual.setEndType(ProjectResources.Individual.RESIDENCY_END_TYPE_NA);
+                individualGateway.insertOrUpdate(ctx.getContentResolver(), individual);
+
+                // post-fill individual extId into the form for display in UI
+                formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, individual.getExtId());
             }
 
-            // update the individual's residency
-            String locationUuid = formPayload.get(ProjectFormFields.Locations.LOCATION_UUID);
-            individual.setCurrentResidenceUuid(locationUuid);
-            individual.setEndType(ProjectResources.Individual.RESIDENCY_END_TYPE_NA);
-            individualGateway.insertOrUpdate(ctx.getContentResolver(), individual);
-
-            // post-fill individual extId into the form for display in UI
-            formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, individual.getExtId());
             return new ConsumerResults(true, null, null);
         }
 
