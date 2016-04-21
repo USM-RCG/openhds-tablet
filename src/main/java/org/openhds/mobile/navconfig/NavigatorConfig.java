@@ -4,15 +4,15 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
 import org.openhds.mobile.fragment.navigate.detail.IndividualDetailFragment;
 import org.openhds.mobile.model.form.FormBehavior;
-import org.openhds.mobile.navconfig.forms.filters.BiokoFormFilters;
-import org.openhds.mobile.navconfig.forms.filters.CensusFormFilters;
-import org.openhds.mobile.navconfig.forms.filters.UpdateFormFilters;
 import org.openhds.mobile.navconfig.forms.builders.BiokoFormPayloadBuilders;
 import org.openhds.mobile.navconfig.forms.builders.CensusFormPayloadBuilders;
 import org.openhds.mobile.navconfig.forms.builders.UpdateFormPayloadBuilders;
 import org.openhds.mobile.navconfig.forms.consumers.BiokoFormPayloadConsumers;
 import org.openhds.mobile.navconfig.forms.consumers.CensusFormPayloadConsumers;
 import org.openhds.mobile.navconfig.forms.consumers.UpdateFormPayloadConsumers;
+import org.openhds.mobile.navconfig.forms.filters.BiokoFormFilters;
+import org.openhds.mobile.navconfig.forms.filters.CensusFormFilters;
+import org.openhds.mobile.navconfig.forms.filters.UpdateFormFilters;
 import org.openhds.mobile.repository.search.FormSearchPluginModule;
 import org.openhds.mobile.repository.search.SearchUtils;
 
@@ -57,12 +57,23 @@ public class NavigatorConfig {
         initFormLabels();
     }
 
+    private void initModules() {
+        modules = new LinkedHashMap<>();
+        initCoreModules();
+        initExtendedModules();
+    }
+
+    private void initExtendedModules() {
+        for (NavigatorModule module : asList(new BiokoModule(this))) {
+            modules.put(module.getActivityTitle(), module);
+        }
+    }
+
     /*
      * Define the navigation modules. They will show up in the interface in the order specified.
      */
-    private void initModules() {
-        modules = new LinkedHashMap<>();
-        for (NavigatorModule module : asList(new CensusModule(this), new UpdateModule(this), new BiokoModule(this))) {
+    private void initCoreModules() {
+        for (NavigatorModule module : asList(new CensusModule(this), new UpdateModule(this))) {
             modules.put(module.getActivityTitle(), module);
         }
     }
