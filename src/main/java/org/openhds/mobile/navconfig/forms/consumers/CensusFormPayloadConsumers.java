@@ -68,15 +68,11 @@ public class CensusFormPayloadConsumers {
         return location;
     }
 
-    private static Individual insertOrUpdateIndividual(Map<String, String> formPayLoad, LaunchContext navigateActivity) {
-
+    private static Individual insertOrUpdateIndividual(Map<String, String> formPayLoad, ContentResolver contentResolver) {
         Individual individual = IndividualFormAdapter.fromForm(formPayLoad);
         individual.setEndType(ProjectResources.Individual.RESIDENCY_END_TYPE_NA);
-
         IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-        ContentResolver contentResolver = navigateActivity.getContentResolver();
         individualGateway.insertOrUpdate(contentResolver, individual);
-
         return individual;
     }
 
@@ -135,8 +131,7 @@ public class CensusFormPayloadConsumers {
 
             String relationshipType = formPayload
                     .get(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD);
-            Individual individual = insertOrUpdateIndividual(formPayload,
-                    ctx);
+            Individual individual = insertOrUpdateIndividual(formPayload, ctx.getContentResolver());
             String startDate = formPayload
                     .get(ProjectFormFields.General.COLLECTION_DATE_TIME);
 
@@ -190,10 +185,8 @@ public class CensusFormPayloadConsumers {
             String relationshipType = "1";
 
             // Pull out useful strings from the formPayload
-            String startDate = formPayload
-                    .get(ProjectFormFields.General.COLLECTION_DATE_TIME);
-            Individual individual = insertOrUpdateIndividual(formPayload,
-                    ctx);
+            String startDate = formPayload.get(ProjectFormFields.General.COLLECTION_DATE_TIME);
+            Individual individual = insertOrUpdateIndividual(formPayload, ctx.getContentResolver());
 
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
             ContentResolver contentResolver = ctx.getContentResolver();
