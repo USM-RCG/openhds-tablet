@@ -673,6 +673,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
         @Override
         public void onEnterState() {
+
             String state = getState();
             updateButtonLabel(state);
 
