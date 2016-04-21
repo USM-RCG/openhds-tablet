@@ -20,4 +20,6 @@ public interface NavigatorModule {
 
     Map<String, DetailFragment> getDetailFragsForStates();
 
+    Map<String, String> getFormLabels();
+
 }

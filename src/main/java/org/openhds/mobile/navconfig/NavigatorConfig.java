@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.ResourceBundle.getBundle;
@@ -65,7 +64,7 @@ public class NavigatorConfig {
 
     private void initExtendedModules() {
         for (NavigatorModule module : asList(new BiokoModule(this))) {
-            modules.put(module.getActivityTitle(), module);
+            addModule(module);
         }
     }
 
@@ -74,8 +73,12 @@ public class NavigatorConfig {
      */
     private void initCoreModules() {
         for (NavigatorModule module : asList(new CensusModule(this), new UpdateModule(this))) {
-            modules.put(module.getActivityTitle(), module);
+            addModule(module);
         }
+    }
+
+    public void addModule(NavigatorModule module) {
+        modules.put(module.getActivityTitle(), module);
     }
 
     /*
@@ -84,22 +87,8 @@ public class NavigatorConfig {
      */
     private void initFormLabels() {
         formLabels = new HashMap<>();
-        String[][] mappings = {
-                {"individual", "individualFormLabel"},
-                {"location", "locationFormLabel"},
-                {"visit", "visitFormLabel"},
-                {"in_migration", "inMigrationFormLabel"},
-                {"out_migration", "outMigrationFormLabel"},
-                {"bed_net", "bedNetFormLabel"},
-                {"death", "deathFormLabel"},
-                {"pregnancy_observation", "pregnancyObservationFormLabel"},
-                {"pregnancy_outcome", "pregnancyOutcomeFormLabel"},
-                {"location_evaluation", "locationEvaluationFormLabel"},
-                {"spraying", "sprayingFormLabel"},
-                {"super_ojo", "superOjoFormLabel"},
-                {"duplicate_location", "duplicateLocationFormLabel"}};
-        for (String[] mapping : mappings) {
-            formLabels.put(mapping[0], mapping[1]);
+        for (NavigatorModule module : modules.values()) {
+            formLabels.putAll(module.getFormLabels());
         }
     }
 
@@ -154,9 +143,10 @@ public class NavigatorConfig {
  */
 abstract class AbstractNavigatorModule implements NavigatorModule {
 
+    protected final NavigatorConfig config;
     protected final Map<String, List<FormBehavior>> formsForStates = new HashMap<>();
     protected final Map<String, DetailFragment> detailFragsForStates = new HashMap<>();
-    protected final NavigatorConfig config;
+    protected final Map<String, String> formLabels = new HashMap<>();
 
     AbstractNavigatorModule(NavigatorConfig config) {
         this.config = config;
@@ -176,10 +166,22 @@ abstract class AbstractNavigatorModule implements NavigatorModule {
 
     @Override
     public List<FormBehavior> getFormsForState(String state) {
-        List<FormBehavior> formsForState = formsForStates.get(state);
-        if (formsForState == null)
-            formsForState = emptyList();
-        return formsForState;
+        if (formsForStates.get(state) == null) {
+            formsForStates.put(state, new ArrayList<FormBehavior>());
+        }
+        return formsForStates.get(state);
+    }
+
+    public void labelForm(String formId, String labelKey) {
+        formLabels.put(formId, labelKey);
+    }
+
+    public void bindForm(String state, FormBehavior form) {
+        getFormsForState(state).add(form);
+    }
+
+    public void bindDetail(String state, DetailFragment fragment) {
+        detailFragsForStates.put(state, fragment);
     }
 
     /*
@@ -190,6 +192,11 @@ abstract class AbstractNavigatorModule implements NavigatorModule {
     public Map<String, DetailFragment> getDetailFragsForStates() {
         return detailFragsForStates;
     }
+
+    @Override
+    public Map<String, String> getFormLabels() {
+        return formLabels;
+    }
 }
 
 
@@ -199,30 +206,32 @@ class BiokoModule extends AbstractNavigatorModule {
 
         super(config);
 
-        List<FormBehavior> individualForms = new ArrayList<>();
+        labelForm("bed_net", "bedNetFormLabel");
+        labelForm("spraying", "sprayingFormLabel");
+        labelForm("super_ojo", "superOjoFormLabel");
+        labelForm("duplicate_location", "duplicateLocationFormLabel");
 
-        individualForms.add(new FormBehavior("bed_net", "bioko.bednetsLabel",
+        bindForm(INDIVIDUAL_STATE, new FormBehavior("bed_net", "bioko.bednetsLabel",
                 new BiokoFormFilters.DistributeBednets(),
                 new BiokoFormPayloadBuilders.DistributeBednets(),
                 new BiokoFormPayloadConsumers.DistributeBednets()));
 
-        individualForms.add(new FormBehavior("spraying", "bioko.sprayingLabel",
+        bindForm(INDIVIDUAL_STATE, new FormBehavior("spraying", "bioko.sprayingLabel",
                 new BiokoFormFilters.SprayHousehold(),
                 new BiokoFormPayloadBuilders.SprayHousehold(),
                 new BiokoFormPayloadConsumers.SprayHousehold()));
 
-        individualForms.add(new FormBehavior("super_ojo", "bioko.superOjoLabel",
+        bindForm(INDIVIDUAL_STATE, new FormBehavior("super_ojo", "bioko.superOjoLabel",
                 null,
                 new BiokoFormPayloadBuilders.SuperOjo(),
                 null));
 
-        individualForms.add(new FormBehavior("duplicate_location", "bioko.duplicateLocationLabel",
+        bindForm(INDIVIDUAL_STATE, new FormBehavior("duplicate_location", "bioko.duplicateLocationLabel",
                 null,
                 new BiokoFormPayloadBuilders.DuplicateLocation(),
                 null));
 
-        formsForStates.put(INDIVIDUAL_STATE, individualForms);
-        detailFragsForStates.put(BOTTOM_STATE, new IndividualDetailFragment());
+        bindDetail(BOTTOM_STATE, new IndividualDetailFragment());
     }
 
     @Override
@@ -248,8 +257,16 @@ class CensusModule extends AbstractNavigatorModule {
 
         super(config);
 
-        List<FormBehavior> householdFormList = new ArrayList<>();
-        List<FormBehavior> individualFormList = new ArrayList<>();
+        labelForm("location", "locationFormLabel");
+        labelForm("pregnancy_observation", "pregnancyObservationFormLabel");
+        labelForm("visit", "visitFormLabel");
+        labelForm("location_evaluation", "locationEvaluationFormLabel");
+        labelForm("individual", "individualFormLabel");
+
+        bindForm(HOUSEHOLD_STATE, new FormBehavior("location", "census.locationLabel",
+                new CensusFormFilters.AddLocation(),
+                new CensusFormPayloadBuilders.AddLocation(),
+                new CensusFormPayloadConsumers.AddLocation()));
 
         FormBehavior pregObFormBehavior = new FormBehavior("pregnancy_observation", "shared.pregnancyObservationLabel",
                 new UpdateFormFilters.PregnancyFilter(),
@@ -261,29 +278,22 @@ class CensusModule extends AbstractNavigatorModule {
                 new UpdateFormPayloadBuilders.StartAVisit(),
                 new CensusFormPayloadConsumers.ChainedVisitForPregnancyObservation(pregObFormBehavior));
 
-        householdFormList.add(new FormBehavior("location", "census.locationLabel",
-                new CensusFormFilters.AddLocation(),
-                new CensusFormPayloadBuilders.AddLocation(),
-                new CensusFormPayloadConsumers.AddLocation()));
-
-        individualFormList.add(new FormBehavior("location_evaluation", "census.evaluateLocationLabel",
+        bindForm(INDIVIDUAL_STATE, new FormBehavior("location_evaluation", "census.evaluateLocationLabel",
                 new CensusFormFilters.EvaluateLocation(),
                 new CensusFormPayloadBuilders.EvaluateLocation(),
                 new CensusFormPayloadConsumers.EvaluateLocation()));
 
-        individualFormList.add(new FormBehavior("individual", "census.headOfHousholdLabel",
+        bindForm(INDIVIDUAL_STATE, new FormBehavior("individual", "census.headOfHousholdLabel",
                 new CensusFormFilters.AddHeadOfHousehold(),
                 new CensusFormPayloadBuilders.AddHeadOfHousehold(),
                 new CensusFormPayloadConsumers.AddHeadOfHousehold(visitPregObFormBehavior)));
 
-        individualFormList.add(new FormBehavior("individual", "census.householdMemberLabel",
+        bindForm(INDIVIDUAL_STATE, new FormBehavior("individual", "census.householdMemberLabel",
                 invert(new CensusFormFilters.AddHeadOfHousehold()),
                 new CensusFormPayloadBuilders.AddMemberOfHousehold(),
                 new CensusFormPayloadConsumers.AddMemberOfHousehold(visitPregObFormBehavior)));
 
-        formsForStates.put(HOUSEHOLD_STATE, householdFormList);
-        formsForStates.put(INDIVIDUAL_STATE, individualFormList);
-        detailFragsForStates.put(BOTTOM_STATE, new IndividualDetailFragment());
+        bindDetail(BOTTOM_STATE, new IndividualDetailFragment());
     }
 
     @Override
@@ -309,11 +319,16 @@ class UpdateModule extends AbstractNavigatorModule {
 
         super(config);
 
-        List<FormBehavior> individualFormList = new ArrayList<>();
-        List<FormBehavior> bottomFormList = new ArrayList<>();
+        labelForm("visit", "visitFormLabel");
+        labelForm("in_migration", "inMigrationFormLabel");
+        labelForm("individual", "individualFormLabel");
+        labelForm("out_migration", "outMigrationFormLabel");
+        labelForm("death", "deathFormLabel");
+        labelForm("pregnancy_observation", "pregnancyObservationFormLabel");
+        labelForm("pregnancy_outcome", "pregnancyOutcomeFormLabel");
 
         // Start a Visit FormBehavior
-        individualFormList.add(new FormBehavior("visit", "shared.visitLabel",
+        bindForm(INDIVIDUAL_STATE, new FormBehavior("visit", "shared.visitLabel",
                 new UpdateFormFilters.StartAVisit(),
                 new UpdateFormPayloadBuilders.StartAVisit(),
                 new UpdateFormPayloadConsumers.StartAVisit()));
@@ -321,7 +336,7 @@ class UpdateModule extends AbstractNavigatorModule {
         // Register an Internal Inmigration, requires a search to do
         ArrayList<FormSearchPluginModule> searches = new ArrayList<>();
         searches.add(SearchUtils.getIndividualPlugin(ProjectFormFields.Individuals.INDIVIDUAL_UUID, R.string.search_individual_label));
-        individualFormList.add(new FormBehavior("in_migration", "update.internalInMigrationLabel",
+        bindForm(INDIVIDUAL_STATE, new FormBehavior("in_migration", "update.internalInMigrationLabel",
                 new UpdateFormFilters.RegisterInMigration(),
                 new UpdateFormPayloadBuilders.RegisterInternalInMigration(),
                 new UpdateFormPayloadConsumers.RegisterInMigration(),
@@ -334,25 +349,25 @@ class UpdateModule extends AbstractNavigatorModule {
                 new UpdateFormPayloadConsumers.RegisterInMigration());
 
         // Register an Individual for External InMigration (chained with in_migration form)
-        individualFormList.add(new FormBehavior("individual", "update.externalInMigrationLabel",
+        bindForm(INDIVIDUAL_STATE, new FormBehavior("individual", "update.externalInMigrationLabel",
                 new UpdateFormFilters.RegisterInMigration(),
                 new UpdateFormPayloadBuilders.AddIndividualFromInMigration(),
                 new UpdateFormPayloadConsumers.AddIndividualFromInMigration(externalInMigrationFormBehavior)));
 
         // Register an OutMigration FormBehavior
-        bottomFormList.add(new FormBehavior("out_migration", "update.outMigrationLabel",
+        bindForm(BOTTOM_STATE, new FormBehavior("out_migration", "update.outMigrationLabel",
                 new UpdateFormFilters.DeathOrOutMigrationFilter(),
                 new UpdateFormPayloadBuilders.RegisterOutMigration(),
                 new UpdateFormPayloadConsumers.RegisterOutMigration()));
 
         // Register a Death FormBehavior
-        bottomFormList.add(new FormBehavior("death", "update.deathLabel",
+        bindForm(BOTTOM_STATE, new FormBehavior("death", "update.deathLabel",
                 new UpdateFormFilters.DeathOrOutMigrationFilter(),
                 new UpdateFormPayloadBuilders.RegisterDeath(),
                 new UpdateFormPayloadConsumers.RegisterDeath()));
 
         // Register a Pregnancy Observation FormBehavior
-        bottomFormList.add(new FormBehavior("pregnancy_observation", "shared.pregnancyObservationLabel",
+        bindForm(BOTTOM_STATE, new FormBehavior("pregnancy_observation", "shared.pregnancyObservationLabel",
                 new UpdateFormFilters.PregnancyFilter(),
                 new UpdateFormPayloadBuilders.RecordPregnancyObservation(),
                 null));
@@ -360,14 +375,12 @@ class UpdateModule extends AbstractNavigatorModule {
         // Register a Pregnancy OutCome FormBehavior
         ArrayList<FormSearchPluginModule> daddySearch = new ArrayList<>();
         daddySearch.add(SearchUtils.getIndividualPlugin(ProjectFormFields.PregnancyOutcome.FATHER_UUID, R.string.search_father_label));
-        bottomFormList.add(new FormBehavior("pregnancy_outcome", "update.pregnancyOutcomeLabel",
+        bindForm(BOTTOM_STATE, new FormBehavior("pregnancy_outcome", "update.pregnancyOutcomeLabel",
                 new UpdateFormFilters.PregnancyFilter(),
                 new UpdateFormPayloadBuilders.RecordPregnancyOutcome(),
                 null, daddySearch));
 
-        formsForStates.put(INDIVIDUAL_STATE, individualFormList);
-        formsForStates.put(BOTTOM_STATE, bottomFormList);
-        detailFragsForStates.put(BOTTOM_STATE, new IndividualDetailFragment());
+        bindDetail(BOTTOM_STATE, new IndividualDetailFragment());
     }
 
 
