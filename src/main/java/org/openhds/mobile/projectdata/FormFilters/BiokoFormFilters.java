@@ -28,18 +28,4 @@ public class BiokoFormFilters {
                 locationGateway.findById(ctx.getCurrentSelection().getUuid()));
     }
 
-    public static class SuperOjo implements FormFilter {
-        @Override
-        public boolean shouldDisplay(LaunchContext ctx) {
-            return true;
-        }
-    }
-
-    public static class DuplicateLocation implements FormFilter {
-        @Override
-        public boolean shouldDisplay(LaunchContext ctx) {
-            return true;
-        }
-    }
-
 }

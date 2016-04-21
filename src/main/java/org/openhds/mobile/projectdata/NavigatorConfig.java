@@ -6,6 +6,7 @@ import org.openhds.mobile.fragment.navigate.detail.IndividualDetailFragment;
 import org.openhds.mobile.model.form.FormBehavior;
 import org.openhds.mobile.projectdata.FormFilters.BiokoFormFilters;
 import org.openhds.mobile.projectdata.FormFilters.CensusFormFilters;
+import org.openhds.mobile.projectdata.FormFilters.NullFilter;
 import org.openhds.mobile.projectdata.FormFilters.UpdateFormFilters;
 import org.openhds.mobile.projectdata.FormPayloadBuilders.BiokoFormPayloadBuilders;
 import org.openhds.mobile.projectdata.FormPayloadBuilders.CensusFormPayloadBuilders;
@@ -200,12 +201,12 @@ class BiokoModule extends AbstractNavigatorModule {
                 new BiokoFormPayloadConsumers.SprayHousehold()));
 
         individualForms.add(new FormBehavior("super_ojo", "bioko.superOjoLabel",
-                new BiokoFormFilters.SuperOjo(),
+                null,
                 new BiokoFormPayloadBuilders.SuperOjo(),
                 new BiokoFormPayloadConsumers.SuperOjo()));
 
         individualForms.add(new FormBehavior("duplicate_location", "bioko.duplicateLocationLabel",
-                new BiokoFormFilters.DuplicateLocation(),
+                null,
                 new BiokoFormPayloadBuilders.DuplicateLocation(),
                 new BiokoFormPayloadConsumers.DuplicateLocation()));
 

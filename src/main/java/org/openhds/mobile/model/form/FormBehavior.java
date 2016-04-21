@@ -1,6 +1,7 @@
 package org.openhds.mobile.model.form;
 
 import org.openhds.mobile.projectdata.FormFilters.FormFilter;
+import org.openhds.mobile.projectdata.FormFilters.NullFilter;
 import org.openhds.mobile.projectdata.FormPayloadBuilders.FormPayloadBuilder;
 import org.openhds.mobile.projectdata.FormPayloadConsumers.FormPayloadConsumer;
 import org.openhds.mobile.projectdata.NavigatorConfig;
@@ -43,7 +44,7 @@ public class FormBehavior {
     }
 
     public FormFilter getFilter() {
-        return filter;
+        return filter != null ? filter : NullFilter.INSTANCE;
     }
 
     public FormPayloadBuilder getBuilder() {
