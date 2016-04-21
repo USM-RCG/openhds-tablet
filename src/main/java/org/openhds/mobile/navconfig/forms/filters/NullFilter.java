@@ -1,6 +1,6 @@
 package org.openhds.mobile.navconfig.forms.filters;
 
-import org.openhds.mobile.navconfig.forms.builders.LaunchContext;
+import org.openhds.mobile.navconfig.forms.LaunchContext;
 
 /**
  * A default filter implementation to handle case where there should be no filtering.

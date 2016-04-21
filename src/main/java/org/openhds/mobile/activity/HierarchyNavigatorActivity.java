@@ -25,7 +25,7 @@ import org.openhds.mobile.model.form.FormBehavior;
 import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.model.update.Visit;
-import org.openhds.mobile.navconfig.forms.builders.LaunchContext;
+import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.navconfig.forms.consumers.ConsumerResults;
 import org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer;
 import org.openhds.mobile.navconfig.NavigatorConfig;

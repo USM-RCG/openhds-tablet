@@ -1,6 +1,6 @@
 package org.openhds.mobile.navconfig.forms.filters;
 
-import org.openhds.mobile.navconfig.forms.builders.LaunchContext;
+import org.openhds.mobile.navconfig.forms.LaunchContext;
 
 /**
  * Determine the visibility of forms in {@link org.openhds.mobile.activity.HierarchyNavigatorActivity}. These are not

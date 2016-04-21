@@ -1,4 +1,4 @@
-package org.openhds.mobile.navconfig.forms.builders;
+package org.openhds.mobile.navconfig.forms;
 
 import android.content.ContentResolver;
 
