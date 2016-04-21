@@ -25,13 +25,13 @@ import org.openhds.mobile.model.form.FormBehavior;
 import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.model.update.Visit;
-import org.openhds.mobile.navconfig.forms.LaunchContext;
-import org.openhds.mobile.navconfig.forms.consumers.ConsumerResults;
-import org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
 import org.openhds.mobile.navconfig.db.CensusQueryHelper;
 import org.openhds.mobile.navconfig.db.QueryHelper;
+import org.openhds.mobile.navconfig.forms.LaunchContext;
+import org.openhds.mobile.navconfig.forms.consumers.ConsumerResults;
+import org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.search.FormSearchPluginModule;
@@ -571,24 +571,22 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                     associateFormToPath(instance.getFilePath());
                     if (instance.isComplete()) {
                         FormPayloadConsumer consumer = formHelper.getBehavior().getConsumer();
-                        if (consumer != null) {
-                            try {
-                                clearResults();
-                                previousConsumerResults = consumer.consumeFormPayload(formHelper.fetch(), this);
-                                if (previousConsumerResults.needsPostfill()) {
-                                    consumer.postFillFormPayload(formHelper.getData());
-                                    try {
-                                        formHelper.update();
-                                    } catch (IOException ue) {
-                                        showShortToast(this, "Update failed: " + ue.getMessage());
-                                    }
+                        try {
+                            clearResults();
+                            previousConsumerResults = consumer.consumeFormPayload(formHelper.fetch(), this);
+                            if (previousConsumerResults.needsPostfill()) {
+                                consumer.postFillFormPayload(formHelper.getData());
+                                try {
+                                    formHelper.update();
+                                } catch (IOException ue) {
+                                    showShortToast(this, "Update failed: " + ue.getMessage());
                                 }
-                                if (previousConsumerResults.getFollowUpFormBehavior() != null) {
-                                    launchForm(previousConsumerResults.getFollowUpFormBehavior(), previousConsumerResults.getFollowUpFormHints());
-                                }
-                            } catch (IOException e) {
-                                showShortToast(this, "Read failed: " + e.getMessage());
                             }
+                            if (previousConsumerResults.getFollowUpFormBehavior() != null) {
+                                launchForm(previousConsumerResults.getFollowUpFormBehavior(), previousConsumerResults.getFollowUpFormHints());
+                            }
+                        } catch (IOException e) {
+                            showShortToast(this, "Read failed: " + e.getMessage());
                         }
                     }
                     break;

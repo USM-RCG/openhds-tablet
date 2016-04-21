@@ -31,28 +31,21 @@ import static org.openhds.mobile.navconfig.BiokoHierarchy.*;
 
 public class UpdateFormPayloadConsumers {
 
-    public static class StartAVisit implements FormPayloadConsumer {
-
+    public static class StartAVisit extends DefaultConsumer {
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
-
             Visit visit = VisitFormAdapter.fromForm(formPayload);
-
             VisitGateway visitGateway = GatewayRegistry.getVisitGateway();
             ContentResolver contentResolver = ctx.getContentResolver();
             visitGateway.insertOrUpdate(contentResolver, visit);
 
             ctx.startVisit(visit);
 
-            return new ConsumerResults(false, null, null);
-        }
-
-        @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
+            return super.consumeFormPayload(formPayload, ctx);
         }
     }
 
-    public static class RegisterDeath implements FormPayloadConsumer {
+    public static class RegisterDeath extends DefaultConsumer {
 
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
@@ -67,15 +60,11 @@ public class UpdateFormPayloadConsumers {
 
             individualGateway.insertOrUpdate(contentResolver, individual);
 
-            return new ConsumerResults(false, null, null);
-        }
-
-        @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
+            return super.consumeFormPayload(formPayload, ctx);
         }
     }
 
-    public static class RegisterOutMigration implements FormPayloadConsumer {
+    public static class RegisterOutMigration extends DefaultConsumer {
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
             // update the individual's residency end type
@@ -83,18 +72,11 @@ public class UpdateFormPayloadConsumers {
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
             Individual individual = individualGateway.getFirst(ctx.getContentResolver(),
                     individualGateway.findById(individualUuid));
-            if (null == individual) {
-                return new ConsumerResults(false, null, null);
+            if (individual != null) {
+                individual.setEndType(ProjectResources.Individual.RESIDENCY_END_TYPE_OMG);
+                individualGateway.insertOrUpdate(ctx.getContentResolver(), individual);
             }
-
-            individual.setEndType(ProjectResources.Individual.RESIDENCY_END_TYPE_OMG);
-            individualGateway.insertOrUpdate(ctx.getContentResolver(), individual);
-            return new ConsumerResults(false, null, null);
-        }
-
-        @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
-
+            return super.consumeFormPayload(formPayload, ctx);
         }
     }
 
@@ -129,7 +111,7 @@ public class UpdateFormPayloadConsumers {
         }
     }
 
-    public static class AddIndividualFromInMigration implements FormPayloadConsumer {
+    public static class AddIndividualFromInMigration extends DefaultConsumer {
 
         private FormBehavior followUp;
 
@@ -192,13 +174,8 @@ public class UpdateFormPayloadConsumers {
             hints.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
             hints.put(ProjectFormFields.Individuals.INDIVIDUAL_UUID, formPayload.get(ProjectFormFields.General.ENTITY_UUID));
             hints.put(ProjectFormFields.Locations.LOCATION_EXTID, formPayload.get(ProjectFormFields.General.HOUSEHOLD_STATE_FIELD_NAME));
+
             return new ConsumerResults(false, followUp, hints);
         }
-
-        @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
-
-        }
-
     }
 }

@@ -92,13 +92,11 @@ public class CensusFormPayloadConsumers {
         }
     }
 
-    public static class EvaluateLocation implements FormPayloadConsumer {
-
+    public static class EvaluateLocation extends DefaultConsumer {
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-
             Location location = locationGateway.getFirst(ctx.getContentResolver(),
                     locationGateway.findById(ctx.getCurrentSelection().getUuid()));
 
@@ -106,12 +104,7 @@ public class CensusFormPayloadConsumers {
 
             locationGateway.insertOrUpdate(ctx.getContentResolver(), location);
 
-            return new ConsumerResults(false, null, null);
-        }
-
-        @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
-
+            return super.consumeFormPayload(formPayload, ctx);
         }
     }
 
@@ -160,13 +153,8 @@ public class CensusFormPayloadConsumers {
             if(containsPregnancy(formPayload)){
                 return getPregnancyResult(formPayload);
             }
-            return new ConsumerResults(false, null, null);
-        }
 
-        @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
-            // TODO Auto-generated method stub
-
+            return super.consumeFormPayload(formPayload, ctx);
         }
     }
 
@@ -228,7 +216,7 @@ public class CensusFormPayloadConsumers {
 
     }
 
-    public abstract static class PregnancyPayloadConsumer implements FormPayloadConsumer {
+    public abstract static class PregnancyPayloadConsumer extends DefaultConsumer {
 
         private FormBehavior followUp;
 
@@ -254,7 +242,7 @@ public class CensusFormPayloadConsumers {
     }
 
     // Used for Form Launch Sequences
-    public static class ChainedVisitForPregnancyObservation implements FormPayloadConsumer {
+    public static class ChainedVisitForPregnancyObservation extends DefaultConsumer {
 
         private FormBehavior followUp;
 
@@ -266,43 +254,24 @@ public class CensusFormPayloadConsumers {
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             Visit visit = VisitFormAdapter.fromForm(formPayload);
-
             VisitGateway visitGateway = GatewayRegistry.getVisitGateway();
             ContentResolver contentResolver = ctx.getContentResolver();
             visitGateway.insertOrUpdate(contentResolver, visit);
 
             ctx.startVisit(visit);
 
-
             ctx.getPreviousConsumerResults().getFollowUpFormHints().put(ProjectFormFields.General.ENTITY_UUID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID));
             ctx.getPreviousConsumerResults().getFollowUpFormHints().put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
 
             return new ConsumerResults(false, followUp, ctx.getPreviousConsumerResults().getFollowUpFormHints());
         }
-
-        @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
-            // TODO Auto-generated method stub
-
-        }
     }
 
-    public static class ChainedPregnancyObservation implements FormPayloadConsumer {
-
+    public static class ChainedPregnancyObservation extends DefaultConsumer {
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
-
-            // Since this is happening as part of a sequence it made sense to me to automatically close the
-            // visit after completion of the sequence.
             ctx.finishVisit();
-
-            return new ConsumerResults(false, null, null);
+            return super.consumeFormPayload(formPayload, ctx);
         }
-
-        @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
-
-        }
-
     }
 }

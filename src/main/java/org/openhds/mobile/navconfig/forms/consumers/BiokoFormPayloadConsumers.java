@@ -9,13 +9,11 @@ import java.util.Map;
 
 public class BiokoFormPayloadConsumers {
 
-    public static class DistributeBednets implements FormPayloadConsumer {
-
+    public static class DistributeBednets extends DefaultConsumer {
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-
             Location location = locationGateway.getFirst(ctx.getContentResolver(),
                     locationGateway.findById(ctx.getCurrentSelection().getUuid()));
 
@@ -23,15 +21,11 @@ public class BiokoFormPayloadConsumers {
 
             locationGateway.insertOrUpdate(ctx.getContentResolver(), location);
 
-            return new ConsumerResults(false, null, null);
+            return super.consumeFormPayload(formPayload, ctx);
         }
-
-        @Override
-        public void postFillFormPayload(Map<String, String> formPayload) { }
-
     }
 
-    public static class SprayHousehold implements FormPayloadConsumer {
+    public static class SprayHousehold extends DefaultConsumer {
 
         public static final String SPRAY_EVAL_KEY = "evaluation";
 
@@ -39,7 +33,6 @@ public class BiokoFormPayloadConsumers {
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-
             Location location = locationGateway.getFirst(ctx.getContentResolver(),
                     locationGateway.findById(ctx.getCurrentSelection().getUuid()));
 
@@ -49,33 +42,7 @@ public class BiokoFormPayloadConsumers {
 
             locationGateway.insertOrUpdate(ctx.getContentResolver(), location);
 
-            return new ConsumerResults(false, null, null);
+            return super.consumeFormPayload(formPayload, ctx);
         }
-
-        @Override
-        public void postFillFormPayload(Map<String, String> formPayload) { }
-    }
-
-    public static class SuperOjo implements FormPayloadConsumer {
-
-        @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
-            return new ConsumerResults(false, null, null);
-        }
-
-        @Override
-        public void postFillFormPayload(Map<String, String> formPayload) { }
-    }
-
-    public static class DuplicateLocation implements FormPayloadConsumer {
-
-        @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
-            return new ConsumerResults(false, null, null);
-        }
-
-        @Override
-        public void postFillFormPayload(Map<String, String> formPayload) { }
-
     }
 }

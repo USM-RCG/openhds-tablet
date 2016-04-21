@@ -1,10 +1,11 @@
 package org.openhds.mobile.model.form;
 
+import org.openhds.mobile.navconfig.NavigatorConfig;
+import org.openhds.mobile.navconfig.forms.builders.FormPayloadBuilder;
+import org.openhds.mobile.navconfig.forms.consumers.DefaultConsumer;
+import org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer;
 import org.openhds.mobile.navconfig.forms.filters.FormFilter;
 import org.openhds.mobile.navconfig.forms.filters.NullFilter;
-import org.openhds.mobile.navconfig.forms.builders.FormPayloadBuilder;
-import org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer;
-import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.repository.search.FormSearchPluginModule;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class FormBehavior {
     }
 
     public FormPayloadConsumer getConsumer() {
-        return consumer;
+        return consumer != null ? consumer : DefaultConsumer.INSTANCE;
     }
 
     public ArrayList<FormSearchPluginModule> getSearchPluginModules() {

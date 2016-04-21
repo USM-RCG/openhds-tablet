@@ -203,12 +203,12 @@ class BiokoModule extends AbstractNavigatorModule {
         individualForms.add(new FormBehavior("super_ojo", "bioko.superOjoLabel",
                 null,
                 new BiokoFormPayloadBuilders.SuperOjo(),
-                new BiokoFormPayloadConsumers.SuperOjo()));
+                null));
 
         individualForms.add(new FormBehavior("duplicate_location", "bioko.duplicateLocationLabel",
                 null,
                 new BiokoFormPayloadBuilders.DuplicateLocation(),
-                new BiokoFormPayloadConsumers.DuplicateLocation()));
+                null));
 
         formsForStates.put(INDIVIDUAL_STATE, individualForms);
         detailFragsForStates.put(BOTTOM_STATE, new IndividualDetailFragment());
