@@ -684,7 +684,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             List<FormBehavior> validForms = new ArrayList<>();
 
             for (FormBehavior form : filteredForms) {
-                if (form.getFormFilter().amIValid(HierarchyNavigatorActivity.this)) {
+                if (form.getFormFilter().shouldDisplay(HierarchyNavigatorActivity.this)) {
                     validForms.add(form);
                 }
             }
