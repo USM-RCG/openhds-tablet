@@ -2,7 +2,6 @@ package org.openhds.mobile.navconfig.forms.consumers;
 
 import android.content.ContentResolver;
 
-import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.model.core.LocationHierarchy;
@@ -11,6 +10,7 @@ import org.openhds.mobile.model.core.Relationship;
 import org.openhds.mobile.model.core.SocialGroup;
 import org.openhds.mobile.model.form.FormBehavior;
 import org.openhds.mobile.model.update.Visit;
+import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.navconfig.forms.adapters.IndividualFormAdapter;
 import org.openhds.mobile.navconfig.forms.adapters.LocationFormAdapter;
 import org.openhds.mobile.navconfig.forms.adapters.VisitFormAdapter;
@@ -68,8 +68,7 @@ public class CensusFormPayloadConsumers {
         return location;
     }
 
-    private static Individual insertOrUpdateIndividual(
-            Map<String, String> formPayLoad, HierarchyNavigatorActivity navigateActivity) {
+    private static Individual insertOrUpdateIndividual(Map<String, String> formPayLoad, LaunchContext navigateActivity) {
 
         Individual individual = IndividualFormAdapter.fromForm(formPayLoad);
         individual.setEndType(ProjectResources.Individual.RESIDENCY_END_TYPE_NA);
@@ -84,8 +83,8 @@ public class CensusFormPayloadConsumers {
     public static class AddLocation implements FormPayloadConsumer {
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
-            ContentResolver contentResolver = navigateActivity.getContentResolver();
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
+            ContentResolver contentResolver = ctx.getContentResolver();
             ensureLocationSectorExists(formPayload, contentResolver);
             insertOrUpdateLocation(formPayload, contentResolver);
             return new ConsumerResults(true, null, null);
@@ -100,16 +99,16 @@ public class CensusFormPayloadConsumers {
     public static class EvaluateLocation implements FormPayloadConsumer {
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
 
-            Location location = locationGateway.getFirst(navigateActivity.getContentResolver(),
-                    locationGateway.findById(navigateActivity.getCurrentSelection().getUuid()));
+            Location location = locationGateway.getFirst(ctx.getContentResolver(),
+                    locationGateway.findById(ctx.getCurrentSelection().getUuid()));
 
             location.setLocationEvaluationStatus(formPayload.get(ProjectFormFields.Locations.EVALUATION));
 
-            locationGateway.insertOrUpdate(navigateActivity.getContentResolver(), location);
+            locationGateway.insertOrUpdate(ctx.getContentResolver(), location);
 
             return new ConsumerResults(false, null, null);
         }
@@ -127,10 +126,9 @@ public class CensusFormPayloadConsumers {
         }
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
-                                                  HierarchyNavigatorActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
-            Map<String, DataWrapper> hierarchyPath = navigateActivity
+            Map<String, DataWrapper> hierarchyPath = ctx
                     .getHierarchyPath();
             DataWrapper selectedLocation = hierarchyPath
                     .get(HOUSEHOLD_STATE);
@@ -138,13 +136,13 @@ public class CensusFormPayloadConsumers {
             String relationshipType = formPayload
                     .get(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD);
             Individual individual = insertOrUpdateIndividual(formPayload,
-                    navigateActivity);
+                    ctx);
             String startDate = formPayload
                     .get(ProjectFormFields.General.COLLECTION_DATE_TIME);
 
             SocialGroupGateway socialGroupGateway = GatewayRegistry.getSocialGroupGateway();
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-            ContentResolver contentResolver = navigateActivity.getContentResolver();
+            ContentResolver contentResolver = ctx.getContentResolver();
 
             // get head of household by household id
             SocialGroup socialGroup = socialGroupGateway.getFirst(contentResolver,
@@ -184,13 +182,9 @@ public class CensusFormPayloadConsumers {
         }
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
-                                                  HierarchyNavigatorActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
-            Map<String, DataWrapper> hierarchyPath = navigateActivity
-                    .getHierarchyPath();
-            DataWrapper selectedLocation = hierarchyPath
-                    .get(HOUSEHOLD_STATE);
+            DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD_STATE);
 
             // head of the household is always "self" to the head of household
             String relationshipType = "1";
@@ -199,10 +193,10 @@ public class CensusFormPayloadConsumers {
             String startDate = formPayload
                     .get(ProjectFormFields.General.COLLECTION_DATE_TIME);
             Individual individual = insertOrUpdateIndividual(formPayload,
-                    navigateActivity);
+                    ctx);
 
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            ContentResolver contentResolver = navigateActivity.getContentResolver();
+            ContentResolver contentResolver = ctx.getContentResolver();
 
             // Update the name of the location
             Location location = locationGateway.getFirst(contentResolver,
@@ -276,21 +270,21 @@ public class CensusFormPayloadConsumers {
         }
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             Visit visit = VisitFormAdapter.fromForm(formPayload);
 
             VisitGateway visitGateway = GatewayRegistry.getVisitGateway();
-            ContentResolver contentResolver = navigateActivity.getContentResolver();
+            ContentResolver contentResolver = ctx.getContentResolver();
             visitGateway.insertOrUpdate(contentResolver, visit);
 
-            navigateActivity.startVisit(visit);
+            ctx.startVisit(visit);
 
 
-            navigateActivity.getPreviousConsumerResults().getFollowUpFormHints().put(ProjectFormFields.General.ENTITY_UUID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID));
-            navigateActivity.getPreviousConsumerResults().getFollowUpFormHints().put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
+            ctx.getPreviousConsumerResults().getFollowUpFormHints().put(ProjectFormFields.General.ENTITY_UUID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID));
+            ctx.getPreviousConsumerResults().getFollowUpFormHints().put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
 
-            return new ConsumerResults(false, followUp, navigateActivity.getPreviousConsumerResults().getFollowUpFormHints());
+            return new ConsumerResults(false, followUp, ctx.getPreviousConsumerResults().getFollowUpFormHints());
         }
 
         @Override
@@ -303,11 +297,11 @@ public class CensusFormPayloadConsumers {
     public static class ChainedPregnancyObservation implements FormPayloadConsumer {
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             // Since this is happening as part of a sequence it made sense to me to automatically close the
             // visit after completion of the sequence.
-            navigateActivity.finishVisit();
+            ctx.finishVisit();
 
             return new ConsumerResults(false, null, null);
         }

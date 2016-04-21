@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.update.Visit;
+import org.openhds.mobile.navconfig.forms.consumers.ConsumerResults;
 import org.openhds.mobile.repository.DataWrapper;
 
 import java.util.List;
@@ -23,9 +24,16 @@ public interface LaunchContext {
 
     DataWrapper getCurrentSelection();
 
-    Visit getCurrentVisit();
-
     Map<String, DataWrapper> getHierarchyPath();
 
     List<String> getStateSequence();
+
+    void startVisit(Visit v);
+
+    Visit getCurrentVisit();
+
+    void finishVisit();
+
+    ConsumerResults getPreviousConsumerResults();
+
 }

@@ -1,11 +1,13 @@
 package org.openhds.mobile.navconfig.forms.consumers;
 
+import org.openhds.mobile.navconfig.forms.LaunchContext;
+
 import java.util.Map;
 
-import org.openhds.mobile.activity.HierarchyNavigatorActivity;
-
 public interface FormPayloadConsumer {
-	ConsumerResults consumeFormPayload(Map<String, String> formPayload,
-									   HierarchyNavigatorActivity navigateActivity);
-	void postFillFormPayload(Map<String, String> formPayload);
+
+    ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx);
+
+    void postFillFormPayload(Map<String, String> formPayload);
+
 }

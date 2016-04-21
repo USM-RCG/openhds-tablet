@@ -2,7 +2,6 @@ package org.openhds.mobile.navconfig.forms.consumers;
 
 import android.content.ContentResolver;
 
-import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.model.core.Membership;
@@ -11,6 +10,7 @@ import org.openhds.mobile.model.core.SocialGroup;
 import org.openhds.mobile.model.form.FormBehavior;
 import org.openhds.mobile.model.update.Visit;
 
+import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.navconfig.forms.adapters.IndividualFormAdapter;
 import org.openhds.mobile.navconfig.forms.adapters.VisitFormAdapter;
 import org.openhds.mobile.navconfig.ProjectFormFields;
@@ -34,15 +34,15 @@ public class UpdateFormPayloadConsumers {
     public static class StartAVisit implements FormPayloadConsumer {
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             Visit visit = VisitFormAdapter.fromForm(formPayload);
 
             VisitGateway visitGateway = GatewayRegistry.getVisitGateway();
-            ContentResolver contentResolver = navigateActivity.getContentResolver();
+            ContentResolver contentResolver = ctx.getContentResolver();
             visitGateway.insertOrUpdate(contentResolver, visit);
 
-            navigateActivity.startVisit(visit);
+            ctx.startVisit(visit);
 
             return new ConsumerResults(false, null, null);
         }
@@ -55,10 +55,10 @@ public class UpdateFormPayloadConsumers {
     public static class RegisterDeath implements FormPayloadConsumer {
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-            ContentResolver contentResolver = navigateActivity.getContentResolver();
+            ContentResolver contentResolver = ctx.getContentResolver();
 
             String uuid = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID);
             Individual individual = individualGateway.getFirst(contentResolver, individualGateway.findById(uuid));
@@ -77,18 +77,18 @@ public class UpdateFormPayloadConsumers {
 
     public static class RegisterOutMigration implements FormPayloadConsumer {
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
             // update the individual's residency end type
             String individualUuid = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID);
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-            Individual individual = individualGateway.getFirst(navigateActivity.getContentResolver(),
+            Individual individual = individualGateway.getFirst(ctx.getContentResolver(),
                     individualGateway.findById(individualUuid));
             if (null == individual) {
                 return new ConsumerResults(false, null, null);
             }
 
             individual.setEndType(ProjectResources.Individual.RESIDENCY_END_TYPE_OMG);
-            individualGateway.insertOrUpdate(navigateActivity.getContentResolver(), individual);
+            individualGateway.insertOrUpdate(ctx.getContentResolver(), individual);
             return new ConsumerResults(false, null, null);
         }
 
@@ -100,12 +100,12 @@ public class UpdateFormPayloadConsumers {
 
     public static class RegisterInMigration implements FormPayloadConsumer {
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, HierarchyNavigatorActivity navigateActivity) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
             // find the migrating individual
             String individualUuid = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID);
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
             Individual individual = individualGateway.getFirst(
-                    navigateActivity.getContentResolver(),
+                    ctx.getContentResolver(),
                     individualGateway.findById(individualUuid));
             if (null == individual) {
                 return new ConsumerResults(true, null, null);
@@ -115,7 +115,7 @@ public class UpdateFormPayloadConsumers {
             String locationUuid = formPayload.get(ProjectFormFields.Locations.LOCATION_UUID);
             individual.setCurrentResidenceUuid(locationUuid);
             individual.setEndType(ProjectResources.Individual.RESIDENCY_END_TYPE_NA);
-            individualGateway.insertOrUpdate(navigateActivity.getContentResolver(), individual);
+            individualGateway.insertOrUpdate(ctx.getContentResolver(), individual);
 
             // post-fill individual extId into the form for display in UI
             formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, individual.getExtId());
@@ -139,14 +139,14 @@ public class UpdateFormPayloadConsumers {
 
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
-                                                  HierarchyNavigatorActivity navigateActivity) {
+                                                  LaunchContext ctx) {
 
-            Map<String, DataWrapper> hierarchyPath = navigateActivity
+            Map<String, DataWrapper> hierarchyPath = ctx
                     .getHierarchyPath();
             DataWrapper selectedLocation = hierarchyPath
                     .get(HOUSEHOLD_STATE);
 
-            ContentResolver contentResolver = navigateActivity.getContentResolver();
+            ContentResolver contentResolver = ctx.getContentResolver();
 
             String relationshipType = formPayload.get(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD);
 
