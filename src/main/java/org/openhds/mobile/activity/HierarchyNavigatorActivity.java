@@ -27,7 +27,7 @@ import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.model.update.Visit;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
-import org.openhds.mobile.navconfig.db.CensusQueryHelper;
+import org.openhds.mobile.navconfig.db.DefaultQueryHelper;
 import org.openhds.mobile.navconfig.db.QueryHelper;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.navconfig.forms.consumers.ConsumerResults;
@@ -101,7 +101,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
         setContentView(R.layout.navigate_activity);
 
-        queryHelper = CensusQueryHelper.getInstance();
+        queryHelper = DefaultQueryHelper.getInstance();
 
         FieldWorker fieldWorker = (FieldWorker) getIntent().getExtras().get(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA);
         setCurrentFieldWorker(fieldWorker);

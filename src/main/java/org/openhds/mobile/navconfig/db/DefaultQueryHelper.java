@@ -21,7 +21,7 @@ import static org.openhds.mobile.navconfig.BiokoHierarchy.REGION_STATE;
 import static org.openhds.mobile.navconfig.BiokoHierarchy.SECTOR_STATE;
 import static org.openhds.mobile.navconfig.BiokoHierarchy.SUB_DISTRICT_STATE;
 
-public class CensusQueryHelper implements QueryHelper {
+public class DefaultQueryHelper implements QueryHelper {
 
     // These must match the server data.
     // They come from the name column of the locationhierarchylevel table
@@ -35,11 +35,11 @@ public class CensusQueryHelper implements QueryHelper {
 
     private static QueryHelper instance;
 
-    protected CensusQueryHelper() {}
+    protected DefaultQueryHelper() {}
 
     public static synchronized QueryHelper getInstance() {
         if (instance == null) {
-            instance = new CensusQueryHelper();
+            instance = new DefaultQueryHelper();
         }
         return instance;
     }
