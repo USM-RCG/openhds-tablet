@@ -15,8 +15,8 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
 import org.openhds.mobile.fragment.navigate.FormListFragment;
 import org.openhds.mobile.model.core.FieldWorker;
-import org.openhds.mobile.projectdata.NavigatorConfig;
-import org.openhds.mobile.projectdata.NavigatorModule;
+import org.openhds.mobile.navconfig.NavigatorConfig;
+import org.openhds.mobile.navconfig.NavigatorModule;
 
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInstances;

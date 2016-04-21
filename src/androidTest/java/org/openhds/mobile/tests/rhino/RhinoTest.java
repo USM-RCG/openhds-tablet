@@ -7,7 +7,7 @@ import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.openhds.mobile.R;
-import org.openhds.mobile.projectdata.HierarchyInfo;
+import org.openhds.mobile.navconfig.HierarchyInfo;
 
 import java.io.IOException;
 import java.io.InputStream;

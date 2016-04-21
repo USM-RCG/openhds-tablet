@@ -1,10 +1,10 @@
 package org.openhds.mobile.model.form;
 
-import org.openhds.mobile.projectdata.FormFilters.FormFilter;
-import org.openhds.mobile.projectdata.FormFilters.NullFilter;
-import org.openhds.mobile.projectdata.FormPayloadBuilders.FormPayloadBuilder;
-import org.openhds.mobile.projectdata.FormPayloadConsumers.FormPayloadConsumer;
-import org.openhds.mobile.projectdata.NavigatorConfig;
+import org.openhds.mobile.navconfig.forms.filters.FormFilter;
+import org.openhds.mobile.navconfig.forms.filters.NullFilter;
+import org.openhds.mobile.navconfig.forms.builders.FormPayloadBuilder;
+import org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer;
+import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.repository.search.FormSearchPluginModule;
 
 import java.util.ArrayList;

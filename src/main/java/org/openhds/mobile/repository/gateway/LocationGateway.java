@@ -7,7 +7,7 @@ import android.database.Cursor;
 import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.R;
 import org.openhds.mobile.model.core.Location;
-import org.openhds.mobile.projectdata.ProjectResources;
+import org.openhds.mobile.navconfig.ProjectResources;
 import org.openhds.mobile.repository.Converter;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.Query;

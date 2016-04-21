@@ -7,7 +7,7 @@ import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.R;
 import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.model.core.Membership;
-import org.openhds.mobile.projectdata.ProjectResources;
+import org.openhds.mobile.navconfig.ProjectResources;
 import org.openhds.mobile.repository.Converter;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.GatewayRegistry;
@@ -36,8 +36,6 @@ import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS;
 import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_NATIONALITY;
 import static org.openhds.mobile.model.core.Individual.getAgeWithUnits;
 import static org.openhds.mobile.model.core.Individual.getFullName;
-import static org.openhds.mobile.repository.RepositoryUtils.LIKE;
-import static org.openhds.mobile.repository.RepositoryUtils.LIKE_WILD_CARD;
 import static org.openhds.mobile.repository.RepositoryUtils.extractString;
 
 

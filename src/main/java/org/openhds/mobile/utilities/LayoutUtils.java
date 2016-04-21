@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.model.form.FormInstance;
-import org.openhds.mobile.projectdata.NavigatorConfig;
-import org.openhds.mobile.projectdata.ProjectFormFields;
+import org.openhds.mobile.navconfig.NavigatorConfig;
+import org.openhds.mobile.navconfig.ProjectFormFields;
 
 import java.io.IOException;
 import java.util.Map;

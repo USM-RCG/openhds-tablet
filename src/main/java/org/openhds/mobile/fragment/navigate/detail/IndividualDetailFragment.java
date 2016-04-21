@@ -7,7 +7,7 @@ import android.widget.ScrollView;
 import org.openhds.mobile.R;
 import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.model.core.Membership;
-import org.openhds.mobile.projectdata.ProjectResources;
+import org.openhds.mobile.navconfig.ProjectResources;
 
 import static org.openhds.mobile.utilities.LayoutUtils.makeLargeTextWithValueAndLabel;
 import android.os.Bundle;

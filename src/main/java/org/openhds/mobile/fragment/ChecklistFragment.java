@@ -17,8 +17,8 @@ import android.widget.TextView;
 import org.openhds.mobile.R;
 import org.openhds.mobile.adapter.ChecklistAdapter;
 import org.openhds.mobile.model.form.FormInstance;
-import org.openhds.mobile.projectdata.ProjectFormFields;
-import org.openhds.mobile.projectdata.ProjectResources;
+import org.openhds.mobile.navconfig.ProjectFormFields;
+import org.openhds.mobile.navconfig.ProjectResources;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.io.IOException;
