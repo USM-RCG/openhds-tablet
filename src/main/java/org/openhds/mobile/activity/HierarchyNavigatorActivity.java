@@ -680,16 +680,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                 hierarchyButtonFragment.setButtonAllowed(state, true);
             }
 
-            List<FormBehavior> filteredForms = currentModule.getFormsForState(state);
-            List<FormBehavior> validForms = new ArrayList<>();
-
-            for (FormBehavior form : filteredForms) {
-                if (form.getFilter().shouldDisplay(HierarchyNavigatorActivity.this)) {
-                    validForms.add(form);
-                }
-            }
-            updateAttachedForms();
-
             if (shouldShowDetailFragment()) {
                 showDetailFragment();
             } else {
@@ -698,13 +688,19 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             }
             updateToggleButton();
 
-            formFragment.createFormButtons(validForms);
+            List<FormBehavior> formsToDisplay = new ArrayList<>();
+            for (FormBehavior form : currentModule.getFormsForState(state)) {
+                if (form.getFilter().shouldDisplay(HierarchyNavigatorActivity.this)) {
+                    formsToDisplay.add(form);
+                }
+            }
+            updateAttachedForms();
+            formFragment.createFormButtons(formsToDisplay);
         }
 
         @Override
         public void onExitState() {
-            String state = getState();
-            updateButtonLabel(state);
+            updateButtonLabel(getState());
         }
     }
 
