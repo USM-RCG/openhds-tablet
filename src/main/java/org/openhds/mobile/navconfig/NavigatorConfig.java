@@ -139,7 +139,7 @@ public class NavigatorConfig {
 
 
 /**
- * Basic functionality for {@NavigatorModules}.
+ * Basic functionality for {@link NavigatorModule}.
  */
 abstract class AbstractNavigatorModule implements NavigatorModule {
 
