@@ -86,8 +86,7 @@ public class UpdateFormPayloadConsumers {
             // find the migrating individual
             String individualUuid = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID);
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-            Individual individual = individualGateway.getFirst(
-                    ctx.getContentResolver(),
+            Individual individual = individualGateway.getFirst(ctx.getContentResolver(),
                     individualGateway.findById(individualUuid));
             if (null == individual) {
                 return new ConsumerResults(true, null, null);
@@ -120,29 +119,21 @@ public class UpdateFormPayloadConsumers {
         }
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload,
-                                                  LaunchContext ctx) {
+        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
-            Map<String, DataWrapper> hierarchyPath = ctx
-                    .getHierarchyPath();
-            DataWrapper selectedLocation = hierarchyPath
-                    .get(HOUSEHOLD_STATE);
-
+            DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD_STATE);
             ContentResolver contentResolver = ctx.getContentResolver();
 
             String relationshipType = formPayload.get(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD);
 
             // Pull out useful strings from the formPayload
-            String startDate = formPayload
-                    .get(ProjectFormFields.General.COLLECTION_DATE_TIME);
-
+            String startDate = formPayload.get(ProjectFormFields.General.COLLECTION_DATE_TIME);
 
             // insert or update individual
             Individual individual = IndividualFormAdapter.fromForm(formPayload);
             individual.setEndType(ProjectResources.Individual.RESIDENCY_END_TYPE_NA);
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
             individualGateway.insertOrUpdate(contentResolver, individual);
-
 
             // Update the name of the location
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
@@ -152,7 +143,6 @@ public class UpdateFormPayloadConsumers {
             location.setName(locationName);
             selectedLocation.setName(locationName);
             locationGateway.insertOrUpdate(contentResolver, location);
-
 
             // create social group
             SocialGroupGateway socialGroupGateway = GatewayRegistry.getSocialGroupGateway();

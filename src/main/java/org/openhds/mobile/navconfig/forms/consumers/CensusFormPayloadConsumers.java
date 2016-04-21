@@ -117,10 +117,7 @@ public class CensusFormPayloadConsumers {
         @Override
         public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
-            Map<String, DataWrapper> hierarchyPath = ctx
-                    .getHierarchyPath();
-            DataWrapper selectedLocation = hierarchyPath
-                    .get(HOUSEHOLD_STATE);
+            DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD_STATE);
 
             String relationshipType = formPayload
                     .get(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD);
