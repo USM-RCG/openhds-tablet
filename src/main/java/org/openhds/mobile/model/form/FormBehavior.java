@@ -12,34 +12,26 @@ public class FormBehavior {
 
     private String formName;
     private String labelKey;
-    private FormFilter formFilter;
-    private FormPayloadBuilder formPayloadBuilder;
-    private FormPayloadConsumer formPayloadConsumer;
+    private FormFilter filter;
+    private FormPayloadBuilder builder;
+    private FormPayloadConsumer consumer;
 
     // ArrayList, not just List, because of user with Android Parcelable interface.
-    private ArrayList<FormSearchPluginModule> formSearchPluginModules;
+    private ArrayList<FormSearchPluginModule> searchPluginModules;
 
-    public FormBehavior(String formName,
-                        String labelKey,
-                        FormFilter formFilter,
-                        FormPayloadBuilder formMapper,
-                        FormPayloadConsumer formPayloadConsumer) {
-        this(formName, labelKey, formFilter, formMapper, formPayloadConsumer, null);
+    public FormBehavior(String formName, String labelKey, FormFilter filter, FormPayloadBuilder builder,
+                        FormPayloadConsumer consumer) {
+        this(formName, labelKey, filter, builder, consumer, null);
     }
 
-    public FormBehavior(String formName,
-                        String labelKey,
-                        FormFilter formFilter,
-                        FormPayloadBuilder formMapper,
-                        FormPayloadConsumer formPayloadConsumer,
-                        ArrayList<FormSearchPluginModule> formSearchPluginModules) {
-
+    public FormBehavior(String formName, String labelKey, FormFilter filter, FormPayloadBuilder builder, FormPayloadConsumer consumer,
+                        ArrayList<FormSearchPluginModule> searchPluginModules) {
         this.formName = formName;
         this.labelKey = labelKey;
-        this.formFilter = formFilter;
-        this.formPayloadBuilder = formMapper;
-        this.formPayloadConsumer = formPayloadConsumer;
-        this.formSearchPluginModules = formSearchPluginModules;
+        this.filter = filter;
+        this.builder = builder;
+        this.consumer = consumer;
+        this.searchPluginModules = searchPluginModules;
     }
 
     public String getFormName() {
@@ -50,20 +42,20 @@ public class FormBehavior {
         return NavigatorConfig.getInstance().getString(labelKey);
     }
 
-    public FormFilter getFormFilter() {
-        return formFilter;
+    public FormFilter getFilter() {
+        return filter;
     }
 
-    public FormPayloadBuilder getFormPayloadBuilder() {
-        return formPayloadBuilder;
+    public FormPayloadBuilder getBuilder() {
+        return builder;
     }
 
-    public FormPayloadConsumer getFormPayloadConsumer() {
-        return formPayloadConsumer;
+    public FormPayloadConsumer getConsumer() {
+        return consumer;
     }
 
-    public ArrayList<FormSearchPluginModule> getFormSearchPluginModules() {
-        return formSearchPluginModules;
+    public ArrayList<FormSearchPluginModule> getSearchPluginModules() {
+        return searchPluginModules;
     }
 
     public boolean getNeedsFormFieldSearch() {

@@ -454,7 +454,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     private Map<String, String> buildDataWithHints(FormBehavior behavior, Map<String, String> followUpHints) {
-        Map<String, String> formData = behavior.getFormPayloadBuilder().buildPayload(this);
+        Map<String, String> formData = behavior.getBuilder().buildPayload(this);
         if(followUpHints != null){
             formData.putAll(followUpHints);
         }
@@ -472,7 +472,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
     private void launchSearch() {
         Intent intent = new Intent(this, FormSearchActivity.class);
-        ArrayList<FormSearchPluginModule> searchModules = formHelper.getBehavior().getFormSearchPluginModules();
+        ArrayList<FormSearchPluginModule> searchModules = formHelper.getBehavior().getSearchPluginModules();
         intent.putParcelableArrayListExtra(FormSearchActivity.FORM_SEARCH_PLUGINS_KEY, searchModules);
         startActivityForResult(intent, SEARCH_ACTIVITY_REQUEST_CODE);
     }
@@ -570,7 +570,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                     FormInstance instance = formHelper.getInstance(data.getData());
                     associateFormToPath(instance.getFilePath());
                     if (instance.isComplete()) {
-                        FormPayloadConsumer consumer = formHelper.getBehavior().getFormPayloadConsumer();
+                        FormPayloadConsumer consumer = formHelper.getBehavior().getConsumer();
                         if (consumer != null) {
                             try {
                                 clearResults();
@@ -684,7 +684,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             List<FormBehavior> validForms = new ArrayList<>();
 
             for (FormBehavior form : filteredForms) {
-                if (form.getFormFilter().shouldDisplay(HierarchyNavigatorActivity.this)) {
+                if (form.getFilter().shouldDisplay(HierarchyNavigatorActivity.this)) {
                     validForms.add(form);
                 }
             }
