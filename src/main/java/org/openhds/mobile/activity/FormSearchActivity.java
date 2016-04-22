@@ -29,7 +29,7 @@ public class FormSearchActivity extends Activity {
     public static final String FORM_SEARCH_PLUGINS_KEY = "formSearchPlugins";
 
     private SearchFragment searchFragment;
-    private DataSelectionFragment dataSelectionFragment;
+    private DataSelectionFragment selectionFragment;
     private ArrayList<FormSearchPluginModule> formSearchPluginModules;
     private FormSearchPluginModule currentFormSearchPluginModule;
     private SearchPluginListAdapter searchPluginListAdapter;
@@ -54,9 +54,9 @@ public class FormSearchActivity extends Activity {
             formSearchPluginModules = savedInstanceState.getParcelableArrayList(FORM_SEARCH_PLUGINS_KEY);
         }
 
-        dataSelectionFragment.setDataSelectionDrawableId(R.drawable.gray_list_item_selector);
+        selectionFragment.setDataSelectionDrawableId(R.drawable.gray_list_item_selector);
         searchFragment.setResultsHandler(new SearchResultsHandler());
-        dataSelectionFragment.setSelectionHandler(new DataSelectionHandler());
+        selectionFragment.setSelectionHandler(new DataSelectionHandler());
     }
 
     @Override
@@ -121,14 +121,14 @@ public class FormSearchActivity extends Activity {
             List<FormSearchPluginModule> plugins = new ArrayList<>();
             plugins.add(currentFormSearchPluginModule);
             searchFragment.setSearchPluginModules(plugins);
-            dataSelectionFragment.clearData();
+            selectionFragment.clearData();
         }
     }
 
     private class SearchResultsHandler implements SearchFragment.ResultsHandler {
         @Override
         public void handleSearchResults(List<DataWrapper> dataWrappers) {
-            dataSelectionFragment.populateData(dataWrappers);
+            selectionFragment.populateData(dataWrappers);
         }
     }
 
