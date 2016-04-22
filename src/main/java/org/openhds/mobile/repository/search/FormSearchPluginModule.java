@@ -3,6 +3,7 @@ package org.openhds.mobile.repository.search;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.Gateway;
 
@@ -12,15 +13,16 @@ import java.util.List;
 
 /**
  * Represents a "search" to fill in a field of a form.
- *
+ * <p/>
  * Extends SearchPluginModule to add the name of the form field that
  * needs filling, and the value to fill into it.
- *
+ * <p/>
  * TODO: add a consumer to take a QueryResult and return up a related value
  * to be filled into the form field instead of the QueryResult extId.
  * The consumer must implement Parcelable, too.
  */
 public class FormSearchPluginModule extends SearchPluginModule implements Parcelable {
+
     private String fieldName;
     private String fieldValue;
 
@@ -33,10 +35,6 @@ public class FormSearchPluginModule extends SearchPluginModule implements Parcel
         return fieldName;
     }
 
-    public void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
-    }
-
     public String getFieldValue() {
         return fieldValue;
     }
@@ -47,6 +45,7 @@ public class FormSearchPluginModule extends SearchPluginModule implements Parcel
 
     // for Parcelable
     private FormSearchPluginModule(Parcel parcel) {
+
         labelId = parcel.readInt();
         fieldName = parcel.readString();
         fieldValue = parcel.readString();
@@ -74,6 +73,7 @@ public class FormSearchPluginModule extends SearchPluginModule implements Parcel
     // for Parcelable
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
+
         parcel.writeInt(labelId);
         parcel.writeString(fieldName);
         parcel.writeString(fieldValue);
@@ -90,6 +90,7 @@ public class FormSearchPluginModule extends SearchPluginModule implements Parcel
             columnsAndLabelsBundle.putInt(key, columnsAndLabels.get(key));
         }
         parcel.writeBundle(columnsAndLabelsBundle);
+
     }
 
     // for Parcelable
@@ -97,6 +98,7 @@ public class FormSearchPluginModule extends SearchPluginModule implements Parcel
 
     // for Parcelable
     private static class Creator implements Parcelable.Creator<FormSearchPluginModule> {
+
         public FormSearchPluginModule createFromParcel(Parcel in) {
             return new FormSearchPluginModule(in);
         }

@@ -38,10 +38,6 @@ public class SearchPluginModule {
         return columnsAndLabels;
     }
 
-    public void setColumnsAndLabels(Map<String, Integer> columnsAndLabels) {
-        this.columnsAndLabels = columnsAndLabels;
-    }
-
     public Gateway getGateway() {
         return gateway;
     }
@@ -54,7 +50,4 @@ public class SearchPluginModule {
         return labelId;
     }
 
-    public void setLabelId(int labelId) {
-        this.labelId = labelId;
-    }
 }
