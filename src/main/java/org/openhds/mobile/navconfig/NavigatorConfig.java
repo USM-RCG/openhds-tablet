@@ -56,6 +56,9 @@ public class NavigatorConfig {
         initFormLabels();
     }
 
+    /*
+     * Define the navigation modules. They will show up in the interface in the order specified.
+     */
     private void initModules() {
         modules = new LinkedHashMap<>();
         initCoreModules();
@@ -66,9 +69,6 @@ public class NavigatorConfig {
         addModule(new BiokoModule(this));
     }
 
-    /*
-     * Define the navigation modules. They will show up in the interface in the order specified.
-     */
     private void initCoreModules() {
         for (NavigatorModule module : asList(new CensusModule(this), new UpdateModule(this))) {
             addModule(module);
