@@ -79,11 +79,11 @@ public class CensusFormPayloadConsumers {
     public static class AddLocation implements FormPayloadConsumer {
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
+        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
             ContentResolver contentResolver = ctx.getContentResolver();
             ensureLocationSectorExists(formPayload, contentResolver);
             insertOrUpdateLocation(formPayload, contentResolver);
-            return new ConsumerResults(true, null, null);
+            return new ConsumerResult(true, null, null);
         }
 
         @Override
@@ -94,7 +94,7 @@ public class CensusFormPayloadConsumers {
 
     public static class EvaluateLocation extends DefaultConsumer {
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
+        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
             Location location = locationGateway.getFirst(ctx.getContentResolver(),
@@ -115,7 +115,7 @@ public class CensusFormPayloadConsumers {
         }
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
+        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD_STATE);
 
@@ -162,7 +162,7 @@ public class CensusFormPayloadConsumers {
         }
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
+        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD_STATE);
 
@@ -202,7 +202,7 @@ public class CensusFormPayloadConsumers {
             if(containsPregnancy(formPayload)) {
                 return getPregnancyResult(formPayload);
             }
-            return new ConsumerResults(true, null, null);
+            return new ConsumerResult(true, null, null);
         }
 
         @Override
@@ -225,8 +225,8 @@ public class CensusFormPayloadConsumers {
             return "Yes".equals(formPayload.get(ProjectFormFields.Individuals.IS_PREGNANT_FLAG));
         }
 
-        protected ConsumerResults getPregnancyResult(Map<String, String> payload) {
-            return new ConsumerResults(false, followUp, getPregnancyHints(payload));
+        protected ConsumerResult getPregnancyResult(Map<String, String> payload) {
+            return new ConsumerResult(false, followUp, getPregnancyHints(payload));
         }
 
         private Map<String, String> getPregnancyHints(Map<String, String> payload) {
@@ -248,7 +248,7 @@ public class CensusFormPayloadConsumers {
         }
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
+        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             Visit visit = VisitFormAdapter.fromForm(formPayload);
             VisitGateway visitGateway = GatewayRegistry.getVisitGateway();
@@ -260,13 +260,13 @@ public class CensusFormPayloadConsumers {
             ctx.getConsumerResult().getFollowUpHints().put(ProjectFormFields.General.ENTITY_UUID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID));
             ctx.getConsumerResult().getFollowUpHints().put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
 
-            return new ConsumerResults(false, followUp, ctx.getConsumerResult().getFollowUpHints());
+            return new ConsumerResult(false, followUp, ctx.getConsumerResult().getFollowUpHints());
         }
     }
 
     public static class ChainedPregnancyObservation extends DefaultConsumer {
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
+        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
             ctx.finishVisit();
             return super.consumeFormPayload(formPayload, ctx);
         }

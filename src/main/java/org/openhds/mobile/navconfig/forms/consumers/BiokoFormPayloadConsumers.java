@@ -11,7 +11,7 @@ public class BiokoFormPayloadConsumers {
 
     public static class DistributeBednets extends DefaultConsumer {
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
+        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
             Location location = locationGateway.getFirst(ctx.getContentResolver(),
@@ -30,7 +30,7 @@ public class BiokoFormPayloadConsumers {
         public static final String SPRAY_EVAL_KEY = "evaluation";
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
+        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
             Location location = locationGateway.getFirst(ctx.getContentResolver(),

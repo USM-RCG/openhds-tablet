@@ -30,7 +30,7 @@ import org.openhds.mobile.navconfig.NavigatorModule;
 import org.openhds.mobile.navconfig.db.DefaultQueryHelper;
 import org.openhds.mobile.navconfig.db.QueryHelper;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
-import org.openhds.mobile.navconfig.forms.consumers.ConsumerResults;
+import org.openhds.mobile.navconfig.forms.consumers.ConsumerResult;
 import org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.repository.DataWrapper;
@@ -90,7 +90,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     private Visit currentVisit;
     private HashMap<MenuItem, String> menuItemTags;
     private String currentModuleName;
-    private ConsumerResults consumerResult;
+    private ConsumerResult consumerResult;
 
     private QueryHelper queryHelper;
 
@@ -641,7 +641,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         return currentVisit;
     }
 
-    public ConsumerResults getConsumerResult() {
+    public ConsumerResult getConsumerResult() {
         return consumerResult;
     }
 

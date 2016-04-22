@@ -5,7 +5,7 @@ import android.content.ContentResolver;
 import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.update.Visit;
-import org.openhds.mobile.navconfig.forms.consumers.ConsumerResults;
+import org.openhds.mobile.navconfig.forms.consumers.ConsumerResult;
 import org.openhds.mobile.repository.DataWrapper;
 
 import java.util.List;
@@ -34,6 +34,6 @@ public interface LaunchContext {
 
     void finishVisit();
 
-    ConsumerResults getConsumerResult();
+    ConsumerResult getConsumerResult();
 
 }

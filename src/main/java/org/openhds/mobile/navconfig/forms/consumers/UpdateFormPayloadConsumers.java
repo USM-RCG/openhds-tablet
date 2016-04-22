@@ -33,7 +33,7 @@ public class UpdateFormPayloadConsumers {
 
     public static class StartAVisit extends DefaultConsumer {
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
+        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
             Visit visit = VisitFormAdapter.fromForm(formPayload);
             VisitGateway visitGateway = GatewayRegistry.getVisitGateway();
             ContentResolver contentResolver = ctx.getContentResolver();
@@ -48,7 +48,7 @@ public class UpdateFormPayloadConsumers {
     public static class RegisterDeath extends DefaultConsumer {
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
+        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
             ContentResolver contentResolver = ctx.getContentResolver();
@@ -66,7 +66,7 @@ public class UpdateFormPayloadConsumers {
 
     public static class RegisterOutMigration extends DefaultConsumer {
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
+        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
             // update the individual's residency end type
             String individualUuid = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID);
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
@@ -82,7 +82,7 @@ public class UpdateFormPayloadConsumers {
 
     public static class RegisterInMigration implements FormPayloadConsumer {
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
+        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
             // find the migrating individual
             String individualUuid = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID);
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
@@ -101,7 +101,7 @@ public class UpdateFormPayloadConsumers {
                 formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, individual.getExtId());
             }
 
-            return new ConsumerResults(true, null, null);
+            return new ConsumerResult(true, null, null);
         }
 
         @Override
@@ -120,7 +120,7 @@ public class UpdateFormPayloadConsumers {
         }
 
         @Override
-        public ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
+        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD_STATE);
             ContentResolver contentResolver = ctx.getContentResolver();
@@ -166,7 +166,7 @@ public class UpdateFormPayloadConsumers {
             hints.put(ProjectFormFields.Individuals.INDIVIDUAL_UUID, formPayload.get(ProjectFormFields.General.ENTITY_UUID));
             hints.put(ProjectFormFields.Locations.LOCATION_EXTID, formPayload.get(ProjectFormFields.General.HOUSEHOLD_STATE_FIELD_NAME));
 
-            return new ConsumerResults(false, followUp, hints);
+            return new ConsumerResult(false, followUp, hints);
         }
     }
 }

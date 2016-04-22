@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface FormPayloadConsumer {
 
-    ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx);
+    ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx);
 
     void augmentInstancePayload(Map<String, String> formPayload);
 

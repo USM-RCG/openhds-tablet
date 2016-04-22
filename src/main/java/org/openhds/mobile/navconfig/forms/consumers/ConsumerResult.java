@@ -9,13 +9,13 @@ import java.util.Map;
  * <p/>
  * -waffle
  */
-public class ConsumerResults {
+public class ConsumerResult {
 
     private final boolean augmentInstance;
     private final FormBehavior followUp;
     private final Map<String, String> followUpHints;
 
-    public ConsumerResults(boolean augmentInstance, FormBehavior followUp, Map<String, String> followUpHints) {
+    public ConsumerResult(boolean augmentInstance, FormBehavior followUp, Map<String, String> followUpHints) {
         this.augmentInstance = augmentInstance;
         this.followUp = followUp;
         this.followUpHints = followUpHints;
