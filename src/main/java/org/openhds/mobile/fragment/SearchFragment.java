@@ -1,16 +1,12 @@
 package org.openhds.mobile.fragment;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.openhds.mobile.R;
@@ -39,7 +35,7 @@ public class SearchFragment extends Fragment {
     private static final int RESULTS_PENDING = -1;
     private static final int NO_SEARCH = -2;
 
-    private SearchModule currentModule;
+    private SearchModule module;
     private ResultsHandler resultsHandler;
 
     @Override
@@ -54,25 +50,18 @@ public class SearchFragment extends Fragment {
         this.resultsHandler = resultsHandler;
     }
 
-    @SuppressWarnings("unchecked")
-    public void setModules(List<? extends SearchModule> modules) {
-
-        Spinner spinner = (Spinner) getView().findViewById(R.id.search_fragment_spinner);
-
-        boolean modulesExist = modules != null && modules.size() > 0;
-        boolean multipleExist = modules != null && modules.size() > 1;
-
-        spinner.setVisibility(multipleExist? View.VISIBLE : View.GONE);
-
-        if (modulesExist) {
-            if (multipleExist) {
-                spinner.setVisibility(View.VISIBLE);
-                ArrayAdapter<SearchModule> moduleAdapter = new SpinnerListAdapter(getActivity(),
-                        R.layout.generic_dropdown_item, (List<SearchModule>) modules);
-                spinner.setAdapter(moduleAdapter);
-                spinner.setOnItemSelectedListener(new SpinnerClickHandler());
+    public void configure(SearchModule module) {
+        if (module != null) {
+            this.module = module;
+            setTitle(module.getLabelId());
+            updateStatus(NO_SEARCH);
+            LinearLayout columnContainer = (LinearLayout) getView().findViewById(R.id.search_fragment_container);
+            columnContainer.removeAllViews();
+            for (String columnName : this.module.getColumnsAndLabels().keySet()) {
+                Integer textHintId = this.module.getColumnsAndLabels().get(columnName);
+                EditText editText = makeEditText(getActivity(), textHintId, columnName);
+                columnContainer.addView(editText);
             }
-            selectModule(modules.get(0));
         }
     }
 
@@ -102,31 +91,11 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    // Set up search fields for a selected search plugin module.
-    private void selectModule(SearchModule searchModule) {
-        currentModule = searchModule;
-        setTitle(searchModule.getLabelId());
-        updateStatus(NO_SEARCH);
-        configureEditTexts();
-    }
-
-    private void configureEditTexts() {
-        if (currentModule != null) {
-            LinearLayout editTextContainer = (LinearLayout) getView().findViewById(R.id.search_fragment_container);
-            editTextContainer.removeAllViews();
-            for (String columnName : currentModule.getColumnsAndLabels().keySet()) {
-                Integer textHintId = currentModule.getColumnsAndLabels().get(columnName);
-                EditText editText = makeEditText(getActivity(), textHintId, columnName);
-                editTextContainer.addView(editText);
-            }
-        }
-    }
-
     // Gather column values from the current edit texts, exclude empty text.
     private Map<String, String> gatherColumnValues() {
         Map<String, String> columnValues = new HashMap<>();
-        if (currentModule != null) {
-            for (String columnName : currentModule.getColumnsAndLabels().keySet()) {
+        if (module != null) {
+            for (String columnName : module.getColumnsAndLabels().keySet()) {
                 EditText editText = (EditText) getView().findViewWithTag(columnName);
                 String columnValue = editText.getText().toString();
                 if (!columnValue.isEmpty()) {
@@ -155,8 +124,8 @@ public class SearchFragment extends Fragment {
             // build a query with those values that the user typed in
             final String[] columnNames = columnNamesAndValues.keySet().toArray(new String[columnCount]);
             final String[] columnValues = wildCardValues.toArray(new String[columnCount]);
-            Query query = currentModule.getGateway().findByCriteriaLike(columnNames, columnValues, columnNames[0]);
-            List<DataWrapper> dataWrappers = currentModule.getGateway().getQueryResultList(
+            Query query = module.getGateway().findByCriteriaLike(columnNames, columnValues, columnNames[0]);
+            List<DataWrapper> dataWrappers = module.getGateway().getQueryResultList(
                     getActivity().getContentResolver(), query, DATA_CATEGORY);
 
             // report the results to the listener
@@ -172,46 +141,6 @@ public class SearchFragment extends Fragment {
 
     public interface ResultsHandler {
         void handleSearchResults(List<DataWrapper> dataWrappers);
-    }
-
-    // Display a choice of search plugin modules.
-    private class SpinnerListAdapter extends ArrayAdapter<SearchModule> {
-
-        public SpinnerListAdapter(Context context, int resource, List<SearchModule> objects) {
-            super(context, resource, objects);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            // make or reuse a text view for this item
-            if (convertView == null) {
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.generic_dropdown_item, null);
-            }
-
-            // set the text of this item from the corresponding search module plugin
-            final TextView textView = (TextView) convertView;
-            SearchModule searchModule = getItem(position);
-            textView.setText(searchModule.getLabelId());
-            return convertView;
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            return getView(position, convertView, parent);
-        }
-    }
-
-    // Set up search fields when the user chooses a plugin module from the spinner.
-    private class SpinnerClickHandler implements AdapterView.OnItemSelectedListener {
-        @Override
-        public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-            SearchModule searchModule = (SearchModule) adapterView.getItemAtPosition(position);
-            selectModule(searchModule);
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> adapterView) {}
     }
 
     // Perform the user's search when they click the search button.

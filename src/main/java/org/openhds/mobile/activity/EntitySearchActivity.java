@@ -20,7 +20,6 @@ import org.openhds.mobile.repository.search.EntityFieldSearch;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.openhds.mobile.utilities.LayoutUtils.configureTextWithValueAndLabel;
 import static org.openhds.mobile.utilities.LayoutUtils.makeLargeTextWithValueAndLabel;
 
@@ -38,6 +37,7 @@ public class EntitySearchActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         // basic view setup
@@ -64,18 +64,7 @@ public class EntitySearchActivity extends Activity {
 
         listView = (ListView) findViewById(R.id.form_search_list_view);
         listView.setOnItemClickListener(new PluginClickListener());
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        searchFragment.setModules(null);
-
-        populateSearchList();
-    }
-
-    private void populateSearchList() {
         moduleListAdapter = new ModuleListAdapter(this, 0, searchModules);
         listView.setAdapter(moduleListAdapter);
     }
@@ -116,7 +105,7 @@ public class EntitySearchActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectedModule = moduleListAdapter.getItem(position);
-            searchFragment.setModules(asList(selectedModule));
+            searchFragment.configure(selectedModule);
             selectionFragment.clearData();
         }
     }

@@ -43,12 +43,6 @@
 
     </RelativeLayout>
 
-    <Spinner
-            android:id="@+id/search_fragment_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="20dp"/>
-
     <ScrollView android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
