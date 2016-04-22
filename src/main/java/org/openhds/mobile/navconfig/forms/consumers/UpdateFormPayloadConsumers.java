@@ -105,7 +105,7 @@ public class UpdateFormPayloadConsumers {
         }
 
         @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
+        public void augmentInstancePayload(Map<String, String> formPayload) {
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID));
         }

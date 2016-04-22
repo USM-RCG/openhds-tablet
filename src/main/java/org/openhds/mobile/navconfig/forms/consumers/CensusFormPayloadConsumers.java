@@ -87,7 +87,7 @@ public class CensusFormPayloadConsumers {
         }
 
         @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
+        public void augmentInstancePayload(Map<String, String> formPayload) {
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get(ProjectFormFields.Locations.LOCATION_EXTID));
         }
     }
@@ -206,7 +206,7 @@ public class CensusFormPayloadConsumers {
         }
 
         @Override
-        public void postFillFormPayload(Map<String, String> formPayload) {
+        public void augmentInstancePayload(Map<String, String> formPayload) {
             // head of the household is always "self" to the head of household
             formPayload.put(ProjectFormFields.Individuals.MEMBER_STATUS, "1");
         }
@@ -257,10 +257,10 @@ public class CensusFormPayloadConsumers {
 
             ctx.startVisit(visit);
 
-            ctx.getPreviousConsumerResults().getFollowUpFormHints().put(ProjectFormFields.General.ENTITY_UUID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID));
-            ctx.getPreviousConsumerResults().getFollowUpFormHints().put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
+            ctx.getConsumerResult().getFollowUpHints().put(ProjectFormFields.General.ENTITY_UUID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID));
+            ctx.getConsumerResult().getFollowUpHints().put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
 
-            return new ConsumerResults(false, followUp, ctx.getPreviousConsumerResults().getFollowUpFormHints());
+            return new ConsumerResults(false, followUp, ctx.getConsumerResult().getFollowUpHints());
         }
     }
 

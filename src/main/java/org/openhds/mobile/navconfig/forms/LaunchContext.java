@@ -34,6 +34,6 @@ public interface LaunchContext {
 
     void finishVisit();
 
-    ConsumerResults getPreviousConsumerResults();
+    ConsumerResults getConsumerResult();
 
 }

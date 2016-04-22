@@ -5,34 +5,35 @@ import org.openhds.mobile.model.form.FormBehavior;
 import java.util.Map;
 
 /**
- *
- *  Simple little class that allows the ability to string multiple forms together in a sequence
- *
- *  -waffle
+ * Simple little class that allows the ability to string multiple forms together in a sequence
+ * <p/>
+ * -waffle
  */
 public class ConsumerResults {
 
-    private final boolean needsPostfill;
-    private final FormBehavior followUpFormBehavior;
-    private final Map<String, String> followUpFormHints;
+    private final boolean augmentInstance;
+    private final FormBehavior followUp;
+    private final Map<String, String> followUpHints;
 
-    public ConsumerResults(boolean needsPostfill, FormBehavior followUpFormBehavior, Map<String,String> followUpFormHints){
-        this.needsPostfill = needsPostfill;
-        this.followUpFormBehavior = followUpFormBehavior;
-        this.followUpFormHints = followUpFormHints;
+    public ConsumerResults(boolean augmentInstance, FormBehavior followUp, Map<String, String> followUpHints) {
+        this.augmentInstance = augmentInstance;
+        this.followUp = followUp;
+        this.followUpHints = followUpHints;
     }
 
-    public boolean needsPostfill() {
-        return needsPostfill;
+    public boolean hasInstanceUpdates() {
+        return augmentInstance;
     }
 
-    public FormBehavior getFollowUpFormBehavior() {
-        return followUpFormBehavior;
+    public FormBehavior getFollowUp() {
+        return followUp;
     }
 
-    public Map<String, String> getFollowUpFormHints() {
-        return followUpFormHints;
+    public boolean hasFollowUp() {
+        return followUp != null;
     }
 
-
+    public Map<String, String> getFollowUpHints() {
+        return followUpHints;
+    }
 }

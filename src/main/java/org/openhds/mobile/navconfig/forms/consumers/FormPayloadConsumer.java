@@ -8,6 +8,6 @@ public interface FormPayloadConsumer {
 
     ConsumerResults consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx);
 
-    void postFillFormPayload(Map<String, String> formPayload);
+    void augmentInstancePayload(Map<String, String> formPayload);
 
 }

@@ -18,6 +18,6 @@ public class DefaultConsumer implements FormPayloadConsumer {
     }
 
     @Override
-    public void postFillFormPayload(Map<String, String> formPayload) {
+    public void augmentInstancePayload(Map<String, String> formPayload) {
     }
 }

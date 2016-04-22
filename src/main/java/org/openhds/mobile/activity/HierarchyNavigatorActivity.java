@@ -90,7 +90,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     private Visit currentVisit;
     private HashMap<MenuItem, String> menuItemTags;
     private String currentModuleName;
-    private ConsumerResults previousConsumerResults;
+    private ConsumerResults consumerResult;
 
     private QueryHelper queryHelper;
 
@@ -572,17 +572,17 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                         FormPayloadConsumer consumer = formHelper.getBehavior().getConsumer();
                         try {
                             clearResults();
-                            previousConsumerResults = consumer.consumeFormPayload(formHelper.fetch(), this);
-                            if (previousConsumerResults.needsPostfill()) {
-                                consumer.postFillFormPayload(formHelper.getData());
+                            consumerResult = consumer.consumeFormPayload(formHelper.fetch(), this);
+                            if (consumerResult.hasInstanceUpdates()) {
+                                consumer.augmentInstancePayload(formHelper.getData());
                                 try {
                                     formHelper.update();
                                 } catch (IOException ue) {
                                     showShortToast(this, "Update failed: " + ue.getMessage());
                                 }
                             }
-                            if (previousConsumerResults.getFollowUpFormBehavior() != null) {
-                                launchForm(previousConsumerResults.getFollowUpFormBehavior(), previousConsumerResults.getFollowUpFormHints());
+                            if (consumerResult.hasFollowUp()) {
+                                launchForm(consumerResult.getFollowUp(), consumerResult.getFollowUpHints());
                             }
                         } catch (IOException e) {
                             showShortToast(this, "Read failed: " + e.getMessage());
@@ -641,8 +641,8 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         return currentVisit;
     }
 
-    public ConsumerResults getPreviousConsumerResults() {
-        return previousConsumerResults;
+    public ConsumerResults getConsumerResult() {
+        return consumerResult;
     }
 
     public void setCurrentVisit(Visit currentVisit) {
