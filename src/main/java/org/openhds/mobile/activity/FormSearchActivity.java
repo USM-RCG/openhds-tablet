@@ -28,9 +28,6 @@ public class FormSearchActivity extends Activity {
 
     public static final String FORM_SEARCH_PLUGINS_KEY = "formSearchPlugins";
 
-    private static final String SEARCH_FRAGMENT_TAG = "searchFragment";
-    private static final String VALUE_SELECTION_FRAGMENT_TAG = "valueSelectionFragment";
-
     private SearchFragment searchFragment;
     private DataSelectionFragment dataSelectionFragment;
     private ArrayList<FormSearchPluginModule> formSearchPluginModules;
@@ -46,21 +43,13 @@ public class FormSearchActivity extends Activity {
         setContentView(R.layout.form_search_activity);
         setTitle(R.string.search_database_label);
 
-        if (null == savedInstanceState) {
-            searchFragment = new SearchFragment();
-            dataSelectionFragment = new DataSelectionFragment();
-            getFragmentManager().beginTransaction()
-                    .add(R.id.form_search_middle_column, searchFragment, SEARCH_FRAGMENT_TAG)
-                    .add(R.id.form_search_right_column, dataSelectionFragment, VALUE_SELECTION_FRAGMENT_TAG)
-                    .commit();
+        searchFragment = (SearchFragment) getFragmentManager().findFragmentById(R.id.search_fragment);
+        selectionFragment = (DataSelectionFragment) getFragmentManager().findFragmentById(R.id.search_selection_fragment);
 
+        if (savedInstanceState == null) {
             // what does the calling activity need the user to search for?
             formSearchPluginModules = getIntent().getParcelableArrayListExtra(FORM_SEARCH_PLUGINS_KEY);
-
         } else {
-            searchFragment = (SearchFragment) getFragmentManager().findFragmentByTag(SEARCH_FRAGMENT_TAG);
-            dataSelectionFragment = (DataSelectionFragment) getFragmentManager().findFragmentByTag(VALUE_SELECTION_FRAGMENT_TAG);
-
             // recall pending and completed searches
             formSearchPluginModules = savedInstanceState.getParcelableArrayList(FORM_SEARCH_PLUGINS_KEY);
         }
