@@ -14,7 +14,6 @@ import org.openhds.mobile.navconfig.forms.filters.BiokoFormFilters;
 import org.openhds.mobile.navconfig.forms.filters.CensusFormFilters;
 import org.openhds.mobile.navconfig.forms.filters.UpdateFormFilters;
 import org.openhds.mobile.repository.search.EntityFieldSearch;
-import org.openhds.mobile.repository.search.SearchUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +30,7 @@ import static org.openhds.mobile.navconfig.BiokoHierarchy.BOTTOM_STATE;
 import static org.openhds.mobile.navconfig.BiokoHierarchy.HOUSEHOLD_STATE;
 import static org.openhds.mobile.navconfig.BiokoHierarchy.INDIVIDUAL_STATE;
 import static org.openhds.mobile.navconfig.forms.filters.InvertedFilter.invert;
+import static org.openhds.mobile.repository.search.SearchUtils.getIndividualModule;
 
 /**
  * The configuration source for hierarchy navigation, form display and form data binding for the field worker section of
@@ -334,13 +334,13 @@ class UpdateModule extends AbstractNavigatorModule {
                 new UpdateFormPayloadConsumers.StartAVisit()));
 
         // Register an Internal Inmigration, requires a search to do
-        ArrayList<EntityFieldSearch> searches = new ArrayList<>();
-        searches.add(SearchUtils.getIndividualModule(ProjectFormFields.Individuals.INDIVIDUAL_UUID, R.string.search_individual_label));
+        EntityFieldSearch migrantSearch = getIndividualModule(
+                ProjectFormFields.Individuals.INDIVIDUAL_UUID, R.string.search_individual_label);
         bindForm(INDIVIDUAL_STATE, new FormBehavior("in_migration", "update.internalInMigrationLabel",
                 new UpdateFormFilters.RegisterInMigration(),
                 new UpdateFormPayloadBuilders.RegisterInternalInMigration(),
                 new UpdateFormPayloadConsumers.RegisterInMigration(),
-                searches));
+                migrantSearch));
 
         // Register an External InMigration form (chained after individual form)
         FormBehavior externalInMigrationFormBehavior = new FormBehavior("in_migration", "update.externalInMigrationLabel",
@@ -373,12 +373,12 @@ class UpdateModule extends AbstractNavigatorModule {
                 null));
 
         // Register a Pregnancy OutCome FormBehavior
-        ArrayList<EntityFieldSearch> daddySearch = new ArrayList<>();
-        daddySearch.add(SearchUtils.getIndividualModule(ProjectFormFields.PregnancyOutcome.FATHER_UUID, R.string.search_father_label));
+        EntityFieldSearch paternitySearch = getIndividualModule(
+                ProjectFormFields.PregnancyOutcome.FATHER_UUID, R.string.search_father_label);
         bindForm(BOTTOM_STATE, new FormBehavior("pregnancy_outcome", "update.pregnancyOutcomeLabel",
                 new UpdateFormFilters.PregnancyFilter(),
                 new UpdateFormPayloadBuilders.RecordPregnancyOutcome(),
-                null, daddySearch));
+                null, paternitySearch));
 
         bindDetail(BOTTOM_STATE, new IndividualDetailFragment());
     }

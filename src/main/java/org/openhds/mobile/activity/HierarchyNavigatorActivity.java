@@ -444,8 +444,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         formHelper.setBehavior(formBehavior); // update activity's current form
         if (formBehavior != null) {
             formHelper.setData(buildDataWithHints(formBehavior, followUpFormHints));
-            boolean requiresSearch = formBehavior.getNeedsFormFieldSearch();
-            if (requiresSearch) {
+            if (formBehavior.requiresSearch()) {
                 launchSearch();
             } else {
                 launchEdit();
@@ -472,7 +471,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
     private void launchSearch() {
         Intent intent = new Intent(this, EntitySearchActivity.class);
-        ArrayList<EntityFieldSearch> searchModules = formHelper.getBehavior().getSearchPluginModules();
+        ArrayList<EntityFieldSearch> searchModules = formHelper.getBehavior().getRequiredSearches();
         intent.putParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY, searchModules);
         startActivityForResult(intent, SEARCH_ACTIVITY_REQUEST_CODE);
     }

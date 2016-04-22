@@ -10,6 +10,8 @@ import org.openhds.mobile.repository.search.EntityFieldSearch;
 
 import java.util.ArrayList;
 
+import static java.util.Arrays.asList;
+
 public class FormBehavior {
 
     private String formName;
@@ -17,9 +19,7 @@ public class FormBehavior {
     private FormFilter filter;
     private FormPayloadBuilder builder;
     private FormPayloadConsumer consumer;
-
-    // ArrayList, not just List, because of user with Android Parcelable interface.
-    private ArrayList<EntityFieldSearch> searchPluginModules;
+    private ArrayList<EntityFieldSearch> requiredSearches;  // Using concrete type for convenient use with Parcelable
 
     public FormBehavior(String formName, String labelKey, FormFilter filter, FormPayloadBuilder builder,
                         FormPayloadConsumer consumer) {
@@ -27,13 +27,14 @@ public class FormBehavior {
     }
 
     public FormBehavior(String formName, String labelKey, FormFilter filter, FormPayloadBuilder builder, FormPayloadConsumer consumer,
-                        ArrayList<EntityFieldSearch> searchPluginModules) {
+                        EntityFieldSearch... requiredSearches) {
         this.formName = formName;
         this.labelKey = labelKey;
         this.filter = filter;
         this.builder = builder;
         this.consumer = consumer;
-        this.searchPluginModules = searchPluginModules;
+        this.requiredSearches = new ArrayList<>();
+        this.requiredSearches.addAll(asList(requiredSearches));
     }
 
     public String getFormName() {
@@ -56,11 +57,11 @@ public class FormBehavior {
         return consumer != null ? consumer : DefaultConsumer.INSTANCE;
     }
 
-    public ArrayList<EntityFieldSearch> getSearchPluginModules() {
-        return searchPluginModules;
+    public ArrayList<EntityFieldSearch> getRequiredSearches() {
+        return requiredSearches;
     }
 
-    public boolean getNeedsFormFieldSearch() {
-        return searchPluginModules != null && searchPluginModules.size() > 0;
+    public boolean requiresSearch() {
+        return requiredSearches.size() > 0;
     }
 }
