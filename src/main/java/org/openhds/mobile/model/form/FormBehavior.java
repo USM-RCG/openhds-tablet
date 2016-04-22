@@ -22,19 +22,16 @@ public class FormBehavior {
     private ArrayList<EntityFieldSearch> requiredSearches;  // Using concrete type for convenient use with Parcelable
 
     public FormBehavior(String formName, String labelKey, FormFilter filter, FormPayloadBuilder builder,
-                        FormPayloadConsumer consumer) {
-        this(formName, labelKey, filter, builder, consumer, null);
-    }
-
-    public FormBehavior(String formName, String labelKey, FormFilter filter, FormPayloadBuilder builder, FormPayloadConsumer consumer,
-                        EntityFieldSearch... requiredSearches) {
+                        FormPayloadConsumer consumer, EntityFieldSearch... requiredSearches) {
         this.formName = formName;
         this.labelKey = labelKey;
         this.filter = filter;
         this.builder = builder;
         this.consumer = consumer;
         this.requiredSearches = new ArrayList<>();
-        this.requiredSearches.addAll(asList(requiredSearches));
+        if (requiredSearches != null) {
+            this.requiredSearches.addAll(asList(requiredSearches));
+        }
     }
 
     public String getFormName() {
