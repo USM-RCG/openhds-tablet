@@ -63,9 +63,7 @@ public class NavigatorConfig {
     }
 
     private void initExtendedModules() {
-        for (NavigatorModule module : asList(new BiokoModule(this))) {
-            addModule(module);
-        }
+        addModule(new BiokoModule(this));
     }
 
     /*
