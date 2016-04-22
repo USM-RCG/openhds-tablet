@@ -34,7 +34,7 @@ import org.openhds.mobile.navconfig.forms.consumers.ConsumerResults;
 import org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.repository.DataWrapper;
-import org.openhds.mobile.repository.search.FormSearchPluginModule;
+import org.openhds.mobile.repository.search.EntityFieldSearch;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 import org.openhds.mobile.utilities.StateMachine;
 import org.openhds.mobile.utilities.StateMachine.StateListener;
@@ -471,9 +471,9 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     private void launchSearch() {
-        Intent intent = new Intent(this, FormSearchActivity.class);
-        ArrayList<FormSearchPluginModule> searchModules = formHelper.getBehavior().getSearchPluginModules();
-        intent.putParcelableArrayListExtra(FormSearchActivity.FORM_SEARCH_PLUGINS_KEY, searchModules);
+        Intent intent = new Intent(this, EntitySearchActivity.class);
+        ArrayList<EntityFieldSearch> searchModules = formHelper.getBehavior().getSearchPluginModules();
+        intent.putParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY, searchModules);
         startActivityForResult(intent, SEARCH_ACTIVITY_REQUEST_CODE);
     }
 
@@ -593,12 +593,12 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
                 case SEARCH_ACTIVITY_REQUEST_CODE:
                     // data intent contains the form fields and values that the user just search for
-                    List<FormSearchPluginModule> formSearchPluginModules =
-                            data.getParcelableArrayListExtra(FormSearchActivity.FORM_SEARCH_PLUGINS_KEY);
+                    List<EntityFieldSearch> formSearchPluginModules =
+                            data.getParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY);
 
                     // merge searched fields with the existing form payload
-                    for (FormSearchPluginModule plugin : formSearchPluginModules) {
-                        formHelper.getData().put(plugin.getFieldName(), plugin.getFieldValue());
+                    for (EntityFieldSearch plugin : formSearchPluginModules) {
+                        formHelper.getData().put(plugin.getName(), plugin.getValue());
                     }
 
                     // now let the user finish filling in the form in ODK

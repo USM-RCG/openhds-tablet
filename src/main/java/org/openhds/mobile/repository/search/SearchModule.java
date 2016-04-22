@@ -18,7 +18,7 @@ import java.util.Map;
  *
  * BSH
  */
-public class SearchPluginModule {
+public class SearchModule {
 
     private static final long serialVersionUID = 91916640L;
 
@@ -26,9 +26,9 @@ public class SearchPluginModule {
     protected int labelId;
     protected Map<String, Integer> columnsAndLabels;
 
-    public SearchPluginModule() {}
+    public SearchModule() {}
 
-    public SearchPluginModule(Gateway gateway, int labelId) {
+    public SearchModule(Gateway gateway, int labelId) {
         this.gateway = gateway;
         this.labelId = labelId;
         columnsAndLabels = new HashMap<>();

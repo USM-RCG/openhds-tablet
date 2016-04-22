@@ -6,7 +6,7 @@ import org.openhds.mobile.navconfig.forms.consumers.DefaultConsumer;
 import org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer;
 import org.openhds.mobile.navconfig.forms.filters.FormFilter;
 import org.openhds.mobile.navconfig.forms.filters.NullFilter;
-import org.openhds.mobile.repository.search.FormSearchPluginModule;
+import org.openhds.mobile.repository.search.EntityFieldSearch;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ public class FormBehavior {
     private FormPayloadConsumer consumer;
 
     // ArrayList, not just List, because of user with Android Parcelable interface.
-    private ArrayList<FormSearchPluginModule> searchPluginModules;
+    private ArrayList<EntityFieldSearch> searchPluginModules;
 
     public FormBehavior(String formName, String labelKey, FormFilter filter, FormPayloadBuilder builder,
                         FormPayloadConsumer consumer) {
@@ -27,7 +27,7 @@ public class FormBehavior {
     }
 
     public FormBehavior(String formName, String labelKey, FormFilter filter, FormPayloadBuilder builder, FormPayloadConsumer consumer,
-                        ArrayList<FormSearchPluginModule> searchPluginModules) {
+                        ArrayList<EntityFieldSearch> searchPluginModules) {
         this.formName = formName;
         this.labelKey = labelKey;
         this.filter = filter;
@@ -56,7 +56,7 @@ public class FormBehavior {
         return consumer != null ? consumer : DefaultConsumer.INSTANCE;
     }
 
-    public ArrayList<FormSearchPluginModule> getSearchPluginModules() {
+    public ArrayList<EntityFieldSearch> getSearchPluginModules() {
         return searchPluginModules;
     }
 

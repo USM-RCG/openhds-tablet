@@ -15,7 +15,7 @@ import org.openhds.mobile.fragment.ChecklistFragment;
 import org.openhds.mobile.fragment.LoginPreferenceFragment;
 import org.openhds.mobile.fragment.SyncDatabaseFragment;
 import org.openhds.mobile.model.form.FormInstance;
-import org.openhds.mobile.repository.search.FormSearchPluginModule;
+import org.openhds.mobile.repository.search.EntityFieldSearch;
 import org.openhds.mobile.repository.search.SearchUtils;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
@@ -103,14 +103,14 @@ public class SupervisorActivity extends Activity {
     }
 
     private void searchDatabase() {
-        ArrayList<FormSearchPluginModule> searchPluginModules = new ArrayList<>();
-        searchPluginModules.add(SearchUtils.getFieldWorkerPlugin("fieldWorker"));
-        searchPluginModules.add(SearchUtils.getIndividualPlugin("individual", R.string.search_individual_label));
-        searchPluginModules.add(SearchUtils.getLocationPlugin("location"));
-        searchPluginModules.add(SearchUtils.getSocialGroupPlugin("socialGroup"));
+        ArrayList<EntityFieldSearch> searchPluginModules = new ArrayList<>();
+        searchPluginModules.add(SearchUtils.getFieldWorkerModule("fieldWorker"));
+        searchPluginModules.add(SearchUtils.getIndividualModule("individual", R.string.search_individual_label));
+        searchPluginModules.add(SearchUtils.getLocationModule("location"));
+        searchPluginModules.add(SearchUtils.getSocialGroupModule("socialGroup"));
 
-        Intent intent = new Intent(this, FormSearchActivity.class);
-        intent.putParcelableArrayListExtra(FormSearchActivity.FORM_SEARCH_PLUGINS_KEY, searchPluginModules);
+        Intent intent = new Intent(this, EntitySearchActivity.class);
+        intent.putParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY, searchPluginModules);
         startActivity(intent);
     }
 

@@ -30,7 +30,7 @@
         <activity android:label="@string/app_name" android:name=".activity.HierarchyNavigatorActivity"/>
         <activity android:label="@string/app_name" android:name=".activity.SupervisorActivity"/>
         <activity android:label="@string/app_name" android:name=".activity.FieldWorkerActivity"/>
-        <activity android:label="@string/app_name" android:name=".activity.FormSearchActivity"/>
+        <activity android:label="@string/app_name" android:name=".activity.EntitySearchActivity"/>
 
         <service android:name=".syncadpt.AuthenticatorService">
             <intent-filter>

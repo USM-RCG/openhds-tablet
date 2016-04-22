@@ -13,7 +13,7 @@ import org.openhds.mobile.navconfig.forms.consumers.UpdateFormPayloadConsumers;
 import org.openhds.mobile.navconfig.forms.filters.BiokoFormFilters;
 import org.openhds.mobile.navconfig.forms.filters.CensusFormFilters;
 import org.openhds.mobile.navconfig.forms.filters.UpdateFormFilters;
-import org.openhds.mobile.repository.search.FormSearchPluginModule;
+import org.openhds.mobile.repository.search.EntityFieldSearch;
 import org.openhds.mobile.repository.search.SearchUtils;
 
 import java.util.ArrayList;
@@ -334,8 +334,8 @@ class UpdateModule extends AbstractNavigatorModule {
                 new UpdateFormPayloadConsumers.StartAVisit()));
 
         // Register an Internal Inmigration, requires a search to do
-        ArrayList<FormSearchPluginModule> searches = new ArrayList<>();
-        searches.add(SearchUtils.getIndividualPlugin(ProjectFormFields.Individuals.INDIVIDUAL_UUID, R.string.search_individual_label));
+        ArrayList<EntityFieldSearch> searches = new ArrayList<>();
+        searches.add(SearchUtils.getIndividualModule(ProjectFormFields.Individuals.INDIVIDUAL_UUID, R.string.search_individual_label));
         bindForm(INDIVIDUAL_STATE, new FormBehavior("in_migration", "update.internalInMigrationLabel",
                 new UpdateFormFilters.RegisterInMigration(),
                 new UpdateFormPayloadBuilders.RegisterInternalInMigration(),
@@ -373,8 +373,8 @@ class UpdateModule extends AbstractNavigatorModule {
                 null));
 
         // Register a Pregnancy OutCome FormBehavior
-        ArrayList<FormSearchPluginModule> daddySearch = new ArrayList<>();
-        daddySearch.add(SearchUtils.getIndividualPlugin(ProjectFormFields.PregnancyOutcome.FATHER_UUID, R.string.search_father_label));
+        ArrayList<EntityFieldSearch> daddySearch = new ArrayList<>();
+        daddySearch.add(SearchUtils.getIndividualModule(ProjectFormFields.PregnancyOutcome.FATHER_UUID, R.string.search_father_label));
         bindForm(BOTTOM_STATE, new FormBehavior("pregnancy_outcome", "update.pregnancyOutcomeLabel",
                 new UpdateFormFilters.PregnancyFilter(),
                 new UpdateFormPayloadBuilders.RecordPregnancyOutcome(),

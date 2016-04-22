@@ -12,10 +12,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import org.openhds.mobile.R;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.Query;
-import org.openhds.mobile.repository.search.SearchPluginModule;
+import org.openhds.mobile.repository.search.SearchModule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,16 +39,14 @@ public class SearchFragment extends Fragment {
     private static final int RESULTS_PENDING = -1;
     private static final int NO_SEARCH = -2;
 
-    private SearchPluginModule currentPluginModule;
+    private SearchModule currentModule;
     private ResultsHandler resultsHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.search_fragment, container, false);
-
         View button = view.findViewById(R.id.search_fragment_button);
         button.setOnClickListener(new ButtonClickHandler());
-
         return view;
     }
 
@@ -56,30 +55,25 @@ public class SearchFragment extends Fragment {
     }
 
     @SuppressWarnings("unchecked")
-    public void setSearchPluginModules(List<? extends SearchPluginModule> searchPluginModules) {
+    public void setModules(List<? extends SearchModule> modules) {
+
         Spinner spinner = (Spinner) getView().findViewById(R.id.search_fragment_spinner);
 
-        if (null == searchPluginModules || searchPluginModules.isEmpty()) {
-            spinner.setVisibility(View.GONE);
-            return;
+        boolean modulesExist = modules != null && modules.size() > 0;
+        boolean multipleExist = modules != null && modules.size() > 1;
+
+        spinner.setVisibility(multipleExist? View.VISIBLE : View.GONE);
+
+        if (modulesExist) {
+            if (multipleExist) {
+                spinner.setVisibility(View.VISIBLE);
+                ArrayAdapter<SearchModule> moduleAdapter = new SpinnerListAdapter(getActivity(),
+                        R.layout.generic_dropdown_item, (List<SearchModule>) modules);
+                spinner.setAdapter(moduleAdapter);
+                spinner.setOnItemSelectedListener(new SpinnerClickHandler());
+            }
+            selectModule(modules.get(0));
         }
-
-        // select the only plugin
-        if (1 == searchPluginModules.size()) {
-            spinner.setVisibility(View.GONE);
-            setPluginModule(searchPluginModules.get(0));
-            return;
-        }
-
-        // allow the user to choose from 2 or more plugins
-        spinner.setVisibility(View.VISIBLE);
-        ArrayAdapter<SearchPluginModule> searchPluginAdapter = new SpinnerListAdapter(
-                getActivity(), R.layout.generic_dropdown_item, (List<SearchPluginModule>) searchPluginModules);
-        spinner.setAdapter(searchPluginAdapter);
-        spinner.setOnItemSelectedListener(new SpinnerClickHandler());
-
-        // select the first plugin
-        setPluginModule(searchPluginModules.get(0));
     }
 
     public void setTitle(int titleId) {
@@ -88,60 +82,56 @@ public class SearchFragment extends Fragment {
     }
 
     private void updateStatus(int resultCount) {
+
         TextView statusText = (TextView) getView().findViewById(R.id.search_fragment_status);
 
-        if (NO_SEARCH == resultCount) {
+        if (resultCount == NO_SEARCH) {
             statusText.setVisibility(View.GONE);
-            return;
-        }
-        statusText.setVisibility(View.VISIBLE);
+        } else {
 
-        if (RESULTS_PENDING == resultCount) {
-            statusText.setText(R.string.search_in_progress_label);
-            getView().invalidate();
-            return;
-        }
+            statusText.setVisibility(View.VISIBLE);
 
-        final String resultsStatus = Integer.toString(resultCount)
-                + " "
-                + getActivity().getResources().getString(R.string.search_results_label);
-        statusText.setText(resultsStatus);
+            if (resultCount == RESULTS_PENDING) {
+                statusText.setText(R.string.search_in_progress_label);
+            } else {
+                final String resultsStatus = Integer.toString(resultCount)
+                        + " "
+                        + getActivity().getResources().getString(R.string.search_results_label);
+                statusText.setText(resultsStatus);
+            }
+        }
     }
 
     // Set up search fields for a selected search plugin module.
-    private void setPluginModule(SearchPluginModule searchPluginModule) {
-        currentPluginModule = searchPluginModule;
-        setTitle(searchPluginModule.getLabelId());
+    private void selectModule(SearchModule searchModule) {
+        currentModule = searchModule;
+        setTitle(searchModule.getLabelId());
         updateStatus(NO_SEARCH);
         configureEditTexts();
     }
 
     private void configureEditTexts() {
-        if (null == currentPluginModule) {
-            return;
-        }
-
-        LinearLayout editTextContainer = (LinearLayout) getView().findViewById(R.id.search_fragment_container);
-        editTextContainer.removeAllViews();
-        for (String columnName : currentPluginModule.getColumnsAndLabels().keySet()) {
-            Integer textHintId = currentPluginModule.getColumnsAndLabels().get(columnName);
-            EditText editText = makeEditText(getActivity(), textHintId, columnName);
-            editTextContainer.addView(editText);
+        if (currentModule != null) {
+            LinearLayout editTextContainer = (LinearLayout) getView().findViewById(R.id.search_fragment_container);
+            editTextContainer.removeAllViews();
+            for (String columnName : currentModule.getColumnsAndLabels().keySet()) {
+                Integer textHintId = currentModule.getColumnsAndLabels().get(columnName);
+                EditText editText = makeEditText(getActivity(), textHintId, columnName);
+                editTextContainer.addView(editText);
+            }
         }
     }
 
     // Gather column values from the current edit texts, exclude empty text.
     private Map<String, String> gatherColumnValues() {
-        if (null == currentPluginModule) {
-            return null;
-        }
-
         Map<String, String> columnValues = new HashMap<>();
-        for (String columnName : currentPluginModule.getColumnsAndLabels().keySet()) {
-            EditText editText = (EditText) getView().findViewWithTag(columnName);
-            String columnValue = editText.getText().toString();
-            if (null != columnValue && !columnValue.isEmpty()) {
-                columnValues.put(columnName, columnValue);
+        if (currentModule != null) {
+            for (String columnName : currentModule.getColumnsAndLabels().keySet()) {
+                EditText editText = (EditText) getView().findViewWithTag(columnName);
+                String columnValue = editText.getText().toString();
+                if (!columnValue.isEmpty()) {
+                    columnValues.put(columnName, columnValue);
+                }
             }
         }
         return columnValues;
@@ -150,35 +140,34 @@ public class SearchFragment extends Fragment {
     // Query based on user's text and return result count or code
     @SuppressWarnings("unchecked")
     private int performQuery() {
+
+        int result = NO_SEARCH;
+
         Map<String, String> columnNamesAndValues = gatherColumnValues();
-        if (null == columnNamesAndValues) {
-            return NO_SEARCH;
+        int columnCount = columnNamesAndValues.size();
+        if (columnCount != 0) {
+            // surround the user's text with SQL LIKE wild cards
+            List<String> wildCardValues = new ArrayList<>();
+            for (String columnValue : columnNamesAndValues.values()) {
+                wildCardValues.add(LIKE_WILD_CARD + columnValue + LIKE_WILD_CARD);
+            }
+
+            // build a query with those values that the user typed in
+            final String[] columnNames = columnNamesAndValues.keySet().toArray(new String[columnCount]);
+            final String[] columnValues = wildCardValues.toArray(new String[columnCount]);
+            Query query = currentModule.getGateway().findByCriteriaLike(columnNames, columnValues, columnNames[0]);
+            List<DataWrapper> dataWrappers = currentModule.getGateway().getQueryResultList(
+                    getActivity().getContentResolver(), query, DATA_CATEGORY);
+
+            // report the results to the listener
+            if (resultsHandler != null) {
+                resultsHandler.handleSearchResults(dataWrappers);
+            }
+
+            result = dataWrappers.size();
         }
 
-        int nValues = columnNamesAndValues.size();
-        if (0 == nValues) {
-            return NO_SEARCH;
-        }
-
-        // surround the user's text with SQL LIKE wild cards
-        List<String> wildCardValues = new ArrayList<>();
-        for (String columnValue : columnNamesAndValues.values()) {
-            wildCardValues.add(LIKE_WILD_CARD + columnValue + LIKE_WILD_CARD);
-        }
-
-        // build a query with those values that the user typed in
-        final String[] columnNames = columnNamesAndValues.keySet().toArray(new String[nValues]);
-        final String[] columnValues = wildCardValues.toArray(new String[nValues]);
-        Query query = currentPluginModule.getGateway().findByCriteriaLike(columnNames, columnValues, columnNames[0]);
-        List<DataWrapper> dataWrappers = currentPluginModule.getGateway().getQueryResultList(
-                getActivity().getContentResolver(), query, DATA_CATEGORY);
-
-        // report the results to the listener
-        if (null != resultsHandler) {
-            resultsHandler.handleSearchResults(dataWrappers);
-        }
-
-        return dataWrappers.size();
+        return result;
     }
 
     public interface ResultsHandler {
@@ -186,9 +175,9 @@ public class SearchFragment extends Fragment {
     }
 
     // Display a choice of search plugin modules.
-    private class SpinnerListAdapter extends ArrayAdapter<SearchPluginModule> {
+    private class SpinnerListAdapter extends ArrayAdapter<SearchModule> {
 
-        public SpinnerListAdapter(Context context, int resource, List<SearchPluginModule> objects) {
+        public SpinnerListAdapter(Context context, int resource, List<SearchModule> objects) {
             super(context, resource, objects);
         }
 
@@ -202,8 +191,8 @@ public class SearchFragment extends Fragment {
 
             // set the text of this item from the corresponding search module plugin
             final TextView textView = (TextView) convertView;
-            SearchPluginModule searchPluginModule = getItem(position);
-            textView.setText(searchPluginModule.getLabelId());
+            SearchModule searchModule = getItem(position);
+            textView.setText(searchModule.getLabelId());
             return convertView;
         }
 
@@ -217,8 +206,8 @@ public class SearchFragment extends Fragment {
     private class SpinnerClickHandler implements AdapterView.OnItemSelectedListener {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-            SearchPluginModule searchPluginModule = (SearchPluginModule) adapterView.getItemAtPosition(position);
-            setPluginModule(searchPluginModule);
+            SearchModule searchModule = (SearchModule) adapterView.getItemAtPosition(position);
+            selectModule(searchModule);
         }
 
         @Override
@@ -234,8 +223,7 @@ public class SearchFragment extends Fragment {
             // the UI to redraw while the search is running
             // Gateway should provide a handy mechanism for this...
             updateStatus(RESULTS_PENDING);
-            int resultCount = performQuery();
-            updateStatus(resultCount);
+            updateStatus(performQuery());
         }
     }
 }

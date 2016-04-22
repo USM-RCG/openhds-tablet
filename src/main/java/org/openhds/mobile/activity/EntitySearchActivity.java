@@ -15,24 +15,25 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.DataSelectionFragment;
 import org.openhds.mobile.fragment.SearchFragment;
 import org.openhds.mobile.repository.DataWrapper;
-import org.openhds.mobile.repository.search.FormSearchPluginModule;
+import org.openhds.mobile.repository.search.EntityFieldSearch;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.openhds.mobile.utilities.LayoutUtils.configureTextWithValueAndLabel;
 import static org.openhds.mobile.utilities.LayoutUtils.makeLargeTextWithValueAndLabel;
 
 
-public class FormSearchActivity extends Activity {
+public class EntitySearchActivity extends Activity {
 
-    public static final String FORM_SEARCH_PLUGINS_KEY = "formSearchPlugins";
+    public static final String SEARCH_MODULES_KEY = "entitySearchModules";
 
     private SearchFragment searchFragment;
     private DataSelectionFragment selectionFragment;
-    private ArrayList<FormSearchPluginModule> formSearchPluginModules;
-    private FormSearchPluginModule currentFormSearchPluginModule;
-    private SearchPluginListAdapter searchPluginListAdapter;
+    private ArrayList<EntityFieldSearch> searchModules;
+    private EntityFieldSearch selectedModule;
+    private ModuleListAdapter moduleListAdapter;
     private ListView listView;
 
     @Override
@@ -48,65 +49,63 @@ public class FormSearchActivity extends Activity {
 
         if (savedInstanceState == null) {
             // what does the calling activity need the user to search for?
-            formSearchPluginModules = getIntent().getParcelableArrayListExtra(FORM_SEARCH_PLUGINS_KEY);
+            searchModules = getIntent().getParcelableArrayListExtra(SEARCH_MODULES_KEY);
         } else {
             // recall pending and completed searches
-            formSearchPluginModules = savedInstanceState.getParcelableArrayList(FORM_SEARCH_PLUGINS_KEY);
+            searchModules = savedInstanceState.getParcelableArrayList(SEARCH_MODULES_KEY);
         }
 
         selectionFragment.setDataSelectionDrawableId(R.drawable.gray_list_item_selector);
         searchFragment.setResultsHandler(new SearchResultsHandler());
         selectionFragment.setSelectionHandler(new DataSelectionHandler());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         Button doneButton = (Button) findViewById(R.id.done_button);
         doneButton.setOnClickListener(new DoneButtonListener());
 
         listView = (ListView) findViewById(R.id.form_search_list_view);
         listView.setOnItemClickListener(new PluginClickListener());
+    }
 
-        searchFragment.setSearchPluginModules(null);
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        searchFragment.setModules(null);
 
         populateSearchList();
     }
 
     private void populateSearchList() {
-        searchPluginListAdapter = new SearchPluginListAdapter(this, 0, formSearchPluginModules);
-        listView.setAdapter(searchPluginListAdapter);
+        moduleListAdapter = new ModuleListAdapter(this, 0, searchModules);
+        listView.setAdapter(moduleListAdapter);
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // remember pending and completed searches
-        savedInstanceState.putParcelableArrayList(FORM_SEARCH_PLUGINS_KEY, formSearchPluginModules);
+        savedInstanceState.putParcelableArrayList(SEARCH_MODULES_KEY, searchModules);
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    private class SearchPluginListAdapter extends ArrayAdapter<FormSearchPluginModule> {
+    private class ModuleListAdapter extends ArrayAdapter<EntityFieldSearch> {
 
         private static final int LABEL_COLOR = R.color.BiokoDataFill;
         private static final int VALUE_COLOR = R.color.BiokoDataBorder;
         private static final int MISSING_COLOR = R.color.RedFillMissing;
 
-        public SearchPluginListAdapter(Context context, int resource, List<FormSearchPluginModule> objects) {
+        public ModuleListAdapter(Context context, int resource, List<EntityFieldSearch> objects) {
             super(context, resource, objects);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
-            FormSearchPluginModule plugin = getItem(position);
-
+            EntityFieldSearch plugin = getItem(position);
             if (convertView == null) {
-                convertView = makeLargeTextWithValueAndLabel(FormSearchActivity.this,
-                        plugin.getLabelId(), plugin.getFieldValue(), LABEL_COLOR, VALUE_COLOR, MISSING_COLOR);
+                convertView = makeLargeTextWithValueAndLabel(EntitySearchActivity.this,
+                        plugin.getLabelId(), plugin.getValue(), LABEL_COLOR, VALUE_COLOR, MISSING_COLOR);
             } else {
                 configureTextWithValueAndLabel((RelativeLayout) convertView,
-                        plugin.getLabelId(), plugin.getFieldValue(), LABEL_COLOR, VALUE_COLOR, MISSING_COLOR);
+                        plugin.getLabelId(), plugin.getValue(), LABEL_COLOR, VALUE_COLOR, MISSING_COLOR);
             }
             convertView.setBackgroundResource(R.drawable.gray_list_item_selector);
             return convertView;
@@ -116,11 +115,8 @@ public class FormSearchActivity extends Activity {
     private class PluginClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            currentFormSearchPluginModule = searchPluginListAdapter.getItem(position);
-
-            List<FormSearchPluginModule> plugins = new ArrayList<>();
-            plugins.add(currentFormSearchPluginModule);
-            searchFragment.setSearchPluginModules(plugins);
+            selectedModule = moduleListAdapter.getItem(position);
+            searchFragment.setModules(asList(selectedModule));
             selectionFragment.clearData();
         }
     }
@@ -135,8 +131,8 @@ public class FormSearchActivity extends Activity {
     private class DataSelectionHandler implements DataSelectionFragment.SelectionHandler {
         @Override
         public void handleSelectedData(DataWrapper dataWrapper) {
-            currentFormSearchPluginModule.setFieldValue(dataWrapper.getUuid());
-            searchPluginListAdapter.notifyDataSetChanged();
+            selectedModule.setValue(dataWrapper.getUuid());
+            moduleListAdapter.notifyDataSetChanged();
         }
     }
 
@@ -144,7 +140,7 @@ public class FormSearchActivity extends Activity {
         @Override
         public void onClick(View view) {
             Intent data = new Intent();
-            data.putParcelableArrayListExtra(FORM_SEARCH_PLUGINS_KEY, formSearchPluginModules);
+            data.putParcelableArrayListExtra(SEARCH_MODULES_KEY, searchModules);
             setResult(RESULT_OK, data);
             finish();
         }
