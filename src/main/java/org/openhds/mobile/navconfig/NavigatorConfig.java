@@ -325,13 +325,11 @@ class UpdateModule extends AbstractNavigatorModule {
         labelForm("pregnancy_observation", "pregnancyObservationFormLabel");
         labelForm("pregnancy_outcome", "pregnancyOutcomeFormLabel");
 
-        // Start a Visit FormBehavior
         bindForm(INDIVIDUAL_STATE, new FormBehavior("visit", "shared.visitLabel",
                 new UpdateFormFilters.StartAVisit(),
                 new UpdateFormPayloadBuilders.StartAVisit(),
                 new UpdateFormPayloadConsumers.StartAVisit()));
 
-        // Register an Internal Inmigration, requires a search to do
         EntityFieldSearch migrantSearch = getIndividualModule(
                 ProjectFormFields.Individuals.INDIVIDUAL_UUID, R.string.search_individual_label);
         bindForm(INDIVIDUAL_STATE, new FormBehavior("in_migration", "update.internalInMigrationLabel",
@@ -340,37 +338,31 @@ class UpdateModule extends AbstractNavigatorModule {
                 new UpdateFormPayloadConsumers.RegisterInMigration(),
                 migrantSearch));
 
-        // Register an External InMigration form (chained after individual form)
         FormBehavior externalInMigrationFormBehavior = new FormBehavior("in_migration", "update.externalInMigrationLabel",
                 new UpdateFormFilters.RegisterInMigration(),
                 new UpdateFormPayloadBuilders.RegisterExternalInMigration(),
                 new UpdateFormPayloadConsumers.RegisterInMigration());
 
-        // Register an Individual for External InMigration (chained with in_migration form)
         bindForm(INDIVIDUAL_STATE, new FormBehavior("individual", "update.externalInMigrationLabel",
                 new UpdateFormFilters.RegisterInMigration(),
                 new UpdateFormPayloadBuilders.AddIndividualFromInMigration(),
                 new UpdateFormPayloadConsumers.AddIndividualFromInMigration(externalInMigrationFormBehavior)));
 
-        // Register an OutMigration FormBehavior
         bindForm(BOTTOM_STATE, new FormBehavior("out_migration", "update.outMigrationLabel",
                 new UpdateFormFilters.DeathOrOutMigrationFilter(),
                 new UpdateFormPayloadBuilders.RegisterOutMigration(),
                 new UpdateFormPayloadConsumers.RegisterOutMigration()));
 
-        // Register a Death FormBehavior
         bindForm(BOTTOM_STATE, new FormBehavior("death", "update.deathLabel",
                 new UpdateFormFilters.DeathOrOutMigrationFilter(),
                 new UpdateFormPayloadBuilders.RegisterDeath(),
                 new UpdateFormPayloadConsumers.RegisterDeath()));
 
-        // Register a Pregnancy Observation FormBehavior
         bindForm(BOTTOM_STATE, new FormBehavior("pregnancy_observation", "shared.pregnancyObservationLabel",
                 new UpdateFormFilters.PregnancyFilter(),
                 new UpdateFormPayloadBuilders.RecordPregnancyObservation(),
                 null));
 
-        // Register a Pregnancy OutCome FormBehavior
         EntityFieldSearch paternitySearch = getIndividualModule(
                 ProjectFormFields.PregnancyOutcome.FATHER_UUID, R.string.search_father_label);
         bindForm(BOTTOM_STATE, new FormBehavior("pregnancy_outcome", "update.pregnancyOutcomeLabel",
