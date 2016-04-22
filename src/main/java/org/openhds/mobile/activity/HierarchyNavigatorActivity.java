@@ -190,7 +190,9 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         }
     }
 
-    // Sets all the fragment's drawables based on the configured module
+    /**
+     * Setup the activity based on the specified navigation module.
+     */
     private void configure(NavigatorModule module){
         setTitle(module.getActivityTitle());
         hierarchyButtonFragment.setHiearchySelectionDrawableId(R.drawable.data_selector);
@@ -321,20 +323,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         visitFragment.setButtonEnabled(getCurrentVisit() != null);
     }
 
-    private void updateAttachedForms() {
-        List<FormInstance> unsentForms = new ArrayList<>();
-        List<String> sentFormPaths = new ArrayList<>();
-        for (FormInstance attachedForm : getAttachedForms(currentHierarchyPath())) {
-            if (attachedForm.isSubmitted()) {
-                sentFormPaths.add(attachedForm.getFilePath());
-            } else {
-                unsentForms.add(attachedForm);
-            }
-        }
-        detachFormsFromHierarchy(sentFormPaths);
-        populateFormView(unsentForms);
-    }
-
     void detachFormsFromHierarchy(List<String> formPaths) {
         DatabaseAdapter.getInstance(this).detachFromHierarchy(formPaths);
     }
@@ -358,7 +346,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     private void updateButtonLabel(String state) {
-
         DataWrapper selected = hierarchyPath.get(state);
         if (null == selected) {
             String stateLabel = getResourceString(HierarchyNavigatorActivity.this, getStateLabels().get(state));
@@ -447,7 +434,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             if (formBehavior.requiresSearch()) {
                 launchSearch();
             } else {
-                launchEdit();
+                launchNewForm();
             }
         }
     }
@@ -460,7 +447,15 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         return formData;
     }
 
-    private void launchEdit() {
+    private void launchNewFormAfterSearch(Intent data) {
+        List<EntityFieldSearch> searchModules = data.getParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY);
+        for (EntityFieldSearch plugin : searchModules) {
+            formHelper.getData().put(plugin.getName(), plugin.getValue());
+        }
+        launchNewForm();
+    }
+
+    private void launchNewForm() {
         try {
             showShortToast(this, R.string.launching_odk_collect);
             startActivityForResult(editIntent(formHelper.newInstance()), ODK_ACTIVITY_REQUEST_CODE);
@@ -537,6 +532,59 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case ODK_ACTIVITY_REQUEST_CODE:
+                    handleFormResult(data);
+                    break;
+                case SEARCH_ACTIVITY_REQUEST_CODE:
+                    launchNewFormAfterSearch(data);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Handles forms created with launchNewForm on return from ODK.
+     */
+    private void handleFormResult(Intent data) {
+        FormInstance instance = formHelper.getInstance(data.getData());
+        associateFormToPath(instance.getFilePath());
+        if (instance.isComplete()) {
+            FormPayloadConsumer consumer = formHelper.getBehavior().getConsumer();
+            try {
+                clearResults();
+                consumerResult = consumer.consumeFormPayload(formHelper.fetch(), this);
+                if (consumerResult.hasInstanceUpdates()) {
+                    consumer.augmentInstancePayload(formHelper.getData());
+                    try {
+                        formHelper.update();
+                    } catch (IOException ue) {
+                        showShortToast(this, "Update failed: " + ue.getMessage());
+                    }
+                }
+                if (consumerResult.hasFollowUp()) {
+                    launchForm(consumerResult.getFollowUp(), consumerResult.getFollowUpHints());
+                }
+            } catch (IOException e) {
+                showShortToast(this, "Read failed: " + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Resets the cached results for the current hierarchy position. Calling this prior to hierarchySetup ensures
+     * that any changes to the database will be reflected in the user interface once hierarchySetup terminates.
+     */
+    private void clearResults() {
+        currentResults = null;
+    }
+
+    /**
+     * Constructs a string representing the current location hierarchy path for attaching forms to the hierarchy.
+     */
     private String currentHierarchyPath() {
         String SEP = "/";
         StringBuilder b = new StringBuilder(SEP);
@@ -552,67 +600,32 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         return b.toString();
     }
 
-    private void associateFormToPath(String formId) {
+    /**
+     * Associates the form instance path to the current hierarchy path of the activity.
+     */
+    private void associateFormToPath(String formPath) {
         String path = currentHierarchyPath();
         DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance(this);
-        if (formId != null) {
-            dbAdapter.attachFormToHierarchy(path, formId);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (RESULT_OK == resultCode) {
-            switch (requestCode) {
-                case ODK_ACTIVITY_REQUEST_CODE:
-                    FormInstance instance = formHelper.getInstance(data.getData());
-                    associateFormToPath(instance.getFilePath());
-                    if (instance.isComplete()) {
-                        FormPayloadConsumer consumer = formHelper.getBehavior().getConsumer();
-                        try {
-                            clearResults();
-                            consumerResult = consumer.consumeFormPayload(formHelper.fetch(), this);
-                            if (consumerResult.hasInstanceUpdates()) {
-                                consumer.augmentInstancePayload(formHelper.getData());
-                                try {
-                                    formHelper.update();
-                                } catch (IOException ue) {
-                                    showShortToast(this, "Update failed: " + ue.getMessage());
-                                }
-                            }
-                            if (consumerResult.hasFollowUp()) {
-                                launchForm(consumerResult.getFollowUp(), consumerResult.getFollowUpHints());
-                            }
-                        } catch (IOException e) {
-                            showShortToast(this, "Read failed: " + e.getMessage());
-                        }
-                    }
-                    break;
-
-                case SEARCH_ACTIVITY_REQUEST_CODE:
-                    // data intent contains the form fields and values that the user just search for
-                    List<EntityFieldSearch> formSearchPluginModules =
-                            data.getParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY);
-
-                    // merge searched fields with the existing form payload
-                    for (EntityFieldSearch plugin : formSearchPluginModules) {
-                        formHelper.getData().put(plugin.getName(), plugin.getValue());
-                    }
-
-                    // now let the user finish filling in the form in ODK
-                    launchEdit();
-                    break;
-            }
+        if (formPath != null) {
+            dbAdapter.attachFormToHierarchy(path, formPath);
         }
     }
 
     /**
-     * Resets the cached results for the current hierarchy position. Calling this prior to hierarchySetup ensures
-     * that any changes to the database will be reflected in the user interface once hierarchySetup terminates.
+     * Refreshes the attached forms at the current hierarchy path and prunes sent form associations.
      */
-    private void clearResults() {
-        currentResults = null;
+    private void updateAttachedForms() {
+        List<FormInstance> unsentForms = new ArrayList<>();
+        List<String> sentFormPaths = new ArrayList<>();
+        for (FormInstance attachedForm : getAttachedForms(currentHierarchyPath())) {
+            if (attachedForm.isSubmitted()) {
+                sentFormPaths.add(attachedForm.getFilePath());
+            } else {
+                unsentForms.add(attachedForm);
+            }
+        }
+        detachFormsFromHierarchy(sentFormPaths);
+        populateFormView(unsentForms);
     }
 
     public DataWrapper getCurrentSelection() {
