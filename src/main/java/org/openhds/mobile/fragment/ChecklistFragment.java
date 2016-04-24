@@ -33,9 +33,9 @@ public class ChecklistFragment extends Fragment {
 
     private final String TAG = ChecklistFragment.class.getSimpleName();
 
-    public static String DELETE_MODE = "delete";
-    public static String APPROVE_MODE = "approve";
     private static final String MODE_BUNDLE_KEY = "checklistFragmentMode";
+    public static final String DELETE_MODE = "delete";
+    public static final String APPROVE_MODE = "approve";
 
     private String currentMode;
 
