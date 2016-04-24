@@ -20,13 +20,23 @@
         <FrameLayout
                 android:id="@+id/field_worker_login_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+            <fragment
+                android:name="org.openhds.mobile.fragment.FieldWorkerLoginFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
 
         <FrameLayout
                 android:layout_marginTop="20dp"
                 android:id="@+id/supervisor_login_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+            <fragment
+                android:name="org.openhds.mobile.fragment.SupervisorLoginFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
     </LinearLayout>
 
     <FrameLayout
@@ -35,6 +45,11 @@
             android:layout_marginTop="30dp"
             android:layout_marginLeft="50dp"
             android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:visibility="gone">
+        <fragment
+            android:name="org.openhds.mobile.fragment.LoginPreferenceFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
 
 </LinearLayout>
