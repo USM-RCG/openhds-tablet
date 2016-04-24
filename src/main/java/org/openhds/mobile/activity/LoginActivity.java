@@ -17,6 +17,8 @@ public class LoginActivity extends Activity {
     public static final String USERNAME_KEY = "usernameKey";
     public static final String PASSWORD_KEY = "passwordKey";
 
+    private final String PREF_STATE_KEY = "prefStateKey";
+
     private FrameLayout prefsLayout;
 
     @Override
@@ -28,6 +30,18 @@ public class LoginActivity extends Activity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(PREF_STATE_KEY, prefsLayout.getVisibility());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        showPrefs(savedInstanceState.getInt(PREF_STATE_KEY) == VISIBLE);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.login_menu, menu);
         return super.onCreateOptionsMenu(menu);
@@ -35,7 +49,15 @@ public class LoginActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        prefsLayout.setVisibility(prefsLayout.getVisibility() == VISIBLE ? GONE : VISIBLE);
+        togglePrefs();
         return true;
+    }
+
+    private void togglePrefs() {
+        showPrefs(prefsLayout.getVisibility() != VISIBLE);
+    }
+
+    private void showPrefs(boolean show) {
+        prefsLayout.setVisibility(show ? VISIBLE : GONE);
     }
 }
