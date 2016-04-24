@@ -35,6 +35,7 @@ public class ChecklistFragment extends Fragment {
 
     public static String DELETE_MODE = "delete";
     public static String APPROVE_MODE = "approve";
+    private static final String MODE_BUNDLE_KEY = "checklistFragmentMode";
 
     private String currentMode;
 
@@ -68,14 +69,24 @@ public class ChecklistFragment extends Fragment {
         return fragmentLayout;
     }
 
-    public void resetCurrentMode() {
-        setMode(currentMode);
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(MODE_BUNDLE_KEY, currentMode);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            setMode(savedInstanceState.getString(MODE_BUNDLE_KEY));
+        }
     }
 
     public void setMode(String mode) {
-        if (mode.equalsIgnoreCase(ChecklistFragment.DELETE_MODE)) {
+        if (ChecklistFragment.DELETE_MODE.equals(mode)) {
             setupDeleteMode();
-        } else if (mode.equalsIgnoreCase(ChecklistFragment.APPROVE_MODE)) {
+        } else if (ChecklistFragment.APPROVE_MODE.equals(mode)) {
             setupApproveMode();
         }
     }
