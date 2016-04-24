@@ -17,6 +17,7 @@
         android:paddingRight="30dp"
         android:paddingTop="100dp">
         <fragment
+            android:id="@+id/fieldworker_login_fragment"
             android:name="org.openhds.mobile.fragment.FieldWorkerLoginFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
@@ -31,6 +32,7 @@
         android:paddingRight="50dp"
         android:paddingTop="100dp">
         <fragment
+            android:id="@+id/supervisor_login_fragment"
             android:name="org.openhds.mobile.fragment.SupervisorLoginFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
@@ -44,6 +46,7 @@
         android:paddingTop="80dp"
         android:visibility="gone">
         <fragment
+            android:id="@+id/login_preference_fragment"
             android:name="org.openhds.mobile.fragment.LoginPreferenceFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
