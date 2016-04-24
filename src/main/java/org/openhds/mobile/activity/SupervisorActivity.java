@@ -75,9 +75,12 @@ public class SupervisorActivity extends Activity {
                     .beginTransaction()
                     .add(R.id.supervisor_activity_options, new LoginPreferenceFragment())
                     .commit();
+            installSyncAccount();
         }
         checklistFragment = (ChecklistFragment) getFragmentManager().findFragmentById(R.id.supervisor_checklist_fragment);
+    }
 
+    private void installSyncAccount() {
         Bundle extras = getIntent().getExtras();
         String username = (String) extras.get(LoginActivity.USERNAME_KEY);
         String password = (String) extras.get(LoginActivity.PASSWORD_KEY);
