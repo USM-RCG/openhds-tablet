@@ -32,14 +32,11 @@ public class SupervisorActivity extends Activity {
 
     private static final String TAG = SupervisorActivity.class.getSimpleName();
 
-    private static final String CHECKLIST_FRAGMENT_TAG = "checklistFragment";
-    private static final String SYNC_FRAGMENT_TAG = "syncDatabaseFragment";
-    private static final String PREFERENCE_FRAGMENT_TAG = "preferenceFragment";
-
     private ChecklistFragment checklistFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.supervisor_main);
 
@@ -73,22 +70,13 @@ public class SupervisorActivity extends Activity {
                 buttonClickListener,
                 supervisorButtonLayout);
 
-
-        if (savedInstanceState == null)  {
-            SyncDatabaseFragment syncDatabaseFragment = new SyncDatabaseFragment();
-            syncDatabaseFragment.setRetainInstance(true);
-            PreferenceFragment preferenceFragment = new LoginPreferenceFragment();
-            checklistFragment = new ChecklistFragment();
+        if (savedInstanceState == null) {
             getFragmentManager()
                     .beginTransaction()
-                    .add(R.id.supervisor_edit_form_container, checklistFragment, CHECKLIST_FRAGMENT_TAG)
-                    .add(R.id.supervisor_auxiliary_container, syncDatabaseFragment, SYNC_FRAGMENT_TAG)
-                    .add(R.id.supervisor_activity_options, preferenceFragment, PREFERENCE_FRAGMENT_TAG)
+                    .add(R.id.supervisor_activity_options, new LoginPreferenceFragment())
                     .commit();
-
-        } else {
-            checklistFragment = (ChecklistFragment) getFragmentManager().findFragmentByTag(CHECKLIST_FRAGMENT_TAG);
         }
+        checklistFragment = (ChecklistFragment) getFragmentManager().findFragmentById(R.id.supervisor_checklist_fragment);
 
         Bundle extras = getIntent().getExtras();
         String username = (String) extras.get(LoginActivity.USERNAME_KEY);
