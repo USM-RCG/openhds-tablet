@@ -87,7 +87,6 @@ public class SupervisorActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        checklistFragment.resetCurrentMode();
     }
 
     private void searchDatabase() {
