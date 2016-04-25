@@ -46,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
@@ -311,7 +310,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         }
         updateAttachedForms();
 
-        visitFragment.setButtonEnabled(getCurrentVisit() != null);
+        visitFragment.setEnabled(getCurrentVisit() != null);
     }
 
     void detachFormsFromHierarchy(List<String> formPaths) {
@@ -654,12 +653,12 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
     public void startVisit(Visit visit) {
         setCurrentVisit(visit);
-        visitFragment.setButtonEnabled(true);
+        visitFragment.setEnabled(true);
     }
 
     public void finishVisit() {
         setCurrentVisit(null);
-        visitFragment.setButtonEnabled(false);
+        visitFragment.setEnabled(false);
         refreshHierarchy(getState());
     }
 

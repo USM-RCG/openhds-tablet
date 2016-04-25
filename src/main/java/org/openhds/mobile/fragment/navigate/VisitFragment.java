@@ -43,13 +43,12 @@ public class VisitFragment extends Fragment implements OnClickListener {
 		navigateActivity.finishVisit();
 	}
 
-	public void setButtonEnabled(boolean isEnabled) {
+	public void setEnabled(boolean enabled) {
 		if (layout != null) {
-			if (isEnabled) {
+			if (enabled) {
 				layout.setVisibility(ViewGroup.VISIBLE);
 				layout.setBackgroundResource(R.drawable.visit_selector);
-				configureTextWithPayload(getActivity(), layout,
-						getResources().getString(R.string.finish_visit), null, null, null, true);
+				configureTextWithPayload(getActivity(), layout, getResources().getString(R.string.finish_visit), null, null, null, true);
 				layout.setClickable(true);
 			} else {
 				layout.setVisibility(ViewGroup.GONE);
