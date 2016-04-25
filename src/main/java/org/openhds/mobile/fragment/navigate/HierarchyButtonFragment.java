@@ -26,7 +26,7 @@ public class HierarchyButtonFragment extends Fragment {
 	private static final int BUTTON_MARGIN = 5;
 
 	private HierarchyNavigator navigator;
-	private Map<String, RelativeLayout> viewsForStates;
+	private Map<String, RelativeLayout> stateViews;
     private int buttonDrawable;
 
 
@@ -39,7 +39,7 @@ public class HierarchyButtonFragment extends Fragment {
 		LinearLayout selectionContainer = (LinearLayout) inflater.inflate(
 				R.layout.hierarchy_button_fragment, container, false);
 
-		viewsForStates = new HashMap<>();
+		stateViews = new HashMap<>();
 		HierarchyButtonListener listener = new HierarchyButtonListener();
 
 		Map<String, Integer> labels = navigator.getStateLabels();
@@ -50,8 +50,7 @@ public class HierarchyButtonFragment extends Fragment {
                     selectionContainer, buttonDrawable, null, null,true);
 			LayoutParams params = (LayoutParams) layout.getLayoutParams();
 			params.setMargins(0, 0, 0, BUTTON_MARGIN);
-
-			viewsForStates.put(state, layout);
+			stateViews.put(state, layout);
 			setVisible(state, false);
 			setHighlighted(state, false);
 		}
@@ -64,14 +63,14 @@ public class HierarchyButtonFragment extends Fragment {
 	}
 
 	public void setVisible(String state, boolean visible) {
-		RelativeLayout layout = viewsForStates.get(state);
+		RelativeLayout layout = stateViews.get(state);
 		if (layout != null) {
 			layout.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
 		}
 	}
 
 	public void setHighlighted(String state, boolean highlighted) {
-		RelativeLayout layout = viewsForStates.get(state);
+		RelativeLayout layout = stateViews.get(state);
 		if (layout != null) {
 			layout.setPressed(highlighted);
 			layout.setClickable(!highlighted);
@@ -79,7 +78,7 @@ public class HierarchyButtonFragment extends Fragment {
 	}
 
 	public void setButtonLabel(String state, String name, String id, boolean centerText) {
-		RelativeLayout layout = viewsForStates.get(state);
+		RelativeLayout layout = stateViews.get(state);
 		if (layout != null) {
 			configureTextWithPayload(getActivity(), layout, name, id, null, null, centerText);
 		}
