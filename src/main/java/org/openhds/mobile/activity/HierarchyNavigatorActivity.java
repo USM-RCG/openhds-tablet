@@ -664,7 +664,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     private void refreshHierarchy(String state){
-        levelManager.moveTo(getStateSequence().get(0));
+        levelManager.moveTo(levelManager.getTop());
         levelManager.moveTo(state);
     }
 
@@ -676,7 +676,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
             updateButtonLabel(level);
 
-            if (!level.equals(getStateSequence().get(getStateSequence().size() - 1))) {
+            if (!level.equals(levelManager.getBottom())) {
                 hierarchyButtonFragment.setButtonAllowed(level, true);
             }
 
@@ -727,7 +727,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
     private static class NavigationManager {
 
-        private String top;
+        private String top, bottom;
         private Set<String> levels;
         private String currentLevel;
         private List<LevelListener> listeners;
@@ -735,8 +735,17 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         public NavigationManager(List<String> levels) {
             this.levels = new LinkedHashSet<>(levels);
             top = levels.get(0);
+            bottom = levels.get(levels.size() - 1);
             listeners = new ArrayList<>();
             moveTo(top);
+        }
+
+        public String getTop() {
+            return top;
+        }
+
+        public String getBottom() {
+            return bottom;
         }
 
         public String getLevel() {
