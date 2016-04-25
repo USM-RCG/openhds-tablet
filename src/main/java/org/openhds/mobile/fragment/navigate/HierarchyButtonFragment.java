@@ -29,10 +29,6 @@ public class HierarchyButtonFragment extends Fragment {
 	private Map<String, RelativeLayout> stateViews;
     private int buttonDrawable;
 
-
-    /*TODO: take in an object with references to SELECTED and NON-SELECTED drawables and point to them in
-    * TODO: setButtonHighligted();
-    */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
