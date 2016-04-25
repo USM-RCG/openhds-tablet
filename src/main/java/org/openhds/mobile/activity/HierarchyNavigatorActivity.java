@@ -245,38 +245,33 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         Intent intent = new Intent();
-
-        if(item.getItemId() == R.id.logout_menu_button) {
-            intent.setClass(this, LoginActivity.class);
-            startActivity(intent);
-            return true;
+        switch (item.getItemId()) {
+            case R.id.logout_menu_button:
+                intent.setClass(this, LoginActivity.class);
+                break;
+            case R.id.field_worker_home_menu_button:
+                intent.setClass(this, FieldWorkerActivity.class);
+                intent.putExtra(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA, getCurrentFieldWorker());
+                break;
+            default:
+                String menuModule = menuItemTags.get(item);
+                if (menuModule != null) {
+                    intent.setClass(this, HierarchyNavigatorActivity.class);
+                    intent.putExtra(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA, getCurrentFieldWorker());
+                    intent.putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, menuModule);
+                    intent.putParcelableArrayListExtra(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
+                    ArrayList<String> hierarchyPathKeys = new ArrayList<>(hierarchyPath.keySet());
+                    for (String key : hierarchyPathKeys) {
+                        intent.putExtra(key + HIERARCHY_PATH_VALUES, hierarchyPath.get(key));
+                    }
+                    intent.putStringArrayListExtra(HIERARCHY_PATH_KEYS, hierarchyPathKeys);
+                } else {
+                    return super.onOptionsItemSelected(item);
+                }
         }
-        if(item.getItemId() == R.id.field_worker_home_menu_button) {
-            intent.setClass(this, FieldWorkerActivity.class);
-            intent.putExtra(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA, getCurrentFieldWorker());
-            startActivity(intent);
-            return true;
-        }
-
-        if(null != menuItemTags.get(item)) {
-            intent.setClass(this, HierarchyNavigatorActivity.class);
-            intent.putExtra(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA, getCurrentFieldWorker());
-            intent.putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, menuItemTags.get(item));
-            intent.putParcelableArrayListExtra(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
-
-            ArrayList<String> hierarchyPathKeys = new ArrayList<>(hierarchyPath.keySet());
-            for (String key : hierarchyPathKeys) {
-                intent.putExtra(key + HIERARCHY_PATH_VALUES, hierarchyPath.get(key));
-            }
-            intent.putStringArrayListExtra(HIERARCHY_PATH_KEYS, hierarchyPathKeys);
-
-            startActivity(intent);
-            return true;
-        }
-            return super.onOptionsItemSelected(item);
-
+        startActivity(intent);
+        return true;
     }
 
     private void hierarchySetup() {
