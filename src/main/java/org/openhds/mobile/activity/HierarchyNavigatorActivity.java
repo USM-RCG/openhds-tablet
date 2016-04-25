@@ -40,8 +40,10 @@ import org.openhds.mobile.utilities.OdkCollectHelper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -81,7 +83,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     private NavigatorModule currentModule;
 
     private FormHelper formHelper;
-    private StateMachine stateMachine;
+    private NavigationManager levelManager;
     private Map<String, DataWrapper> hierarchyPath;
     private List<DataWrapper> currentResults;
     private DataWrapper currentSelection;
@@ -111,10 +113,10 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             currentModule = NavigatorConfig.getInstance().getModule(currentModuleName);
             hierarchyPath = new HashMap<>();
             formHelper = new FormHelper(this);
-            stateMachine = new StateMachine(new HashSet<>(getStateSequence()), getStateSequence().get(0));
+            levelManager = new NavigationManager(getStateSequence());
 
             for (String state : getStateSequence()) {
-                stateMachine.registerListener(state, new HierarchyStateListener());
+                levelManager.listenForLevel(state, new HierarchyLevelListener());
             }
 
             if (savedInstanceState == null) {
@@ -336,7 +338,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     public String getState() {
-        return stateMachine.getState();
+        return levelManager.getLevel();
     }
 
     private void updateButtonLabel(String state) {
@@ -394,7 +396,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             currentSelection = previousSelection;
             currentResults = queryHelper.getChildren(getContentResolver(), previousSelection, targetState);
         }
-        stateMachine.transitionTo(targetState);
+        levelManager.transitionTo(targetState);
 
     }
 
@@ -416,11 +418,10 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             currentResults = queryHelper.getChildren(getContentResolver(), selected, nextState);
 
             hierarchyPath.put(currentState, selected);
-            stateMachine.transitionTo(nextState);
+            levelManager.transitionTo(nextState);
         }
     }
 
-    @Override
     public void launchForm(FormBehavior formBehavior, Map<String, String> followUpFormHints) {
         formHelper.setBehavior(formBehavior); // update activity's current form
         if (formBehavior != null) {
@@ -668,15 +669,15 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     private void refreshHierarchy(String state){
-        stateMachine.transitionTo(getStateSequence().get(0));
-        stateMachine.transitionTo(state);
+        levelManager.transitionTo(getStateSequence().get(0));
+        levelManager.transitionTo(state);
     }
 
     // Respond when the navigation state machine changes state.
-    private class HierarchyStateListener implements StateListener {
+    private class HierarchyLevelListener implements LevelListener {
 
         @Override
-        public void onEnterState() {
+        public void onEntering() {
 
             String state = getState();
             updateButtonLabel(state);
@@ -704,7 +705,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         }
 
         @Override
-        public void onExitState() {
+        public void onLeaving() {
             updateButtonLabel(getState());
         }
     }
@@ -713,7 +714,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     private class ValueSelectionHandler implements DataSelectionFragment.SelectionHandler {
         @Override
         public void handleSelectedData(DataWrapper dataWrapper) {
-            HierarchyNavigatorActivity.this.stepDown(dataWrapper);
+            stepDown(dataWrapper);
         }
     }
 
@@ -721,76 +722,68 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     private class FormSelectionHandler implements FormSelectionFragment.SelectionHandler {
         @Override
         public void handleSelectedForm(FormBehavior formBehavior) {
-            HierarchyNavigatorActivity.this.launchForm(formBehavior, null);
+            launchForm(formBehavior, null);
         }
     }
 
-    private interface StateListener {
-        void onEnterState();
-        void onExitState();
+    private interface LevelListener {
+        void onEntering();
+        void onLeaving();
     }
 
-    private static class StateMachine {
+    private static class NavigationManager {
 
-        private Set<String> stateSet;
-        private String currentState;
-        private Map<String, Set<StateListener>> stateListeners;
+        private String top;
+        private Set<String> levels;
+        private String currentLevel;
+        private Map<String, Set<LevelListener>> listeners;
 
-        public StateMachine(Set<String> stateSet, String defaultState) {
-            this.stateSet = stateSet;
-            stateListeners = new HashMap<>();
-            transitionTo(defaultState);
+        public NavigationManager(List<String> levels) {
+            this.levels = new LinkedHashSet<>(levels);
+            top = levels.get(0);
+            listeners = new HashMap<>();
+            transitionTo(top);
         }
 
-        public String getState() {
-            return currentState;
+        public String getLevel() {
+            return currentLevel;
         }
 
-        public void transitionTo(String state) {
-            if (!stateSet.contains(state)) {
-                throw new IllegalStateException("State machine has no such state: " + state);
+        public void transitionTo(String level) {
+            if (!levels.contains(level)) {
+                throw new IllegalStateException("no such level: " + level);
             }
-
-            if (state.equals(currentState)) {
-                return;
-            }
-
-            fireOnExitListeners();
-            currentState = state;
-            fireOnEnterListeners();
-        }
-
-        public void registerListener(String state, StateListener stateListener) {
-
-            if (!stateSet.contains(state)) {
-                throw new IllegalStateException("State machine has no such state: " + state);
-            }
-
-            if (stateListeners.get(state) == null) {
-                stateListeners.put(state, new HashSet<StateListener>());
-            }
-            stateListeners.get(state).add(stateListener);
-        }
-
-        private void fireOnExitListeners() {
-            Set<StateListener> listenersToFire = stateListeners.get(currentState);
-            if (listenersToFire == null) {
-                return;
-            }
-
-            for (StateListener listener : listenersToFire) {
-                listener.onExitState();
+            if (!level.equals(currentLevel)) {
+                fireLeaving(currentLevel);
+                currentLevel = level;
+                fireEntering(level);
             }
         }
 
-        private void fireOnEnterListeners() {
-            Set<StateListener> listenersToFire = stateListeners.get(currentState);
-            if (listenersToFire == null) {
-                return;
+        public void listenForLevel(String level, LevelListener listener) {
+            if (!levels.contains(level)) {
+                throw new IllegalStateException("no such level: " + level);
             }
+            if (listeners.get(level) == null) {
+                listeners.put(level, new HashSet<LevelListener>());
+            }
+            listeners.get(level).add(listener);
+        }
 
-            for (StateListener listener : listenersToFire) {
-                listener.onEnterState();
+        private Set<LevelListener> getListeners(String level) {
+            Set<LevelListener> result = listeners.get(level);
+            return result != null? result : Collections.<LevelListener>emptySet();
+        }
+
+        private void fireLeaving(String level) {
+            for (LevelListener listener : getListeners(level)) {
+                listener.onLeaving();
+            }
+        }
+
+        private void fireEntering(String level) {
+            for (LevelListener listener : getListeners(level)) {
+                listener.onEntering();
             }
         }
     }

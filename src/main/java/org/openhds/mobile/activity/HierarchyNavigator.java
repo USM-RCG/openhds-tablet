@@ -15,6 +15,5 @@ public interface HierarchyNavigator {
 	void jumpUp(String state);
 
 	void stepDown(DataWrapper qr);
-	
-	void launchForm(FormBehavior form, Map<String, String> followUpformHints);
+
 }
