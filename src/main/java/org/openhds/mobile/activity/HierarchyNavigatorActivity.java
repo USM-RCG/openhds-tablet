@@ -40,9 +40,7 @@ import org.openhds.mobile.utilities.OdkCollectHelper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -114,10 +112,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             hierarchyPath = new HashMap<>();
             formHelper = new FormHelper(this);
             levelManager = new NavigationManager(getStateSequence());
-
-            for (String state : getStateSequence()) {
-                levelManager.listenForLevel(state, new HierarchyLevelListener());
-            }
+            levelManager.addListener(new HierarchyLevelListener());
 
             if (savedInstanceState == null) {
 
@@ -396,7 +391,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             currentSelection = previousSelection;
             currentResults = queryHelper.getChildren(getContentResolver(), previousSelection, targetState);
         }
-        levelManager.transitionTo(targetState);
+        levelManager.moveTo(targetState);
 
     }
 
@@ -418,7 +413,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             currentResults = queryHelper.getChildren(getContentResolver(), selected, nextState);
 
             hierarchyPath.put(currentState, selected);
-            levelManager.transitionTo(nextState);
+            levelManager.moveTo(nextState);
         }
     }
 
@@ -669,21 +664,20 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     private void refreshHierarchy(String state){
-        levelManager.transitionTo(getStateSequence().get(0));
-        levelManager.transitionTo(state);
+        levelManager.moveTo(getStateSequence().get(0));
+        levelManager.moveTo(state);
     }
 
     // Respond when the navigation state machine changes state.
     private class HierarchyLevelListener implements LevelListener {
 
         @Override
-        public void onEntering() {
+        public void onEntering(String level) {
 
-            String state = getState();
-            updateButtonLabel(state);
+            updateButtonLabel(level);
 
-            if (!state.equals(getStateSequence().get(getStateSequence().size() - 1))) {
-                hierarchyButtonFragment.setButtonAllowed(state, true);
+            if (!level.equals(getStateSequence().get(getStateSequence().size() - 1))) {
+                hierarchyButtonFragment.setButtonAllowed(level, true);
             }
 
             if (shouldShowDetailFragment()) {
@@ -695,7 +689,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             updateToggleButton();
 
             List<FormBehavior> formsToDisplay = new ArrayList<>();
-            for (FormBehavior form : currentModule.getFormsForState(state)) {
+            for (FormBehavior form : currentModule.getFormsForState(level)) {
                 if (form.getFilter().shouldDisplay(HierarchyNavigatorActivity.this)) {
                     formsToDisplay.add(form);
                 }
@@ -705,8 +699,8 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         }
 
         @Override
-        public void onLeaving() {
-            updateButtonLabel(getState());
+        public void onLeaving(String level) {
+            updateButtonLabel(level);
         }
     }
 
@@ -727,8 +721,8 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     private interface LevelListener {
-        void onEntering();
-        void onLeaving();
+        void onEntering(String level);
+        void onLeaving(String level);
     }
 
     private static class NavigationManager {
@@ -736,54 +730,45 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         private String top;
         private Set<String> levels;
         private String currentLevel;
-        private Map<String, Set<LevelListener>> listeners;
+        private List<LevelListener> listeners;
 
         public NavigationManager(List<String> levels) {
             this.levels = new LinkedHashSet<>(levels);
             top = levels.get(0);
-            listeners = new HashMap<>();
-            transitionTo(top);
+            listeners = new ArrayList<>();
+            moveTo(top);
         }
 
         public String getLevel() {
             return currentLevel;
         }
 
-        public void transitionTo(String level) {
+        public void moveTo(String level) {
             if (!levels.contains(level)) {
                 throw new IllegalStateException("no such level: " + level);
             }
             if (!level.equals(currentLevel)) {
-                fireLeaving(currentLevel);
+                if (currentLevel != null) {
+                    fireLeaving(currentLevel);
+                }
                 currentLevel = level;
                 fireEntering(level);
             }
         }
 
-        public void listenForLevel(String level, LevelListener listener) {
-            if (!levels.contains(level)) {
-                throw new IllegalStateException("no such level: " + level);
-            }
-            if (listeners.get(level) == null) {
-                listeners.put(level, new HashSet<LevelListener>());
-            }
-            listeners.get(level).add(listener);
-        }
-
-        private Set<LevelListener> getListeners(String level) {
-            Set<LevelListener> result = listeners.get(level);
-            return result != null? result : Collections.<LevelListener>emptySet();
+        public void addListener(LevelListener listener) {
+            listeners.add(listener);
         }
 
         private void fireLeaving(String level) {
-            for (LevelListener listener : getListeners(level)) {
-                listener.onLeaving();
+            for (LevelListener listener : listeners) {
+                listener.onLeaving(level);
             }
         }
 
         private void fireEntering(String level) {
-            for (LevelListener listener : getListeners(level)) {
-                listener.onEntering();
+            for (LevelListener listener : listeners) {
+                listener.onEntering(level);
             }
         }
     }
