@@ -191,7 +191,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
      */
     private void configure(NavigatorModule module){
         setTitle(module.getActivityTitle());
-        hierarchyButtonFragment.setHiearchySelectionDrawableId(R.drawable.data_selector);
+        hierarchyButtonFragment.setButtonDrawable(R.drawable.data_selector);
         valueFragment.setDataSelectionDrawableId(R.drawable.data_selector);
         formFragment.setFormSelectionDrawableId(R.drawable.form_selector);
         View middleColumn = findViewById(R.id.middle_column);
@@ -275,7 +275,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         for (String state : getStateSequence()) {
             if (hierarchyPath.containsKey(state)) {
                 updateButtonLabel(state);
-                hierarchyButtonFragment.setButtonAllowed(state, true);
+                hierarchyButtonFragment.setVisible(state, true);
                 stateIndex++;
             } else {
                 break;
@@ -284,7 +284,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
         String state = getStateSequence().get(stateIndex);
         if (stateIndex == 0) {
-            hierarchyButtonFragment.setButtonAllowed(state, true);
+            hierarchyButtonFragment.setVisible(state, true);
             currentResults = queryHelper.getAll(getContentResolver(), getStateSequence().get(0));
             updateToggleButton();
 
@@ -338,13 +338,13 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
     private void updateButtonLabel(String state) {
         DataWrapper selected = hierarchyPath.get(state);
-        if (null == selected) {
-            String stateLabel = getResourceString(HierarchyNavigatorActivity.this, getStateLabels().get(state));
+        if (selected == null) {
+            String stateLabel = getString(getStateLabels().get(state));
             hierarchyButtonFragment.setButtonLabel(state, stateLabel, null, true);
-            hierarchyButtonFragment.setButtonHighlighted(state, true);
+            hierarchyButtonFragment.setHighlighted(state, true);
         } else {
             hierarchyButtonFragment.setButtonLabel(state, selected.getName(), selected.getExtId(), false);
-            hierarchyButtonFragment.setButtonHighlighted(state, false);
+            hierarchyButtonFragment.setHighlighted(state, false);
         }
     }
 
@@ -375,7 +375,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         // un-traverse the hierarchy up to the target state
         for (int i = currentIndex; i >= targetIndex; i--) {
             String state = getStateSequence().get(i);
-            hierarchyButtonFragment.setButtonAllowed(state, false);
+            hierarchyButtonFragment.setVisible(state, false);
             hierarchyPath.remove(state);
 
         }
@@ -677,7 +677,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             updateButtonLabel(level);
 
             if (!level.equals(levelManager.getBottom())) {
-                hierarchyButtonFragment.setButtonAllowed(level, true);
+                hierarchyButtonFragment.setVisible(level, true);
             }
 
             if (shouldShowDetailFragment()) {

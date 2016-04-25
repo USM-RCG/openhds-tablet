@@ -1,15 +1,5 @@
 package org.openhds.mobile.fragment.navigate;
 
-import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
-import static org.openhds.mobile.utilities.LayoutUtils.configureTextWithPayload;
-import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.openhds.mobile.R;
-import org.openhds.mobile.activity.HierarchyNavigator;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,6 +10,16 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
+import org.openhds.mobile.R;
+import org.openhds.mobile.activity.HierarchyNavigator;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
+import static org.openhds.mobile.utilities.LayoutUtils.configureTextWithPayload;
+import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
+
 public class HierarchyButtonFragment extends Fragment {
 
 	// for some reason margin in layout XML is ignored
@@ -27,7 +27,7 @@ public class HierarchyButtonFragment extends Fragment {
 
 	private HierarchyNavigator navigator;
 	private Map<String, RelativeLayout> viewsForStates;
-    private int hiearchySelectionDrawableId;
+    private int buttonDrawable;
 
 
     /*TODO: take in an object with references to SELECTED and NON-SELECTED drawables and point to them in
@@ -35,6 +35,7 @@ public class HierarchyButtonFragment extends Fragment {
     */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
 		LinearLayout selectionContainer = (LinearLayout) inflater.inflate(
 				R.layout.hierarchy_button_fragment, container, false);
 
@@ -46,13 +47,13 @@ public class HierarchyButtonFragment extends Fragment {
 			final String description = null;
 			RelativeLayout layout = makeTextWithPayload(getActivity(),
                     getResourceString(getActivity(), labels.get(state)), description, state, listener,
-                    selectionContainer, hiearchySelectionDrawableId, null, null,true);
+                    selectionContainer, buttonDrawable, null, null,true);
 			LayoutParams params = (LayoutParams) layout.getLayoutParams();
 			params.setMargins(0, 0, 0, BUTTON_MARGIN);
 
 			viewsForStates.put(state, layout);
-			setButtonAllowed(state, false);
-			setButtonHighlighted(state, false);
+			setVisible(state, false);
+			setHighlighted(state, false);
 		}
 
 		return selectionContainer;
@@ -62,46 +63,36 @@ public class HierarchyButtonFragment extends Fragment {
 		this.navigator = navigator;
 	}
 
-	public void setButtonAllowed(String state, boolean isShown) {
-
+	public void setVisible(String state, boolean visible) {
 		RelativeLayout layout = viewsForStates.get(state);
-
-		if (null == layout) {
-			return;
+		if (layout != null) {
+			layout.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
 		}
-		layout.setVisibility(isShown ? View.VISIBLE : View.INVISIBLE);
+	}
+
+	public void setHighlighted(String state, boolean highlighted) {
+		RelativeLayout layout = viewsForStates.get(state);
+		if (layout != null) {
+			layout.setPressed(highlighted);
+			layout.setClickable(!highlighted);
+		}
 	}
 
 	public void setButtonLabel(String state, String name, String id, boolean centerText) {
 		RelativeLayout layout = viewsForStates.get(state);
-		if (null == layout) {
-			return;
+		if (layout != null) {
+			configureTextWithPayload(getActivity(), layout, name, id, null, null, centerText);
 		}
-		configureTextWithPayload(getActivity(), layout, name, id, null, null, centerText);
 	}
 
-    public void setHiearchySelectionDrawableId(int hiearchySelectionDrawableId) {
-        this.hiearchySelectionDrawableId = hiearchySelectionDrawableId;
+    public void setButtonDrawable(int drawable) {
+        this.buttonDrawable = drawable;
     }
 
     private class HierarchyButtonListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
 			navigator.jumpUp((String) v.getTag());
-
 		}
-	}
-
-	public void setButtonHighlighted(String state, boolean isHighlighted) {
-
-		RelativeLayout layout = viewsForStates.get(state);
-
-		if (null == layout) {
-			return;
-		}
-
-        layout.setPressed(isHighlighted);
-        layout.setClickable(!isHighlighted);
-
 	}
 }
