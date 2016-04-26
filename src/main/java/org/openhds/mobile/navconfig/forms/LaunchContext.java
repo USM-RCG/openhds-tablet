@@ -3,6 +3,7 @@ package org.openhds.mobile.navconfig.forms;
 import android.content.ContentResolver;
 
 import org.openhds.mobile.activity.HierarchyNavigatorActivity;
+import org.openhds.mobile.activity.HierarchyPath;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.update.Visit;
 import org.openhds.mobile.navconfig.forms.consumers.ConsumerResult;
@@ -24,7 +25,7 @@ public interface LaunchContext {
 
     DataWrapper getCurrentSelection();
 
-    Map<String, DataWrapper> getHierarchyPath();
+    HierarchyPath getHierarchyPath();
 
     List<String> getStateSequence();
 

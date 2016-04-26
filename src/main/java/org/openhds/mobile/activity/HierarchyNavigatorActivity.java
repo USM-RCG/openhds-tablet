@@ -72,16 +72,16 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     private static final String DETAIL_FRAGMENT_TAG = "hierarchyDetailFragment";
     private static final String VISIT_FRAGMENT_TAG = "hierarchyVisitFragment";
     private static final String VIEW_PATH_FORM_FRAGMENT_TAG ="formListFragment";
-    private static final String VISIT_KEY = "visitKey";
-    private static final String HIERARCHY_PATH_KEYS = "hierarchyPathKeys";
-    private static final String HIERARCHY_PATH_VALUES = "hierarchyPathValues";
+
+    private static final String HIERARCHY_PATH_KEY = "hierarchyPathKeys";
     private static final String CURRENT_RESULTS_KEY = "currentResults";
+    private static final String VISIT_KEY = "visitKey";
 
     private NavigatorModule currentModule;
 
     private FormHelper formHelper;
     private NavigationManager levelManager;
-    private Map<String, DataWrapper> hierarchyPath;
+    private HierarchyPath hierarchyPath;
     private List<DataWrapper> currentResults;
     private DataWrapper currentSelection;
     private FieldWorker currentFieldWorker;
@@ -95,31 +95,33 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.navigate_activity);
 
-        queryHelper = DefaultQueryHelper.getInstance();
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
 
-        FieldWorker fieldWorker = (FieldWorker) getIntent().getExtras().get(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA);
-        setCurrentFieldWorker(fieldWorker);
-        currentModuleName = (String) getIntent().getExtras().get(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA);
+        currentModuleName = (String) extras.get(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA);
+        currentModule = NavigatorConfig.getInstance().getModule(currentModuleName);
+
+        currentFieldWorker = (FieldWorker) extras.get(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA);
+
+        queryHelper = DefaultQueryHelper.getInstance();
+        formHelper = new FormHelper(this);
 
         try {
 
-            currentModule = NavigatorConfig.getInstance().getModule(currentModuleName);
-            hierarchyPath = new HashMap<>();
-            formHelper = new FormHelper(this);
+            hierarchyPath = new HierarchyPath();
             levelManager = new NavigationManager(getStateSequence());
             levelManager.addListener(new HierarchyLevelListener());
 
             if (savedInstanceState == null) {
 
-                if (null != getIntent().getStringArrayListExtra(HIERARCHY_PATH_KEYS)) {
-                    ArrayList<String> hierarchyPathKeys = getIntent().getStringArrayListExtra(HIERARCHY_PATH_KEYS);
-                    for (String key : hierarchyPathKeys) {
-                        hierarchyPath.put(key, (DataWrapper) getIntent().getParcelableExtra(key + HIERARCHY_PATH_VALUES));
-                    }
+                HierarchyPath suppliedPath = intent.getParcelableExtra(HIERARCHY_PATH_KEY);
+                if (suppliedPath != null) {
+                    hierarchyPath = suppliedPath;
                     currentResults = getIntent().getParcelableArrayListExtra(CURRENT_RESULTS_KEY);
                 }
 
@@ -170,11 +172,9 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
                 formListFragment = (FormListFragment) fragmentManager.findFragmentByTag(VIEW_PATH_FORM_FRAGMENT_TAG);
 
-                ArrayList<String> hierarchyPathKeys = savedInstanceState.getStringArrayList(HIERARCHY_PATH_KEYS);
-                for (String key : hierarchyPathKeys) {
-                    hierarchyPath.put(key, (DataWrapper) savedInstanceState.getParcelable(key + HIERARCHY_PATH_VALUES));
-                }
+                hierarchyPath = savedInstanceState.getParcelable(HIERARCHY_PATH_KEY);
                 currentResults = savedInstanceState.getParcelableArrayList(CURRENT_RESULTS_KEY);
+
                 setCurrentVisit((Visit) savedInstanceState.get(VISIT_KEY));
             }
 
@@ -205,13 +205,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-
-        ArrayList<String> hierarchyPathKeys = new ArrayList<>(hierarchyPath.keySet());
-        for (String key : hierarchyPathKeys) {
-            savedInstanceState.putParcelable(key + HIERARCHY_PATH_VALUES, hierarchyPath.get(key));
-        }
-        savedInstanceState.putStringArrayList(HIERARCHY_PATH_KEYS, hierarchyPathKeys);
-
+        savedInstanceState.putParcelable(HIERARCHY_PATH_KEY, hierarchyPath);
         savedInstanceState.putParcelableArrayList(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
         savedInstanceState.putSerializable(VISIT_KEY, getCurrentVisit());
         super.onSaveInstanceState(savedInstanceState);
@@ -253,14 +247,10 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                 String menuModule = menuItemTags.get(item);
                 if (menuModule != null) {
                     intent.setClass(this, HierarchyNavigatorActivity.class);
-                    intent.putExtra(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA, getCurrentFieldWorker());
                     intent.putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, menuModule);
+                    intent.putExtra(HIERARCHY_PATH_KEY, hierarchyPath);
                     intent.putParcelableArrayListExtra(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
-                    ArrayList<String> hierarchyPathKeys = new ArrayList<>(hierarchyPath.keySet());
-                    for (String key : hierarchyPathKeys) {
-                        intent.putExtra(key + HIERARCHY_PATH_VALUES, hierarchyPath.get(key));
-                    }
-                    intent.putStringArrayListExtra(HIERARCHY_PATH_KEYS, hierarchyPathKeys);
+                    intent.putExtra(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA, getCurrentFieldWorker());
                 } else {
                     return super.onOptionsItemSelected(item);
                 }
@@ -270,36 +260,31 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     private void hierarchySetup() {
-        int stateIndex = 0;
-        for (String state : getStateSequence()) {
-            if (hierarchyPath.containsKey(state)) {
-                updateButtonLabel(state);
-                hierarchyButtonFragment.setVisible(state, true);
-                stateIndex++;
-            } else {
-                break;
-            }
+
+        for (String level : hierarchyPath.getLevels()) {
+            updateButtonLabel(level);
+            hierarchyButtonFragment.setVisible(level, true);
         }
 
-        String state = getStateSequence().get(stateIndex);
-        if (stateIndex == 0) {
-            hierarchyButtonFragment.setVisible(state, true);
-            currentResults = queryHelper.getAll(getContentResolver(), getStateSequence().get(0));
+        int pathDepth = hierarchyPath.depth();
+        String levelAtDepth = getStateSequence().get(pathDepth);
+        if (pathDepth == 0) {
+            hierarchyButtonFragment.setVisible(levelAtDepth, true);
+            currentResults = queryHelper.getAll(getContentResolver(), levelAtDepth);
             updateToggleButton();
-
         } else {
-            String previousState = getStateSequence().get(stateIndex - 1);
-            DataWrapper previousSelection = hierarchyPath.get(previousState);
-            currentSelection = previousSelection;
+            String parentLevel = getStateSequence().get(pathDepth - 1);
+            DataWrapper parentItem = hierarchyPath.get(parentLevel);
+            currentSelection = parentItem;
             if(currentResults == null) {
-                currentResults = queryHelper.getChildren(getContentResolver(), previousSelection, state);
+                currentResults = queryHelper.getChildren(getContentResolver(), parentItem, levelAtDepth);
             }
         }
 
         boolean isAdded = valueFragment.isAdded();
 
         // make sure that listeners will fire for the current state
-        refreshHierarchy(state);
+        refreshHierarchy(levelAtDepth);
 
         if (isAdded || !currentResults.isEmpty()) {
             showValueFragment();
@@ -327,7 +312,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         return OdkCollectHelper.getByPaths(getContentResolver(), attachedPaths);
     }
 
-    public Map<String, DataWrapper> getHierarchyPath() {
+    public HierarchyPath getHierarchyPath() {
         return hierarchyPath;
     }
 
@@ -358,60 +343,51 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     @Override
-    public void jumpUp(String targetState) {
-        int targetIndex = getStateSequence().indexOf(targetState);
-        if (targetIndex < 0) {
-            throw new IllegalStateException("Target state <" + targetState + "> is not a valid state");
+    public void jumpUp(String level) {
+
+        if (!hierarchyPath.getLevels().contains(level)) {
+            throw new IllegalStateException("invalid level: " + level);
         }
 
-        String currentState = getState();
-        int currentIndex = getStateSequence().indexOf(currentState);
-        if (targetIndex >= currentIndex) {
-            // use stepDown() to go down the hierarchy
-            return;
+        List<String> allLevels = getStateSequence();
+        int indexBeforeJump = allLevels.indexOf(getState());
+        int indexAfterJump = allLevels.indexOf(level);
+
+        hierarchyPath.truncate(level);
+
+        // Disable buttons made irrelevant after jump
+        for (int i = indexBeforeJump; i >= indexAfterJump; i--) {
+            hierarchyButtonFragment.setVisible(getStateSequence().get(i), false);
         }
 
-        // un-traverse the hierarchy up to the target state
-        for (int i = currentIndex; i >= targetIndex; i--) {
-            String state = getStateSequence().get(i);
-            hierarchyButtonFragment.setVisible(state, false);
-            hierarchyPath.remove(state);
-
-        }
-
-        // prepare to stepDown() from this target state
-        if (0 == targetIndex) {
-            // root of the hierarchy
-            currentResults = queryHelper.getAll(getContentResolver(), getStateSequence().get(0));
+        // Populate data to enable drilling deeper from new depth
+        if (indexAfterJump == 0) {
+            currentResults = queryHelper.getAll(getContentResolver(), getStateSequence().get(indexAfterJump));
         } else {
-            // middle of the hierarchy
-            String previousState = getStateSequence().get(targetIndex - 1);
-            DataWrapper previousSelection = hierarchyPath.get(previousState);
-            currentSelection = previousSelection;
-            currentResults = queryHelper.getChildren(getContentResolver(), previousSelection, targetState);
+            String parentLevel = getStateSequence().get(indexAfterJump - 1);
+            DataWrapper parentItem = hierarchyPath.get(parentLevel);
+            currentSelection = parentItem;
+            currentResults = queryHelper.getChildren(getContentResolver(), parentItem, level);
         }
-        levelManager.moveTo(targetState);
 
+        levelManager.moveTo(level);
     }
 
     @Override
     public void stepDown(DataWrapper selected) {
-        String currentState = getState();
 
-        if (!currentState.equals(selected.getCategory())) {
-            throw new IllegalStateException("Selected state <"
-                    + selected.getCategory() + "> mismatch with current state <"
-                    + currentState + ">");
+        String currentState = getState(), selectedState = selected.getCategory();
+
+        if (!currentState.equals(selectedState)) {
+            throw new IllegalStateException("level mismatch: expected " + currentState + ", saw " + selectedState);
         }
 
         int currentIndex = getStateSequence().indexOf(currentState);
         if (currentIndex >= 0 && currentIndex < getStateSequence().size() - 1) {
             String nextState = getStateSequence().get(currentIndex + 1);
-
             currentSelection = selected;
             currentResults = queryHelper.getChildren(getContentResolver(), selected, nextState);
-
-            hierarchyPath.put(currentState, selected);
+            hierarchyPath.down(currentState, selected);
             levelManager.moveTo(nextState);
         }
     }
@@ -572,31 +548,12 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     /**
-     * Constructs a string representing the current location hierarchy path for attaching forms to the hierarchy.
-     */
-    private String currentHierarchyPath() {
-        String SEP = "/";
-        StringBuilder b = new StringBuilder(SEP);
-        List<String> stateSequence = getStateSequence();
-        Map<String, DataWrapper> hierarchyPath = getHierarchyPath();
-        for (String state : stateSequence) {
-            DataWrapper pathData = hierarchyPath.get(state);
-            if (pathData != null) {
-                b.append(pathData.getExtId());
-                b.append(SEP);
-            }
-        }
-        return b.toString();
-    }
-
-    /**
      * Associates the form instance path to the current hierarchy path of the activity.
      */
     private void associateFormToPath(String formPath) {
-        String path = currentHierarchyPath();
         DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance(this);
         if (formPath != null) {
-            dbAdapter.attachFormToHierarchy(path, formPath);
+            dbAdapter.attachFormToHierarchy(hierarchyPath.toString(), formPath);
         }
     }
 
@@ -606,7 +563,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     private void updateAttachedForms() {
         List<FormInstance> unsentForms = new ArrayList<>();
         List<String> sentFormPaths = new ArrayList<>();
-        for (FormInstance attachedForm : getAttachedForms(currentHierarchyPath())) {
+        for (FormInstance attachedForm : getAttachedForms(hierarchyPath.toString())) {
             if (attachedForm.isSubmitted()) {
                 sentFormPaths.add(attachedForm.getFilePath());
             } else {

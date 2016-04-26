@@ -2,6 +2,7 @@ package org.openhds.mobile.navconfig.forms.builders;
 
 import android.content.ContentResolver;
 
+import org.openhds.mobile.activity.HierarchyPath;
 import org.openhds.mobile.model.core.*;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.navconfig.forms.adapters.IndividualFormAdapter;
@@ -219,7 +220,7 @@ public class CensusFormPayloadBuilders {
             PayloadTools.flagForReview(formPayload, true);
 
             // build complete individual form
-            Map<String, DataWrapper> hierarchyPath = ctx.getHierarchyPath();
+            HierarchyPath hierarchyPath = ctx.getHierarchyPath();
             String individualUuid = hierarchyPath.get(INDIVIDUAL_STATE).getUuid();
             String householdUuid = hierarchyPath.get(HOUSEHOLD_STATE).getUuid();
 

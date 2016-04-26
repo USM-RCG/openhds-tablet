@@ -1,10 +1,10 @@
 package org.openhds.mobile.navconfig.forms.builders;
 
-import org.openhds.mobile.navconfig.forms.LaunchContext;
-import org.openhds.mobile.repository.DataWrapper;
+import org.openhds.mobile.activity.HierarchyPath;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.navconfig.ProjectFormFields;
 import org.openhds.mobile.navconfig.ProjectResources;
+import org.openhds.mobile.navconfig.forms.LaunchContext;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,15 +24,13 @@ public class PayloadTools {
     public static void addMinimalFormPayload(Map<String, String> formPayload, LaunchContext navigateActivity) {
 
         List<String> stateSequence = navigateActivity.getStateSequence();
-        Map<String, DataWrapper> hierarchyPath = navigateActivity.getHierarchyPath();
+        HierarchyPath hierarchyPath = navigateActivity.getHierarchyPath();
 
         //TODO: Add all the hierarchy Uuids as well?
         // Add all the extIds from the HierarchyPath
-        for (String state : stateSequence) {
-            if (null != hierarchyPath.get(state)) {
-                String fieldName = ProjectFormFields.General.getExtIdFieldNameFromState(state);
-                formPayload.put(fieldName, hierarchyPath.get(state).getExtId());
-            }
+        for (String level : hierarchyPath.getLevels()) {
+            String fieldName = ProjectFormFields.General.getExtIdFieldNameFromState(level);
+            formPayload.put(fieldName, hierarchyPath.get(level).getExtId());
         }
 
         // add the FieldWorker's extId
