@@ -1,5 +1,6 @@
 package org.openhds.mobile.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -22,17 +23,31 @@ import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 
 public class FormSelectionFragment extends Fragment {
 
-    private SelectionHandler selectionHandler;
+    private FormSelectionListener listener;
     private FormSelectionListAdapter formListAdapter;
     private int formSelectionDrawableId;
+
+    public interface FormSelectionListener {
+        void onFormSelected(FormBehavior formBehavior);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof FormSelectionListener) {
+            listener = (FormSelectionListener)activity;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.form_selection_fragment, container, false);
-    }
-
-    public void setSelectionHandler(SelectionHandler selectionHandler) {
-        this.selectionHandler = selectionHandler;
     }
 
     public void createFormButtons(List<FormBehavior> values) {
@@ -48,15 +63,13 @@ public class FormSelectionFragment extends Fragment {
         this.formSelectionDrawableId = formSelectionDrawableId;
     }
 
-    public interface SelectionHandler {
-        void handleSelectedForm(FormBehavior formBehavior);
-    }
-
     private class FormClickListener implements OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            FormBehavior form = formListAdapter.getItem(position);
-            selectionHandler.handleSelectedForm(form);
+            if (listener != null) {
+                FormBehavior form = formListAdapter.getItem(position);
+                listener.onFormSelected(form);
+            }
         }
     }
 

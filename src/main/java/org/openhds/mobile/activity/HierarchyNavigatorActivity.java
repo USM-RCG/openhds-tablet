@@ -49,7 +49,7 @@ import java.util.Set;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
-public class HierarchyNavigatorActivity extends Activity implements HierarchyNavigator, LaunchContext {
+public class HierarchyNavigatorActivity extends Activity implements HierarchyNavigator, LaunchContext, FormSelectionFragment.FormSelectionListener {
 
     private static final String TAG = HierarchyNavigatorActivity.class.getSimpleName();
 
@@ -131,7 +131,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                 valueFragment = new DataSelectionFragment();
                 valueFragment.setSelectionHandler(new ValueSelectionHandler());
                 formFragment = new FormSelectionFragment();
-                formFragment.setSelectionHandler(new FormSelectionHandler());
                 detailToggleFragment = new DetailToggleFragment();
                 detailToggleFragment.setNavigateActivity(this);
                 defaultDetailFragment = new DefaultDetailFragment();
@@ -154,7 +153,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                 hierarchyButtonFragment = (HierarchyButtonFragment) fragmentManager.findFragmentByTag(HIERARCHY_BUTTON_FRAGMENT_TAG);
                 hierarchyButtonFragment.setNavigator(this);
                 formFragment = (FormSelectionFragment) fragmentManager.findFragmentByTag(FORM_FRAGMENT_TAG);
-                formFragment.setSelectionHandler(new FormSelectionHandler());
                 detailToggleFragment = (DetailToggleFragment) fragmentManager.findFragmentByTag(TOGGLE_FRAGMENT_TAG);
                 detailToggleFragment.setNavigateActivity(this);
                 visitFragment = (VisitFragment) fragmentManager.findFragmentByTag(VISIT_FRAGMENT_TAG);
@@ -620,6 +618,11 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         levelManager.moveTo(state);
     }
 
+    @Override
+    public void onFormSelected(FormBehavior formBehavior) {
+        launchForm(formBehavior, null);
+    }
+
     // Respond when the navigation state machine changes state.
     private class HierarchyLevelListener implements LevelListener {
 
@@ -661,14 +664,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         @Override
         public void handleSelectedData(DataWrapper dataWrapper) {
             stepDown(dataWrapper);
-        }
-    }
-
-    // Receive a form that the user clicked in FormSelectionFragment.
-    private class FormSelectionHandler implements FormSelectionFragment.SelectionHandler {
-        @Override
-        public void handleSelectedForm(FormBehavior formBehavior) {
-            launchForm(formBehavior, null);
         }
     }
 
