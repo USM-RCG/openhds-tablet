@@ -49,9 +49,10 @@ import java.util.Set;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
-public class HierarchyNavigatorActivity extends Activity implements HierarchyNavigator, LaunchContext,
-        FormSelectionFragment.FormSelectionListener, DataSelectionFragment.DataSelectionListener,
-        VisitFragment.VisitFinishedListener, DetailToggleFragment.DetailToggleListener {
+public class HierarchyNavigatorActivity extends Activity implements LaunchContext,
+        HierarchyButtonFragment.HierarchyButtonListener, DetailToggleFragment.DetailToggleListener,
+        DataSelectionFragment.DataSelectionListener, FormSelectionFragment.FormSelectionListener,
+        VisitFragment.VisitFinishedListener {
 
     private static final String TAG = HierarchyNavigatorActivity.class.getSimpleName();
 
@@ -131,7 +132,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
                 //fresh activity
                 hierarchyButtonFragment = new HierarchyButtonFragment();
-                hierarchyButtonFragment.setNavigator(this);
                 valueFragment = new DataSelectionFragment();
                 formFragment = new FormSelectionFragment();
                 detailToggleFragment = new DetailToggleFragment();
@@ -152,7 +152,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                 FragmentManager fragmentManager = getFragmentManager();
                 // restore saved activity state
                 hierarchyButtonFragment = (HierarchyButtonFragment) fragmentManager.findFragmentByTag(HIERARCHY_BUTTON_FRAGMENT_TAG);
-                hierarchyButtonFragment.setNavigator(this);
                 formFragment = (FormSelectionFragment) fragmentManager.findFragmentByTag(FORM_FRAGMENT_TAG);
                 detailToggleFragment = (DetailToggleFragment) fragmentManager.findFragmentByTag(TOGGLE_FRAGMENT_TAG);
                 visitFragment = (VisitFragment) fragmentManager.findFragmentByTag(VISIT_FRAGMENT_TAG);
@@ -327,18 +326,15 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         }
     }
 
-    @Override
-    public Map<String, Integer> getLevelLabels() {
+    private Map<String, Integer> getLevelLabels() {
         return config.getHierarchy().getLevelLabels();
     }
 
-    @Override
-    public List<String> getLevels() {
+    private List<String> getLevels() {
         return config.getHierarchy().getLevels();
     }
 
-    @Override
-    public void jumpUp(String level) {
+    private void jumpUp(String level) {
 
         if (!hierarchyPath.getLevels().contains(level)) {
             throw new IllegalStateException("invalid level: " + level);
@@ -368,8 +364,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         levelManager.moveTo(level);
     }
 
-    @Override
-    public void stepDown(DataWrapper selected) {
+    private void stepDown(DataWrapper selected) {
 
         String currentState = getLevel(), selectedState = selected.getCategory();
 
@@ -387,7 +382,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         }
     }
 
-    public void launchForm(FormBehavior formBehavior, Map<String, String> followUpFormHints) {
+    private void launchForm(FormBehavior formBehavior, Map<String, String> followUpFormHints) {
         formHelper.setBehavior(formBehavior); // update activity's current form
         if (formBehavior != null) {
             formHelper.setData(buildDataWithHints(formBehavior, followUpFormHints));
@@ -481,8 +476,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         }
     }
 
-    // for ONCLICK of the toggleFrag
-    public void toggleMiddleFragment() {
+    private void toggleMiddleFragment() {
         if (valueFragment.isAdded()) {
             showDetailFragment();
             detailToggleFragment.setHighlighted(true);
@@ -595,7 +589,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         return consumerResult;
     }
 
-    public void setCurrentVisit(Visit currentVisit) {
+    private void setCurrentVisit(Visit currentVisit) {
         this.currentVisit = currentVisit;
     }
 
@@ -633,6 +627,11 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     @Override
     public void onDetailToggled() {
         toggleMiddleFragment();
+    }
+
+    @Override
+    public void onHierarchyButtonClicked(String level) {
+        jumpUp(level);
     }
 
 
