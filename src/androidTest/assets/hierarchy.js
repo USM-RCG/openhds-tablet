@@ -20,7 +20,7 @@ for (var l = 0; l < levels.length; l++) {
     levelLabels[level.name] = level.label;
 }
 
-var info = new org.openhds.mobile.projectdata.HierarchyInfo({
+var info = new org.openhds.mobile.navconfig.HierarchyInfo({
     getLevels: function() { return levelNames; },
     getLevelLabels: function() { return levelLabels },
 });
