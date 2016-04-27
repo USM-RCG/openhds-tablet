@@ -14,8 +14,6 @@ public interface NavigatorModule {
 
     String getActivityTitle();
 
-    HierarchyInfo getHierarchyInfo();
-
     List<FormBehavior> getFormsForState(String state);
 
     Map<String, DetailFragment> getDetailFragsForStates();

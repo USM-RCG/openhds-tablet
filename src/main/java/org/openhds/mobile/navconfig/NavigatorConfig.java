@@ -130,6 +130,10 @@ public class NavigatorConfig {
         return getBundle("modulestrings").getString(key);
     }
 
+    public HierarchyInfo getHierarchy() {
+        return BiokoHierarchy.INSTANCE;
+    }
+
     public NavigatorModule getModule(String name) {
         return modules.get(name);
     }
@@ -155,11 +159,6 @@ abstract class AbstractNavigatorModule implements NavigatorModule {
      */
     protected String getString(String key) {
         return config.getString(key);
-    }
-
-    @Override
-    public HierarchyInfo getHierarchyInfo() {
-        return BiokoHierarchy.INSTANCE;
     }
 
     @Override

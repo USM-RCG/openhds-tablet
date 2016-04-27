@@ -79,6 +79,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     private static final String CURRENT_RESULTS_KEY = "currentResults";
     private static final String VISIT_KEY = "visitKey";
 
+    private NavigatorConfig config;
     private NavigatorModule currentModule;
 
     private FormHelper formHelper;
@@ -105,8 +106,9 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
+        config = NavigatorConfig.getInstance();
         currentModuleName = (String) extras.get(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA);
-        currentModule = NavigatorConfig.getInstance().getModule(currentModuleName);
+        currentModule = config.getModule(currentModuleName);
 
         currentFieldWorker = (FieldWorker) extras.get(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA);
 
@@ -328,12 +330,12 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
     @Override
     public Map<String, Integer> getStateLabels() {
-        return currentModule.getHierarchyInfo().getStateLabels();
+        return config.getHierarchy().getStateLabels();
     }
 
     @Override
     public List<String> getStateSequence() {
-        return currentModule.getHierarchyInfo().getStateSequence();
+        return config.getHierarchy().getStateSequence();
     }
 
     @Override
