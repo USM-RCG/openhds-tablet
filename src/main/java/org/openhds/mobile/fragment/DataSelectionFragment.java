@@ -1,5 +1,6 @@
 package org.openhds.mobile.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+
 import org.openhds.mobile.R;
 import org.openhds.mobile.repository.DataWrapper;
 
@@ -21,10 +23,28 @@ import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 
 public class DataSelectionFragment extends Fragment {
 
-    private SelectionHandler selectionHandler;
+    private DataSelectionListener listener;
     private DataSelectionListAdapter dataWrapperAdapter;
     private int dataSelectionDrawableId;
     private ListView listView;
+
+    public interface DataSelectionListener {
+        void onDataSelected(DataWrapper data);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof DataSelectionListener) {
+            this.listener = (DataSelectionListener)activity;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        this.listener = null;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,8 +54,8 @@ public class DataSelectionFragment extends Fragment {
         return viewGroup;
     }
 
-    public void populateData(List<DataWrapper> dataWrappers) {
-        dataWrapperAdapter = new DataSelectionListAdapter(getActivity(), R.layout.generic_list_item_white_text, dataWrappers);
+    public void populateData(List<DataWrapper> data) {
+        dataWrapperAdapter = new DataSelectionListAdapter(getActivity(), R.layout.generic_list_item_white_text, data);
         listView.setAdapter(dataWrapperAdapter);
     }
 
@@ -46,23 +66,17 @@ public class DataSelectionFragment extends Fragment {
         dataWrapperAdapter.clear();
     }
 
-    public void setSelectionHandler(SelectionHandler selectionHandler) {
-        this.selectionHandler = selectionHandler;
-    }
-
     public void setDataSelectionDrawableId(int dataSelectionDrawableId) {
         this.dataSelectionDrawableId = dataSelectionDrawableId;
-    }
-
-    public interface SelectionHandler {
-        void handleSelectedData(DataWrapper dataWrapper);
     }
 
     private class DataClickListener implements OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            DataWrapper selected = dataWrapperAdapter.getItem(position);
-            selectionHandler.handleSelectedData(selected);
+            if (listener != null) {
+                DataWrapper selected = dataWrapperAdapter.getItem(position);
+                listener.onDataSelected(selected);
+            }
         }
     }
 

@@ -49,7 +49,7 @@ import java.util.Set;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
-public class HierarchyNavigatorActivity extends Activity implements HierarchyNavigator, LaunchContext, FormSelectionFragment.FormSelectionListener {
+public class HierarchyNavigatorActivity extends Activity implements HierarchyNavigator, LaunchContext, FormSelectionFragment.FormSelectionListener, DataSelectionFragment.DataSelectionListener {
 
     private static final String TAG = HierarchyNavigatorActivity.class.getSimpleName();
 
@@ -129,7 +129,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                 hierarchyButtonFragment = new HierarchyButtonFragment();
                 hierarchyButtonFragment.setNavigator(this);
                 valueFragment = new DataSelectionFragment();
-                valueFragment.setSelectionHandler(new ValueSelectionHandler());
                 formFragment = new FormSelectionFragment();
                 detailToggleFragment = new DetailToggleFragment();
                 detailToggleFragment.setNavigateActivity(this);
@@ -166,7 +165,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                     detailFragment = (DetailFragment) fragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG);
                     detailFragment.setNavigateActivity(this);
                 }
-                valueFragment.setSelectionHandler(new ValueSelectionHandler());
 
                 formListFragment = (FormListFragment) fragmentManager.findFragmentByTag(VIEW_PATH_FORM_FRAGMENT_TAG);
 
@@ -623,6 +621,11 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         launchForm(formBehavior, null);
     }
 
+    @Override
+    public void onDataSelected(DataWrapper data) {
+        stepDown(data);
+    }
+
     // Respond when the navigation state machine changes state.
     private class HierarchyLevelListener implements LevelListener {
 
@@ -656,14 +659,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         @Override
         public void onLeaving(String level) {
             updateButtonLabel(level);
-        }
-    }
-
-    // Receive a value that the user clicked in ValueSelectionFragment.
-    private class ValueSelectionHandler implements DataSelectionFragment.SelectionHandler {
-        @Override
-        public void handleSelectedData(DataWrapper dataWrapper) {
-            stepDown(dataWrapper);
         }
     }
 

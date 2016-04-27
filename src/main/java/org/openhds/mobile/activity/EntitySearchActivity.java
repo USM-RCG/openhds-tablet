@@ -24,7 +24,7 @@ import static org.openhds.mobile.utilities.LayoutUtils.configureTextWithValueAnd
 import static org.openhds.mobile.utilities.LayoutUtils.makeLargeTextWithValueAndLabel;
 
 
-public class EntitySearchActivity extends Activity {
+public class EntitySearchActivity extends Activity implements DataSelectionFragment.DataSelectionListener {
 
     public static final String SEARCH_MODULES_KEY = "entitySearchModules";
 
@@ -56,8 +56,8 @@ public class EntitySearchActivity extends Activity {
         }
 
         selectionFragment.setDataSelectionDrawableId(R.drawable.gray_list_item_selector);
+
         searchFragment.setResultsHandler(new SearchResultsHandler());
-        selectionFragment.setSelectionHandler(new DataSelectionHandler());
 
         Button doneButton = (Button) findViewById(R.id.done_button);
         doneButton.setOnClickListener(new DoneButtonListener());
@@ -74,6 +74,12 @@ public class EntitySearchActivity extends Activity {
         // remember pending and completed searches
         savedInstanceState.putParcelableArrayList(SEARCH_MODULES_KEY, searchModules);
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onDataSelected(DataWrapper data) {
+        selectedModule.setValue(data.getUuid());
+        moduleListAdapter.notifyDataSetChanged();
     }
 
     private class ModuleListAdapter extends ArrayAdapter<EntityFieldSearch> {
@@ -114,14 +120,6 @@ public class EntitySearchActivity extends Activity {
         @Override
         public void handleSearchResults(List<DataWrapper> dataWrappers) {
             selectionFragment.populateData(dataWrappers);
-        }
-    }
-
-    private class DataSelectionHandler implements DataSelectionFragment.SelectionHandler {
-        @Override
-        public void handleSelectedData(DataWrapper dataWrapper) {
-            selectedModule.setValue(dataWrapper.getUuid());
-            moduleListAdapter.notifyDataSetChanged();
         }
     }
 
