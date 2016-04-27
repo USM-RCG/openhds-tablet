@@ -4,8 +4,8 @@ import static org.openhds.mobile.utilities.LayoutUtils.configureTextWithPayload;
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 
 import org.openhds.mobile.R;
-import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,11 +18,28 @@ import android.widget.RelativeLayout;
 
 public class VisitFragment extends Fragment implements OnClickListener {
 
-	HierarchyNavigatorActivity navigateActivity; // FIXME: a strong smell, fragments should be self-contained
-
 	private static final int BOTTOM_MARGIN = 10;
 
-	RelativeLayout layout;
+	private RelativeLayout layout;
+	private VisitFinishedListener listener;
+
+	public interface VisitFinishedListener {
+		void onVisitFinished();
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		if (activity instanceof VisitFinishedListener) {
+			listener = (VisitFinishedListener)activity;
+		}
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		listener = null;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,13 +51,11 @@ public class VisitFragment extends Fragment implements OnClickListener {
 		return toggleContainer;
 	}
 
-	public void setNavigateActivity(HierarchyNavigatorActivity navigateActivity) {
-		this.navigateActivity = navigateActivity;
-	}
-
 	@Override
 	public void onClick(View v) {
-		navigateActivity.finishVisit();
+		if (listener != null) {
+			listener.onVisitFinished();
+		}
 	}
 
 	public void setEnabled(boolean enabled) {

@@ -49,7 +49,9 @@ import java.util.Set;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
-public class HierarchyNavigatorActivity extends Activity implements HierarchyNavigator, LaunchContext, FormSelectionFragment.FormSelectionListener, DataSelectionFragment.DataSelectionListener {
+public class HierarchyNavigatorActivity extends Activity implements HierarchyNavigator, LaunchContext,
+        FormSelectionFragment.FormSelectionListener, DataSelectionFragment.DataSelectionListener,
+        VisitFragment.VisitFinishedListener {
 
     private static final String TAG = HierarchyNavigatorActivity.class.getSimpleName();
 
@@ -134,7 +136,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                 detailToggleFragment.setNavigateActivity(this);
                 defaultDetailFragment = new DefaultDetailFragment();
                 visitFragment = new VisitFragment();
-                visitFragment.setNavigateActivity(this);
                 formListFragment = new FormListFragment();
 
                 getFragmentManager().beginTransaction()
@@ -155,7 +156,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                 detailToggleFragment = (DetailToggleFragment) fragmentManager.findFragmentByTag(TOGGLE_FRAGMENT_TAG);
                 detailToggleFragment.setNavigateActivity(this);
                 visitFragment = (VisitFragment) fragmentManager.findFragmentByTag(VISIT_FRAGMENT_TAG);
-                visitFragment.setNavigateActivity(this);
 
                 defaultDetailFragment = new DefaultDetailFragment();
 
@@ -624,6 +624,11 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     @Override
     public void onDataSelected(DataWrapper data) {
         stepDown(data);
+    }
+
+    @Override
+    public void onVisitFinished() {
+        finishVisit();
     }
 
     // Respond when the navigation state machine changes state.
