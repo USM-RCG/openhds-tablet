@@ -51,7 +51,7 @@ import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 public class HierarchyNavigatorActivity extends Activity implements HierarchyNavigator, LaunchContext,
         FormSelectionFragment.FormSelectionListener, DataSelectionFragment.DataSelectionListener,
-        VisitFragment.VisitFinishedListener {
+        VisitFragment.VisitFinishedListener, DetailToggleFragment.DetailToggleListener {
 
     private static final String TAG = HierarchyNavigatorActivity.class.getSimpleName();
 
@@ -133,7 +133,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                 valueFragment = new DataSelectionFragment();
                 formFragment = new FormSelectionFragment();
                 detailToggleFragment = new DetailToggleFragment();
-                detailToggleFragment.setNavigateActivity(this);
                 defaultDetailFragment = new DefaultDetailFragment();
                 visitFragment = new VisitFragment();
                 formListFragment = new FormListFragment();
@@ -154,7 +153,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
                 hierarchyButtonFragment.setNavigator(this);
                 formFragment = (FormSelectionFragment) fragmentManager.findFragmentByTag(FORM_FRAGMENT_TAG);
                 detailToggleFragment = (DetailToggleFragment) fragmentManager.findFragmentByTag(TOGGLE_FRAGMENT_TAG);
-                detailToggleFragment.setNavigateActivity(this);
                 visitFragment = (VisitFragment) fragmentManager.findFragmentByTag(VISIT_FRAGMENT_TAG);
 
                 defaultDetailFragment = new DefaultDetailFragment();
@@ -629,6 +627,11 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     @Override
     public void onVisitFinished() {
         finishVisit();
+    }
+
+    @Override
+    public void onDetailToggled(boolean enabled) {
+        toggleMiddleFragment();
     }
 
     // Respond when the navigation state machine changes state.

@@ -6,6 +6,7 @@ import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
