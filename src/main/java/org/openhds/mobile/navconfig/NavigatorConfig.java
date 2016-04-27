@@ -146,8 +146,8 @@ public class NavigatorConfig {
 abstract class AbstractNavigatorModule implements NavigatorModule {
 
     protected final NavigatorConfig config;
-    protected final Map<String, List<FormBehavior>> formsForStates = new HashMap<>();
-    protected final Map<String, DetailFragment> detailFragsForStates = new HashMap<>();
+    protected final Map<String, List<FormBehavior>> formsForLevels = new HashMap<>();
+    protected final Map<String, DetailFragment> detailForLevels = new HashMap<>();
     protected final Map<String, String> formLabels = new HashMap<>();
 
     AbstractNavigatorModule(NavigatorConfig config) {
@@ -162,11 +162,11 @@ abstract class AbstractNavigatorModule implements NavigatorModule {
     }
 
     @Override
-    public List<FormBehavior> getFormsForState(String state) {
-        if (formsForStates.get(state) == null) {
-            formsForStates.put(state, new ArrayList<FormBehavior>());
+    public List<FormBehavior> getForms(String level) {
+        if (formsForLevels.get(level) == null) {
+            formsForLevels.put(level, new ArrayList<FormBehavior>());
         }
-        return formsForStates.get(state);
+        return formsForLevels.get(level);
     }
 
     public void labelForm(String formId, String labelKey) {
@@ -174,11 +174,11 @@ abstract class AbstractNavigatorModule implements NavigatorModule {
     }
 
     public void bindForm(String state, FormBehavior form) {
-        getFormsForState(state).add(form);
+        getForms(state).add(form);
     }
 
     public void bindDetail(String state, DetailFragment fragment) {
-        detailFragsForStates.put(state, fragment);
+        detailForLevels.put(state, fragment);
     }
 
     /*
@@ -187,7 +187,7 @@ abstract class AbstractNavigatorModule implements NavigatorModule {
      */
     @Override
     public Map<String, DetailFragment> getDetailFragsForStates() {
-        return detailFragsForStates;
+        return detailForLevels;
     }
 
     @Override

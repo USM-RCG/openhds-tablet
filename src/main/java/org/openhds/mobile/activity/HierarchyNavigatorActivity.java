@@ -603,7 +603,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             updateToggleButton();
 
             List<FormBehavior> formsToDisplay = new ArrayList<>();
-            for (FormBehavior form : currentModule.getFormsForState(level)) {
+            for (FormBehavior form : currentModule.getForms(level)) {
                 if (form.getFilter().shouldDisplay(HierarchyNavigatorActivity.this)) {
                     formsToDisplay.add(form);
                 }
