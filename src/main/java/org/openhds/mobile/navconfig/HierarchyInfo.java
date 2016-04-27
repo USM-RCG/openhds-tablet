@@ -15,8 +15,6 @@ import java.util.Map;
  */
 public interface HierarchyInfo {
 
-    String getHierarchyName();
-
     Map<String, Integer> getStateLabels();
 
     List<String> getStateSequence();

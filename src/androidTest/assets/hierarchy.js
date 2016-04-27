@@ -21,7 +21,6 @@ for (var l = 0; l < levels.length; l++) {
 }
 
 var info = new org.openhds.mobile.projectdata.HierarchyInfo({
-    getHierarchyName: function() { return 'biokoHierarchy'; },
     getStateSequence: function() { return states; },
     getStateLabels: function() { return levelLabels },
 });

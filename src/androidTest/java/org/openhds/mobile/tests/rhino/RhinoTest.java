@@ -154,8 +154,6 @@ public class RhinoTest extends ActivityTestCase {
             Context.exit();
         }
 
-        assertEquals("biokoHierarchy", info.getHierarchyName());
-
         assertNotNull(info.getStateSequence());
         String levelName = info.getStateSequence().get(5);
         assertEquals("mapArea", levelName);

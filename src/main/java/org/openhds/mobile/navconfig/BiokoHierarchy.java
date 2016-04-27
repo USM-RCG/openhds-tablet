@@ -16,8 +16,6 @@ public class BiokoHierarchy implements HierarchyInfo {
 
     static final BiokoHierarchy INSTANCE = new BiokoHierarchy();
 
-    public static final String HIERARCHY_NAME = "biokoHierarchy";
-
     public static final String REGION_STATE = "region";
     public static final String PROVINCE_STATE = "province";
     public static final String DISTRICT_STATE = "district";
@@ -67,8 +65,4 @@ public class BiokoHierarchy implements HierarchyInfo {
         return stateSequence;
     }
 
-    @Override
-    public String getHierarchyName() {
-        return HIERARCHY_NAME;
-    }
 }
