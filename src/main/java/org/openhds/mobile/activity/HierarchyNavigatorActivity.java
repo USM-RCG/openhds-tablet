@@ -52,8 +52,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         DataSelectionFragment.DataSelectionListener, FormSelectionFragment.FormSelectionListener,
         VisitFragment.VisitFinishedListener {
 
-    private static final String TAG = HierarchyNavigatorActivity.class.getSimpleName();
-
     private static final int ODK_ACTIVITY_REQUEST_CODE = 0;
     private static final int SEARCH_ACTIVITY_REQUEST_CODE = 1;
 
