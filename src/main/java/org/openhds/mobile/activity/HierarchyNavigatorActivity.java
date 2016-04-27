@@ -592,10 +592,6 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         return currentFieldWorker;
     }
 
-    public void setCurrentFieldWorker(FieldWorker currentFieldWorker) {
-        this.currentFieldWorker = currentFieldWorker;
-    }
-
     public Visit getCurrentVisit() {
         return currentVisit;
     }
