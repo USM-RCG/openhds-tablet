@@ -60,10 +60,9 @@ public class DataSelectionFragment extends Fragment {
     }
 
     public void clearData() {
-        if (null == dataWrapperAdapter) {
-            return;
+        if (dataWrapperAdapter != null) {
+            dataWrapperAdapter.clear();
         }
-        dataWrapperAdapter.clear();
     }
 
     public void setDataSelectionDrawableId(int dataSelectionDrawableId) {
