@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -117,65 +116,59 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         queryHelper = DefaultQueryHelper.getInstance();
         formHelper = new FormHelper(this);
 
-        try {
+        hierarchyPath = new HierarchyPath();
+        levelManager = new NavigationManager(getLevels());
+        levelManager.addListener(new HierarchyLevelListener());
 
-            hierarchyPath = new HierarchyPath();
-            levelManager = new NavigationManager(getLevels());
-            levelManager.addListener(new HierarchyLevelListener());
+        if (savedInstanceState == null) {
 
-            if (savedInstanceState == null) {
-
-                HierarchyPath suppliedPath = intent.getParcelableExtra(HIERARCHY_PATH_KEY);
-                if (suppliedPath != null) {
-                    hierarchyPath = suppliedPath;
-                    currentResults = getIntent().getParcelableArrayListExtra(CURRENT_RESULTS_KEY);
-                }
-
-                //fresh activity
-                hierarchyButtonFragment = new HierarchyButtonFragment();
-                valueFragment = new DataSelectionFragment();
-                formFragment = new FormSelectionFragment();
-                detailToggleFragment = new DetailToggleFragment();
-                defaultDetailFragment = new DefaultDetailFragment();
-                visitFragment = new VisitFragment();
-                formListFragment = new FormListFragment();
-
-                getFragmentManager().beginTransaction()
-                        .add(R.id.left_column_top, hierarchyButtonFragment, HIERARCHY_BUTTON_FRAGMENT_TAG)
-                        .add(R.id.left_column_bottom, detailToggleFragment, TOGGLE_FRAGMENT_TAG)
-                        .add(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG)
-                        .add(R.id.right_column_top, formFragment, FORM_FRAGMENT_TAG)
-                        .add(R.id.right_column_middle, visitFragment, VISIT_FRAGMENT_TAG)
-                        .add(R.id.right_column_bottom, formListFragment, VIEW_PATH_FORM_FRAGMENT_TAG)
-                        .commit();
-            } else {
-
-                FragmentManager fragmentManager = getFragmentManager();
-                // restore saved activity state
-                hierarchyButtonFragment = (HierarchyButtonFragment) fragmentManager.findFragmentByTag(HIERARCHY_BUTTON_FRAGMENT_TAG);
-                formFragment = (FormSelectionFragment) fragmentManager.findFragmentByTag(FORM_FRAGMENT_TAG);
-                detailToggleFragment = (DetailToggleFragment) fragmentManager.findFragmentByTag(TOGGLE_FRAGMENT_TAG);
-                visitFragment = (VisitFragment) fragmentManager.findFragmentByTag(VISIT_FRAGMENT_TAG);
-
-                defaultDetailFragment = new DefaultDetailFragment();
-
-                valueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
-                if (valueFragment == null) {
-                    valueFragment = new DataSelectionFragment();
-                    detailFragment = (DetailFragment) fragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG);
-                    detailFragment.setNavigateActivity(this);
-                }
-
-                formListFragment = (FormListFragment) fragmentManager.findFragmentByTag(VIEW_PATH_FORM_FRAGMENT_TAG);
-
-                hierarchyPath = savedInstanceState.getParcelable(HIERARCHY_PATH_KEY);
-                currentResults = savedInstanceState.getParcelableArrayList(CURRENT_RESULTS_KEY);
-
-                setCurrentVisit((Visit) savedInstanceState.get(VISIT_KEY));
+            HierarchyPath suppliedPath = intent.getParcelableExtra(HIERARCHY_PATH_KEY);
+            if (suppliedPath != null) {
+                hierarchyPath = suppliedPath;
+                currentResults = getIntent().getParcelableArrayListExtra(CURRENT_RESULTS_KEY);
             }
 
-        } catch (Exception e) {
-            Log.e(TAG, "failed to create navigation module by name " + currentModuleName, e);
+            //fresh activity
+            hierarchyButtonFragment = new HierarchyButtonFragment();
+            valueFragment = new DataSelectionFragment();
+            formFragment = new FormSelectionFragment();
+            detailToggleFragment = new DetailToggleFragment();
+            defaultDetailFragment = new DefaultDetailFragment();
+            visitFragment = new VisitFragment();
+            formListFragment = new FormListFragment();
+
+            getFragmentManager().beginTransaction()
+                    .add(R.id.left_column_top, hierarchyButtonFragment, HIERARCHY_BUTTON_FRAGMENT_TAG)
+                    .add(R.id.left_column_bottom, detailToggleFragment, TOGGLE_FRAGMENT_TAG)
+                    .add(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG)
+                    .add(R.id.right_column_top, formFragment, FORM_FRAGMENT_TAG)
+                    .add(R.id.right_column_middle, visitFragment, VISIT_FRAGMENT_TAG)
+                    .add(R.id.right_column_bottom, formListFragment, VIEW_PATH_FORM_FRAGMENT_TAG)
+                    .commit();
+        } else {
+
+            FragmentManager fragmentManager = getFragmentManager();
+            // restore saved activity state
+            hierarchyButtonFragment = (HierarchyButtonFragment) fragmentManager.findFragmentByTag(HIERARCHY_BUTTON_FRAGMENT_TAG);
+            formFragment = (FormSelectionFragment) fragmentManager.findFragmentByTag(FORM_FRAGMENT_TAG);
+            detailToggleFragment = (DetailToggleFragment) fragmentManager.findFragmentByTag(TOGGLE_FRAGMENT_TAG);
+            visitFragment = (VisitFragment) fragmentManager.findFragmentByTag(VISIT_FRAGMENT_TAG);
+
+            defaultDetailFragment = new DefaultDetailFragment();
+
+            valueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
+            if (valueFragment == null) {
+                valueFragment = new DataSelectionFragment();
+                detailFragment = (DetailFragment) fragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG);
+                detailFragment.setNavigateActivity(this);
+            }
+
+            formListFragment = (FormListFragment) fragmentManager.findFragmentByTag(VIEW_PATH_FORM_FRAGMENT_TAG);
+
+            hierarchyPath = savedInstanceState.getParcelable(HIERARCHY_PATH_KEY);
+            currentResults = savedInstanceState.getParcelableArrayList(CURRENT_RESULTS_KEY);
+
+            setCurrentVisit((Visit) savedInstanceState.get(VISIT_KEY));
         }
     }
 
