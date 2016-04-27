@@ -17,13 +17,25 @@
         <FrameLayout
             android:id="@+id/left_column_top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+            <fragment
+                android:name="org.openhds.mobile.fragment.navigate.HierarchyButtonFragment"
+                android:id="@+id/hierarchy_button_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
 
         <FrameLayout
             android:id="@+id/left_column_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp" />
+            android:paddingTop="10dp">
+            <fragment
+                android:name="org.openhds.mobile.fragment.navigate.DetailToggleFragment"
+                android:id="@+id/detail_toggle_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
 
     </LinearLayout>
 
@@ -45,17 +57,37 @@
         <FrameLayout
             android:id="@+id/right_column_top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+
+            <fragment
+                android:name="org.openhds.mobile.fragment.FormSelectionFragment"
+                android:id="@+id/form_selection_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="left|top"/>
+        </FrameLayout>
 
         <FrameLayout
             android:id="@+id/right_column_middle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+            <fragment
+                android:name="org.openhds.mobile.fragment.navigate.VisitFragment"
+                android:id="@+id/visit_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
 
         <FrameLayout
             android:id="@+id/right_column_bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+            <fragment
+                android:name="org.openhds.mobile.fragment.navigate.FormListFragment"
+                android:id="@+id/form_list_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
 
     </LinearLayout>
 

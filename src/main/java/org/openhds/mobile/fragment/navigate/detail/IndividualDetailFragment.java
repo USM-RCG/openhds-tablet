@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
 import org.openhds.mobile.repository.gateway.MembershipGateway;
@@ -37,9 +39,9 @@ public class IndividualDetailFragment extends DetailFragment {
     }
 
     @Override
-    public void setUpDetails() {
+    public void setUpDetails(DataWrapper data) {
 
-        Individual individual = getIndividual(navigateActivity.getCurrentSelection().getUuid());
+        Individual individual = getIndividual(data.getUuid());
 
         List<Membership> memberships = getMemberships(individual.getExtId());
 
@@ -138,16 +140,11 @@ public class IndividualDetailFragment extends DetailFragment {
 
     private Individual getIndividual(String uuid) {
         IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-        ContentResolver contentResolver = navigateActivity.getContentResolver();
-
-        return individualGateway.getFirst(contentResolver, individualGateway.findById(uuid));
+        return individualGateway.getFirst(getActivity().getContentResolver(), individualGateway.findById(uuid));
     }
 
     private List<Membership> getMemberships(String individualExtId) {
         MembershipGateway membershipGateway = GatewayRegistry.getMembershipGateway();
-        ContentResolver contentResolver = navigateActivity.getContentResolver();
-
-        return membershipGateway.getList(contentResolver,
-                membershipGateway.findByIndividual(individualExtId));
+        return membershipGateway.getList(getActivity().getContentResolver(), membershipGateway.findByIndividual(individualExtId));
     }
 }

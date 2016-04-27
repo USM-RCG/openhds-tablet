@@ -66,13 +66,8 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private VisitFragment visitFragment;
     private FormListFragment formListFragment;
 
-    private static final String HIERARCHY_BUTTON_FRAGMENT_TAG = "hierarchyButtonFragment";
     private static final String VALUE_FRAGMENT_TAG = "hierarchyValueFragment";
-    private static final String FORM_FRAGMENT_TAG = "hierarchyFormFragment";
-    private static final String TOGGLE_FRAGMENT_TAG = "hierarchyToggleFragment";
     private static final String DETAIL_FRAGMENT_TAG = "hierarchyDetailFragment";
-    private static final String VISIT_FRAGMENT_TAG = "hierarchyVisitFragment";
-    private static final String VIEW_PATH_FORM_FRAGMENT_TAG ="formListFragment";
 
     private static final String HIERARCHY_PATH_KEY = "hierarchyPathKeys";
     private static final String CURRENT_RESULTS_KEY = "currentResults";
@@ -120,55 +115,38 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         levelManager = new NavigationManager(getLevels());
         levelManager.addListener(new HierarchyLevelListener());
 
-        if (savedInstanceState == null) {
+        FragmentManager fragmentManager = getFragmentManager();
 
+        hierarchyButtonFragment = (HierarchyButtonFragment) fragmentManager.findFragmentById(R.id.hierarchy_button_fragment);
+        detailToggleFragment = (DetailToggleFragment) fragmentManager.findFragmentById(R.id.detail_toggle_fragment);
+        formFragment = (FormSelectionFragment) fragmentManager.findFragmentById(R.id.form_selection_fragment);
+        visitFragment = (VisitFragment) fragmentManager.findFragmentById(R.id.visit_fragment);
+        formListFragment = (FormListFragment) fragmentManager.findFragmentById(R.id.form_list_fragment);
+        defaultDetailFragment = new DefaultDetailFragment();
+        valueFragment = new DataSelectionFragment();
+
+        if (savedInstanceState == null) {
             HierarchyPath suppliedPath = intent.getParcelableExtra(HIERARCHY_PATH_KEY);
             if (suppliedPath != null) {
                 hierarchyPath = suppliedPath;
                 currentResults = getIntent().getParcelableArrayListExtra(CURRENT_RESULTS_KEY);
             }
-
-            //fresh activity
-            hierarchyButtonFragment = new HierarchyButtonFragment();
-            valueFragment = new DataSelectionFragment();
-            formFragment = new FormSelectionFragment();
-            detailToggleFragment = new DetailToggleFragment();
-            defaultDetailFragment = new DefaultDetailFragment();
-            visitFragment = new VisitFragment();
-            formListFragment = new FormListFragment();
-
-            getFragmentManager().beginTransaction()
-                    .add(R.id.left_column_top, hierarchyButtonFragment, HIERARCHY_BUTTON_FRAGMENT_TAG)
-                    .add(R.id.left_column_bottom, detailToggleFragment, TOGGLE_FRAGMENT_TAG)
+            fragmentManager.beginTransaction()
                     .add(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG)
-                    .add(R.id.right_column_top, formFragment, FORM_FRAGMENT_TAG)
-                    .add(R.id.right_column_middle, visitFragment, VISIT_FRAGMENT_TAG)
-                    .add(R.id.right_column_bottom, formListFragment, VIEW_PATH_FORM_FRAGMENT_TAG)
                     .commit();
         } else {
-
-            FragmentManager fragmentManager = getFragmentManager();
-            // restore saved activity state
-            hierarchyButtonFragment = (HierarchyButtonFragment) fragmentManager.findFragmentByTag(HIERARCHY_BUTTON_FRAGMENT_TAG);
-            formFragment = (FormSelectionFragment) fragmentManager.findFragmentByTag(FORM_FRAGMENT_TAG);
-            detailToggleFragment = (DetailToggleFragment) fragmentManager.findFragmentByTag(TOGGLE_FRAGMENT_TAG);
-            visitFragment = (VisitFragment) fragmentManager.findFragmentByTag(VISIT_FRAGMENT_TAG);
-
-            defaultDetailFragment = new DefaultDetailFragment();
-
-            valueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
-            if (valueFragment == null) {
-                valueFragment = new DataSelectionFragment();
-                detailFragment = (DetailFragment) fragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG);
-                detailFragment.setNavigateActivity(this);
-            }
-
-            formListFragment = (FormListFragment) fragmentManager.findFragmentByTag(VIEW_PATH_FORM_FRAGMENT_TAG);
-
             hierarchyPath = savedInstanceState.getParcelable(HIERARCHY_PATH_KEY);
             currentResults = savedInstanceState.getParcelableArrayList(CURRENT_RESULTS_KEY);
-
             setCurrentVisit((Visit) savedInstanceState.get(VISIT_KEY));
+
+            DataSelectionFragment existingValueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
+            if (existingValueFragment != null) {
+                valueFragment = existingValueFragment;
+            }
+            DetailFragment existingDetailFragment = (DetailFragment) fragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG);
+            if (existingDetailFragment != null) {
+                detailFragment = existingDetailFragment;
+            }
         }
     }
 
@@ -419,25 +397,18 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     private void showDetailFragment() {
-        // we don't check if it is added here because there are detail fragments for each level
-        detailFragment = getDetailFragmentForCurrentState();
-        detailFragment.setNavigateActivity(this);
-
+        DetailFragment fragment = getDetailFragmentForCurrentState();
+        detailFragment = fragment == null? defaultDetailFragment : fragment;
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.middle_column, detailFragment, DETAIL_FRAGMENT_TAG)
                 .commit();
         getFragmentManager().executePendingTransactions();
-
-        detailFragment.setUpDetails();
+        detailFragment.setUpDetails(getCurrentSelection());
     }
 
     private DetailFragment getDetailFragmentForCurrentState() {
-
-        if (null != (detailFragment = currentModule.getDetailFragsForStates().get(getLevel()))) {
-            return detailFragment;
-        }
-        return defaultDetailFragment;
+        return currentModule.getDetailFragsForStates().get(getLevel());
     }
 
     private boolean shouldShowDetailFragment() {
@@ -445,8 +416,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     private void updateToggleButton() {
-        if (null != currentModule.getDetailFragsForStates().get(getLevel()) && !shouldShowDetailFragment()) {
-
+        if (getDetailFragmentForCurrentState() != null && !shouldShowDetailFragment()) {
             detailToggleFragment.setEnabled(true);
             if (!valueFragment.isAdded()) {
                 detailToggleFragment.setHighlighted(true);

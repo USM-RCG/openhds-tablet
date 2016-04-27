@@ -1,18 +1,12 @@
 package org.openhds.mobile.fragment.navigate.detail;
 
-import org.openhds.mobile.activity.HierarchyNavigatorActivity;
-
 import android.app.Fragment;
 
-public class DetailFragment extends Fragment {
+import org.openhds.mobile.activity.HierarchyNavigatorActivity;
+import org.openhds.mobile.repository.DataWrapper;
 
-	protected HierarchyNavigatorActivity navigateActivity;
+public abstract class DetailFragment extends Fragment {
 
-	public void setUpDetails() {
-	}
-
-	public void setNavigateActivity(HierarchyNavigatorActivity navigateActivity) {
-		this.navigateActivity = navigateActivity;
-	}
+    public abstract void setUpDetails(DataWrapper data);
 
 }
