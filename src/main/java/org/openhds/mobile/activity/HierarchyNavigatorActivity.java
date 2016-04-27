@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.DataSelectionFragment;
@@ -111,6 +110,8 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         currentModuleName = (String) extras.get(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA);
         currentModule = config.getModule(currentModuleName);
 
+        setTitle(currentModule.getActivityTitle());
+
         currentFieldWorker = (FieldWorker) extras.get(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA);
 
         queryHelper = DefaultQueryHelper.getInstance();
@@ -173,23 +174,9 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                 setCurrentVisit((Visit) savedInstanceState.get(VISIT_KEY));
             }
 
-            configure(currentModule);
-
         } catch (Exception e) {
             Log.e(TAG, "failed to create navigation module by name " + currentModuleName, e);
         }
-    }
-
-    /**
-     * Setup the activity based on the specified navigation module.
-     */
-    private void configure(NavigatorModule module){
-        setTitle(module.getActivityTitle());
-        hierarchyButtonFragment.setButtonDrawable(R.drawable.data_selector);
-        valueFragment.setDataSelectionDrawableId(R.drawable.data_selector);
-        formFragment.setFormSelectionDrawableId(R.drawable.form_selector);
-        View middleColumn = findViewById(R.id.middle_column);
-        middleColumn.setBackgroundResource(R.drawable.gray_middle_column_drawable);
     }
 
     @Override

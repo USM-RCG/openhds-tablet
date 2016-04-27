@@ -29,7 +29,6 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 
 	private HierarchyButtonListener listener;
 	private Map<String, RelativeLayout> stateViews;
-    private int buttonDrawable;
 
 	public interface HierarchyButtonListener {
 		void onHierarchyButtonClicked(String level);
@@ -62,7 +61,7 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 			final String description = null;
 			RelativeLayout layout = makeTextWithPayload(getActivity(),
                     getResourceString(getActivity(), hierarchy.getLevelLabels().get(state)), description, state, this,
-					fragmentLayout, buttonDrawable, null, null,true);
+					fragmentLayout, R.drawable.data_selector, null, null,true);
 			LayoutParams params = (LayoutParams) layout.getLayoutParams();
 			params.setMargins(0, 0, 0, BUTTON_MARGIN);
 			stateViews.put(state, layout);
@@ -94,10 +93,6 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 			configureTextWithPayload(getActivity(), layout, name, id, null, null, centerText);
 		}
 	}
-
-    public void setButtonDrawable(int drawable) {
-        this.buttonDrawable = drawable;
-    }
 
 	@Override
 	public void onClick(View v) {

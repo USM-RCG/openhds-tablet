@@ -25,7 +25,6 @@ public class DataSelectionFragment extends Fragment {
 
     private DataSelectionListener listener;
     private DataSelectionListAdapter dataWrapperAdapter;
-    private int dataSelectionDrawableId;
     private ListView listView;
 
     public interface DataSelectionListener {
@@ -65,10 +64,6 @@ public class DataSelectionFragment extends Fragment {
         }
     }
 
-    public void setDataSelectionDrawableId(int dataSelectionDrawableId) {
-        this.dataSelectionDrawableId = dataSelectionDrawableId;
-    }
-
     private class DataClickListener implements OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -92,7 +87,7 @@ public class DataSelectionFragment extends Fragment {
 
             if (convertView == null) {
                 convertView = makeTextWithPayload(getActivity(), dataWrapper.getName(), dataWrapper.getExtId(), dataWrapper.getName(),
-                        null, null, dataSelectionDrawableId, dataWrapper.getStringsPayload(), dataWrapper.getStringIdsPayload(), false);
+                        null, null, R.drawable.data_selector, dataWrapper.getStringsPayload(), dataWrapper.getStringIdsPayload(), false);
             } else {
                 configureTextWithPayload(getActivity(), (RelativeLayout) convertView, dataWrapper.getName(), dataWrapper.getExtId(),
                         dataWrapper.getStringsPayload(), dataWrapper.getStringIdsPayload(), false);

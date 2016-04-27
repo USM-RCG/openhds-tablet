@@ -31,7 +31,8 @@
         android:id="@+id/middle_column"
         android:layout_width="0px"
         android:layout_height="match_parent"
-        android:layout_weight="5"/>
+        android:layout_weight="5"
+        android:background="@drawable/gray_middle_column_drawable"/>
 
     <LinearLayout
         android:id="@+id/right_column"

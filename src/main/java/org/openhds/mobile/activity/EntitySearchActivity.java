@@ -55,8 +55,6 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
             searchModules = savedInstanceState.getParcelableArrayList(SEARCH_MODULES_KEY);
         }
 
-        selectionFragment.setDataSelectionDrawableId(R.drawable.gray_list_item_selector);
-
         searchFragment.setResultsHandler(new SearchResultsHandler());
 
         Button doneButton = (Button) findViewById(R.id.done_button);

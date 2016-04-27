@@ -25,7 +25,6 @@ public class FormSelectionFragment extends Fragment {
 
     private FormSelectionListener listener;
     private FormSelectionListAdapter formListAdapter;
-    private int formSelectionDrawableId;
 
     public interface FormSelectionListener {
         void onFormSelected(FormBehavior formBehavior);
@@ -59,10 +58,6 @@ public class FormSelectionFragment extends Fragment {
         params.setMargins(0, 0, 0, values.isEmpty()? 0 : 10);  // Add bottom margin only when we have content
     }
 
-    public void setFormSelectionDrawableId(int formSelectionDrawableId) {
-        this.formSelectionDrawableId = formSelectionDrawableId;
-    }
-
     private class FormClickListener implements OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -86,7 +81,7 @@ public class FormSelectionFragment extends Fragment {
 
             if (convertView == null) {
                 convertView = makeTextWithPayload(getActivity(), form.getLabel(), null,
-                        form.getLabel(), null, null, formSelectionDrawableId, null, null, true);
+                        form.getLabel(), null, null, R.drawable.form_selector, null, null, true);
                 convertView.setPadding(0, 10, 0, 10); // Make the buttons thicker for easier selection
             }
 
