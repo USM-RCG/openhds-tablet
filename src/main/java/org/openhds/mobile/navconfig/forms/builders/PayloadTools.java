@@ -8,7 +8,6 @@ import org.openhds.mobile.navconfig.forms.LaunchContext;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Map;
 
 public class PayloadTools {
@@ -23,7 +22,6 @@ public class PayloadTools {
 
     public static void addMinimalFormPayload(Map<String, String> formPayload, LaunchContext navigateActivity) {
 
-        List<String> stateSequence = navigateActivity.getStateSequence();
         HierarchyPath hierarchyPath = navigateActivity.getHierarchyPath();
 
         //TODO: Add all the hierarchy Uuids as well?
