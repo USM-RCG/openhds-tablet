@@ -27,42 +27,42 @@ public class BiokoHierarchy implements HierarchyInfo {
     public static final String INDIVIDUAL_STATE = "individual";
     public static final String BOTTOM_STATE = "bottom";
 
-    private static final Map<String, Integer> stateLabels = new HashMap<>();
-    private static final List<String> stateSequence = new ArrayList<>();
+    private static final Map<String, Integer> levelLabels = new HashMap<>();
+    private static final List<String> levels = new ArrayList<>();
 
     static {
 
-        stateLabels.put(REGION_STATE, R.string.region_label);
-        stateLabels.put(PROVINCE_STATE, R.string.province_label);
-        stateLabels.put(DISTRICT_STATE, R.string.district_label);
-        stateLabels.put(SUB_DISTRICT_STATE, R.string.sub_district_label);
-        stateLabels.put(LOCALITY_STATE, R.string.locality_label);
-        stateLabels.put(MAP_AREA_STATE, R.string.map_area_label);
-        stateLabels.put(SECTOR_STATE, R.string.sector_label);
-        stateLabels.put(HOUSEHOLD_STATE, R.string.household_label);
-        stateLabels.put(INDIVIDUAL_STATE, R.string.individual_label);
-        stateLabels.put(BOTTOM_STATE, R.string.bottom_label);
+        levelLabels.put(REGION_STATE, R.string.region_label);
+        levelLabels.put(PROVINCE_STATE, R.string.province_label);
+        levelLabels.put(DISTRICT_STATE, R.string.district_label);
+        levelLabels.put(SUB_DISTRICT_STATE, R.string.sub_district_label);
+        levelLabels.put(LOCALITY_STATE, R.string.locality_label);
+        levelLabels.put(MAP_AREA_STATE, R.string.map_area_label);
+        levelLabels.put(SECTOR_STATE, R.string.sector_label);
+        levelLabels.put(HOUSEHOLD_STATE, R.string.household_label);
+        levelLabels.put(INDIVIDUAL_STATE, R.string.individual_label);
+        levelLabels.put(BOTTOM_STATE, R.string.bottom_label);
 
-        stateSequence.add(REGION_STATE);
-        stateSequence.add(PROVINCE_STATE);
-        stateSequence.add(DISTRICT_STATE);
-        stateSequence.add(SUB_DISTRICT_STATE);
-        stateSequence.add(LOCALITY_STATE);
-        stateSequence.add(MAP_AREA_STATE);
-        stateSequence.add(SECTOR_STATE);
-        stateSequence.add(HOUSEHOLD_STATE);
-        stateSequence.add(INDIVIDUAL_STATE);
-        stateSequence.add(BOTTOM_STATE);
+        levels.add(REGION_STATE);
+        levels.add(PROVINCE_STATE);
+        levels.add(DISTRICT_STATE);
+        levels.add(SUB_DISTRICT_STATE);
+        levels.add(LOCALITY_STATE);
+        levels.add(MAP_AREA_STATE);
+        levels.add(SECTOR_STATE);
+        levels.add(HOUSEHOLD_STATE);
+        levels.add(INDIVIDUAL_STATE);
+        levels.add(BOTTOM_STATE);
     }
 
     @Override
-    public Map<String, Integer> getStateLabels() {
-        return stateLabels;
+    public Map<String, Integer> getLevelLabels() {
+        return levelLabels;
     }
 
     @Override
-    public List<String> getStateSequence() {
-        return stateSequence;
+    public List<String> getLevels() {
+        return levels;
     }
 
 }

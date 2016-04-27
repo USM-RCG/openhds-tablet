@@ -118,7 +118,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         try {
 
             hierarchyPath = new HierarchyPath();
-            levelManager = new NavigationManager(getStateSequence());
+            levelManager = new NavigationManager(getLevels());
             levelManager.addListener(new HierarchyLevelListener());
 
             if (savedInstanceState == null) {
@@ -263,13 +263,13 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         }
 
         int pathDepth = hierarchyPath.depth();
-        String levelAtDepth = getStateSequence().get(pathDepth);
+        String levelAtDepth = getLevels().get(pathDepth);
         if (pathDepth == 0) {
             hierarchyButtonFragment.setVisible(levelAtDepth, true);
             currentResults = queryHelper.getAll(getContentResolver(), levelAtDepth);
             updateToggleButton();
         } else {
-            String parentLevel = getStateSequence().get(pathDepth - 1);
+            String parentLevel = getLevels().get(pathDepth - 1);
             DataWrapper parentItem = hierarchyPath.get(parentLevel);
             currentSelection = parentItem;
             if(currentResults == null) {
@@ -279,8 +279,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
         boolean isAdded = valueFragment.isAdded();
 
-        // make sure that listeners will fire for the current state
-        refreshHierarchy(levelAtDepth);
+        refreshHierarchy(levelAtDepth); // ensure listeners fire for the current level
 
         if (isAdded || !currentResults.isEmpty()) {
             showValueFragment();
@@ -312,30 +311,30 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         return hierarchyPath;
     }
 
-    public String getState() {
+    private String getLevel() {
         return levelManager.getLevel();
     }
 
-    private void updateButtonLabel(String state) {
-        DataWrapper selected = hierarchyPath.get(state);
+    private void updateButtonLabel(String level) {
+        DataWrapper selected = hierarchyPath.get(level);
         if (selected == null) {
-            String stateLabel = getString(getStateLabels().get(state));
-            hierarchyButtonFragment.setButtonLabel(state, stateLabel, null, true);
-            hierarchyButtonFragment.setHighlighted(state, true);
+            String levelLabel = getString(getLevelLabels().get(level));
+            hierarchyButtonFragment.setButtonLabel(level, levelLabel, null, true);
+            hierarchyButtonFragment.setHighlighted(level, true);
         } else {
-            hierarchyButtonFragment.setButtonLabel(state, selected.getName(), selected.getExtId(), false);
-            hierarchyButtonFragment.setHighlighted(state, false);
+            hierarchyButtonFragment.setButtonLabel(level, selected.getName(), selected.getExtId(), false);
+            hierarchyButtonFragment.setHighlighted(level, false);
         }
     }
 
     @Override
-    public Map<String, Integer> getStateLabels() {
-        return config.getHierarchy().getStateLabels();
+    public Map<String, Integer> getLevelLabels() {
+        return config.getHierarchy().getLevelLabels();
     }
 
     @Override
-    public List<String> getStateSequence() {
-        return config.getHierarchy().getStateSequence();
+    public List<String> getLevels() {
+        return config.getHierarchy().getLevels();
     }
 
     @Override
@@ -345,22 +344,22 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             throw new IllegalStateException("invalid level: " + level);
         }
 
-        List<String> allLevels = getStateSequence();
-        int indexBeforeJump = allLevels.indexOf(getState());
+        List<String> allLevels = getLevels();
+        int indexBeforeJump = allLevels.indexOf(getLevel());
         int indexAfterJump = allLevels.indexOf(level);
 
         hierarchyPath.truncate(level);
 
         // Disable buttons made irrelevant after jump
         for (int i = indexBeforeJump; i >= indexAfterJump; i--) {
-            hierarchyButtonFragment.setVisible(getStateSequence().get(i), false);
+            hierarchyButtonFragment.setVisible(getLevels().get(i), false);
         }
 
         // Populate data to enable drilling deeper from new depth
         if (indexAfterJump == 0) {
-            currentResults = queryHelper.getAll(getContentResolver(), getStateSequence().get(indexAfterJump));
+            currentResults = queryHelper.getAll(getContentResolver(), getLevels().get(indexAfterJump));
         } else {
-            String parentLevel = getStateSequence().get(indexAfterJump - 1);
+            String parentLevel = getLevels().get(indexAfterJump - 1);
             DataWrapper parentItem = hierarchyPath.get(parentLevel);
             currentSelection = parentItem;
             currentResults = queryHelper.getChildren(getContentResolver(), parentItem, level);
@@ -372,15 +371,15 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     @Override
     public void stepDown(DataWrapper selected) {
 
-        String currentState = getState(), selectedState = selected.getCategory();
+        String currentState = getLevel(), selectedState = selected.getCategory();
 
         if (!currentState.equals(selectedState)) {
             throw new IllegalStateException("level mismatch: expected " + currentState + ", saw " + selectedState);
         }
 
-        int currentIndex = getStateSequence().indexOf(currentState);
-        if (currentIndex >= 0 && currentIndex < getStateSequence().size() - 1) {
-            String nextState = getStateSequence().get(currentIndex + 1);
+        int currentIndex = getLevels().indexOf(currentState);
+        if (currentIndex >= 0 && currentIndex < getLevels().size() - 1) {
+            String nextState = getLevels().get(currentIndex + 1);
             currentSelection = selected;
             currentResults = queryHelper.getChildren(getContentResolver(), selected, nextState);
             hierarchyPath.down(currentState, selected);
@@ -445,7 +444,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     private void showDetailFragment() {
-        // we don't check if it is added here because there are detail fragments for each state
+        // we don't check if it is added here because there are detail fragments for each level
         detailFragment = getDetailFragmentForCurrentState();
         detailFragment.setNavigateActivity(this);
 
@@ -460,7 +459,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
 
     private DetailFragment getDetailFragmentForCurrentState() {
 
-        if (null != (detailFragment = currentModule.getDetailFragsForStates().get(getState()))) {
+        if (null != (detailFragment = currentModule.getDetailFragsForStates().get(getLevel()))) {
             return detailFragment;
         }
         return defaultDetailFragment;
@@ -471,7 +470,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     private void updateToggleButton() {
-        if (null != currentModule.getDetailFragsForStates().get(getState()) && !shouldShowDetailFragment()) {
+        if (null != currentModule.getDetailFragsForStates().get(getLevel()) && !shouldShowDetailFragment()) {
 
             detailToggleFragment.setEnabled(true);
             if (!valueFragment.isAdded()) {
@@ -577,8 +576,8 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     @Override
     public void onBackPressed() {
         int currentStateIndex;
-        if (0 < (currentStateIndex = getStateSequence().indexOf(getState()))) {
-            jumpUp(getStateSequence().get(currentStateIndex - 1));
+        if (0 < (currentStateIndex = getLevels().indexOf(getLevel()))) {
+            jumpUp(getLevels().get(currentStateIndex - 1));
         } else {
             super.onBackPressed();
         }
@@ -608,12 +607,12 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     public void finishVisit() {
         setCurrentVisit(null);
         visitFragment.setEnabled(false);
-        refreshHierarchy(getState());
+        refreshHierarchy(getLevel());
     }
 
-    private void refreshHierarchy(String state){
+    private void refreshHierarchy(String level){
         levelManager.moveTo(levelManager.getTop());
-        levelManager.moveTo(state);
+        levelManager.moveTo(level);
     }
 
     @Override
@@ -636,7 +635,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
         toggleMiddleFragment();
     }
 
-    // Respond when the navigation state machine changes state.
+
     private class HierarchyLevelListener implements LevelListener {
 
         @Override

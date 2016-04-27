@@ -13,14 +13,14 @@ var levels = [
     { name: 'bottom', label: _s.bottom_label }
 ];
 
-var states = [], levelLabels = {};
+var levelNames = [], levelLabels = {};
 for (var l = 0; l < levels.length; l++) {
     var level = levels[l];
-    states.push(level.name);
+    levelNames.push(level.name);
     levelLabels[level.name] = level.label;
 }
 
 var info = new org.openhds.mobile.projectdata.HierarchyInfo({
-    getStateSequence: function() { return states; },
-    getStateLabels: function() { return levelLabels },
+    getLevels: function() { return levelNames; },
+    getLevelLabels: function() { return levelLabels },
 });

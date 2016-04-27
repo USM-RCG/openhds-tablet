@@ -27,8 +27,6 @@ public interface LaunchContext {
 
     HierarchyPath getHierarchyPath();
 
-    List<String> getStateSequence();
-
     void startVisit(Visit v);
 
     Visit getCurrentVisit();

@@ -8,9 +8,9 @@ import org.openhds.mobile.repository.DataWrapper;
 
 public interface HierarchyNavigator {
 
-	Map<String, Integer> getStateLabels();
+	Map<String, Integer> getLevelLabels();
 
-	List<String> getStateSequence();
+	List<String> getLevels();
 
 	void jumpUp(String state);
 

@@ -154,13 +154,13 @@ public class RhinoTest extends ActivityTestCase {
             Context.exit();
         }
 
-        assertNotNull(info.getStateSequence());
-        String levelName = info.getStateSequence().get(5);
+        assertNotNull(info.getLevels());
+        String levelName = info.getLevels().get(5);
         assertEquals("mapArea", levelName);
 
-        assertNotNull(info.getStateLabels());
-        assertNotNull(info.getStateLabels().get(levelName));
-        int label = info.getStateLabels().get(levelName);
+        assertNotNull(info.getLevelLabels());
+        assertNotNull(info.getLevelLabels().get(levelName));
+        int label = info.getLevelLabels().get(levelName);
         assertEquals(R.string.map_area_label, label);
 
         String levelLabel = getInstrumentation().getTargetContext().getString(label);

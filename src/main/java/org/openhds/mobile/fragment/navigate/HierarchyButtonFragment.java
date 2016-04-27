@@ -38,8 +38,8 @@ public class HierarchyButtonFragment extends Fragment {
 		stateViews = new HashMap<>();
 		HierarchyButtonListener listener = new HierarchyButtonListener();
 
-		Map<String, Integer> labels = navigator.getStateLabels();
-		for (String state : navigator.getStateSequence()) {
+		Map<String, Integer> labels = navigator.getLevelLabels();
+		for (String state : navigator.getLevels()) {
 			final String description = null;
 			RelativeLayout layout = makeTextWithPayload(getActivity(),
                     getResourceString(getActivity(), labels.get(state)), description, state, listener,
