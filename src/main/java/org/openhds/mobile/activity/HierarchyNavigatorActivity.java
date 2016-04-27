@@ -291,7 +291,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
             valueFragment.populateData(currentResults);
         } else {
             showDetailFragment();
-            detailToggleFragment.setButtonHighlighted(true);
+            detailToggleFragment.setHighlighted(true);
         }
         updateAttachedForms();
 
@@ -477,12 +477,12 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     private void updateToggleButton() {
         if (null != currentModule.getDetailFragsForStates().get(getState()) && !shouldShowDetailFragment()) {
 
-            detailToggleFragment.setButtonEnabled(true);
+            detailToggleFragment.setEnabled(true);
             if (!valueFragment.isAdded()) {
-                detailToggleFragment.setButtonHighlighted(true);
+                detailToggleFragment.setHighlighted(true);
             }
         } else {
-            detailToggleFragment.setButtonEnabled(false);
+            detailToggleFragment.setEnabled(false);
         }
     }
 
@@ -490,10 +490,10 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     public void toggleMiddleFragment() {
         if (valueFragment.isAdded()) {
             showDetailFragment();
-            detailToggleFragment.setButtonHighlighted(true);
+            detailToggleFragment.setHighlighted(true);
         } else if (detailFragment.isAdded()) {
             showValueFragment();
-            detailToggleFragment.setButtonHighlighted(false);
+            detailToggleFragment.setHighlighted(false);
         }
     }
 

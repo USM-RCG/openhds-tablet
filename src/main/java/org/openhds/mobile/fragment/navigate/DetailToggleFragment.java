@@ -48,7 +48,7 @@ public class DetailToggleFragment extends Fragment implements OnClickListener {
 		navigateActivity.toggleMiddleFragment();
 	}
 
-	public void setButtonEnabled(boolean isEnabled) {
+	public void setEnabled(boolean isEnabled) {
 
 		this.isEnabled = isEnabled;
 
@@ -60,12 +60,12 @@ public class DetailToggleFragment extends Fragment implements OnClickListener {
 		} else {
 			layout.setVisibility(ViewGroup.VISIBLE);
 			layout.setClickable(true);
-			setButtonHighlighted(false);
+			setHighlighted(false);
 		}
 
 	}
 
-	public void setButtonHighlighted(boolean isHighlighted) {
+	public void setHighlighted(boolean isHighlighted) {
 
 		if (null == layout) {
 			return;
