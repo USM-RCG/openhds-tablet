@@ -630,7 +630,7 @@ public class HierarchyNavigatorActivity extends Activity implements HierarchyNav
     }
 
     @Override
-    public void onDetailToggled(boolean enabled) {
+    public void onDetailToggled() {
         toggleMiddleFragment();
     }
 
