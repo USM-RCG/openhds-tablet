@@ -55,11 +55,11 @@ public class BiokoHierarchy {
         levels.add(BOTTOM_STATE);
     }
 
-    public Map<String, Integer> getLevelLabels() {
+    Map<String, Integer> getLevelLabels() {
         return levelLabels;
     }
 
-    public List<String> getLevels() {
+    List<String> getLevels() {
         return levels;
     }
 
