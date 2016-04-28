@@ -16,43 +16,43 @@ public class BiokoHierarchy {
 
     static final BiokoHierarchy INSTANCE = new BiokoHierarchy();
 
-    public static final String REGION_STATE = "region";
-    public static final String PROVINCE_STATE = "province";
-    public static final String DISTRICT_STATE = "district";
-    public static final String SUB_DISTRICT_STATE = "subDistrict";
-    public static final String LOCALITY_STATE = "locality";
-    public static final String MAP_AREA_STATE = "mapArea";
-    public static final String SECTOR_STATE = "sector";
-    public static final String HOUSEHOLD_STATE = "household";
-    public static final String INDIVIDUAL_STATE = "individual";
-    public static final String BOTTOM_STATE = "bottom";
+    public static final String REGION = "region";
+    public static final String PROVINCE = "province";
+    public static final String DISTRICT = "district";
+    public static final String SUBDISTRICT = "subDistrict";
+    public static final String LOCALITY = "locality";
+    public static final String MAP_AREA = "mapArea";
+    public static final String SECTOR = "sector";
+    public static final String HOUSEHOLD = "household";
+    public static final String INDIVIDUAL = "individual";
+    public static final String BOTTOM = "bottom";
 
     private static final Map<String, Integer> levelLabels = new HashMap<>();
     private static final List<String> levels = new ArrayList<>();
 
     static {
 
-        levelLabels.put(REGION_STATE, R.string.region_label);
-        levelLabels.put(PROVINCE_STATE, R.string.province_label);
-        levelLabels.put(DISTRICT_STATE, R.string.district_label);
-        levelLabels.put(SUB_DISTRICT_STATE, R.string.sub_district_label);
-        levelLabels.put(LOCALITY_STATE, R.string.locality_label);
-        levelLabels.put(MAP_AREA_STATE, R.string.map_area_label);
-        levelLabels.put(SECTOR_STATE, R.string.sector_label);
-        levelLabels.put(HOUSEHOLD_STATE, R.string.household_label);
-        levelLabels.put(INDIVIDUAL_STATE, R.string.individual_label);
-        levelLabels.put(BOTTOM_STATE, R.string.bottom_label);
+        levelLabels.put(REGION, R.string.region_label);
+        levelLabels.put(PROVINCE, R.string.province_label);
+        levelLabels.put(DISTRICT, R.string.district_label);
+        levelLabels.put(SUBDISTRICT, R.string.sub_district_label);
+        levelLabels.put(LOCALITY, R.string.locality_label);
+        levelLabels.put(MAP_AREA, R.string.map_area_label);
+        levelLabels.put(SECTOR, R.string.sector_label);
+        levelLabels.put(HOUSEHOLD, R.string.household_label);
+        levelLabels.put(INDIVIDUAL, R.string.individual_label);
+        levelLabels.put(BOTTOM, R.string.bottom_label);
 
-        levels.add(REGION_STATE);
-        levels.add(PROVINCE_STATE);
-        levels.add(DISTRICT_STATE);
-        levels.add(SUB_DISTRICT_STATE);
-        levels.add(LOCALITY_STATE);
-        levels.add(MAP_AREA_STATE);
-        levels.add(SECTOR_STATE);
-        levels.add(HOUSEHOLD_STATE);
-        levels.add(INDIVIDUAL_STATE);
-        levels.add(BOTTOM_STATE);
+        levels.add(REGION);
+        levels.add(PROVINCE);
+        levels.add(DISTRICT);
+        levels.add(SUBDISTRICT);
+        levels.add(LOCALITY);
+        levels.add(MAP_AREA);
+        levels.add(SECTOR);
+        levels.add(HOUSEHOLD);
+        levels.add(INDIVIDUAL);
+        levels.add(BOTTOM);
     }
 
     Map<String, Integer> getLevelLabels() {

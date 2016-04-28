@@ -31,7 +31,7 @@ public class CensusFormPayloadBuilders {
 
     private static void addNewLocationPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
-        DataWrapper sectorDataWrapper = ctx.getHierarchyPath().get(SECTOR_STATE);
+        DataWrapper sectorDataWrapper = ctx.getHierarchyPath().get(SECTOR);
         ContentResolver contentResolver = ctx.getContentResolver();
 
         // sector extid is <hierarchyExtId>
@@ -90,7 +90,7 @@ public class CensusFormPayloadBuilders {
 
     private static void addNewIndividualPayload(Map<String, String> formPayload, LaunchContext navigateActivity) {
 
-        DataWrapper locationDataWrapper = navigateActivity.getHierarchyPath().get(HOUSEHOLD_STATE);
+        DataWrapper locationDataWrapper = navigateActivity.getHierarchyPath().get(HOUSEHOLD);
 
         String individualExtId = IdHelper.generateIndividualExtId(navigateActivity.getContentResolver(), locationDataWrapper);
 
@@ -130,8 +130,8 @@ public class CensusFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             PayloadTools.flagForReview(formPayload, false);
 
-            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
-            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
+            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD).getExtId();
+            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
 
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
@@ -221,8 +221,8 @@ public class CensusFormPayloadBuilders {
 
             // build complete individual form
             HierarchyPath hierarchyPath = ctx.getHierarchyPath();
-            String individualUuid = hierarchyPath.get(INDIVIDUAL_STATE).getUuid();
-            String householdUuid = hierarchyPath.get(HOUSEHOLD_STATE).getUuid();
+            String individualUuid = hierarchyPath.get(INDIVIDUAL).getUuid();
+            String householdUuid = hierarchyPath.get(HOUSEHOLD).getUuid();
 
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
             ContentResolver contentResolver = ctx.getContentResolver();

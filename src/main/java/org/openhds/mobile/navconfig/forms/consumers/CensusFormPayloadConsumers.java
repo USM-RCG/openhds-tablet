@@ -30,8 +30,8 @@ import org.openhds.mobile.utilities.IdHelper;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.openhds.mobile.navconfig.BiokoHierarchy.HOUSEHOLD_STATE;
-import static org.openhds.mobile.navconfig.BiokoHierarchy.SECTOR_STATE;
+import static org.openhds.mobile.navconfig.BiokoHierarchy.HOUSEHOLD;
+import static org.openhds.mobile.navconfig.BiokoHierarchy.SECTOR;
 
 public class CensusFormPayloadConsumers {
 
@@ -51,7 +51,7 @@ public class CensusFormPayloadConsumers {
             sector.setParentUuid(mapArea.getUuid());
             sector.setExtId(sectorExtId);
             sector.setName(sectorName);
-            sector.setLevel(SECTOR_STATE);
+            sector.setLevel(SECTOR);
             locationHierarchyGateway.insertOrUpdate(contentResolver,sector);
 
             // Modify the payload to refer to the created sector
@@ -117,7 +117,7 @@ public class CensusFormPayloadConsumers {
         @Override
         public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
-            DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD_STATE);
+            DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD);
 
             String relationshipType = formPayload
                     .get(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD);
@@ -164,7 +164,7 @@ public class CensusFormPayloadConsumers {
         @Override
         public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
-            DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD_STATE);
+            DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD);
 
             // head of the household is always "self" to the head of household
             String relationshipType = "1";

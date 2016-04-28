@@ -36,16 +36,16 @@ public class ProjectFormFields {
         private static final Map<String, String> stateFieldNames = new HashMap<>();
 
         static {
-            stateFieldNames.put(REGION_STATE, REGION_STATE_FIELD_NAME);
-            stateFieldNames.put(PROVINCE_STATE, PROVINCE_STATE_FIELD_NAME);
-            stateFieldNames.put(DISTRICT_STATE, DISTRICT_STATE_FIELD_NAME);
-            stateFieldNames.put(SUB_DISTRICT_STATE, SUB_DISTRICT_STATE_FIELD_NAME);
-            stateFieldNames.put(LOCALITY_STATE, LOCALITY_STATE_FIELD_NAME);
-            stateFieldNames.put(MAP_AREA_STATE, MAP_AREA_STATE_FIELD_NAME);
-            stateFieldNames.put(SECTOR_STATE, SECTOR_STATE_FIELD_NAME);
-            stateFieldNames.put(HOUSEHOLD_STATE, HOUSEHOLD_STATE_FIELD_NAME);
-            stateFieldNames.put(INDIVIDUAL_STATE, INDIVIDUAL_STATE_FIELD_NAME);
-            stateFieldNames.put(BOTTOM_STATE, BOTTOM_STATE_FIELD_NAME);
+            stateFieldNames.put(REGION, REGION_STATE_FIELD_NAME);
+            stateFieldNames.put(PROVINCE, PROVINCE_STATE_FIELD_NAME);
+            stateFieldNames.put(DISTRICT, DISTRICT_STATE_FIELD_NAME);
+            stateFieldNames.put(SUBDISTRICT, SUB_DISTRICT_STATE_FIELD_NAME);
+            stateFieldNames.put(LOCALITY, LOCALITY_STATE_FIELD_NAME);
+            stateFieldNames.put(MAP_AREA, MAP_AREA_STATE_FIELD_NAME);
+            stateFieldNames.put(SECTOR, SECTOR_STATE_FIELD_NAME);
+            stateFieldNames.put(HOUSEHOLD, HOUSEHOLD_STATE_FIELD_NAME);
+            stateFieldNames.put(INDIVIDUAL, INDIVIDUAL_STATE_FIELD_NAME);
+            stateFieldNames.put(BOTTOM, BOTTOM_STATE_FIELD_NAME);
         }
 
         public static String getExtIdFieldNameFromState(String state) {

@@ -6,7 +6,7 @@ import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.LocationGateway;
 import org.openhds.mobile.repository.gateway.SocialGroupGateway;
 
-import static org.openhds.mobile.navconfig.BiokoHierarchy.HOUSEHOLD_STATE;
+import static org.openhds.mobile.navconfig.BiokoHierarchy.HOUSEHOLD;
 
 
 public class CensusFormFilters {
@@ -31,7 +31,7 @@ public class CensusFormFilters {
     public static class AddHeadOfHousehold implements FormFilter {
         @Override
         public boolean shouldDisplay(LaunchContext ctx) {
-            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
+            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
             SocialGroupGateway socialGroupGateway = GatewayRegistry.getSocialGroupGateway();
             return socialGroupGateway.getFirst(ctx.getContentResolver(),
                     socialGroupGateway.findByLocationUuid(locationUuid)) == null;

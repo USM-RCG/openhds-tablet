@@ -26,9 +26,9 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.ResourceBundle.getBundle;
-import static org.openhds.mobile.navconfig.BiokoHierarchy.BOTTOM_STATE;
-import static org.openhds.mobile.navconfig.BiokoHierarchy.HOUSEHOLD_STATE;
-import static org.openhds.mobile.navconfig.BiokoHierarchy.INDIVIDUAL_STATE;
+import static org.openhds.mobile.navconfig.BiokoHierarchy.BOTTOM;
+import static org.openhds.mobile.navconfig.BiokoHierarchy.HOUSEHOLD;
+import static org.openhds.mobile.navconfig.BiokoHierarchy.INDIVIDUAL;
 import static org.openhds.mobile.navconfig.forms.filters.InvertedFilter.invert;
 import static org.openhds.mobile.repository.search.SearchUtils.getIndividualModule;
 
@@ -223,27 +223,27 @@ class BiokoModule extends AbstractNavigatorModule {
         labelForm("super_ojo", "superOjoFormLabel");
         labelForm("duplicate_location", "duplicateLocationFormLabel");
 
-        bindForm(INDIVIDUAL_STATE, new FormBehavior("bed_net", "bioko.bednetsLabel",
+        bindForm(INDIVIDUAL, new FormBehavior("bed_net", "bioko.bednetsLabel",
                 new BiokoFormFilters.DistributeBednets(),
                 new BiokoFormPayloadBuilders.DistributeBednets(),
                 new BiokoFormPayloadConsumers.DistributeBednets()));
 
-        bindForm(INDIVIDUAL_STATE, new FormBehavior("spraying", "bioko.sprayingLabel",
+        bindForm(INDIVIDUAL, new FormBehavior("spraying", "bioko.sprayingLabel",
                 new BiokoFormFilters.SprayHousehold(),
                 new BiokoFormPayloadBuilders.SprayHousehold(),
                 new BiokoFormPayloadConsumers.SprayHousehold()));
 
-        bindForm(INDIVIDUAL_STATE, new FormBehavior("super_ojo", "bioko.superOjoLabel",
+        bindForm(INDIVIDUAL, new FormBehavior("super_ojo", "bioko.superOjoLabel",
                 null,
                 new BiokoFormPayloadBuilders.SuperOjo(),
                 null));
 
-        bindForm(INDIVIDUAL_STATE, new FormBehavior("duplicate_location", "bioko.duplicateLocationLabel",
+        bindForm(INDIVIDUAL, new FormBehavior("duplicate_location", "bioko.duplicateLocationLabel",
                 null,
                 new BiokoFormPayloadBuilders.DuplicateLocation(),
                 null));
 
-        bindDetail(BOTTOM_STATE, new IndividualDetailFragment());
+        bindDetail(BOTTOM, new IndividualDetailFragment());
     }
 
     @Override
@@ -275,7 +275,7 @@ class CensusModule extends AbstractNavigatorModule {
         labelForm("location_evaluation", "locationEvaluationFormLabel");
         labelForm("individual", "individualFormLabel");
 
-        bindForm(HOUSEHOLD_STATE, new FormBehavior("location", "census.locationLabel",
+        bindForm(HOUSEHOLD, new FormBehavior("location", "census.locationLabel",
                 new CensusFormFilters.AddLocation(),
                 new CensusFormPayloadBuilders.AddLocation(),
                 new CensusFormPayloadConsumers.AddLocation()));
@@ -290,22 +290,22 @@ class CensusModule extends AbstractNavigatorModule {
                 new UpdateFormPayloadBuilders.StartAVisit(),
                 new CensusFormPayloadConsumers.ChainedVisitForPregnancyObservation(pregObFormBehavior));
 
-        bindForm(INDIVIDUAL_STATE, new FormBehavior("location_evaluation", "census.evaluateLocationLabel",
+        bindForm(INDIVIDUAL, new FormBehavior("location_evaluation", "census.evaluateLocationLabel",
                 new CensusFormFilters.EvaluateLocation(),
                 new CensusFormPayloadBuilders.EvaluateLocation(),
                 new CensusFormPayloadConsumers.EvaluateLocation()));
 
-        bindForm(INDIVIDUAL_STATE, new FormBehavior("individual", "census.headOfHousholdLabel",
+        bindForm(INDIVIDUAL, new FormBehavior("individual", "census.headOfHousholdLabel",
                 new CensusFormFilters.AddHeadOfHousehold(),
                 new CensusFormPayloadBuilders.AddHeadOfHousehold(),
                 new CensusFormPayloadConsumers.AddHeadOfHousehold(visitPregObFormBehavior)));
 
-        bindForm(INDIVIDUAL_STATE, new FormBehavior("individual", "census.householdMemberLabel",
+        bindForm(INDIVIDUAL, new FormBehavior("individual", "census.householdMemberLabel",
                 invert(new CensusFormFilters.AddHeadOfHousehold()),
                 new CensusFormPayloadBuilders.AddMemberOfHousehold(),
                 new CensusFormPayloadConsumers.AddMemberOfHousehold(visitPregObFormBehavior)));
 
-        bindDetail(BOTTOM_STATE, new IndividualDetailFragment());
+        bindDetail(BOTTOM, new IndividualDetailFragment());
     }
 
     @Override
@@ -339,14 +339,14 @@ class UpdateModule extends AbstractNavigatorModule {
         labelForm("pregnancy_observation", "pregnancyObservationFormLabel");
         labelForm("pregnancy_outcome", "pregnancyOutcomeFormLabel");
 
-        bindForm(INDIVIDUAL_STATE, new FormBehavior("visit", "shared.visitLabel",
+        bindForm(INDIVIDUAL, new FormBehavior("visit", "shared.visitLabel",
                 new UpdateFormFilters.StartAVisit(),
                 new UpdateFormPayloadBuilders.StartAVisit(),
                 new UpdateFormPayloadConsumers.StartAVisit()));
 
         EntityFieldSearch migrantSearch = getIndividualModule(
                 ProjectFormFields.Individuals.INDIVIDUAL_UUID, R.string.search_individual_label);
-        bindForm(INDIVIDUAL_STATE, new FormBehavior("in_migration", "update.internalInMigrationLabel",
+        bindForm(INDIVIDUAL, new FormBehavior("in_migration", "update.internalInMigrationLabel",
                 new UpdateFormFilters.RegisterInMigration(),
                 new UpdateFormPayloadBuilders.RegisterInternalInMigration(),
                 new UpdateFormPayloadConsumers.RegisterInMigration(),
@@ -357,34 +357,34 @@ class UpdateModule extends AbstractNavigatorModule {
                 new UpdateFormPayloadBuilders.RegisterExternalInMigration(),
                 new UpdateFormPayloadConsumers.RegisterInMigration());
 
-        bindForm(INDIVIDUAL_STATE, new FormBehavior("individual", "update.externalInMigrationLabel",
+        bindForm(INDIVIDUAL, new FormBehavior("individual", "update.externalInMigrationLabel",
                 new UpdateFormFilters.RegisterInMigration(),
                 new UpdateFormPayloadBuilders.AddIndividualFromInMigration(),
                 new UpdateFormPayloadConsumers.AddIndividualFromInMigration(externalInMigrationFormBehavior)));
 
-        bindForm(BOTTOM_STATE, new FormBehavior("out_migration", "update.outMigrationLabel",
+        bindForm(BOTTOM, new FormBehavior("out_migration", "update.outMigrationLabel",
                 new UpdateFormFilters.DeathOrOutMigrationFilter(),
                 new UpdateFormPayloadBuilders.RegisterOutMigration(),
                 new UpdateFormPayloadConsumers.RegisterOutMigration()));
 
-        bindForm(BOTTOM_STATE, new FormBehavior("death", "update.deathLabel",
+        bindForm(BOTTOM, new FormBehavior("death", "update.deathLabel",
                 new UpdateFormFilters.DeathOrOutMigrationFilter(),
                 new UpdateFormPayloadBuilders.RegisterDeath(),
                 new UpdateFormPayloadConsumers.RegisterDeath()));
 
-        bindForm(BOTTOM_STATE, new FormBehavior("pregnancy_observation", "shared.pregnancyObservationLabel",
+        bindForm(BOTTOM, new FormBehavior("pregnancy_observation", "shared.pregnancyObservationLabel",
                 new UpdateFormFilters.PregnancyFilter(),
                 new UpdateFormPayloadBuilders.RecordPregnancyObservation(),
                 null));
 
         EntityFieldSearch paternitySearch = getIndividualModule(
                 ProjectFormFields.PregnancyOutcome.FATHER_UUID, R.string.search_father_label);
-        bindForm(BOTTOM_STATE, new FormBehavior("pregnancy_outcome", "update.pregnancyOutcomeLabel",
+        bindForm(BOTTOM, new FormBehavior("pregnancy_outcome", "update.pregnancyOutcomeLabel",
                 new UpdateFormFilters.PregnancyFilter(),
                 new UpdateFormPayloadBuilders.RecordPregnancyOutcome(),
                 null, paternitySearch));
 
-        bindDetail(BOTTOM_STATE, new IndividualDetailFragment());
+        bindDetail(BOTTOM, new IndividualDetailFragment());
     }
 
 

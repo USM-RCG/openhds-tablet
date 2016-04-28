@@ -6,8 +6,8 @@ import org.openhds.mobile.navconfig.ProjectResources;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
 
-import static org.openhds.mobile.navconfig.BiokoHierarchy.HOUSEHOLD_STATE;
-import static org.openhds.mobile.navconfig.BiokoHierarchy.INDIVIDUAL_STATE;
+import static org.openhds.mobile.navconfig.BiokoHierarchy.HOUSEHOLD;
+import static org.openhds.mobile.navconfig.BiokoHierarchy.INDIVIDUAL;
 
 
 public class UpdateFormFilters {
@@ -22,7 +22,7 @@ public class UpdateFormFilters {
     public static class RegisterInMigration implements FormFilter {
         @Override
         public boolean shouldDisplay(LaunchContext ctx) {
-            return ctx.getCurrentVisit() != null && ctx.getHierarchyPath().get(HOUSEHOLD_STATE) != null;
+            return ctx.getCurrentVisit() != null && ctx.getHierarchyPath().get(HOUSEHOLD) != null;
         }
     }
 
@@ -43,7 +43,7 @@ public class UpdateFormFilters {
     }
 
     private static Individual getIndividual(LaunchContext ctx) {
-        String uuid = ctx.getHierarchyPath().get(INDIVIDUAL_STATE).getUuid();
+        String uuid = ctx.getHierarchyPath().get(INDIVIDUAL).getUuid();
         IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
         return individualGateway.getFirst(ctx.getContentResolver(), individualGateway.findById(uuid));
     }

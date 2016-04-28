@@ -122,7 +122,7 @@ public class UpdateFormPayloadConsumers {
         @Override
         public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
-            DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD_STATE);
+            DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD);
             ContentResolver contentResolver = ctx.getContentResolver();
 
             String relationshipType = formPayload.get(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD);

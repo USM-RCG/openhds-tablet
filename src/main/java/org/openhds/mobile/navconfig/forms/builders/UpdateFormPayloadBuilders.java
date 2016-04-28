@@ -35,8 +35,8 @@ public class UpdateFormPayloadBuilders {
             PayloadTools.flagForReview(formPayload, false);
 
             String visitDate = formatDate(Calendar.getInstance());
-            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
-            String locationUuid= ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
+            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD).getExtId();
+            String locationUuid= ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
             String visitExtId = visitDate + "_" + locationExtId;
 
 
@@ -68,8 +68,8 @@ public class UpdateFormPayloadBuilders {
             formPayload.put(ProjectFormFields.Visits.VISIT_EXTID, ctx.getCurrentVisit().getExtId());
             formPayload.put(ProjectFormFields.Visits.VISIT_UUID, ctx.getCurrentVisit().getUuid());
 
-            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
-            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
+            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD).getExtId();
+            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
 
@@ -96,8 +96,8 @@ public class UpdateFormPayloadBuilders {
             formPayload.put(ProjectFormFields.Visits.VISIT_EXTID, ctx.getCurrentVisit().getExtId());
             formPayload.put(ProjectFormFields.Visits.VISIT_UUID, ctx.getCurrentVisit().getUuid());
 
-            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
-            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
+            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD).getExtId();
+            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
 
@@ -125,8 +125,8 @@ public class UpdateFormPayloadBuilders {
 
             String outMigrationDate = formatDate(Calendar.getInstance());
 
-            String individualExtId = navigateActivity.getHierarchyPath().get(INDIVIDUAL_STATE).getExtId();
-            String individualUuid = navigateActivity.getHierarchyPath().get(INDIVIDUAL_STATE).getUuid();
+            String individualExtId = navigateActivity.getHierarchyPath().get(INDIVIDUAL).getExtId();
+            String individualUuid = navigateActivity.getHierarchyPath().get(INDIVIDUAL).getUuid();
 
             formPayload.put(ProjectFormFields.OutMigrations.OUT_MIGRATION_DATE, outMigrationDate);
 
@@ -158,7 +158,7 @@ public class UpdateFormPayloadBuilders {
 
             String individualExtId;
             String individualUuid;
-            DataWrapper dataWrapper = ctx.getHierarchyPath().get(INDIVIDUAL_STATE);
+            DataWrapper dataWrapper = ctx.getHierarchyPath().get(INDIVIDUAL);
             if (null != dataWrapper) {
                 individualExtId = dataWrapper.getExtId();
                 individualUuid = dataWrapper.getUuid();
@@ -189,7 +189,7 @@ public class UpdateFormPayloadBuilders {
 
             String individualExtId;
             String individualUuid;
-            DataWrapper dataWrapper = ctx.getHierarchyPath().get(INDIVIDUAL_STATE);
+            DataWrapper dataWrapper = ctx.getHierarchyPath().get(INDIVIDUAL);
             if (null == dataWrapper) {
                 individualExtId = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID);
                 individualUuid = formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID);
@@ -224,10 +224,10 @@ public class UpdateFormPayloadBuilders {
 
             SocialGroupGateway socialGroupGateway = new SocialGroupGateway();
             SocialGroup socialGroup = socialGroupGateway.getFirst(ctx.getContentResolver(),
-                    socialGroupGateway.findByLocationUuid(ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid()));
+                    socialGroupGateway.findByLocationUuid(ctx.getHierarchyPath().get(HOUSEHOLD).getUuid()));
 
-            String motherExtId = ctx.getHierarchyPath().get(INDIVIDUAL_STATE).getExtId();
-            String motherUuid = ctx.getHierarchyPath().get(INDIVIDUAL_STATE).getUuid();
+            String motherExtId = ctx.getHierarchyPath().get(INDIVIDUAL).getExtId();
+            String motherUuid = ctx.getHierarchyPath().get(INDIVIDUAL).getUuid();
 
             formPayload.put(ProjectFormFields.PregnancyOutcome.MOTHER_UUID, motherUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, motherUuid);
@@ -249,7 +249,7 @@ public class UpdateFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, navigateActivity);
             PayloadTools.flagForReview(formPayload, false);
 
-            DataWrapper locationDataWrapper = navigateActivity.getHierarchyPath().get(HOUSEHOLD_STATE);
+            DataWrapper locationDataWrapper = navigateActivity.getHierarchyPath().get(HOUSEHOLD);
 
             String individualExtId = IdHelper.generateIndividualExtId(navigateActivity.getContentResolver(), locationDataWrapper);
 

@@ -39,8 +39,8 @@ public class BiokoFormPayloadBuilders {
             String distributionDateTime = formPayload.get(ProjectFormFields.General.COLLECTION_DATE_TIME);
             formPayload.put(ProjectFormFields.General.DISTRIBUTION_DATE_TIME, distributionDateTime);
 
-            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
-            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
+            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD).getExtId();
+            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
 
             formPayload.put(ProjectFormFields.BedNet.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.BedNet.LOCATION_UUID, locationUuid);
@@ -90,8 +90,8 @@ public class BiokoFormPayloadBuilders {
             formPayload.put(ProjectFormFields.SprayHousehold.SURVEY_DATE, formatTime(Calendar.getInstance()));
 
 
-            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
-            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
+            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD).getExtId();
+            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
             formPayload.put(ProjectFormFields.BedNet.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.BedNet.LOCATION_UUID, locationUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
@@ -116,8 +116,8 @@ public class BiokoFormPayloadBuilders {
             formPayload.put(ProjectFormFields.SuperOjo.OJO_DATE, formatTime(Calendar.getInstance()));
 
 
-            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getExtId();
-            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD_STATE).getUuid();
+            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD).getExtId();
+            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
@@ -139,10 +139,10 @@ public class BiokoFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             PayloadTools.flagForReview(formPayload, false);
 
-            DataWrapper mapArea = ctx.getHierarchyPath().get(MAP_AREA_STATE);
+            DataWrapper mapArea = ctx.getHierarchyPath().get(MAP_AREA);
             formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, mapArea.getName());
 
-            DataWrapper sector = ctx.getHierarchyPath().get(SECTOR_STATE);
+            DataWrapper sector = ctx.getHierarchyPath().get(SECTOR);
             formPayload.put(ProjectFormFields.Locations.SECTOR_NAME, sector.getName());
 
             // Assign the next sequential building number in sector
@@ -155,7 +155,7 @@ public class BiokoFormPayloadBuilders {
             }
             formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, formatBuilding(buildingNumber, true));
 
-            DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD_STATE);
+            DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
             String locationExtId = household.getExtId();
             String locationUuid = household.getUuid();
 
