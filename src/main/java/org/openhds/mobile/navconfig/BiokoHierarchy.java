@@ -12,7 +12,7 @@ import java.util.Map;
  * {@link NavigatorModule}s. It is simply the list of state names, state
  * labels (for UI), and state sequence.
  */
-public class BiokoHierarchy implements HierarchyInfo {
+public class BiokoHierarchy {
 
     static final BiokoHierarchy INSTANCE = new BiokoHierarchy();
 
@@ -55,12 +55,10 @@ public class BiokoHierarchy implements HierarchyInfo {
         levels.add(BOTTOM_STATE);
     }
 
-    @Override
     public Map<String, Integer> getLevelLabels() {
         return levelLabels;
     }
 
-    @Override
     public List<String> getLevels() {
         return levels;
     }

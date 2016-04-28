@@ -12,7 +12,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
 import org.openhds.mobile.R;
-import org.openhds.mobile.navconfig.HierarchyInfo;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 
 import java.util.HashMap;
