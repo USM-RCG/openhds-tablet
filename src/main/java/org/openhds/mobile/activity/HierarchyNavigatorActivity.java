@@ -110,7 +110,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         formHelper = new FormHelper(this);
 
         hierarchyPath = new HierarchyPath();
-        levelManager = new NavigationManager(getLevels());
+        levelManager = new NavigationManager(config.getLevels());
         levelManager.addListener(new HierarchyLevelListener());
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -218,13 +218,13 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         }
 
         int pathDepth = hierarchyPath.depth();
-        String levelAtDepth = getLevels().get(pathDepth);
+        String levelAtDepth = config.getLevels().get(pathDepth);
         if (pathDepth == 0) {
             hierarchyButtonFragment.setVisible(levelAtDepth, true);
             currentResults = queryHelper.getAll(getContentResolver(), levelAtDepth);
             updateToggleButton();
         } else {
-            String parentLevel = getLevels().get(pathDepth - 1);
+            String parentLevel = config.getLevels().get(pathDepth - 1);
             DataWrapper parentItem = hierarchyPath.get(parentLevel);
             currentSelection = parentItem;
             if(currentResults == null) {
@@ -273,7 +273,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private void updateButtonLabel(String level) {
         DataWrapper selected = hierarchyPath.get(level);
         if (selected == null) {
-            String levelLabel = getString(getLevelLabels().get(level));
+            String levelLabel = getString(config.getLevelLabel(level));
             hierarchyButtonFragment.setButtonLabel(level, levelLabel, null, true);
             hierarchyButtonFragment.setHighlighted(level, true);
         } else {
@@ -282,21 +282,13 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         }
     }
 
-    private Map<String, Integer> getLevelLabels() {
-        return config.getHierarchy().getLevelLabels();
-    }
-
-    private List<String> getLevels() {
-        return config.getHierarchy().getLevels();
-    }
-
     private void jumpUp(String level) {
 
         if (!hierarchyPath.getLevels().contains(level)) {
             throw new IllegalStateException("invalid level: " + level);
         }
 
-        List<String> allLevels = getLevels();
+        List<String> allLevels = config.getLevels();
         int indexBeforeJump = allLevels.indexOf(getLevel());
         int indexAfterJump = allLevels.indexOf(level);
 
@@ -304,14 +296,14 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
         // Disable buttons made irrelevant after jump
         for (int i = indexBeforeJump; i >= indexAfterJump; i--) {
-            hierarchyButtonFragment.setVisible(getLevels().get(i), false);
+            hierarchyButtonFragment.setVisible(config.getLevels().get(i), false);
         }
 
         // Populate data to enable drilling deeper from new depth
         if (indexAfterJump == 0) {
-            currentResults = queryHelper.getAll(getContentResolver(), getLevels().get(indexAfterJump));
+            currentResults = queryHelper.getAll(getContentResolver(), config.getLevels().get(indexAfterJump));
         } else {
-            String parentLevel = getLevels().get(indexAfterJump - 1);
+            String parentLevel = config.getLevels().get(indexAfterJump - 1);
             DataWrapper parentItem = hierarchyPath.get(parentLevel);
             currentSelection = parentItem;
             currentResults = queryHelper.getChildren(getContentResolver(), parentItem, level);
@@ -328,9 +320,9 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             throw new IllegalStateException("level mismatch: expected " + currentState + ", saw " + selectedState);
         }
 
-        int currentIndex = getLevels().indexOf(currentState);
-        if (currentIndex >= 0 && currentIndex < getLevels().size() - 1) {
-            String nextState = getLevels().get(currentIndex + 1);
+        int currentIndex = config.getLevels().indexOf(currentState);
+        if (currentIndex >= 0 && currentIndex < config.getLevels().size() - 1) {
+            String nextState = config.getLevels().get(currentIndex + 1);
             currentSelection = selected;
             currentResults = queryHelper.getChildren(getContentResolver(), selected, nextState);
             hierarchyPath.down(currentState, selected);
@@ -518,8 +510,8 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     @Override
     public void onBackPressed() {
         int currentStateIndex;
-        if (0 < (currentStateIndex = getLevels().indexOf(getLevel()))) {
-            jumpUp(getLevels().get(currentStateIndex - 1));
+        if (0 < (currentStateIndex = config.getLevels().indexOf(getLevel()))) {
+            jumpUp(config.getLevels().get(currentStateIndex - 1));
         } else {
             super.onBackPressed();
         }

@@ -130,8 +130,23 @@ public class NavigatorConfig {
         return getBundle("modulestrings").getString(key);
     }
 
-    public HierarchyInfo getHierarchy() {
-        return BiokoHierarchy.INSTANCE;
+    /**
+     * Get logical names for the configured hierarchy levels.
+     *
+     * @return a list of configured hier levels, from highest to lowest.
+     */
+    public List<String> getLevels() {
+        return BiokoHierarchy.INSTANCE.getLevels();
+    }
+
+    /**
+     * Get a localized label for the logical hierarchy level.
+     *
+     * @param level the hierarchy level
+     * @return the level's label for the current locale
+     */
+    public int getLevelLabel(String level) {
+        return BiokoHierarchy.INSTANCE.getLevelLabels().get(level);
     }
 
     public NavigatorModule getModule(String name) {

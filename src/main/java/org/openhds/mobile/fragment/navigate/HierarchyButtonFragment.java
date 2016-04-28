@@ -56,17 +56,17 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 
 		stateViews = new HashMap<>();
 
-		HierarchyInfo hierarchy = NavigatorConfig.getInstance().getHierarchy();
-		for (String state : hierarchy.getLevels()) {
+		NavigatorConfig config = NavigatorConfig.getInstance();
+		for (String level : config.getLevels()) {
 			final String description = null;
 			RelativeLayout layout = makeTextWithPayload(getActivity(),
-                    getResourceString(getActivity(), hierarchy.getLevelLabels().get(state)), description, state, this,
+                    getResourceString(getActivity(), config.getLevelLabel(level)), description, level, this,
 					fragmentLayout, R.drawable.data_selector, null, null,true);
 			LayoutParams params = (LayoutParams) layout.getLayoutParams();
 			params.setMargins(0, 0, 0, BUTTON_MARGIN);
-			stateViews.put(state, layout);
-			setVisible(state, false);
-			setHighlighted(state, false);
+			stateViews.put(level, layout);
+			setVisible(level, false);
+			setHighlighted(level, false);
 		}
 
 		return fragmentLayout;
