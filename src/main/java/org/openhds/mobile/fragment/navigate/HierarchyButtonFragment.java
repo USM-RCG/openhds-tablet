@@ -27,7 +27,7 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 	private static final int BUTTON_MARGIN = 5;
 
 	private HierarchyButtonListener listener;
-	private Map<String, RelativeLayout> stateViews;
+	private Map<String, RelativeLayout> levelViews;
 
 	public interface HierarchyButtonListener {
 		void onHierarchyButtonClicked(String level);
@@ -53,7 +53,7 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 		LinearLayout fragmentLayout = (LinearLayout) inflater.inflate(
 				R.layout.hierarchy_button_fragment, container, false);
 
-		stateViews = new HashMap<>();
+		levelViews = new HashMap<>();
 
 		NavigatorConfig config = NavigatorConfig.getInstance();
 		for (String level : config.getLevels()) {
@@ -63,7 +63,7 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 					fragmentLayout, R.drawable.data_selector, null, null,true);
 			LayoutParams params = (LayoutParams) layout.getLayoutParams();
 			params.setMargins(0, 0, 0, BUTTON_MARGIN);
-			stateViews.put(level, layout);
+			levelViews.put(level, layout);
 			setVisible(level, false);
 			setHighlighted(level, false);
 		}
@@ -71,23 +71,23 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 		return fragmentLayout;
 	}
 
-	public void setVisible(String state, boolean visible) {
-		RelativeLayout layout = stateViews.get(state);
+	public void setVisible(String level, boolean visible) {
+		RelativeLayout layout = levelViews.get(level);
 		if (layout != null) {
 			layout.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
 		}
 	}
 
-	public void setHighlighted(String state, boolean highlighted) {
-		RelativeLayout layout = stateViews.get(state);
+	public void setHighlighted(String level, boolean highlighted) {
+		RelativeLayout layout = levelViews.get(level);
 		if (layout != null) {
 			layout.setPressed(highlighted);
 			layout.setClickable(!highlighted);
 		}
 	}
 
-	public void setButtonLabel(String state, String name, String id, boolean centerText) {
-		RelativeLayout layout = stateViews.get(state);
+	public void setButtonLabel(String level, String name, String id, boolean centerText) {
+		RelativeLayout layout = levelViews.get(level);
 		if (layout != null) {
 			configureTextWithPayload(getActivity(), layout, name, id, null, null, centerText);
 		}

@@ -314,19 +314,19 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     private void stepDown(DataWrapper selected) {
 
-        String currentState = getLevel(), selectedState = selected.getCategory();
+        String level = getLevel(), selectedLevel = selected.getCategory();
 
-        if (!currentState.equals(selectedState)) {
-            throw new IllegalStateException("level mismatch: expected " + currentState + ", saw " + selectedState);
+        if (!level.equals(selectedLevel)) {
+            throw new IllegalStateException("level mismatch: expected " + level + ", saw " + selectedLevel);
         }
 
-        int currentIndex = config.getLevels().indexOf(currentState);
+        int currentIndex = config.getLevels().indexOf(level);
         if (currentIndex >= 0 && currentIndex < config.getLevels().size() - 1) {
-            String nextState = config.getLevels().get(currentIndex + 1);
+            String nextLevel = config.getLevels().get(currentIndex + 1);
             currentSelection = selected;
-            currentResults = queryHelper.getChildren(getContentResolver(), selected, nextState);
-            hierarchyPath.down(currentState, selected);
-            levelManager.moveTo(nextState);
+            currentResults = queryHelper.getChildren(getContentResolver(), selected, nextLevel);
+            hierarchyPath.down(level, selected);
+            levelManager.moveTo(nextLevel);
         }
     }
 
@@ -387,7 +387,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     private void showDetailFragment() {
-        DetailFragment fragment = getDetailFragmentForCurrentState();
+        DetailFragment fragment = getDetailForCurrentLevel();
         detailFragment = fragment == null? defaultDetailFragment : fragment;
         getFragmentManager()
                 .beginTransaction()
@@ -397,16 +397,16 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         detailFragment.setUpDetails(getCurrentSelection());
     }
 
-    private DetailFragment getDetailFragmentForCurrentState() {
+    private DetailFragment getDetailForCurrentLevel() {
         return currentModule.getDetailFragment(getLevel());
     }
 
-    private boolean shouldShowDetailFragment() {
+    private boolean shouldShowDetail() {
         return currentResults == null || currentResults.isEmpty();
     }
 
     private void updateToggleButton() {
-        if (getDetailFragmentForCurrentState() != null && !shouldShowDetailFragment()) {
+        if (getDetailForCurrentLevel() != null && !shouldShowDetail()) {
             detailToggleFragment.setEnabled(true);
             if (!valueFragment.isAdded()) {
                 detailToggleFragment.setHighlighted(true);
@@ -586,7 +586,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                 hierarchyButtonFragment.setVisible(level, true);
             }
 
-            if (shouldShowDetailFragment()) {
+            if (shouldShowDetail()) {
                 showDetailFragment();
             } else {
                 showValueFragment();

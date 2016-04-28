@@ -33,24 +33,24 @@ public class ProjectFormFields {
         public static final String INDIVIDUAL_STATE_FIELD_NAME = "individualExtId";
         public static final String BOTTOM_STATE_FIELD_NAME = "bottomExtId";
 
-        private static final Map<String, String> stateFieldNames = new HashMap<>();
+        private static final Map<String, String> levelExtIdFields = new HashMap<>();
 
         static {
-            stateFieldNames.put(REGION, REGION_STATE_FIELD_NAME);
-            stateFieldNames.put(PROVINCE, PROVINCE_STATE_FIELD_NAME);
-            stateFieldNames.put(DISTRICT, DISTRICT_STATE_FIELD_NAME);
-            stateFieldNames.put(SUBDISTRICT, SUB_DISTRICT_STATE_FIELD_NAME);
-            stateFieldNames.put(LOCALITY, LOCALITY_STATE_FIELD_NAME);
-            stateFieldNames.put(MAP_AREA, MAP_AREA_STATE_FIELD_NAME);
-            stateFieldNames.put(SECTOR, SECTOR_STATE_FIELD_NAME);
-            stateFieldNames.put(HOUSEHOLD, HOUSEHOLD_STATE_FIELD_NAME);
-            stateFieldNames.put(INDIVIDUAL, INDIVIDUAL_STATE_FIELD_NAME);
-            stateFieldNames.put(BOTTOM, BOTTOM_STATE_FIELD_NAME);
+            levelExtIdFields.put(REGION, REGION_STATE_FIELD_NAME);
+            levelExtIdFields.put(PROVINCE, PROVINCE_STATE_FIELD_NAME);
+            levelExtIdFields.put(DISTRICT, DISTRICT_STATE_FIELD_NAME);
+            levelExtIdFields.put(SUBDISTRICT, SUB_DISTRICT_STATE_FIELD_NAME);
+            levelExtIdFields.put(LOCALITY, LOCALITY_STATE_FIELD_NAME);
+            levelExtIdFields.put(MAP_AREA, MAP_AREA_STATE_FIELD_NAME);
+            levelExtIdFields.put(SECTOR, SECTOR_STATE_FIELD_NAME);
+            levelExtIdFields.put(HOUSEHOLD, HOUSEHOLD_STATE_FIELD_NAME);
+            levelExtIdFields.put(INDIVIDUAL, INDIVIDUAL_STATE_FIELD_NAME);
+            levelExtIdFields.put(BOTTOM, BOTTOM_STATE_FIELD_NAME);
         }
 
-        public static String getExtIdFieldNameFromState(String state) {
-            if (stateFieldNames.containsKey(state)) {
-                return stateFieldNames.get(state);
+        public static String getExtIdFieldForLevel(String level) {
+            if (levelExtIdFields.containsKey(level)) {
+                return levelExtIdFields.get(level);
             } else {
                 return null;
             }

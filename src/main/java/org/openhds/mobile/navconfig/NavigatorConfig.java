@@ -188,17 +188,17 @@ abstract class AbstractNavigatorModule implements NavigatorModule {
         formLabels.put(formId, labelKey);
     }
 
-    public void bindForm(String state, FormBehavior form) {
-        getForms(state).add(form);
+    public void bindForm(String level, FormBehavior form) {
+        getForms(level).add(form);
     }
 
-    public void bindDetail(String state, DetailFragment fragment) {
-        detailForLevels.put(state, fragment);
+    public void bindDetail(String level, DetailFragment fragment) {
+        detailForLevels.put(level, fragment);
     }
 
     /*
      * These details are off by 1: details for an individual should be shown after clicking a specific individual
-     * which is actually the bottom (not the individual) state.
+     * which is actually the bottom level, not the individual level.
      */
     @Override
     public DetailFragment getDetailFragment(String level) {
@@ -386,7 +386,6 @@ class UpdateModule extends AbstractNavigatorModule {
 
         bindDetail(BOTTOM, new IndividualDetailFragment());
     }
-
 
     @Override
     public String getLaunchLabel() {

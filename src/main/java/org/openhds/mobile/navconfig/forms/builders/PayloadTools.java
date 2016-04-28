@@ -27,7 +27,7 @@ public class PayloadTools {
         //TODO: Add all the hierarchy Uuids as well?
         // Add all the extIds from the HierarchyPath
         for (String level : hierarchyPath.getLevels()) {
-            String fieldName = ProjectFormFields.General.getExtIdFieldNameFromState(level);
+            String fieldName = ProjectFormFields.General.getExtIdFieldForLevel(level);
             formPayload.put(fieldName, hierarchyPath.get(level).getExtId());
         }
 

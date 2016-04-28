@@ -122,12 +122,12 @@ public class IndividualGateway extends Gateway<Individual> {
         }
 
         @Override
-        public DataWrapper toDataWrapper(ContentResolver contentResolver, Individual individual, String state) {
+        public DataWrapper toDataWrapper(ContentResolver contentResolver, Individual individual, String level) {
             DataWrapper dataWrapper = new DataWrapper();
             dataWrapper.setUuid(individual.getUuid());
             dataWrapper.setExtId(individual.getExtId());
             dataWrapper.setName(getFullName(individual));
-            dataWrapper.setCategory(state);
+            dataWrapper.setCategory(level);
 
             // for Bioko
             // add individual details to payload

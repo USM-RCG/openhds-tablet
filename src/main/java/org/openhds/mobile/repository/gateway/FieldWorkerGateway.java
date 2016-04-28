@@ -67,11 +67,11 @@ public class FieldWorkerGateway extends Gateway<FieldWorker> {
         }
 
         @Override
-        public DataWrapper toDataWrapper(ContentResolver contentResolver, FieldWorker fieldWorker, String state) {
+        public DataWrapper toDataWrapper(ContentResolver contentResolver, FieldWorker fieldWorker, String level) {
             DataWrapper dataWrapper = new DataWrapper();
             dataWrapper.setExtId(fieldWorker.getExtId());
             dataWrapper.setName(fieldWorker.getFirstName());
-            dataWrapper.setCategory(state);
+            dataWrapper.setCategory(level);
             dataWrapper.setUuid(fieldWorker.getUuid());
             return dataWrapper;
         }

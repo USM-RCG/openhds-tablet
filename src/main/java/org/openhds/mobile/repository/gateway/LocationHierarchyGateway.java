@@ -68,12 +68,12 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
         }
 
         @Override
-        public DataWrapper toDataWrapper(ContentResolver contentResolver, LocationHierarchy locationHierarchy, String state) {
+        public DataWrapper toDataWrapper(ContentResolver contentResolver, LocationHierarchy locationHierarchy, String level) {
             DataWrapper dataWrapper = new DataWrapper();
             dataWrapper.setExtId(locationHierarchy.getExtId());
             dataWrapper.setUuid(locationHierarchy.getUuid());
             dataWrapper.setName(locationHierarchy.getName());
-            dataWrapper.setCategory(state);
+            dataWrapper.setCategory(level);
             return dataWrapper;
         }
     }

@@ -17,20 +17,20 @@ public class QueryResultsIterator<T> implements Iterator<DataWrapper> {
     private final Converter<T> converter;
     private final ContentResolver contentResolver;
     private final ResultsIterator<T> resultsIterator;
-    private final String state;
+    private final String level;
 
-    public QueryResultsIterator(ContentResolver contentResolver, Query query, Converter<T> converter, String state) {
+    public QueryResultsIterator(ContentResolver contentResolver, Query query, Converter<T> converter, String level) {
         this.converter = converter;
         this.contentResolver = contentResolver;
         this.resultsIterator = new ResultsIterator<>(contentResolver, query, converter);
-        this.state = state;
+        this.level = level;
     }
 
-    public QueryResultsIterator(ContentResolver contentResolver, Query query, Converter<T> converter, String state, int windowMaxSize) {
+    public QueryResultsIterator(ContentResolver contentResolver, Query query, Converter<T> converter, String level, int windowMaxSize) {
         this.converter = converter;
         this.contentResolver = contentResolver;
         this.resultsIterator = new ResultsIterator<>(contentResolver, query, converter, windowMaxSize);
-        this.state = state;
+        this.level = level;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class QueryResultsIterator<T> implements Iterator<DataWrapper> {
 
     @Override
     public DataWrapper next() {
-        return converter.toDataWrapper(contentResolver, resultsIterator.next(), state);
+        return converter.toDataWrapper(contentResolver, resultsIterator.next(), level);
     }
 
     @Override

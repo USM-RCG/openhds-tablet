@@ -89,12 +89,12 @@ public class RelationshipGateway extends Gateway<Relationship> {
         }
 
         @Override
-        public DataWrapper toDataWrapper(ContentResolver contentResolver, Relationship relationship, String state) {
+        public DataWrapper toDataWrapper(ContentResolver contentResolver, Relationship relationship, String level) {
             DataWrapper dataWrapper = new DataWrapper();
 
             dataWrapper.setUuid(relationship.getUuid());
             dataWrapper.setName(relationship.getType());
-            dataWrapper.setCategory(state);
+            dataWrapper.setCategory(level);
 
             return dataWrapper;
         }

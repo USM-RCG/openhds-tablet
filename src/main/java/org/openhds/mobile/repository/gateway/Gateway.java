@@ -104,33 +104,33 @@ public abstract class Gateway<T> {
     }
 
     // get the first result from a query as a QueryResult or null
-    public DataWrapper getFirstQueryResult(ContentResolver contentResolver, Query query, String state) {
+    public DataWrapper getFirstQueryResult(ContentResolver contentResolver, Query query, String level) {
         T entity = getFirst(contentResolver, query);
         if (null == entity) {
             return null;
         }
-        return converter.toDataWrapper(contentResolver, entity, state);
+        return converter.toDataWrapper(contentResolver, entity, level);
     }
 
     // get all results from a query as a list of QueryResults
-    public List<DataWrapper> getQueryResultList(ContentResolver contentResolver, Query query, String state) {
+    public List<DataWrapper> getQueryResultList(ContentResolver contentResolver, Query query, String level) {
         List<DataWrapper> dataWrappers = new ArrayList<>();
         Cursor cursor = query.select(contentResolver);
         List<T> entities = toList(cursor);
         for (T entity : entities) {
-            dataWrappers.add(converter.toDataWrapper(contentResolver, entity, state));
+            dataWrappers.add(converter.toDataWrapper(contentResolver, entity, level));
         }
         return dataWrappers;
     }
 
     // get an iterator over all results from a query as QueryResults
-    public Iterator<DataWrapper> getQueryResultIterator(ContentResolver contentResolver, Query query, String state) {
-        return new QueryResultsIterator<>(contentResolver, query, converter, state);
+    public Iterator<DataWrapper> getQueryResultIterator(ContentResolver contentResolver, Query query, String level) {
+        return new QueryResultsIterator<>(contentResolver, query, converter, level);
     }
 
     // get an iterator over all results from a query as QueryResults, with given iterator window size
-    public Iterator<DataWrapper> getQueryResultIterator(ContentResolver contentResolver, Query query, String state, int windowSize) {
-        return new QueryResultsIterator<>(contentResolver, query, converter, state, windowSize);
+    public Iterator<DataWrapper> getQueryResultIterator(ContentResolver contentResolver, Query query, String level, int windowSize) {
+        return new QueryResultsIterator<>(contentResolver, query, converter, level, windowSize);
     }
 
     // find entities with given id

@@ -44,42 +44,42 @@ public class DefaultQueryHelper implements QueryHelper {
         return instance;
     }
 
-    public List<DataWrapper> getAll(ContentResolver contentResolver, String state) {
+    public List<DataWrapper> getAll(ContentResolver contentResolver, String level) {
         LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
-        switch (state) {
+        switch (level) {
             case REGION:
                 return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByLevel(REGION_HIERARCHY_LEVEL_NAME), state);
+                        locationHierarchyGateway.findByLevel(REGION_HIERARCHY_LEVEL_NAME), level);
             case PROVINCE:
                 return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByLevel(PROVINCE_HIERARCHY_LEVEL_NAME), state);
+                        locationHierarchyGateway.findByLevel(PROVINCE_HIERARCHY_LEVEL_NAME), level);
             case DISTRICT:
                 return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByLevel(DISTRICT_HIERARCHY_LEVEL_NAME), state);
+                        locationHierarchyGateway.findByLevel(DISTRICT_HIERARCHY_LEVEL_NAME), level);
             case SUBDISTRICT:
                 return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByLevel(SUB_DISTRICT_HIERARCHY_LEVEL_NAME), state);
+                        locationHierarchyGateway.findByLevel(SUB_DISTRICT_HIERARCHY_LEVEL_NAME), level);
             case LOCALITY:
                 return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByLevel(LOCALITY_HIERARCHY_LEVEL_NAME), state);
+                        locationHierarchyGateway.findByLevel(LOCALITY_HIERARCHY_LEVEL_NAME), level);
             case MAP_AREA:
                 return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByLevel(MAP_AREA_HIERARCHY_LEVEL_NAME), state);
+                        locationHierarchyGateway.findByLevel(MAP_AREA_HIERARCHY_LEVEL_NAME), level);
             case SECTOR:
                 return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByLevel(SECTOR_HIERARCHY_LEVEL_NAME), state);
+                        locationHierarchyGateway.findByLevel(SECTOR_HIERARCHY_LEVEL_NAME), level);
             case HOUSEHOLD:
                 LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-                return locationGateway.getQueryResultList(contentResolver, locationGateway.findAll(), state);
+                return locationGateway.getQueryResultList(contentResolver, locationGateway.findAll(), level);
             case INDIVIDUAL:
                 IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-                return individualGateway.getQueryResultList(contentResolver, individualGateway.findAll(), state);
+                return individualGateway.getQueryResultList(contentResolver, individualGateway.findAll(), level);
             default:
                 return new ArrayList<>();
         }
     }
 
-    public List<DataWrapper> getChildren(ContentResolver contentResolver, DataWrapper qr, String childState) {
+    public List<DataWrapper> getChildren(ContentResolver contentResolver, DataWrapper qr, String childLevel) {
         switch (qr.getCategory()) {
             case REGION:
             case PROVINCE:
@@ -89,15 +89,15 @@ public class DefaultQueryHelper implements QueryHelper {
             case MAP_AREA:
                 LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
                 return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByParent(qr.getUuid()), childState);
+                        locationHierarchyGateway.findByParent(qr.getUuid()), childLevel);
             case SECTOR:
                 LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
                 return locationGateway.getQueryResultList(contentResolver,
-                        locationGateway.findByHierarchy(qr.getUuid()), childState);
+                        locationGateway.findByHierarchy(qr.getUuid()), childLevel);
             case HOUSEHOLD:
                 IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
                 return individualGateway.getQueryResultList(contentResolver,
-                        individualGateway.findByResidency(qr.getUuid()), childState);
+                        individualGateway.findByResidency(qr.getUuid()), childLevel);
         }
         return new ArrayList<>();
     }

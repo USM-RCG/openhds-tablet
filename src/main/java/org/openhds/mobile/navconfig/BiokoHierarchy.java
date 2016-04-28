@@ -8,9 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Defines the "hierarchy" for the {@link NavigatorConfig}'s
- * {@link NavigatorModule}s. It is simply the list of state names, state
- * labels (for UI), and state sequence.
+ * Defines the "hierarchy" for the {@link NavigatorConfig}'s {@link NavigatorModule}s. It is simply the list of level
+ * names, labels (for UI), and their ordering from highest to lowest.
  */
 public class BiokoHierarchy {
 

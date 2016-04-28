@@ -116,7 +116,7 @@ public class LocationGateway extends Gateway<Location> {
         }
 
         @Override
-        public DataWrapper toDataWrapper(ContentResolver contentResolver, Location location, String state) {
+        public DataWrapper toDataWrapper(ContentResolver contentResolver, Location location, String level) {
 
             DataWrapper dataWrapper = new DataWrapper();
             dataWrapper.setUuid(location.getUuid());
@@ -143,7 +143,7 @@ public class LocationGateway extends Gateway<Location> {
                 }
             }
 
-            dataWrapper.setCategory(state);
+            dataWrapper.setCategory(level);
             return dataWrapper;
         }
     }
