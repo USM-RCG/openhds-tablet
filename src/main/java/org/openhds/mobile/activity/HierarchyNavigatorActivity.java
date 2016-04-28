@@ -406,7 +406,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     private DetailFragment getDetailFragmentForCurrentState() {
-        return currentModule.getDetailFragsForStates().get(getLevel());
+        return currentModule.getDetailFragment(getLevel());
     }
 
     private boolean shouldShowDetailFragment() {

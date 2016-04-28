@@ -186,8 +186,8 @@ abstract class AbstractNavigatorModule implements NavigatorModule {
      * which is actually the bottom (not the individual) state.
      */
     @Override
-    public Map<String, DetailFragment> getDetailFragsForStates() {
-        return detailForLevels;
+    public DetailFragment getDetailFragment(String level) {
+        return detailForLevels.get(level);
     }
 
     @Override
