@@ -6,12 +6,18 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
-import org.openhds.mobile.R;
+import org.openhds.mobile.fragment.navigate.detail.IndividualDetailFragment;
+import org.openhds.mobile.model.form.FormBehavior;
+import org.openhds.mobile.navconfig.BiokoHierarchy;
+import org.openhds.mobile.navconfig.NavigatorConfig;
+import org.openhds.mobile.navconfig.NavigatorModule;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.List;
+import java.util.Map;
 
 public class RhinoTest extends ActivityTestCase {
 
@@ -137,5 +143,31 @@ public class RhinoTest extends ActivityTestCase {
             Context.exit();
         }
         assertEquals(4, adder.add(1, 3));
+    }
+
+    public void testAddNavModule() throws IOException {
+        InputStream scriptStream = getInstrumentation().getContext().getAssets().open("bioko-config.js");
+        Reader scriptReader = new InputStreamReader(scriptStream);
+        Context ctx = Context.enter();
+        ctx.setOptimizationLevel(-1);
+        NavigatorConfig config = NavigatorConfig.getInstance();
+        try {
+            Scriptable scope = ctx.initStandardObjects();
+            scope.put("config", scope, config);
+            ctx.evaluateReader(scope, scriptReader, getName(), 1, null);
+        } finally {
+            Context.exit();
+        }
+        final String moduleName = "JavaScript Config";
+        NavigatorModule module = config.getModule(moduleName);
+        assertNotNull(module);
+        assertEquals(moduleName, module.getActivityTitle());
+        List<FormBehavior> forms = module.getForms(BiokoHierarchy.INDIVIDUAL);
+        assertEquals(4, forms.size());
+        assertTrue(forms.get(0) instanceof FormBehavior);
+        Map<String, String> labels = module.getFormLabels();
+        assertEquals(4, labels.size());
+        assertEquals("superOjoFormLabel", labels.get("super_ojo"));
+        assertTrue(module.getDetailFragment(BiokoHierarchy.BOTTOM) instanceof IndividualDetailFragment);
     }
 }
