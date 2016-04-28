@@ -8,11 +8,11 @@ import java.util.Map;
 
 public interface NavigatorModule {
 
+    String getActivityTitle();
+
     String getLaunchLabel();
 
     String getLaunchDescription();
-
-    String getActivityTitle();
 
     List<FormBehavior> getForms(String level);
 
