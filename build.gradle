@@ -18,7 +18,6 @@ repositories {
 dependencies {
     compile 'org.jdom:jdom2:2.0.5'
     compile 'org.mindrot:jbcrypt:0.3m'
-    compile 'com.github.batkinson:jrsync:1.1'
     compile 'org.mozilla:rhino:1.7.7.1'
 }
 

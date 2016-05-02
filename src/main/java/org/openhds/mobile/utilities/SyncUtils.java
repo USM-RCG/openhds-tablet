@@ -8,7 +8,9 @@ import android.util.Log;
 import org.openhds.mobile.R;
 import org.openhds.mobile.provider.OpenHDSProvider;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,9 +26,6 @@ import java.net.URL;
 
 import static android.content.ContentResolver.setIsSyncable;
 import static android.content.ContentResolver.setSyncAutomatically;
-import static com.github.batkinson.jrsync.zsync.IOUtil.BUFFER_SIZE;
-import static com.github.batkinson.jrsync.zsync.IOUtil.buffer;
-import static com.github.batkinson.jrsync.zsync.IOUtil.close;
 import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.openhds.mobile.OpenHDS.AUTHORITY;
@@ -42,6 +41,8 @@ import static org.openhds.mobile.utilities.HttpUtils.get;
 public class SyncUtils {
 
     private static final String TAG = SyncUtils.class.getSimpleName();
+
+    private static final int BUFFER_SIZE = 8192;
 
     public static final String SQLITE_MIME_TYPE = "application/x-sqlite3";
 
@@ -111,6 +112,37 @@ public class SyncUtils {
         String baseUrl = getPreferenceString(ctx, R.string.openhds_server_url_key, "");
         String path = getResourceString(ctx, R.string.sync_database_path);
         return new URL(baseUrl + path);
+    }
+
+    /**
+     * A convenience method to safely and easily close multiple closable resources. This is really only necessary until
+     * the API level is high enough to use try-with-resources. It swallows any {@link IOException} occurring and logs
+     * them at warn.
+     *
+     * @param closeables a list of possibly null closeable references or null
+     */
+    public static void close(Closeable ... closeables) {
+        if (closeables != null) {
+            for (Closeable c : closeables) {
+                if (c != null) {
+                    try {
+                        c.close();
+                    } catch (IOException e) {
+                        Log.w(TAG, "failure during close", e);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * A convenience method to wrap an output stream with a buffer to minimize system calls for multiple writes.
+     *
+     * @param toWrap the stream to wrap with a buffered stream
+     * @return a {@link BufferedOutputStream} wrapping toWrap
+     */
+    public static OutputStream buffer(OutputStream toWrap) {
+        return new BufferedOutputStream(toWrap);
     }
 
     private static String loadFirstLine(File file) {
