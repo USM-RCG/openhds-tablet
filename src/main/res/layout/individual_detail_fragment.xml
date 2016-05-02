@@ -15,39 +15,35 @@
                 android:id="@+id/individual_detail_frag_extid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginBottom="5dp"
-                android:textColor="@color/White"
                 android:background="@drawable/detail_fragment_drawable"
-                android:textSize="25sp" />
+                android:gravity="center"
+                android:textColor="@color/White"
+                android:textSize="25sp"
+                android:layout_marginBottom="5dp"/>
 
         <LinearLayout
                 android:id="@+id/individual_detail_frag_personal_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
+                android:orientation="vertical"
                 android:background="@drawable/detail_fragment_drawable"
-                android:orientation="vertical" >
-        </LinearLayout>
+                android:layout_marginBottom="5dp"/>
 
         <LinearLayout
                 android:id="@+id/individual_detail_frag_contact_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
+                android:orientation="vertical"
                 android:background="@drawable/detail_fragment_drawable"
-                android:orientation="vertical" >
-        </LinearLayout>
+                android:layout_marginBottom="5dp"/>
 
         <LinearLayout
                 android:id="@+id/individual_detail_frag_membership_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/detail_fragment_drawable"
-                android:orientation="vertical" >
-        </LinearLayout>
-
+                android:orientation="vertical"
+                android:background="@drawable/detail_fragment_drawable"/>
+q
     </LinearLayout>
 
 </ScrollView>
