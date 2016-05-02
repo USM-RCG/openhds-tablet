@@ -24,17 +24,15 @@ import org.openhds.mobile.repository.gateway.MembershipGateway;
 
 public class IndividualDetailFragment extends DetailFragment {
 
+    private static final int LABEL_COLOR = R.color.DetailLabel;
+    private static final int VALUE_COLOR = R.color.DetailValue;
+    private static final int MISSING_COLOR = R.color.DetailMissing;
+
     ScrollView detailContainer;
-    int labelColor;
-    int valueColor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
         detailContainer = (ScrollView) inflater.inflate(R.layout.individual_detail_fragment, container, false);
-
-        labelColor = R.color.GrayButtonBorder;
-        valueColor = R.color.GrayButtonFillPressed;
-
         return detailContainer;
     }
 
@@ -66,64 +64,64 @@ public class IndividualDetailFragment extends DetailFragment {
         personalInfoContainer.addView(makeLargeTextWithValueAndLabel(getActivity(),
                 R.string.individual_full_name_label,
                 individual.getFirstName() + " " + individual.getLastName(),
-                labelColor, valueColor, R.color.NA_Gray));
+                LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
         // Other names
         personalInfoContainer.addView(makeLargeTextWithValueAndLabel(getActivity(),
                 R.string.individual_other_names_label,
                 individual.getOtherNames(),
-                labelColor, valueColor, R.color.NA_Gray));
+                LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
 
         personalInfoContainer.addView(makeLargeTextWithValueAndLabel(getActivity(),
                 R.string.gender_lbl,
                 getString(ProjectResources.Individual.getIndividualStringId(individual.getGender())),
-                labelColor, valueColor, R.color.NA_Gray));
+                LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
 
         // Language Preference
         personalInfoContainer.addView(makeLargeTextWithValueAndLabel(getActivity(),
                 R.string.individual_language_preference_label,
                 getString(ProjectResources.Individual.getIndividualStringId(individual.getLanguagePreference())),
-                labelColor, valueColor, R.color.NA_Gray));
+                LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
 
         // Nationality
         personalInfoContainer.addView(makeLargeTextWithValueAndLabel(getActivity(),
                 R.string.individual_nationality_label,
                 getString(ProjectResources.Individual.getIndividualStringId(individual.getNationality())),
-                labelColor, valueColor, R.color.NA_Gray));
+                LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
 
         // age and birthday
         personalInfoContainer.addView(makeLargeTextWithValueAndLabel(getActivity(),
                 R.string.individual_age_label,
                 Individual.getAgeWithUnits(individual),
-                labelColor, valueColor, R.color.NA_Gray));
+                LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
 
         personalInfoContainer.addView(makeLargeTextWithValueAndLabel(getActivity(),
                 R.string.individual_date_of_birth_label,
                 individual.getDob(),
-                labelColor, valueColor, R.color.NA_Gray));
+                LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
 
         //UUID
         personalInfoContainer.addView(makeLargeTextWithValueAndLabel(getActivity(),
                 R.string.uuid,
                 individual.getUuid(),
-                labelColor, valueColor, R.color.NA_Gray));
+                LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
 
         // Contact Info
         contactInfoContainer.addView(makeLargeTextWithValueAndLabel(getActivity(),
                 R.string.individual_personal_phone_number_label,
                 individual.getPhoneNumber(),
-                labelColor, valueColor, R.color.NA_Gray));
+                LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
         contactInfoContainer.addView(makeLargeTextWithValueAndLabel(getActivity(),
                 R.string.individual_other_phone_number_label,
                 individual.getOtherPhoneNumber(),
-                labelColor, valueColor, R.color.NA_Gray));
+                LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
         contactInfoContainer.addView(makeLargeTextWithValueAndLabel(getActivity(),
                 R.string.individual_point_of_contact_label,
                 individual.getPointOfContactName(),
-                labelColor, valueColor, R.color.NA_Gray));
+                LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
         contactInfoContainer.addView(makeLargeTextWithValueAndLabel(getActivity(),
                 R.string.individual_point_of_contact_phone_number_label,
                 individual.getPointOfContactPhoneNumber(),
-                labelColor, valueColor, R.color.NA_Gray));
+                LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
 
         if (!memberships.isEmpty()) {
             for (Membership membership : memberships) {
@@ -131,7 +129,7 @@ public class IndividualDetailFragment extends DetailFragment {
                         getActivity(),
                         R.string.individual_relationship_to_head_label,
                         getString(ProjectResources.Relationship.getRelationshipStringId(membership.getRelationshipToHead())),
-                        labelColor, valueColor, R.color.NA_Gray));
+                        LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
             }
         } else {
             membershipInfoContainer.setVisibility(View.GONE);

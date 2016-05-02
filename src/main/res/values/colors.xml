@@ -150,7 +150,6 @@
     <color name="ValueYellow">#FFFF66</color>
     <color name="LabelPink">#B72770</color>
     <color name="ValuePink">#D25896</color>
-    <color name="NA_Gray">#4D4D4D</color>
     <color name="AcidGray">#303030</color>
     <color name="DarkerAcidGray">#222222</color>
     <color name="CustomMediumGray">#adadad</color>
@@ -176,6 +175,9 @@
     <color name="GrayListItemFill">#CDCDCC</color>
     <color name="GrayListItemFillPressed">#FAF9F9</color>
     <color name="DetailFragGray">#4D464646</color>
+    <color name="DetailLabel">#4D4D4D</color>
+    <color name="DetailValue">#FAF9F9</color>
+    <color name="DetailMissing">#898989</color>
     <color name="IncompleteForm">#b3b3b3</color>
     <color name="IncompleteFormPressed">#bfbfbf</color>
     <color name="CompleteForm">#FFAA6B</color>
