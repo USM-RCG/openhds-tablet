@@ -8,11 +8,8 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
 import org.openhds.mobile.fragment.navigate.detail.IndividualDetailFragment;
 import org.openhds.mobile.model.form.FormBehavior;
-import org.openhds.mobile.navconfig.forms.builders.CensusFormPayloadBuilders;
 import org.openhds.mobile.navconfig.forms.builders.UpdateFormPayloadBuilders;
-import org.openhds.mobile.navconfig.forms.consumers.CensusFormPayloadConsumers;
 import org.openhds.mobile.navconfig.forms.consumers.UpdateFormPayloadConsumers;
-import org.openhds.mobile.navconfig.forms.filters.CensusFormFilters;
 import org.openhds.mobile.navconfig.forms.filters.UpdateFormFilters;
 import org.openhds.mobile.repository.search.EntityFieldSearch;
 
@@ -32,9 +29,7 @@ import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.ResourceBundle.getBundle;
 import static org.openhds.mobile.navconfig.BiokoHierarchy.BOTTOM;
-import static org.openhds.mobile.navconfig.BiokoHierarchy.HOUSEHOLD;
 import static org.openhds.mobile.navconfig.BiokoHierarchy.INDIVIDUAL;
-import static org.openhds.mobile.navconfig.forms.filters.InvertedFilter.invert;
 import static org.openhds.mobile.repository.search.SearchUtils.getIndividualModule;
 
 /**
@@ -68,11 +63,11 @@ public class NavigatorConfig {
      */
     private void initModules() {
         modules = new LinkedHashMap<>();
-        initCoreModules();
         try {
+            initCoreModules();
             initExtendedModules();
         } catch (IOException e) {
-            Log.e(TAG, "failure initializing extensions", e);
+            Log.e(TAG, "failure initializing modules", e);
         }
     }
 
@@ -97,8 +92,9 @@ public class NavigatorConfig {
         }
     }
 
-    private void initCoreModules() {
-        for (NavigatorModule module : asList(new CensusModule(this), new UpdateModule(this))) {
+    private void initCoreModules() throws IOException {
+        executeConfigScript("/core.js");
+        for (NavigatorModule module : asList(new UpdateModule(this))) {
             addModule(module);
         }
     }
@@ -236,68 +232,6 @@ abstract class AbstractNavigatorModule implements NavigatorModule {
     @Override
     public Map<String, String> getFormLabels() {
         return formLabels;
-    }
-}
-
-
-class CensusModule extends AbstractNavigatorModule {
-
-    CensusModule(NavigatorConfig config) {
-
-        super(config);
-
-        labelForm("location", "locationFormLabel");
-        labelForm("pregnancy_observation", "pregnancyObservationFormLabel");
-        labelForm("visit", "visitFormLabel");
-        labelForm("location_evaluation", "locationEvaluationFormLabel");
-        labelForm("individual", "individualFormLabel");
-
-        bindForm(HOUSEHOLD, new FormBehavior("location", "census.locationLabel",
-                new CensusFormFilters.AddLocation(),
-                new CensusFormPayloadBuilders.AddLocation(),
-                new CensusFormPayloadConsumers.AddLocation()));
-
-        FormBehavior pregObFormBehavior = new FormBehavior("pregnancy_observation", "shared.pregnancyObservationLabel",
-                new UpdateFormFilters.PregnancyFilter(),
-                new UpdateFormPayloadBuilders.RecordPregnancyObservation(),
-                new CensusFormPayloadConsumers.ChainedPregnancyObservation());
-
-        FormBehavior visitPregObFormBehavior = new FormBehavior("visit", "shared.visitLabel",
-                new UpdateFormFilters.StartAVisit(),
-                new UpdateFormPayloadBuilders.StartAVisit(),
-                new CensusFormPayloadConsumers.ChainedVisitForPregnancyObservation(pregObFormBehavior));
-
-        bindForm(INDIVIDUAL, new FormBehavior("location_evaluation", "census.evaluateLocationLabel",
-                new CensusFormFilters.EvaluateLocation(),
-                new CensusFormPayloadBuilders.EvaluateLocation(),
-                new CensusFormPayloadConsumers.EvaluateLocation()));
-
-        bindForm(INDIVIDUAL, new FormBehavior("individual", "census.headOfHousholdLabel",
-                new CensusFormFilters.AddHeadOfHousehold(),
-                new CensusFormPayloadBuilders.AddHeadOfHousehold(),
-                new CensusFormPayloadConsumers.AddHeadOfHousehold(visitPregObFormBehavior)));
-
-        bindForm(INDIVIDUAL, new FormBehavior("individual", "census.householdMemberLabel",
-                invert(new CensusFormFilters.AddHeadOfHousehold()),
-                new CensusFormPayloadBuilders.AddMemberOfHousehold(),
-                new CensusFormPayloadConsumers.AddMemberOfHousehold(visitPregObFormBehavior)));
-
-        bindDetail(BOTTOM, new IndividualDetailFragment());
-    }
-
-    @Override
-    public String getLaunchLabel() {
-        return getString("census.launchTitle");
-    }
-
-    @Override
-    public String getLaunchDescription() {
-        return getString("census.launchDescription");
-    }
-
-    @Override
-    public String getActivityTitle() {
-        return getString("census.activityTitle");
     }
 }
 
