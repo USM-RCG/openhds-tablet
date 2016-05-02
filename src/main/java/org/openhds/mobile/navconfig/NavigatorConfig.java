@@ -1,20 +1,25 @@
 package org.openhds.mobile.navconfig;
 
+import android.util.Log;
+
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Scriptable;
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
 import org.openhds.mobile.fragment.navigate.detail.IndividualDetailFragment;
 import org.openhds.mobile.model.form.FormBehavior;
-import org.openhds.mobile.navconfig.forms.builders.BiokoFormPayloadBuilders;
 import org.openhds.mobile.navconfig.forms.builders.CensusFormPayloadBuilders;
 import org.openhds.mobile.navconfig.forms.builders.UpdateFormPayloadBuilders;
-import org.openhds.mobile.navconfig.forms.consumers.BiokoFormPayloadConsumers;
 import org.openhds.mobile.navconfig.forms.consumers.CensusFormPayloadConsumers;
 import org.openhds.mobile.navconfig.forms.consumers.UpdateFormPayloadConsumers;
-import org.openhds.mobile.navconfig.forms.filters.BiokoFormFilters;
 import org.openhds.mobile.navconfig.forms.filters.CensusFormFilters;
 import org.openhds.mobile.navconfig.forms.filters.UpdateFormFilters;
 import org.openhds.mobile.repository.search.EntityFieldSearch;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,6 +46,8 @@ import static org.openhds.mobile.repository.search.SearchUtils.getIndividualModu
  */
 public class NavigatorConfig {
 
+    private static final String TAG = NavigatorConfig.class.getSimpleName();
+
     private static NavigatorConfig instance;
 
     private Map<String, NavigatorModule> modules = emptyMap();
@@ -62,11 +69,32 @@ public class NavigatorConfig {
     private void initModules() {
         modules = new LinkedHashMap<>();
         initCoreModules();
-        initExtendedModules();
+        try {
+            initExtendedModules();
+        } catch (IOException e) {
+            Log.e(TAG, "failure initializing extensions", e);
+        }
     }
 
-    private void initExtendedModules() {
-        addModule(new BiokoModule(this));
+    private void initExtendedModules() throws IOException {
+        executeConfigScript("/extensions.js");
+    }
+
+    private void executeConfigScript(String resourcePath) throws IOException {
+        InputStream scriptStream = NavigatorConfig.class.getResourceAsStream(resourcePath);
+        if (scriptStream != null) {
+            Reader scriptReader = new InputStreamReader(scriptStream);
+            Context ctx = Context.enter();
+            ctx.setOptimizationLevel(-1);
+            try {
+                Scriptable scope = ctx.initStandardObjects();
+                scope.put("config", scope, this);
+                ctx.evaluateReader(scope, scriptReader, resourcePath, 1, null);
+            } finally {
+                Context.exit();
+                scriptStream.close();
+            }
+        }
     }
 
     private void initCoreModules() {
@@ -208,57 +236,6 @@ abstract class AbstractNavigatorModule implements NavigatorModule {
     @Override
     public Map<String, String> getFormLabels() {
         return formLabels;
-    }
-}
-
-
-class BiokoModule extends AbstractNavigatorModule {
-
-    BiokoModule(NavigatorConfig config) {
-
-        super(config);
-
-        labelForm("bed_net", "bedNetFormLabel");
-        labelForm("spraying", "sprayingFormLabel");
-        labelForm("super_ojo", "superOjoFormLabel");
-        labelForm("duplicate_location", "duplicateLocationFormLabel");
-
-        bindForm(INDIVIDUAL, new FormBehavior("bed_net", "bioko.bednetsLabel",
-                new BiokoFormFilters.DistributeBednets(),
-                new BiokoFormPayloadBuilders.DistributeBednets(),
-                new BiokoFormPayloadConsumers.DistributeBednets()));
-
-        bindForm(INDIVIDUAL, new FormBehavior("spraying", "bioko.sprayingLabel",
-                new BiokoFormFilters.SprayHousehold(),
-                new BiokoFormPayloadBuilders.SprayHousehold(),
-                new BiokoFormPayloadConsumers.SprayHousehold()));
-
-        bindForm(INDIVIDUAL, new FormBehavior("super_ojo", "bioko.superOjoLabel",
-                null,
-                new BiokoFormPayloadBuilders.SuperOjo(),
-                null));
-
-        bindForm(INDIVIDUAL, new FormBehavior("duplicate_location", "bioko.duplicateLocationLabel",
-                null,
-                new BiokoFormPayloadBuilders.DuplicateLocation(),
-                null));
-
-        bindDetail(BOTTOM, new IndividualDetailFragment());
-    }
-
-    @Override
-    public String getLaunchLabel() {
-        return getString("bioko.launchTitle");
-    }
-
-    @Override
-    public String getLaunchDescription() {
-        return getString("bioko.launchDescription");
-    }
-
-    @Override
-    public String getActivityTitle() {
-        return getString("bioko.activityTitle");
     }
 }
 

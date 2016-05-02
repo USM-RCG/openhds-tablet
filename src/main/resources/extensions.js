@@ -44,9 +44,9 @@ with (imports) {
     var module = new NavigatorModule({
         getLaunchLabel: function() { return config.getString('bioko.launchTitle'); },
         getLaunchDescription: function() { return config.getString('bioko.launchDescription'); },
-        getActivityTitle: function() { return 'JavaScript Config'; },
-        getForms: function(level) { return forms[level]; },
-        getDetailFragment: function(level) { return details[level]; },
+        getActivityTitle: function() { return config.getString('bioko.activityTitle'); },
+        getForms: function(level) { return forms[level] || []; },
+        getDetailFragment: function(level) { return details[level] || null; },
         getFormLabels: function() { return labels; }
     });
 
