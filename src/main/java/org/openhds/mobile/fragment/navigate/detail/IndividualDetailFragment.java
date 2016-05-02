@@ -2,7 +2,6 @@ package org.openhds.mobile.fragment.navigate.detail;
 
 import java.util.List;
 
-import android.content.ContentResolver;
 import android.widget.ScrollView;
 import org.openhds.mobile.R;
 import org.openhds.mobile.model.core.Individual;
