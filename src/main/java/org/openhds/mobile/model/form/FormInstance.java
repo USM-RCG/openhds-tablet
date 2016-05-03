@@ -1,24 +1,19 @@
 package org.openhds.mobile.model.form;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import android.net.Uri;
-
 import org.openhds.mobile.provider.InstanceProviderAPI;
+
+import java.io.Serializable;
 
 public class FormInstance implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-	private String formName;
-	private String filePath;
+    private String formName;
+    private String filePath;
     private String fileName;
-	private String uriString;
+    private String uriString;
     private String formVersion;
-	private String status;
+    private String status;
 
     public String getFormVersion() {
         return formVersion;
@@ -28,52 +23,56 @@ public class FormInstance implements Serializable {
         this.formVersion = formVersion;
     }
 
-    public String getFileName() { return fileName; }
+    public String getFileName() {
+        return fileName;
+    }
 
-    public void setFileName(String fileName) {this.fileName = fileName;}
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
-	public String getFormName() {
-		return formName;
-	}
+    public String getFormName() {
+        return formName;
+    }
 
-	public void setFormName(String formName) {
-		this.formName = formName;
-	}
+    public void setFormName(String formName) {
+        this.formName = formName;
+    }
 
-	public String getFilePath() {
-		return filePath;
-	}
+    public String getFilePath() {
+        return filePath;
+    }
 
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-	}
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 
-	public String getUriString() {
-		return uriString;
-	}
+    public String getUriString() {
+        return uriString;
+    }
 
-	public void setUriString(String uriString) {
-		this.uriString = uriString;
-	}
+    public void setUriString(String uriString) {
+        this.uriString = uriString;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	public boolean isComplete() {
-		return InstanceProviderAPI.STATUS_COMPLETE.equals(status);
-	}
+    public boolean isComplete() {
+        return InstanceProviderAPI.STATUS_COMPLETE.equals(status);
+    }
 
-	public boolean isSubmitted() {
-		return InstanceProviderAPI.STATUS_SUBMITTED.equals(status);
-	}
+    public boolean isSubmitted() {
+        return InstanceProviderAPI.STATUS_SUBMITTED.equals(status);
+    }
 
-	public boolean isIncomplete() {
-		return InstanceProviderAPI.STATUS_INCOMPLETE.equals(status);
-	}
+    public boolean isIncomplete() {
+        return InstanceProviderAPI.STATUS_INCOMPLETE.equals(status);
+    }
 
 }
