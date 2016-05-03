@@ -4,33 +4,21 @@ import android.util.Log;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
-import org.openhds.mobile.R;
-import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
-import org.openhds.mobile.fragment.navigate.detail.IndividualDetailFragment;
-import org.openhds.mobile.model.form.FormBehavior;
-import org.openhds.mobile.navconfig.forms.builders.UpdateFormPayloadBuilders;
-import org.openhds.mobile.navconfig.forms.consumers.UpdateFormPayloadConsumers;
-import org.openhds.mobile.navconfig.forms.filters.UpdateFormFilters;
-import org.openhds.mobile.repository.search.EntityFieldSearch;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.ResourceBundle.getBundle;
-import static org.openhds.mobile.navconfig.BiokoHierarchy.BOTTOM;
-import static org.openhds.mobile.navconfig.BiokoHierarchy.INDIVIDUAL;
-import static org.openhds.mobile.repository.search.SearchUtils.getIndividualModule;
+
 
 /**
  * The configuration source for hierarchy navigation, form display and form data binding for the field worker section of
@@ -84,6 +72,7 @@ public class NavigatorConfig {
             try {
                 Scriptable scope = ctx.initStandardObjects();
                 scope.put("config", scope, this);
+                Log.i(TAG, "executing config script " + resourcePath);
                 ctx.evaluateReader(scope, scriptReader, resourcePath, 1, null);
             } finally {
                 Context.exit();
@@ -94,9 +83,7 @@ public class NavigatorConfig {
 
     private void initCoreModules() throws IOException {
         executeConfigScript("/core.js");
-        for (NavigatorModule module : asList(new UpdateModule(this))) {
-            addModule(module);
-        }
+        executeConfigScript("/update.js");
     }
 
     public void addModule(NavigatorModule module) {
@@ -175,141 +162,5 @@ public class NavigatorConfig {
 
     public NavigatorModule getModule(String name) {
         return modules.get(name);
-    }
-}
-
-
-/**
- * Basic functionality for {@link NavigatorModule}.
- */
-abstract class AbstractNavigatorModule implements NavigatorModule {
-
-    protected final NavigatorConfig config;
-    protected final Map<String, List<FormBehavior>> formsForLevels = new HashMap<>();
-    protected final Map<String, DetailFragment> detailForLevels = new HashMap<>();
-    protected final Map<String, String> formLabels = new HashMap<>();
-
-    AbstractNavigatorModule(NavigatorConfig config) {
-        this.config = config;
-    }
-
-    /*
-     * Forwards localized string lookups to the config from which the module was defined.
-     */
-    protected String getString(String key) {
-        return config.getString(key);
-    }
-
-    @Override
-    public List<FormBehavior> getForms(String level) {
-        if (formsForLevels.get(level) == null) {
-            formsForLevels.put(level, new ArrayList<FormBehavior>());
-        }
-        return formsForLevels.get(level);
-    }
-
-    public void labelForm(String formId, String labelKey) {
-        formLabels.put(formId, labelKey);
-    }
-
-    public void bindForm(String level, FormBehavior form) {
-        getForms(level).add(form);
-    }
-
-    public void bindDetail(String level, DetailFragment fragment) {
-        detailForLevels.put(level, fragment);
-    }
-
-    /*
-     * These details are off by 1: details for an individual should be shown after clicking a specific individual
-     * which is actually the bottom level, not the individual level.
-     */
-    @Override
-    public DetailFragment getDetailFragment(String level) {
-        return detailForLevels.get(level);
-    }
-
-    @Override
-    public Map<String, String> getFormLabels() {
-        return formLabels;
-    }
-}
-
-
-class UpdateModule extends AbstractNavigatorModule {
-
-    UpdateModule(NavigatorConfig config) {
-
-        super(config);
-
-        labelForm("visit", "visitFormLabel");
-        labelForm("in_migration", "inMigrationFormLabel");
-        labelForm("individual", "individualFormLabel");
-        labelForm("out_migration", "outMigrationFormLabel");
-        labelForm("death", "deathFormLabel");
-        labelForm("pregnancy_observation", "pregnancyObservationFormLabel");
-        labelForm("pregnancy_outcome", "pregnancyOutcomeFormLabel");
-
-        bindForm(INDIVIDUAL, new FormBehavior("visit", "shared.visitLabel",
-                new UpdateFormFilters.StartAVisit(),
-                new UpdateFormPayloadBuilders.StartAVisit(),
-                new UpdateFormPayloadConsumers.StartAVisit()));
-
-        EntityFieldSearch migrantSearch = getIndividualModule(
-                ProjectFormFields.Individuals.INDIVIDUAL_UUID, R.string.search_individual_label);
-        bindForm(INDIVIDUAL, new FormBehavior("in_migration", "update.internalInMigrationLabel",
-                new UpdateFormFilters.RegisterInMigration(),
-                new UpdateFormPayloadBuilders.RegisterInternalInMigration(),
-                new UpdateFormPayloadConsumers.RegisterInMigration(),
-                migrantSearch));
-
-        FormBehavior externalInMigrationFormBehavior = new FormBehavior("in_migration", "update.externalInMigrationLabel",
-                new UpdateFormFilters.RegisterInMigration(),
-                new UpdateFormPayloadBuilders.RegisterExternalInMigration(),
-                new UpdateFormPayloadConsumers.RegisterInMigration());
-
-        bindForm(INDIVIDUAL, new FormBehavior("individual", "update.externalInMigrationLabel",
-                new UpdateFormFilters.RegisterInMigration(),
-                new UpdateFormPayloadBuilders.AddIndividualFromInMigration(),
-                new UpdateFormPayloadConsumers.AddIndividualFromInMigration(externalInMigrationFormBehavior)));
-
-        bindForm(BOTTOM, new FormBehavior("out_migration", "update.outMigrationLabel",
-                new UpdateFormFilters.DeathOrOutMigrationFilter(),
-                new UpdateFormPayloadBuilders.RegisterOutMigration(),
-                new UpdateFormPayloadConsumers.RegisterOutMigration()));
-
-        bindForm(BOTTOM, new FormBehavior("death", "update.deathLabel",
-                new UpdateFormFilters.DeathOrOutMigrationFilter(),
-                new UpdateFormPayloadBuilders.RegisterDeath(),
-                new UpdateFormPayloadConsumers.RegisterDeath()));
-
-        bindForm(BOTTOM, new FormBehavior("pregnancy_observation", "shared.pregnancyObservationLabel",
-                new UpdateFormFilters.PregnancyFilter(),
-                new UpdateFormPayloadBuilders.RecordPregnancyObservation(),
-                null));
-
-        EntityFieldSearch paternitySearch = getIndividualModule(
-                ProjectFormFields.PregnancyOutcome.FATHER_UUID, R.string.search_father_label);
-        bindForm(BOTTOM, new FormBehavior("pregnancy_outcome", "update.pregnancyOutcomeLabel",
-                new UpdateFormFilters.PregnancyFilter(),
-                new UpdateFormPayloadBuilders.RecordPregnancyOutcome(),
-                null, paternitySearch));
-
-        bindDetail(BOTTOM, new IndividualDetailFragment());
-    }
-
-    @Override
-    public String getLaunchLabel() {
-        return getString("update.launchTitle");
-    }
-
-    @Override
-    public String getLaunchDescription() {
-        return getString("update.launchDescription");
-    }
-
-    @Override
-    public String getActivityTitle() {
-        return getString("update.activityTitle");
     }
 }
