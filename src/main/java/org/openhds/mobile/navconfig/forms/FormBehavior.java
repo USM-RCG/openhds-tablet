@@ -1,4 +1,4 @@
-package org.openhds.mobile.model.form;
+package org.openhds.mobile.navconfig.forms;
 
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.forms.builders.FormPayloadBuilder;

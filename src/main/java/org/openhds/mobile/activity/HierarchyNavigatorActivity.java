@@ -19,7 +19,7 @@ import org.openhds.mobile.fragment.navigate.VisitFragment;
 import org.openhds.mobile.fragment.navigate.detail.DefaultDetailFragment;
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
 import org.openhds.mobile.model.core.FieldWorker;
-import org.openhds.mobile.model.form.FormBehavior;
+import org.openhds.mobile.navconfig.forms.FormBehavior;
 import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.model.update.Visit;

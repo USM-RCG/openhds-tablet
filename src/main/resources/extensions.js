@@ -1,6 +1,6 @@
 var imports = JavaImporter(
-    org.openhds.mobile.model.form,
     org.openhds.mobile.navconfig,
+    org.openhds.mobile.navconfig.forms,
     org.openhds.mobile.navconfig.forms.filters,
     org.openhds.mobile.navconfig.forms.builders,
     org.openhds.mobile.navconfig.forms.consumers,

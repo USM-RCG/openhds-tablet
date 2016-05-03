@@ -1,6 +1,6 @@
 package org.openhds.mobile.navconfig.forms.consumers;
 
-import org.openhds.mobile.model.form.FormBehavior;
+import org.openhds.mobile.navconfig.forms.FormBehavior;
 
 import java.util.Map;
 

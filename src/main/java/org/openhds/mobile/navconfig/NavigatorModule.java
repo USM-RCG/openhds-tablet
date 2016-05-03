@@ -1,7 +1,7 @@
 package org.openhds.mobile.navconfig;
 
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
-import org.openhds.mobile.model.form.FormBehavior;
+import org.openhds.mobile.navconfig.forms.FormBehavior;
 
 import java.util.List;
 import java.util.Map;
