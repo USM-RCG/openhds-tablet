@@ -76,21 +76,4 @@ public class FormInstance implements Serializable {
 		return InstanceProviderAPI.STATUS_INCOMPLETE.equals(status);
 	}
 
-	public static List<File> toListOfFiles(List<FormInstance> formInstances) {
-		ArrayList<File> fileList = new ArrayList<>();
-
-		for (FormInstance instance : formInstances) {
-			fileList.add(new File(instance.getFilePath()));
-		}
-		return fileList;
-	}
-
-	public static List<Uri> toListOfUris(List<FormInstance> formInstances) {
-		ArrayList<Uri> uriList = new ArrayList<>();
-
-		for (FormInstance instance : formInstances) {
-			uriList.add(Uri.parse(instance.getUriString()));
-		}
-		return uriList;
-	}
 }
