@@ -138,7 +138,7 @@ public class NavigatorConfig {
      * @return the string, localized for the current {@link java.util.Locale}
      */
     public String getString(String key) {
-        return getBundle("modulestrings").getString(key);
+        return getBundle("strings").getString(key);
     }
 
     /**
