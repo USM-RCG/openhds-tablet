@@ -1,6 +1,6 @@
 package org.openhds.mobile.navconfig.forms.consumers;
 
-import org.openhds.mobile.navconfig.forms.FormBehavior;
+import org.openhds.mobile.navconfig.forms.Binding;
 
 import java.util.Map;
 
@@ -12,10 +12,10 @@ import java.util.Map;
 public class ConsumerResult {
 
     private final boolean augmentInstance;
-    private final FormBehavior followUp;
+    private final Binding followUp;
     private final Map<String, String> followUpHints;
 
-    public ConsumerResult(boolean augmentInstance, FormBehavior followUp, Map<String, String> followUpHints) {
+    public ConsumerResult(boolean augmentInstance, Binding followUp, Map<String, String> followUpHints) {
         this.augmentInstance = augmentInstance;
         this.followUp = followUp;
         this.followUpHints = followUpHints;
@@ -25,7 +25,7 @@ public class ConsumerResult {
         return augmentInstance;
     }
 
-    public FormBehavior getFollowUp() {
+    public Binding getFollowUp() {
         return followUp;
     }
 

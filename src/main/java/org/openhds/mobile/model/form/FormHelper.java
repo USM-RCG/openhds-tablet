@@ -4,7 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 
-import org.openhds.mobile.navconfig.forms.FormBehavior;
+import org.openhds.mobile.navconfig.forms.Binding;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ import static org.openhds.mobile.utilities.FormUtils.updateInstance;
 
 public class FormHelper {
 
-    private FormBehavior behavior;
+    private Binding binding;
     private ContentResolver resolver;
     private Map<String, String> formData;
     private FormInstance instance;
@@ -27,12 +27,12 @@ public class FormHelper {
         this.resolver = ctx.getContentResolver();
     }
 
-    public FormBehavior getBehavior() {
-        return behavior;
+    public Binding getBinding() {
+        return binding;
     }
 
-    public void setBehavior(FormBehavior behavior) {
-        this.behavior = behavior;
+    public void setForm(Binding binding) {
+        this.binding = binding;
     }
 
     public Map<String, String> getData() {
@@ -56,7 +56,7 @@ public class FormHelper {
     }
 
     public Uri newInstance() throws IOException {
-        String formName = behavior.getFormName();
+        String formName = binding.getForm();
         return generateODKForm(resolver, formName, formData, formFile(formName, new Date()));
     }
 }

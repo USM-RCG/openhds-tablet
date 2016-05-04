@@ -190,7 +190,7 @@
     <string name="social_group_head_ext_id">Ext ID del Jefe del Hogar</string>
     <string name="social_group_member_count">Número de Miembros del Hogar</string>
 
-    <!-- UpdateActivity FormBehavior Labels -->
+    <!-- UpdateActivity Labels -->
     <string name="finish_visit">Terminar la Visita</string>
 
     <string name="action_settings">Configuración</string>

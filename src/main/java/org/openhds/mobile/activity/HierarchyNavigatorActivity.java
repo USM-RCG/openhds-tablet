@@ -19,7 +19,7 @@ import org.openhds.mobile.fragment.navigate.VisitFragment;
 import org.openhds.mobile.fragment.navigate.detail.DefaultDetailFragment;
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
 import org.openhds.mobile.model.core.FieldWorker;
-import org.openhds.mobile.navconfig.forms.FormBehavior;
+import org.openhds.mobile.navconfig.forms.Binding;
 import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.model.update.Visit;
@@ -28,6 +28,7 @@ import org.openhds.mobile.navconfig.NavigatorModule;
 import org.openhds.mobile.navconfig.db.DefaultQueryHelper;
 import org.openhds.mobile.navconfig.db.QueryHelper;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
+import org.openhds.mobile.navconfig.forms.Launcher;
 import org.openhds.mobile.navconfig.forms.consumers.ConsumerResult;
 import org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer;
 import org.openhds.mobile.provider.DatabaseAdapter;
@@ -330,11 +331,11 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         }
     }
 
-    private void launchForm(FormBehavior formBehavior, Map<String, String> followUpFormHints) {
-        formHelper.setBehavior(formBehavior); // update activity's current form
-        if (formBehavior != null) {
-            formHelper.setData(buildDataWithHints(formBehavior, followUpFormHints));
-            if (formBehavior.requiresSearch()) {
+    private void launchForm(Binding binding, Map<String, String> followUpFormHints) {
+        formHelper.setForm(binding); // update activity's current form
+        if (binding != null) {
+            formHelper.setData(buildDataWithHints(binding, followUpFormHints));
+            if (binding.requiresSearch()) {
                 launchSearch();
             } else {
                 launchNewForm();
@@ -342,8 +343,8 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         }
     }
 
-    private Map<String, String> buildDataWithHints(FormBehavior behavior, Map<String, String> followUpHints) {
-        Map<String, String> formData = behavior.getBuilder().buildPayload(this);
+    private Map<String, String> buildDataWithHints(Binding binding, Map<String, String> followUpHints) {
+        Map<String, String> formData = binding.getBuilder().buildPayload(this);
         if(followUpHints != null){
             formData.putAll(followUpHints);
         }
@@ -369,8 +370,8 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     private void launchSearch() {
         Intent intent = new Intent(this, EntitySearchActivity.class);
-        ArrayList<EntityFieldSearch> searchModules = formHelper.getBehavior().getRequiredSearches();
-        intent.putParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY, searchModules);
+        List<EntityFieldSearch> searchModules = formHelper.getBinding().getSearches();
+        intent.putParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY, new ArrayList<>(searchModules));
         startActivityForResult(intent, SEARCH_ACTIVITY_REQUEST_CODE);
     }
 
@@ -447,7 +448,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         FormInstance instance = formHelper.getInstance(data.getData());
         associateFormToPath(instance.getFilePath());
         if (instance.isComplete()) {
-            FormPayloadConsumer consumer = formHelper.getBehavior().getConsumer();
+            FormPayloadConsumer consumer = formHelper.getBinding().getConsumer();
             try {
                 clearResults();
                 consumerResult = consumer.consumeFormPayload(formHelper.fetch(), this);
@@ -550,8 +551,8 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     @Override
-    public void onFormSelected(FormBehavior formBehavior) {
-        launchForm(formBehavior, null);
+    public void onFormSelected(Binding binding) {
+        launchForm(binding, null);
     }
 
     @Override
@@ -594,14 +595,15 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             }
             updateToggleButton();
 
-            List<FormBehavior> formsToDisplay = new ArrayList<>();
-            for (FormBehavior form : currentModule.getForms(level)) {
-                if (form.getFilter().shouldDisplay(HierarchyNavigatorActivity.this)) {
-                    formsToDisplay.add(form);
+            List<Launcher> relevantLaunchers = new ArrayList<>();
+            for (Launcher launcher : currentModule.getLaunchers(level)) {
+                if (launcher.relevantFor(HierarchyNavigatorActivity.this)) {
+                    relevantLaunchers.add(launcher);
                 }
             }
+            formFragment.createFormButtons(relevantLaunchers);
+
             updateAttachedForms();
-            formFragment.createFormButtons(formsToDisplay);
         }
 
         @Override

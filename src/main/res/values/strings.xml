@@ -216,7 +216,7 @@
     <string name="social_group_head_ext_id">Head of Household Id</string>
     <string name="social_group_member_count">Number of Household Members</string>
 
-    <!-- UpdateActivity FormBehavior Labels -->
+    <!-- UpdateActivity Labels -->
     <string name="finish_visit">Finish Visit</string>
 
     <string name="action_settings">Settings</string>

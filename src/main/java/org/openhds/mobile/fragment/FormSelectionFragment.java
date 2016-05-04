@@ -14,7 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import org.openhds.mobile.R;
-import org.openhds.mobile.navconfig.forms.FormBehavior;
+import org.openhds.mobile.navconfig.forms.Binding;
+import org.openhds.mobile.navconfig.forms.Launcher;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class FormSelectionFragment extends Fragment {
     private FormSelectionListAdapter formListAdapter;
 
     public interface FormSelectionListener {
-        void onFormSelected(FormBehavior formBehavior);
+        void onFormSelected(Binding binding);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class FormSelectionFragment extends Fragment {
         return inflater.inflate(R.layout.form_selection_fragment, container, false);
     }
 
-    public void createFormButtons(List<FormBehavior> values) {
+    public void createFormButtons(List<Launcher> values) {
         formListAdapter = new FormSelectionListAdapter(getActivity(), R.layout.generic_list_item_white_text, values);
         ListView listView = (ListView) getActivity().findViewById(R.id.form_fragment_listview);
         listView.setAdapter(formListAdapter);
@@ -62,31 +63,31 @@ public class FormSelectionFragment extends Fragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (listener != null) {
-                FormBehavior form = formListAdapter.getItem(position);
-                listener.onFormSelected(form);
+                Launcher launcher = formListAdapter.getItem(position);
+                listener.onFormSelected(launcher.getBinding());
             }
         }
     }
 
-    private class FormSelectionListAdapter extends ArrayAdapter<FormBehavior> {
+    private class FormSelectionListAdapter extends ArrayAdapter<Launcher> {
 
-        public FormSelectionListAdapter(Context context, int resource, List<FormBehavior> objects) {
+        public FormSelectionListAdapter(Context context, int resource, List<Launcher> objects) {
             super(context, resource, objects);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            FormBehavior form = formListAdapter.getItem(position);
+            String label = formListAdapter.getItem(position).getLabel();
 
             if (convertView == null) {
-                convertView = makeTextWithPayload(getActivity(), form.getLabel(), null,
-                        form.getLabel(), null, null, R.drawable.form_selector, null, null, true);
+                convertView = makeTextWithPayload(getActivity(), label, null,
+                        label, null, null, R.drawable.form_selector, null, null, true);
                 convertView.setPadding(0, 10, 0, 10); // Make the buttons thicker for easier selection
             }
 
             configureTextWithPayload(getActivity(),
-                    (RelativeLayout) convertView, form.getLabel(), null, null, null, true);
+                    (RelativeLayout) convertView, label, null, null, null, true);
 
             return convertView;
         }

@@ -9,44 +9,81 @@ var imports = JavaImporter(
 
 with (imports) {
 
-    var labels = {
-        location: 'locationFormLabel',
-        pregnancy_observation: 'pregnancyObservationFormLabel',
-        visit: 'visitFormLabel',
-        location_evaluation: 'locationEvaluationFormLabel',
-        individual: 'individualFormLabel'
-    };
+    var labels = {};
+    var binds = {};
 
-    var pregObFormBehavior = new FormBehavior('pregnancy_observation', 'shared.pregnancyObservationLabel',
-        new UpdateFormFilters.PregnancyFilter(),
-        new UpdateFormPayloadBuilders.RecordPregnancyObservation(),
-        new CensusFormPayloadConsumers.ChainedPregnancyObservation());
+    function bind(b) {
+        var bind_name = b.name || b.form;
+        binds[bind_name] = new Binding({
+            getName: function() { return bind_name; },
+            getForm: function() { return b.form; },
+            getLabel: function() { return config.getString(b.label); },
+            getBuilder: function() { return b.builder; },
+            getConsumer: function() { return b.consumer; },
+            getSearches: function() { return b.searches || []; },
+            requiresSearch: function() { return b.searches? b.searches.length > 0 : false; }
+        });
+        labels[b.form] = b.label;  // temporary: form labels will come directly from bindings
+    }
 
-    var visitPregObFormBehavior = new FormBehavior('visit', 'shared.visitLabel',
-        new UpdateFormFilters.StartAVisit(),
-        new UpdateFormPayloadBuilders.StartAVisit(),
-        new CensusFormPayloadConsumers.ChainedVisitForPregnancyObservation(pregObFormBehavior));
+    bind({ form: 'location',
+           label: 'locationFormLabel',
+           builder: new CensusFormPayloadBuilders.AddLocation(),
+           consumer: new CensusFormPayloadConsumers.AddLocation() });
 
-    var forms = {
+    bind({ form: 'location_evaluation',
+           label: 'locationEvaluationFormLabel',
+           builder: new CensusFormPayloadBuilders.EvaluateLocation(),
+           consumer: new CensusFormPayloadConsumers.EvaluateLocation() });
+
+    bind({ name: 'census_preg_obs',
+           form: 'pregnancy_observation',
+           label: 'pregnancyObservationFormLabel',
+           builder: new UpdateFormPayloadBuilders.RecordPregnancyObservation(),
+           consumer: new CensusFormPayloadConsumers.ChainedPregnancyObservation() });
+
+    bind({ name: 'census_preg_visit',
+           form: 'visit',
+           label: 'visitFormLabel',
+           builder: new UpdateFormPayloadBuilders.StartAVisit(),
+           consumer: new CensusFormPayloadConsumers.ChainedVisitForPregnancyObservation(binds['census_preg_obs']) });
+
+    bind({ name: 'household_head',
+           form: 'individual',
+           label: 'individualFormLabel',
+           builder: new CensusFormPayloadBuilders.AddHeadOfHousehold(),
+           consumer: new CensusFormPayloadConsumers.AddHeadOfHousehold(binds['census_preg_visit']) });
+
+    bind({ name: 'household_member',
+           form: 'individual',
+           label: 'individualFormLabel',
+           builder: new CensusFormPayloadBuilders.AddMemberOfHousehold(),
+           consumer: new CensusFormPayloadConsumers.AddMemberOfHousehold(binds['census_preg_visit']) });
+
+    function launcher(l) {
+        return new Launcher({
+            getLabel: function() { return config.getString(l.label); },
+            relevantFor: function(ctx) { return l.filter? l.filter.shouldDisplay(ctx) : true; },
+            getBinding: function() { return binds[l.bind]; }
+        });
+    }
+
+    var launchers = {
         household: [
-            new FormBehavior('location', 'census.locationLabel',
-                new CensusFormFilters.AddLocation(),
-                new CensusFormPayloadBuilders.AddLocation(),
-                new CensusFormPayloadConsumers.AddLocation())
+            launcher({ label: 'census.locationLabel',
+                       bind: 'location',
+                       filter: new CensusFormFilters.AddLocation() })
         ],
         individual: [
-            new FormBehavior('location_evaluation', 'census.evaluateLocationLabel',
-                new CensusFormFilters.EvaluateLocation(),
-                new CensusFormPayloadBuilders.EvaluateLocation(),
-                new CensusFormPayloadConsumers.EvaluateLocation()),
-            new FormBehavior('individual', 'census.headOfHouseholdLabel',
-                new CensusFormFilters.AddHeadOfHousehold(),
-                new CensusFormPayloadBuilders.AddHeadOfHousehold(),
-                new CensusFormPayloadConsumers.AddHeadOfHousehold(visitPregObFormBehavior)),
-            new FormBehavior('individual', 'census.householdMemberLabel',
-                InvertedFilter.invert(new CensusFormFilters.AddHeadOfHousehold()),
-                new CensusFormPayloadBuilders.AddMemberOfHousehold(),
-                new CensusFormPayloadConsumers.AddMemberOfHousehold(visitPregObFormBehavior))
+            launcher({ label: 'census.evaluateLocationLabel',
+                       bind: 'location_evaluation',
+                       filter: new CensusFormFilters.EvaluateLocation() }),
+            launcher({ label: 'census.headOfHouseholdLabel',
+                       bind: 'household_head',
+                       filter: new CensusFormFilters.AddHeadOfHousehold() }),
+            launcher({ label: 'census.householdMemberLabel',
+                       bind: 'household_member',
+                       filter: InvertedFilter.invert(new CensusFormFilters.AddHeadOfHousehold()) })
         ]
     };
 
@@ -55,10 +92,10 @@ with (imports) {
     };
 
     var module = new NavigatorModule({
+        getActivityTitle: function() { return config.getString('census.activityTitle'); },
         getLaunchLabel: function() { return config.getString('census.launchTitle'); },
         getLaunchDescription: function() { return config.getString('census.launchDescription'); },
-        getActivityTitle: function() { return config.getString('census.activityTitle'); },
-        getForms: function(level) { return forms[level] || []; },
+        getLaunchers: function(level) { return launchers[level] || []; },
         getDetailFragment: function(level) { return details[level] || null; },
         getFormLabels: function() { return labels; }
     });

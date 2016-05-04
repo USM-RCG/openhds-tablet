@@ -8,7 +8,7 @@ import org.openhds.mobile.model.core.LocationHierarchy;
 import org.openhds.mobile.model.core.Membership;
 import org.openhds.mobile.model.core.Relationship;
 import org.openhds.mobile.model.core.SocialGroup;
-import org.openhds.mobile.navconfig.forms.FormBehavior;
+import org.openhds.mobile.navconfig.forms.Binding;
 import org.openhds.mobile.model.update.Visit;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.navconfig.forms.adapters.IndividualFormAdapter;
@@ -110,7 +110,7 @@ public class CensusFormPayloadConsumers {
 
     public static class AddMemberOfHousehold extends PregnancyPayloadConsumer {
 
-        public AddMemberOfHousehold(FormBehavior followUp) {
+        public AddMemberOfHousehold(Binding followUp) {
             super(followUp);
         }
 
@@ -157,7 +157,7 @@ public class CensusFormPayloadConsumers {
 
     public static class AddHeadOfHousehold extends PregnancyPayloadConsumer {
 
-        public AddHeadOfHousehold(FormBehavior followUp) {
+        public AddHeadOfHousehold(Binding followUp) {
             super(followUp);
         }
 
@@ -215,9 +215,9 @@ public class CensusFormPayloadConsumers {
 
     public abstract static class PregnancyPayloadConsumer extends DefaultConsumer {
 
-        private FormBehavior followUp;
+        private Binding followUp;
 
-        public PregnancyPayloadConsumer(FormBehavior followUp) {
+        public PregnancyPayloadConsumer(Binding followUp) {
             this.followUp = followUp;
         }
 
@@ -241,9 +241,9 @@ public class CensusFormPayloadConsumers {
     // Used for Form Launch Sequences
     public static class ChainedVisitForPregnancyObservation extends DefaultConsumer {
 
-        private FormBehavior followUp;
+        private Binding followUp;
 
-        public ChainedVisitForPregnancyObservation(FormBehavior followUp) {
+        public ChainedVisitForPregnancyObservation(Binding followUp) {
             this.followUp = followUp;
         }
 

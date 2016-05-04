@@ -7,7 +7,7 @@ import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.model.core.Membership;
 import org.openhds.mobile.model.core.Relationship;
 import org.openhds.mobile.model.core.SocialGroup;
-import org.openhds.mobile.navconfig.forms.FormBehavior;
+import org.openhds.mobile.navconfig.forms.Binding;
 import org.openhds.mobile.model.update.Visit;
 
 import org.openhds.mobile.navconfig.forms.LaunchContext;
@@ -113,9 +113,9 @@ public class UpdateFormPayloadConsumers {
 
     public static class AddIndividualFromInMigration extends DefaultConsumer {
 
-        private FormBehavior followUp;
+        private Binding followUp;
 
-        public AddIndividualFromInMigration(FormBehavior followUp) {
+        public AddIndividualFromInMigration(Binding followUp) {
             this.followUp = followUp;
         }
 

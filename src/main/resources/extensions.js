@@ -9,31 +9,61 @@ var imports = JavaImporter(
 
 with (imports) {
 
-    var labels = {
-        bed_net: 'bedNetFormLabel',
-        spraying: 'sprayingFormLabel',
-        super_ojo: 'superOjoFormLabel',
-        duplicate_location: 'duplicateLocationFormLabel'
-    };
+    var labels = {};
+    var binds = {};
 
-    var forms = {
+    function bind(b) {
+        var bind_name = b.name || b.form;
+        binds[bind_name] = new Binding({
+            getName: function() { return bind_name; },
+            getForm: function() { return b.form; },
+            getLabel: function() { return config.getString(b.label); },
+            getBuilder: function() { return b.builder; },
+            getConsumer: function() { return b.consumer || new DefaultConsumer(); },
+            getSearches: function() { return b.searches || []; },
+            requiresSearch: function() { return b.searches? b.searches.length > 0 : false; }
+        });
+        labels[b.form] = b.label;  // temporary: form labels will come directly from bindings
+    }
+
+    bind({ form: 'bed_net',
+           label: 'bedNetFormLabel',
+           builder: new BiokoFormPayloadBuilders.DistributeBednets(),
+           consumer: new BiokoFormPayloadConsumers.DistributeBednets() });
+
+    bind({ form: 'spraying',
+           label: 'sprayingFormLabel',
+           builder: new BiokoFormPayloadBuilders.SprayHousehold(),
+           consumer: new BiokoFormPayloadConsumers.SprayHousehold() });
+
+    bind({ form: 'super_ojo',
+           label: 'superOjoFormLabel',
+           builder: new BiokoFormPayloadBuilders.SuperOjo() });
+
+    bind({ form: 'duplicate_location',
+           label: 'duplicateLocationFormLabel',
+           builder: new BiokoFormPayloadBuilders.DuplicateLocation() });
+
+    function launcher(l) {
+        return new Launcher({
+            getLabel: function() { return config.getString(l.label); },
+            relevantFor: function(ctx) { return l.filter? l.filter.shouldDisplay(ctx) : true; },
+            getBinding: function() { return binds[l.bind]; }
+        });
+    }
+
+    var launchers = {
         individual: [
-            new FormBehavior('bed_net', 'bioko.bednetsLabel',
-                new BiokoFormFilters.DistributeBednets(),
-                new BiokoFormPayloadBuilders.DistributeBednets(),
-                new BiokoFormPayloadConsumers.DistributeBednets()),
-            new FormBehavior('spraying', 'bioko.sprayingLabel',
-                new BiokoFormFilters.SprayHousehold(),
-                new BiokoFormPayloadBuilders.SprayHousehold(),
-                new BiokoFormPayloadConsumers.SprayHousehold()),
-            new FormBehavior('super_ojo', 'bioko.superOjoLabel',
-                null,
-                new BiokoFormPayloadBuilders.SuperOjo(),
-                null),
-            new FormBehavior('duplicate_location', 'bioko.duplicateLocationLabel',
-                null,
-                new BiokoFormPayloadBuilders.DuplicateLocation(),
-                null)
+            launcher({ label: 'bioko.bednetsLabel',
+                       bind: 'bed_net',
+                       filter: new BiokoFormFilters.DistributeBednets() }),
+            launcher({ label: 'bioko.sprayingLabel',
+                       bind: 'spraying',
+                       filter: new BiokoFormFilters.SprayHousehold() }),
+            launcher({ label: 'bioko.superOjoLabel',
+                       bind: 'super_ojo' }),
+            launcher({ label: 'bioko.duplicateLocationLabel',
+                       bind: 'duplicate_location' })
         ]
     };
 
@@ -42,10 +72,10 @@ with (imports) {
     };
 
     var module = new NavigatorModule({
+        getActivityTitle: function() { return config.getString('bioko.activityTitle'); },
         getLaunchLabel: function() { return config.getString('bioko.launchTitle'); },
         getLaunchDescription: function() { return config.getString('bioko.launchDescription'); },
-        getActivityTitle: function() { return config.getString('bioko.activityTitle'); },
-        getForms: function(level) { return forms[level] || []; },
+        getLaunchers: function(level) { return launchers[level] || []; },
         getDetailFragment: function(level) { return details[level] || null; },
         getFormLabels: function() { return labels; }
     });

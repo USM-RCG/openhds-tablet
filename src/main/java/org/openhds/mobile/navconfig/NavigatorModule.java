@@ -1,7 +1,7 @@
 package org.openhds.mobile.navconfig;
 
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
-import org.openhds.mobile.navconfig.forms.FormBehavior;
+import org.openhds.mobile.navconfig.forms.Launcher;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ public interface NavigatorModule {
 
     String getLaunchDescription();
 
-    List<FormBehavior> getForms(String level);
+    List<Launcher> getLaunchers(String level);
 
     DetailFragment getDetailFragment(String level);
 
