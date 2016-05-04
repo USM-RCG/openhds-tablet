@@ -17,10 +17,12 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.ProjectFormFields;
+import org.openhds.mobile.navconfig.forms.Binding;
 
 import java.io.IOException;
 import java.util.Map;
 
+import static org.openhds.mobile.utilities.FormUtils.BINDING_MAP_KEY;
 import static org.openhds.mobile.utilities.FormUtils.loadInstance;
 
 public class LayoutUtils {
@@ -223,15 +225,23 @@ public class LayoutUtils {
             view.setBackgroundResource(R.drawable.form_list_drawable_orange);
         }
 
-        // Set form name
-        String formTypeName = NavigatorConfig.getInstance().getFormLabel(formInstance.getFormName());
-        TextView formTypeView = (TextView) view.findViewById(R.id.form_instance_list_type);
-        formTypeView.setText(formTypeName);
-
-        // Extract and set values contained within the form instance
         try {
+
             Map<String, String> instanceData = loadInstance(formInstance.getFilePath());
 
+            // Set form name based on its embedded binding
+            final String formTypeName;
+            if (instanceData.containsKey(BINDING_MAP_KEY)) {
+                String boundName = instanceData.get(BINDING_MAP_KEY);
+                Binding binding = NavigatorConfig.getInstance().getBinding(boundName);
+                formTypeName = binding.getLabel();
+            } else {
+                formTypeName = formInstance.getFormName();
+            }
+            TextView formTypeView = (TextView) view.findViewById(R.id.form_instance_list_type);
+            formTypeView.setText(formTypeName);
+
+            // Extract and set values contained within the form instance
             String entityId = instanceData.get(ProjectFormFields.General.ENTITY_EXTID);
             setText(view.findViewById(R.id.form_instance_list_id), entityId);
 

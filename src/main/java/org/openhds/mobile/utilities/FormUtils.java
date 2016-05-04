@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
+import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -17,6 +18,7 @@ import org.jdom2.output.XMLOutputter;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.navconfig.ProjectFormFields;
 import org.openhds.mobile.navconfig.ProjectResources;
+import org.openhds.mobile.navconfig.forms.Binding;
 import org.openhds.mobile.provider.DatabaseAdapter;
 
 import java.io.File;
@@ -51,6 +53,8 @@ public class FormUtils {
     private static final String TAG = FormUtils.class.getSimpleName();
 
     public static final String FILE_EXTENSION = ".xml";
+    public static final String BINDING_ATTR = "cims-binding";
+    public static final String BINDING_MAP_KEY = "@cims-binding"; // valid xml element names can't collide
 
     /**
      * Loads the specified XML file into a jdom2 {@link Document} object.
@@ -207,7 +211,13 @@ public class FormUtils {
         Document template = domFromFile(templateForm), completed = new Document();
         Element templateRoot = template.getRootElement();
         for (Element templateData : descendants(templateRoot, new ElementFilter("data", templateRoot.getNamespace("")))) {
-            completed.setRootElement(templateData.detach());
+            Element newRoot = templateData.detach();
+            // add the binding name as a root-level attribute, if present
+            if (data.containsKey(BINDING_MAP_KEY)) {
+                newRoot.setAttribute(BINDING_ATTR, data.get(BINDING_MAP_KEY));
+            }
+            completed.setRootElement(newRoot);
+            // fill out the template form elements with supplied data values
             for (Element dataElement : descendants(templateData)) {
                 String elementName = dataElement.getName();
                 if (data.containsKey(elementName) && data.get(elementName) != null) {
@@ -252,7 +262,16 @@ public class FormUtils {
         if (path != null) {
             try {
                 Document formDoc = domFromFile(new File(path));
-                for (Element dataElement : descendants(formDoc.getRootElement())) {
+                Element root = formDoc.getRootElement();
+
+                // add the instance binding name (an abnormal value)
+                Attribute bindingAttr = root.getAttribute(BINDING_ATTR);
+                if (bindingAttr != null) {
+                    formValues.put(BINDING_MAP_KEY, bindingAttr.getValue());
+                }
+
+                // add the instance elements
+                for (Element dataElement : descendants(root)) {
                     List<Element> children = dataElement.getChildren();
                     if (children == null || children.isEmpty()) {
                         formValues.put(dataElement.getName(), dataElement.getText());
@@ -311,26 +330,31 @@ public class FormUtils {
      * Generates and registers a new XML form with the specified values and registers it with ODK.
      *
      * @param resolver
-     * @param name     the odk form instance id of the blank form to use as template
+     * @param binding  the form binding form the form to generate
      * @param values   name/value pairs specifying values to merge with the blank form
      * @param location the filesystem location to save the generated form to, it must be accessible to ODK Collect
      * @return the content {@link Uri} of the form registered with ODK
      * @throws IOException
      */
-    public static Uri generateODKForm(ContentResolver resolver, String name, Map<String, String> values, File location)
+    public static Uri generateODKForm(ContentResolver resolver, Binding binding, Map<String, String> values, File location)
             throws IOException {
-        FormInstance template = getBlankInstance(resolver, name);
+        String formName = binding.getForm(), bindName = binding.getName();
+        FormInstance template = getBlankInstance(resolver, formName);
         if (template != null) {
             String tName = template.getFormName(), tVersion = template.getFormVersion(), tPath = template.getFilePath();
             File tFile = new File(tPath);
             try {
+                if (bindName != null) {
+                    // Used to form bindings for saved instances
+                    values.put(BINDING_MAP_KEY, binding.getName());
+                }
                 saveForm(genInstanceDoc(tFile, values), location);
                 return registerInstance(resolver, location, location.getName(), tName, tVersion);
             } catch (JDOMException e) {
                 throw new IOException("failed to fill out form", e);
             }
         } else {
-            throw new FileNotFoundException("form " + name + " not found");
+            throw new FileNotFoundException("form " + formName + " not found");
         }
     }
 

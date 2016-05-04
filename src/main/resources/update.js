@@ -11,7 +11,6 @@ var imports = JavaImporter(
 
 with (imports) {
 
-    var labels = {};
     var binds = {};
 
     function bind(b) {
@@ -25,7 +24,6 @@ with (imports) {
             getSearches: function() { return b.searches || []; },
             requiresSearch: function() { return b.searches? b.searches.length > 0 : false; }
         });
-        labels[b.form] = b.label;  // temporary: form labels will come directly from bindings
     }
 
     bind({ form: 'visit',
@@ -122,9 +120,9 @@ with (imports) {
         getActivityTitle: function() { return config.getString('update.activityTitle'); },
         getLaunchLabel: function() { return config.getString('update.launchTitle'); },
         getLaunchDescription: function() { return config.getString('update.launchDescription'); },
+        getBindings: function() { return binds; },
         getLaunchers: function(level) { return launchers[level] || []; },
-        getDetailFragment: function(level) { return details[level] || null; },
-        getFormLabels: function() { return labels; }
+        getDetailFragment: function(level) { return details[level] || null; }
     });
 
     config.addModule(module);

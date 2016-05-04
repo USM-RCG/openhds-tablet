@@ -4,6 +4,7 @@ import android.util.Log;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
+import org.openhds.mobile.navconfig.forms.Binding;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +35,7 @@ public class NavigatorConfig {
     private static NavigatorConfig instance;
 
     private Map<String, NavigatorModule> modules = emptyMap();
-    private Map<String, String> formLabels = emptyMap();
+    private Map<String, Binding> bindings = emptyMap();
 
 
     protected NavigatorConfig() {
@@ -43,7 +44,7 @@ public class NavigatorConfig {
 
     private void init() {
         initModules();
-        initFormLabels();
+        initFormBindings();
     }
 
     /*
@@ -61,6 +62,11 @@ public class NavigatorConfig {
 
     private void initExtendedModules() throws IOException {
         executeConfigScript("/extensions.js");
+    }
+
+    private void initCoreModules() throws IOException {
+        executeConfigScript("/core.js");
+        executeConfigScript("/update.js");
     }
 
     private void executeConfigScript(String resourcePath) throws IOException {
@@ -81,24 +87,18 @@ public class NavigatorConfig {
         }
     }
 
-    private void initCoreModules() throws IOException {
-        executeConfigScript("/core.js");
-        executeConfigScript("/update.js");
+    /**
+     * Creates and index of all module {@link Binding} objects by name for fast access.
+     */
+    private void initFormBindings() {
+        bindings = new HashMap<>();
+        for (NavigatorModule module : modules.values()) {
+            bindings.putAll(module.getBindings());
+        }
     }
 
     public void addModule(NavigatorModule module) {
         modules.put(module.getActivityTitle(), module);
-    }
-
-    /*
-     * Define the labels to use for rendering stored forms in the UI. It defines the mapping from jr form id to resource
-     * bundle key for the label.
-     */
-    private void initFormLabels() {
-        formLabels = new HashMap<>();
-        for (NavigatorModule module : modules.values()) {
-            formLabels.putAll(module.getFormLabels());
-        }
     }
 
     public static synchronized NavigatorConfig getInstance() {
@@ -115,20 +115,6 @@ public class NavigatorConfig {
      */
     public Collection<NavigatorModule> getModules() {
         return unmodifiableCollection(modules.values());
-    }
-
-    /**
-     * Returns the label for the specified form id.
-     *
-     * @param formId the instance id (jrId) of the form
-     * @return the label describing the form type
-     */
-    public String getFormLabel(String formId) {
-        if (formLabels.containsKey(formId)) {
-            return getString(formLabels.get(formId));
-        } else {
-            return formId;
-        }
     }
 
     /**
@@ -162,5 +148,14 @@ public class NavigatorConfig {
 
     public NavigatorModule getModule(String name) {
         return modules.get(name);
+    }
+
+    /**
+     * Finds a configured form binding by name.
+     * @param name the name of the binding to retrieve
+     * @return the {@link Binding} object for the given name or null if none exists
+     */
+    public Binding getBinding(String name) {
+        return bindings.get(name);
     }
 }
