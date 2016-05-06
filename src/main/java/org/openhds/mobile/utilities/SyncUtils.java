@@ -2,6 +2,7 @@ package org.openhds.mobile.utilities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.util.Log;
 
@@ -30,10 +31,12 @@ import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.openhds.mobile.OpenHDS.AUTHORITY;
 import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
+import static org.openhds.mobile.syncadpt.SyncAdapter.SYNC_NOTIFICATION_ID;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
 import static org.openhds.mobile.utilities.HttpUtils.get;
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * Dumping grounds for miscellaneous sync-related functions.
@@ -298,8 +301,12 @@ public class SyncUtils {
                     File fingerprintFile = getFingerprintFile(dbTempFile);
                     String fingerprint = httpConn.getHeaderField("ETag");
                     Log.i(TAG, "update " + fingerprint + " found, fetching");
-                    if (fingerprintFile.exists() && !fingerprintFile.delete()) {
-                        Log.w(TAG, "failed to clear old fingerprint, user could install partial content!");
+                    if (fingerprintFile.exists()) {
+                        NotificationManager manager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+                        manager.cancel(SYNC_NOTIFICATION_ID);
+                        if (!fingerprintFile.delete()) {
+                            Log.w(TAG, "failed to clear old fingerprint, user could install partial content!");
+                        }
                     }
                     streamToFile(httpConn.getInputStream(), dbTempFile);
                     store(fingerprintFile, fingerprint);  // install fingerprint after downloaded finishes
