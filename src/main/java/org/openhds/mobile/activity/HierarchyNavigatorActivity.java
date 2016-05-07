@@ -39,7 +39,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -114,7 +113,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         queryHelper = DefaultQueryHelper.getInstance();
 
         hierarchyPath = new HierarchyPath();
-        List<String> configLevels = config.getLevels();
 
         FragmentManager fragmentManager = getFragmentManager();
 
