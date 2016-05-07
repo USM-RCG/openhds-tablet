@@ -137,6 +137,24 @@ public class NavigatorConfig {
     }
 
     /**
+     * Convenience method for getting top-most level. Same as getLevels().get(0).
+     *
+     * @return the top-most level
+     */
+    public String getTopLevel() {
+        return getLevels().get(0);
+    }
+
+    /**
+     * Convenience method for getting bottom-most level.
+     *
+     * @return the bottom-most level
+     */
+    public String getBottomLevel() {
+        return getLevels().get(getLevels().size() - 1);
+    }
+
+    /**
      * Get a localized label for the logical hierarchy level.
      *
      * @param level the hierarchy level

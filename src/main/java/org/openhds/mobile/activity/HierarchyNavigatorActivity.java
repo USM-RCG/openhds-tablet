@@ -114,8 +114,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
         hierarchyPath = new HierarchyPath();
         List<String> configLevels = config.getLevels();
-        top = configLevels.get(0);
-        bottom = configLevels.get(configLevels.size() - 1);
 
         FragmentManager fragmentManager = getFragmentManager();
 
@@ -546,7 +544,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     private void refreshHierarchy(String level){
-        moveTo(getTop());
+        moveTo(config.getTopLevel());
         moveTo(level);
     }
 
@@ -579,7 +577,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
         updateButtonLabel(level);
 
-        if (!level.equals(getBottom())) {
+        if (!level.equals(config.getBottomLevel())) {
             hierarchyButtonFragment.setVisible(level, true);
         }
 
@@ -606,16 +604,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         updateButtonLabel(level);
     }
 
-    private String top, bottom;
     private String currentLevel;
-
-    public String getTop() {
-        return top;
-    }
-
-    public String getBottom() {
-        return bottom;
-    }
 
     public String getLevel() {
         return currentLevel;
