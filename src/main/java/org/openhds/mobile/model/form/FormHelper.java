@@ -5,22 +5,19 @@ import android.content.Context;
 import android.net.Uri;
 
 import org.openhds.mobile.navconfig.forms.Binding;
-import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.Map;
 
-import static org.openhds.mobile.utilities.FormUtils.formFile;
-import static org.openhds.mobile.utilities.FormUtils.generateODKForm;
-import static org.openhds.mobile.utilities.FormUtils.loadInstance;
-import static org.openhds.mobile.utilities.FormUtils.updateInstance;
+import static org.openhds.mobile.model.form.FormInstance.generate;
+import static org.openhds.mobile.model.form.FormInstance.lookup;
+
 
 public class FormHelper {
 
     private Binding binding;
     private ContentResolver resolver;
-    private Map<String, String> formData;
+    private Map<String, String> data;
     private FormInstance instance;
 
     public FormHelper(Context ctx) {
@@ -36,26 +33,26 @@ public class FormHelper {
     }
 
     public Map<String, String> getData() {
-        return formData;
+        return data;
     }
 
-    public void setData(Map<String, String> formData) {
-        this.formData = formData;
+    public void setData(Map<String, String> data) {
+        this.data = data;
     }
 
-    public FormInstance getInstance(Uri instanceUri) {
-        return instance = OdkCollectHelper.getInstance(resolver, instanceUri);
+    public FormInstance getInstance(Uri uri) {
+        return instance = lookup(resolver, uri);
     }
 
     public void update() throws IOException {
-        updateInstance(formData, instance.getFilePath());
+        instance.put(data);
     }
 
     public Map<String, String> fetch() throws IOException {
-        return formData = loadInstance(instance.getFilePath());
+        return data = instance.get();
     }
 
     public Uri newInstance() throws IOException {
-        return generateODKForm(resolver, binding, formData, formFile(binding.getForm(), new Date()));
+        return generate(resolver, binding, data);
     }
 }

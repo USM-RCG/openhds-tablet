@@ -1,8 +1,22 @@
 package org.openhds.mobile.model.form;
 
-import org.openhds.mobile.provider.InstanceProviderAPI;
+import android.content.ContentResolver;
+import android.net.Uri;
 
+import org.openhds.mobile.navconfig.forms.Binding;
+import org.openhds.mobile.provider.InstanceProviderAPI;
+import org.openhds.mobile.utilities.OdkCollectHelper;
+
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.Map;
+
+import static org.openhds.mobile.utilities.FormUtils.formFile;
+import static org.openhds.mobile.utilities.FormUtils.generateODKForm;
+import static org.openhds.mobile.utilities.FormUtils.loadInstance;
+import static org.openhds.mobile.utilities.FormUtils.updateInstance;
+import static org.openhds.mobile.utilities.OdkCollectHelper.getInstance;
 
 public class FormInstance implements Serializable {
 
@@ -73,6 +87,22 @@ public class FormInstance implements Serializable {
 
     public boolean isIncomplete() {
         return InstanceProviderAPI.STATUS_INCOMPLETE.equals(status);
+    }
+
+    public void put(Map<String, String> data) throws IOException {
+        updateInstance(data, filePath);
+    }
+
+    public Map<String, String> get() throws IOException {
+        return loadInstance(filePath);
+    }
+
+    public static FormInstance lookup(ContentResolver resolver, Uri uri) {
+        return getInstance(resolver, uri);
+    }
+
+    public static Uri generate(ContentResolver resolver, Binding binding, Map<String, String> data) throws IOException {
+        return generateODKForm(resolver, binding, data, formFile(binding.getForm(), new Date()));
     }
 
 }
