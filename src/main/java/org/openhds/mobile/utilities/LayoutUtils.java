@@ -22,7 +22,9 @@ import org.openhds.mobile.navconfig.forms.Binding;
 import java.io.IOException;
 import java.util.Map;
 
-import static org.openhds.mobile.utilities.FormUtils.BINDING_MAP_KEY;
+import static org.openhds.mobile.model.form.FormInstance.BINDING_MAP_KEY;
+import static org.openhds.mobile.model.form.FormInstance.getBinding;
+import static org.openhds.mobile.model.form.FormInstance.isBound;
 import static org.openhds.mobile.utilities.FormUtils.loadInstance;
 
 public class LayoutUtils {
@@ -216,39 +218,29 @@ public class LayoutUtils {
     }
 
     // Set up a form list item based on a given form instance.
-    public static void configureFormListItem(Context context, View view, FormInstance formInstance) {
+    public static void configureFormListItem(Context context, View view, FormInstance instance) {
 
-        // Set background based on form status
-        if (!formInstance.isComplete()) {
-            view.setBackgroundResource(R.drawable.form_list_drawable_gray);
-        } else {
-            view.setBackgroundResource(R.drawable.form_list_drawable_orange);
-        }
+        view.setBackgroundResource(
+                instance.isComplete()? R.drawable.form_list_drawable_orange : R.drawable.form_list_drawable_gray
+        );
 
         try {
 
-            Map<String, String> instanceData = loadInstance(formInstance.getFilePath());
+            Map<String, String> data = instance.get();
 
             // Set form name based on its embedded binding
-            final String formTypeName;
-            if (instanceData.containsKey(BINDING_MAP_KEY)) {
-                String boundName = instanceData.get(BINDING_MAP_KEY);
-                Binding binding = NavigatorConfig.getInstance().getBinding(boundName);
-                formTypeName = binding.getLabel();
-            } else {
-                formTypeName = formInstance.getFormName();
-            }
+            String formTypeName = isBound(data)? getBinding(data).getLabel() : instance.getFormName();
             TextView formTypeView = (TextView) view.findViewById(R.id.form_instance_list_type);
             formTypeView.setText(formTypeName);
 
             // Extract and set values contained within the form instance
-            String entityId = instanceData.get(ProjectFormFields.General.ENTITY_EXTID);
+            String entityId = data.get(ProjectFormFields.General.ENTITY_EXTID);
             setText(view.findViewById(R.id.form_instance_list_id), entityId);
 
-            String fieldWorker = instanceData.get(ProjectFormFields.General.FIELD_WORKER_EXTID);
+            String fieldWorker = data.get(ProjectFormFields.General.FIELD_WORKER_EXTID);
             setText(view.findViewById(R.id.form_instance_list_fieldworker), fieldWorker);
 
-            String date = instanceData.get(ProjectFormFields.General.COLLECTION_DATE_TIME);
+            String date = data.get(ProjectFormFields.General.COLLECTION_DATE_TIME);
             setText(view.findViewById(R.id.form_instance_list_date), date);
 
         } catch (IOException e) {

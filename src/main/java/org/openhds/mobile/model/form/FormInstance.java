@@ -3,9 +3,9 @@ package org.openhds.mobile.model.form;
 import android.content.ContentResolver;
 import android.net.Uri;
 
+import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.forms.Binding;
 import org.openhds.mobile.provider.InstanceProviderAPI;
-import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -19,6 +19,9 @@ import static org.openhds.mobile.utilities.FormUtils.updateInstance;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getInstance;
 
 public class FormInstance implements Serializable {
+
+    public static final String BINDING_MAP_KEY = "@cims-binding"; // valid xml element names can't collide
+    public static final String BINDING_ATTR = "cims-binding";
 
     private static final long serialVersionUID = 1L;
 
@@ -95,6 +98,26 @@ public class FormInstance implements Serializable {
 
     public Map<String, String> get() throws IOException {
         return loadInstance(filePath);
+    }
+
+    /**
+     * Gives the configured form binding as identified from the given instance data.
+     *
+     * @param data instance data, possibly containing binding information
+     * @return the configured form binding, or null if none is available for the data
+     */
+    public static Binding getBinding(Map<String, String> data) {
+        return isBound(data) ? NavigatorConfig.getInstance().getBinding(data.get(BINDING_MAP_KEY)) : null;
+    }
+
+    /**
+     * Determines whether the given instance data contains binding information.
+     *
+     * @param data the instance data
+     * @return true if binding metadata is present, false otherwise
+     */
+    public static boolean isBound(Map<String, String> data) {
+        return data.containsKey(BINDING_MAP_KEY);
     }
 
     public static FormInstance lookup(ContentResolver resolver, Uri uri) {

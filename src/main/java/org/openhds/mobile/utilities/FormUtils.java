@@ -39,6 +39,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static android.os.Environment.getExternalStorageDirectory;
+import static org.openhds.mobile.model.form.FormInstance.BINDING_ATTR;
+import static org.openhds.mobile.model.form.FormInstance.BINDING_MAP_KEY;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInstances;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getBlankInstance;
 import static org.openhds.mobile.utilities.OdkCollectHelper.moveInstance;
@@ -53,8 +55,6 @@ public class FormUtils {
     private static final String TAG = FormUtils.class.getSimpleName();
 
     public static final String FILE_EXTENSION = ".xml";
-    public static final String BINDING_ATTR = "cims-binding";
-    public static final String BINDING_MAP_KEY = "@cims-binding"; // valid xml element names can't collide
 
     /**
      * Loads the specified XML file into a jdom2 {@link Document} object.
