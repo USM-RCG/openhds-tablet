@@ -332,7 +332,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     private void launchForm(Binding binding, Map<String, String> followUpFormHints) {
-        formHelper.setForm(binding); // update activity's current form
+        formHelper.setBinding(binding); // update activity's current form
         if (binding != null) {
             formHelper.setData(buildDataWithHints(binding, followUpFormHints));
             if (binding.requiresSearch()) {

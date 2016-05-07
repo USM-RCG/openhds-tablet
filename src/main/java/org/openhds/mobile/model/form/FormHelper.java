@@ -28,7 +28,7 @@ public class FormHelper {
         return binding;
     }
 
-    public void setForm(Binding binding) {
+    public void setBinding(Binding binding) {
         this.binding = binding;
     }
 
