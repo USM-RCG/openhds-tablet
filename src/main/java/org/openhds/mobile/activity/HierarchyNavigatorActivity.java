@@ -258,10 +258,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         visitFragment.setEnabled(getCurrentVisit() != null);
     }
 
-    void detachFormsFromHierarchy(List<String> formPaths) {
-        DatabaseAdapter.getInstance(this).detachFromHierarchy(formPaths);
-    }
-
     private void populateFormView(List<FormInstance> forms) {
         formListFragment.populate(forms);
     }
@@ -491,9 +487,8 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
      * Associates the form instance path to the current hierarchy path of the activity.
      */
     private void associateFormToPath(String formPath) {
-        DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance(this);
         if (formPath != null) {
-            dbAdapter.attachFormToHierarchy(hierarchyPath.toString(), formPath);
+            DatabaseAdapter.getInstance(this).attachFormToHierarchy(hierarchyPath.toString(), formPath);
         }
     }
 
@@ -510,7 +505,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                 unsentForms.add(attachedForm);
             }
         }
-        detachFormsFromHierarchy(sentFormPaths);
+        DatabaseAdapter.getInstance(this).detachFromHierarchy(sentFormPaths);
         populateFormView(unsentForms);
     }
 
