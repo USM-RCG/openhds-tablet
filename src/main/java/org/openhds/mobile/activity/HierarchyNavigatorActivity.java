@@ -80,6 +80,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private Binding binding;
     private Map<String, String> data;
 
+    private String currentLevel;
     private HierarchyPath hierarchyPath;
     private List<DataWrapper> currentResults;
     private DataWrapper currentSelection;
@@ -603,8 +604,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     public void onLeaving(String level) {
         updateButtonLabel(level);
     }
-
-    private String currentLevel;
 
     public String getLevel() {
         return currentLevel;
