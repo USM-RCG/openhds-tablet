@@ -42,7 +42,6 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static org.openhds.mobile.model.form.FormInstance.generate;
 import static org.openhds.mobile.model.form.FormInstance.lookup;
@@ -81,7 +80,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private Binding binding;
     private Map<String, String> data;
 
-    private NavigationManager levelManager;
     private HierarchyPath hierarchyPath;
     private List<DataWrapper> currentResults;
     private DataWrapper currentSelection;
@@ -115,8 +113,9 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         queryHelper = DefaultQueryHelper.getInstance();
 
         hierarchyPath = new HierarchyPath();
-        levelManager = new NavigationManager(config.getLevels());
-        levelManager.addListener(new HierarchyLevelListener());
+        List<String> configLevels = config.getLevels();
+        top = configLevels.get(0);
+        bottom = configLevels.get(configLevels.size() - 1);
 
         FragmentManager fragmentManager = getFragmentManager();
 
@@ -272,10 +271,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         return hierarchyPath;
     }
 
-    private String getLevel() {
-        return levelManager.getLevel();
-    }
-
     private void updateButtonLabel(String level) {
         DataWrapper selected = hierarchyPath.get(level);
         if (selected == null) {
@@ -315,7 +310,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             currentResults = queryHelper.getChildren(getContentResolver(), parentItem, level);
         }
 
-        levelManager.moveTo(level);
+        moveTo(level);
     }
 
     private void stepDown(DataWrapper selected) {
@@ -332,7 +327,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             currentSelection = selected;
             currentResults = queryHelper.getChildren(getContentResolver(), selected, nextLevel);
             hierarchyPath.down(level, selected);
-            levelManager.moveTo(nextLevel);
+            moveTo(nextLevel);
         }
     }
 
@@ -515,9 +510,9 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     @Override
     public void onBackPressed() {
-        int currentStateIndex;
-        if (0 < (currentStateIndex = config.getLevels().indexOf(getLevel()))) {
-            jumpUp(config.getLevels().get(currentStateIndex - 1));
+        int currentLevelIndex = config.getLevels().indexOf(getLevel());
+        if (currentLevelIndex > 0) {
+            jumpUp(config.getLevels().get(currentLevelIndex - 1));
         } else {
             super.onBackPressed();
         }
@@ -551,8 +546,8 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     private void refreshHierarchy(String level){
-        levelManager.moveTo(levelManager.getTop());
-        levelManager.moveTo(level);
+        moveTo(getTop());
+        moveTo(level);
     }
 
     @Override
@@ -580,102 +575,62 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         jumpUp(level);
     }
 
+    public void onEntering(String level) {
 
-    private class HierarchyLevelListener implements LevelListener {
+        updateButtonLabel(level);
 
-        @Override
-        public void onEntering(String level) {
-
-            updateButtonLabel(level);
-
-            if (!level.equals(levelManager.getBottom())) {
-                hierarchyButtonFragment.setVisible(level, true);
-            }
-
-            if (shouldShowDetail()) {
-                showDetailFragment();
-            } else {
-                showValueFragment();
-                valueFragment.populateData(currentResults);
-            }
-            updateToggleButton();
-
-            List<Launcher> relevantLaunchers = new ArrayList<>();
-            for (Launcher launcher : currentModule.getLaunchers(level)) {
-                if (launcher.relevantFor(HierarchyNavigatorActivity.this)) {
-                    relevantLaunchers.add(launcher);
-                }
-            }
-            formFragment.createFormButtons(relevantLaunchers);
-
-            updateAttachedForms();
+        if (!level.equals(getBottom())) {
+            hierarchyButtonFragment.setVisible(level, true);
         }
 
-        @Override
-        public void onLeaving(String level) {
-            updateButtonLabel(level);
+        if (shouldShowDetail()) {
+            showDetailFragment();
+        } else {
+            showValueFragment();
+            valueFragment.populateData(currentResults);
         }
+        updateToggleButton();
+
+        List<Launcher> relevantLaunchers = new ArrayList<>();
+        for (Launcher launcher : currentModule.getLaunchers(level)) {
+            if (launcher.relevantFor(HierarchyNavigatorActivity.this)) {
+                relevantLaunchers.add(launcher);
+            }
+        }
+        formFragment.createFormButtons(relevantLaunchers);
+
+        updateAttachedForms();
     }
 
-    private interface LevelListener {
-        void onEntering(String level);
-        void onLeaving(String level);
+    public void onLeaving(String level) {
+        updateButtonLabel(level);
     }
 
-    private static class NavigationManager {
+    private String top, bottom;
+    private String currentLevel;
 
-        private String top, bottom;
-        private Set<String> levels;
-        private String currentLevel;
-        private List<LevelListener> listeners;
+    public String getTop() {
+        return top;
+    }
 
-        public NavigationManager(List<String> levels) {
-            this.levels = new LinkedHashSet<>(levels);
-            top = levels.get(0);
-            bottom = levels.get(levels.size() - 1);
-            listeners = new ArrayList<>();
-            moveTo(top);
+    public String getBottom() {
+        return bottom;
+    }
+
+    public String getLevel() {
+        return currentLevel;
+    }
+
+    public void moveTo(String level) {
+        if (!config.getLevels().contains(level)) {
+            throw new IllegalStateException("no such level: " + level);
         }
-
-        public String getTop() {
-            return top;
-        }
-
-        public String getBottom() {
-            return bottom;
-        }
-
-        public String getLevel() {
-            return currentLevel;
-        }
-
-        public void moveTo(String level) {
-            if (!levels.contains(level)) {
-                throw new IllegalStateException("no such level: " + level);
+        if (!level.equals(currentLevel)) {
+            if (currentLevel != null) {
+                onLeaving(currentLevel);
             }
-            if (!level.equals(currentLevel)) {
-                if (currentLevel != null) {
-                    fireLeaving(currentLevel);
-                }
-                currentLevel = level;
-                fireEntering(level);
-            }
-        }
-
-        public void addListener(LevelListener listener) {
-            listeners.add(listener);
-        }
-
-        private void fireLeaving(String level) {
-            for (LevelListener listener : listeners) {
-                listener.onLeaving(level);
-            }
-        }
-
-        private void fireEntering(String level) {
-            for (LevelListener listener : listeners) {
-                listener.onEntering(level);
-            }
+            currentLevel = level;
+            onEntering(level);
         }
     }
 }
