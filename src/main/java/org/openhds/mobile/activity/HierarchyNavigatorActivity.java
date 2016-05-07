@@ -19,14 +19,13 @@ import org.openhds.mobile.fragment.navigate.VisitFragment;
 import org.openhds.mobile.fragment.navigate.detail.DefaultDetailFragment;
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
 import org.openhds.mobile.model.core.FieldWorker;
-import org.openhds.mobile.navconfig.forms.Binding;
-import org.openhds.mobile.model.form.FormHelper;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.model.update.Visit;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
 import org.openhds.mobile.navconfig.db.DefaultQueryHelper;
 import org.openhds.mobile.navconfig.db.QueryHelper;
+import org.openhds.mobile.navconfig.forms.Binding;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.navconfig.forms.Launcher;
 import org.openhds.mobile.navconfig.forms.consumers.ConsumerResult;
@@ -45,6 +44,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.openhds.mobile.model.form.FormInstance.generate;
+import static org.openhds.mobile.model.form.FormInstance.lookup;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
@@ -71,11 +72,15 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private static final String HIERARCHY_PATH_KEY = "hierarchyPathKeys";
     private static final String CURRENT_RESULTS_KEY = "currentResults";
     private static final String VISIT_KEY = "visitKey";
+    private static final String BINDING_KEY = "bindingKey";
+    private static final String FORM_DATA_KEY = "formDataKey";
 
     private NavigatorConfig config;
     private NavigatorModule currentModule;
 
-    private FormHelper formHelper;
+    private Binding binding;
+    private Map<String, String> data;
+
     private NavigationManager levelManager;
     private HierarchyPath hierarchyPath;
     private List<DataWrapper> currentResults;
@@ -108,7 +113,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         currentFieldWorker = (FieldWorker) extras.get(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA);
 
         queryHelper = DefaultQueryHelper.getInstance();
-        formHelper = new FormHelper(this);
 
         hierarchyPath = new HierarchyPath();
         levelManager = new NavigationManager(config.getLevels());
@@ -137,6 +141,9 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             hierarchyPath = savedInstanceState.getParcelable(HIERARCHY_PATH_KEY);
             currentResults = savedInstanceState.getParcelableArrayList(CURRENT_RESULTS_KEY);
             setCurrentVisit((Visit) savedInstanceState.get(VISIT_KEY));
+            String bindingName = savedInstanceState.getString(BINDING_KEY);
+            binding = bindingName != null ? config.getBinding(bindingName) : null;
+            data = (Map<String, String>) savedInstanceState.getSerializable(FORM_DATA_KEY);
 
             DataSelectionFragment existingValueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
             if (existingValueFragment != null) {
@@ -160,6 +167,8 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         savedInstanceState.putParcelable(HIERARCHY_PATH_KEY, hierarchyPath);
         savedInstanceState.putParcelableArrayList(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
         savedInstanceState.putSerializable(VISIT_KEY, getCurrentVisit());
+        savedInstanceState.putString(BINDING_KEY, binding != null ? binding.getName() : null);
+        savedInstanceState.putSerializable(FORM_DATA_KEY, data != null? new HashMap<>(data) : null);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -332,9 +341,9 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     private void launchForm(Binding binding, Map<String, String> followUpFormHints) {
-        formHelper.setBinding(binding); // update activity's current form
-        if (binding != null) {
-            formHelper.setData(buildDataWithHints(binding, followUpFormHints));
+        this.binding = binding; // update activity's current form
+        if (this.binding != null) {
+            this.data = buildDataWithHints(binding, followUpFormHints);
             if (binding.requiresSearch()) {
                 launchSearch();
             } else {
@@ -354,7 +363,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private void launchNewFormAfterSearch(Intent data) {
         List<EntityFieldSearch> searchModules = data.getParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY);
         for (EntityFieldSearch plugin : searchModules) {
-            formHelper.getData().put(plugin.getName(), plugin.getValue());
+            this.data.put(plugin.getName(), plugin.getValue());
         }
         launchNewForm();
     }
@@ -362,7 +371,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private void launchNewForm() {
         try {
             showShortToast(this, R.string.launching_odk_collect);
-            startActivityForResult(editIntent(formHelper.newInstance()), ODK_ACTIVITY_REQUEST_CODE);
+            startActivityForResult(editIntent(generate(getContentResolver(), binding, data)), ODK_ACTIVITY_REQUEST_CODE);
         } catch (Exception e) {
             showShortToast(this, "failed to launch form: " + e.getMessage());
         }
@@ -370,7 +379,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     private void launchSearch() {
         Intent intent = new Intent(this, EntitySearchActivity.class);
-        List<EntityFieldSearch> searchModules = formHelper.getBinding().getSearches();
+        List<EntityFieldSearch> searchModules = binding.getSearches();
         intent.putParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY, new ArrayList<>(searchModules));
         startActivityForResult(intent, SEARCH_ACTIVITY_REQUEST_CODE);
     }
@@ -445,17 +454,18 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
      * Handles forms created with launchNewForm on return from ODK.
      */
     private void handleFormResult(Intent data) {
-        FormInstance instance = formHelper.getInstance(data.getData());
+        FormInstance instance = lookup(getContentResolver(), data.getData());
         associateFormToPath(instance.getFilePath());
         if (instance.isComplete()) {
-            FormPayloadConsumer consumer = formHelper.getBinding().getConsumer();
+            FormPayloadConsumer consumer = binding.getConsumer();
             try {
                 clearResults();
-                consumerResult = consumer.consumeFormPayload(formHelper.fetch(), this);
+                Map<String, String> formData = instance.get();
+                consumerResult = consumer.consumeFormPayload(formData, this);
                 if (consumerResult.hasInstanceUpdates()) {
-                    consumer.augmentInstancePayload(formHelper.getData());
+                    consumer.augmentInstancePayload(formData);
                     try {
-                        formHelper.update();
+                        instance.put(formData);
                     } catch (IOException ue) {
                         showShortToast(this, "Update failed: " + ue.getMessage());
                     }
