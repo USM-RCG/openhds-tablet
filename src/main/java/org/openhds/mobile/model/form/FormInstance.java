@@ -92,10 +92,22 @@ public class FormInstance implements Serializable {
         return InstanceProviderAPI.STATUS_INCOMPLETE.equals(status);
     }
 
+    /**
+     * Updates the form instance on disk with the supplied values.
+     *
+     * @param data key/value pairs corresponding to element names to update and their values
+     * @throws IOException
+     */
     public void put(Map<String, String> data) throws IOException {
         updateInstance(data, filePath);
     }
 
+    /**
+     * Fetches the form instance values from disk.
+     *
+     * @return a map of key/value pairs corresponding to elements and their values
+     * @throws IOException
+     */
     public Map<String, String> get() throws IOException {
         return loadInstance(filePath);
     }
@@ -120,10 +132,26 @@ public class FormInstance implements Serializable {
         return data.containsKey(BINDING_MAP_KEY);
     }
 
+    /**
+     * Retrieves a {@link FormInstance} from a specified {@link Uri}.
+     *
+     * @param resolver the content resolved to use for the lookup
+     * @param uri the uri of the instance to lookup
+     * @return a {@link FormInstance} object if found, null otherwise
+     */
     public static FormInstance lookup(ContentResolver resolver, Uri uri) {
         return getInstance(resolver, uri);
     }
 
+    /**
+     * Generates a new {@link FormInstance}.
+     *
+     * @param resolver content resolver to use for instance registration with ODK
+     * @param binding the binding to use for instance generation
+     * @param data the form data to populate the new instance with
+     * @return the {@link Uri} to a new form instance, registered with ODK
+     * @throws IOException
+     */
     public static Uri generate(ContentResolver resolver, Binding binding, Map<String, String> data) throws IOException {
         return generateODKForm(resolver, binding, data, formFile(binding.getForm(), new Date()));
     }
