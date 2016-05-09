@@ -611,12 +611,10 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         if (!config.getLevels().contains(level)) {
             throw new IllegalStateException("no such level: " + level);
         }
-        if (!level.equals(currentLevel)) {
-            if (currentLevel != null) {
-                onLeaving(currentLevel);
-            }
-            currentLevel = level;
-            onEntering(level);
+        if (currentLevel != null) {
+            onLeaving(currentLevel);
         }
+        currentLevel = level;
+        onEntering(level);
     }
 }
