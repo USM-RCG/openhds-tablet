@@ -69,6 +69,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     private static final String HIERARCHY_PATH_KEY = "hierarchyPathKeys";
     private static final String CURRENT_RESULTS_KEY = "currentResults";
+    private static final String CURRENT_SELECTION_KEY = "currentSelection";
     private static final String VISIT_KEY = "visitKey";
     private static final String BINDING_KEY = "bindingKey";
     private static final String FORM_DATA_KEY = "formDataKey";
@@ -135,6 +136,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                     .commit();
         } else {
             hierarchyPath = savedInstanceState.getParcelable(HIERARCHY_PATH_KEY);
+            currentSelection = savedInstanceState.getParcelable(CURRENT_SELECTION_KEY);
             currentResults = savedInstanceState.getParcelableArrayList(CURRENT_RESULTS_KEY);
             setCurrentVisit((Visit) savedInstanceState.get(VISIT_KEY));
             String bindingName = savedInstanceState.getString(BINDING_KEY);
@@ -153,19 +155,20 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        hierarchySetup();
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelable(HIERARCHY_PATH_KEY, hierarchyPath);
+        savedInstanceState.putParcelable(CURRENT_SELECTION_KEY, currentSelection);
         savedInstanceState.putParcelableArrayList(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
         savedInstanceState.putSerializable(VISIT_KEY, getCurrentVisit());
         savedInstanceState.putString(BINDING_KEY, binding != null ? binding.getName() : null);
         savedInstanceState.putSerializable(FORM_DATA_KEY, data != null? new HashMap<>(data) : null);
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        hierarchySetup(); // called here since it expects fragments to be created
     }
 
     @Override
