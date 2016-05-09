@@ -228,7 +228,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         if (pathDepth == 0) {
             hierarchyButtonFragment.setVisible(levelAtDepth, true);
             currentResults = queryHelper.getAll(getContentResolver(), levelAtDepth);
-            updateToggleButton();
         } else {
             String parentLevel = config.getLevels().get(pathDepth - 1);
             DataWrapper parentItem = hierarchyPath.get(parentLevel);
@@ -238,18 +237,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             }
         }
 
-        boolean isAdded = valueFragment.isAdded();
-
         moveTo(levelAtDepth);
-
-        if (isAdded || !currentResults.isEmpty()) {
-            showValueFragment();
-            valueFragment.populateData(currentResults);
-        } else {
-            showDetailFragment();
-            detailToggleFragment.setHighlighted(true);
-        }
-        updateAttachedForms();
     }
 
     private void populateFormView(List<FormInstance> forms) {
