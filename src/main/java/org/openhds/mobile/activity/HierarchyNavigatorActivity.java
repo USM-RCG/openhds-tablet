@@ -55,15 +55,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private static final int ODK_ACTIVITY_REQUEST_CODE = 0;
     private static final int SEARCH_ACTIVITY_REQUEST_CODE = 1;
 
-    private HierarchyButtonFragment hierarchyButtonFragment;
-    private DataSelectionFragment valueFragment;
-    private FormSelectionFragment formFragment;
-    private DetailToggleFragment detailToggleFragment;
-    private DetailFragment defaultDetailFragment;
-    private DetailFragment detailFragment;
-    private VisitFragment visitFragment;
-    private FormListFragment formListFragment;
-
     private static final String VALUE_FRAGMENT_TAG = "hierarchyValueFragment";
     private static final String DETAIL_FRAGMENT_TAG = "hierarchyDetailFragment";
 
@@ -74,20 +65,29 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private static final String BINDING_KEY = "bindingKey";
     private static final String FORM_DATA_KEY = "formDataKey";
 
+    private HierarchyButtonFragment hierarchyButtonFragment;
+    private DataSelectionFragment valueFragment;
+    private FormSelectionFragment formFragment;
+    private DetailToggleFragment detailToggleFragment;
+    private DetailFragment defaultDetailFragment;
+    private DetailFragment detailFragment;
+    private VisitFragment visitFragment;
+    private FormListFragment formListFragment;
+
     private NavigatorConfig config;
+    private String currentModuleName;
     private NavigatorModule currentModule;
 
     private Binding binding;
     private Map<String, String> data;
 
-    private String currentLevel;
     private HierarchyPath hierarchyPath;
-    private List<DataWrapper> currentResults;
     private DataWrapper currentSelection;
+    private List<DataWrapper> currentResults;
     private FieldWorker currentFieldWorker;
     private Visit currentVisit;
+
     private HashMap<MenuItem, String> menuItemTags;
-    private String currentModuleName;
     private ConsumerResult consumerResult;
 
     private QueryHelper queryHelper;
@@ -138,7 +138,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             hierarchyPath = savedInstanceState.getParcelable(HIERARCHY_PATH_KEY);
             currentSelection = savedInstanceState.getParcelable(CURRENT_SELECTION_KEY);
             currentResults = savedInstanceState.getParcelableArrayList(CURRENT_RESULTS_KEY);
-            setCurrentVisit((Visit) savedInstanceState.get(VISIT_KEY));
+            currentVisit = (Visit) savedInstanceState.getSerializable(VISIT_KEY);
             String bindingName = savedInstanceState.getString(BINDING_KEY);
             binding = bindingName != null ? config.getBinding(bindingName) : null;
             data = (Map<String, String>) savedInstanceState.getSerializable(FORM_DATA_KEY);
@@ -168,7 +168,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        hierarchySetup(); // called here since it expects fragments to be created
+        update(); // called here since it expects fragments to be created
     }
 
     @Override
@@ -219,104 +219,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         return true;
     }
 
-    private void hierarchySetup() {
-
-        for (String level : hierarchyPath.getLevels()) {
-            updateButtonLabel(level);
-            hierarchyButtonFragment.setVisible(level, true);
-        }
-
-        int pathDepth = hierarchyPath.depth();
-        String levelAtDepth = config.getLevels().get(pathDepth);
-        if (pathDepth == 0) {
-            hierarchyButtonFragment.setVisible(levelAtDepth, true);
-            currentResults = queryHelper.getAll(getContentResolver(), levelAtDepth);
-        } else {
-            String parentLevel = config.getLevels().get(pathDepth - 1);
-            DataWrapper parentItem = hierarchyPath.get(parentLevel);
-            currentSelection = parentItem;
-            if(currentResults == null) {
-                currentResults = queryHelper.getChildren(getContentResolver(), parentItem, levelAtDepth);
-            }
-        }
-
-        moveTo(levelAtDepth);
-    }
-
-    private void populateFormView(List<FormInstance> forms) {
-        formListFragment.populate(forms);
-    }
-
-    private List<FormInstance> getAttachedForms(String hierarchyPath) {
-        DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance(this);
-        Collection<String> attachedPaths = dbAdapter.findFormsForHierarchy(hierarchyPath);
-        return OdkCollectHelper.getByPaths(getContentResolver(), attachedPaths);
-    }
-
-    public HierarchyPath getHierarchyPath() {
-        return hierarchyPath;
-    }
-
-    private void updateButtonLabel(String level) {
-        DataWrapper selected = hierarchyPath.get(level);
-        if (selected == null) {
-            String levelLabel = getString(config.getLevelLabel(level));
-            hierarchyButtonFragment.setButtonLabel(level, levelLabel, null, true);
-            hierarchyButtonFragment.setHighlighted(level, true);
-        } else {
-            hierarchyButtonFragment.setButtonLabel(level, selected.getName(), selected.getExtId(), false);
-            hierarchyButtonFragment.setHighlighted(level, false);
-        }
-    }
-
-    private void jumpUp(String level) {
-
-        if (!hierarchyPath.getLevels().contains(level)) {
-            throw new IllegalStateException("invalid level: " + level);
-        }
-
-        List<String> allLevels = config.getLevels();
-        int indexBeforeJump = allLevels.indexOf(getLevel());
-        int indexAfterJump = allLevels.indexOf(level);
-
-        hierarchyPath.truncate(level);
-
-        // Disable buttons made irrelevant after jump
-        for (int i = indexBeforeJump; i >= indexAfterJump; i--) {
-            hierarchyButtonFragment.setVisible(config.getLevels().get(i), false);
-        }
-
-        // Populate data to enable drilling deeper from new depth
-        if (indexAfterJump == 0) {
-            currentResults = queryHelper.getAll(getContentResolver(), config.getLevels().get(indexAfterJump));
-        } else {
-            String parentLevel = config.getLevels().get(indexAfterJump - 1);
-            DataWrapper parentItem = hierarchyPath.get(parentLevel);
-            currentSelection = parentItem;
-            currentResults = queryHelper.getChildren(getContentResolver(), parentItem, level);
-        }
-
-        moveTo(level);
-    }
-
-    private void stepDown(DataWrapper selected) {
-
-        String level = getLevel(), selectedLevel = selected.getCategory();
-
-        if (!level.equals(selectedLevel)) {
-            throw new IllegalStateException("level mismatch: expected " + level + ", saw " + selectedLevel);
-        }
-
-        int currentIndex = config.getLevels().indexOf(level);
-        if (currentIndex >= 0 && currentIndex < config.getLevels().size() - 1) {
-            String nextLevel = config.getLevels().get(currentIndex + 1);
-            currentSelection = selected;
-            currentResults = queryHelper.getChildren(getContentResolver(), selected, nextLevel);
-            hierarchyPath.down(level, selected);
-            moveTo(nextLevel);
-        }
-    }
-
     private void launchForm(Binding binding, Map<String, String> followUpFormHints) {
         this.binding = binding; // update activity's current form
         if (this.binding != null) {
@@ -337,12 +239,11 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         return formData;
     }
 
-    private void launchNewFormAfterSearch(Intent data) {
-        List<EntityFieldSearch> searchModules = data.getParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY);
-        for (EntityFieldSearch plugin : searchModules) {
-            this.data.put(plugin.getName(), plugin.getValue());
-        }
-        launchNewForm();
+    private void launchSearch() {
+        Intent intent = new Intent(this, EntitySearchActivity.class);
+        List<EntityFieldSearch> searchModules = binding.getSearches();
+        intent.putParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY, new ArrayList<>(searchModules));
+        startActivityForResult(intent, SEARCH_ACTIVITY_REQUEST_CODE);
     }
 
     private void launchNewForm() {
@@ -351,65 +252,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             startActivityForResult(editIntent(generate(getContentResolver(), binding, data)), ODK_ACTIVITY_REQUEST_CODE);
         } catch (Exception e) {
             showShortToast(this, "failed to launch form: " + e.getMessage());
-        }
-    }
-
-    private void launchSearch() {
-        Intent intent = new Intent(this, EntitySearchActivity.class);
-        List<EntityFieldSearch> searchModules = binding.getSearches();
-        intent.putParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY, new ArrayList<>(searchModules));
-        startActivityForResult(intent, SEARCH_ACTIVITY_REQUEST_CODE);
-    }
-
-    private void showValueFragment() {
-        // there is only 1 value fragment that can be added
-        if (!valueFragment.isAdded()) {
-            getFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG).commit();
-            getFragmentManager().executePendingTransactions();
-
-            valueFragment.populateData(currentResults);
-        }
-    }
-
-    private void showDetailFragment() {
-        DetailFragment fragment = getDetailForCurrentLevel();
-        detailFragment = fragment == null? defaultDetailFragment : fragment;
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.middle_column, detailFragment, DETAIL_FRAGMENT_TAG)
-                .commit();
-        getFragmentManager().executePendingTransactions();
-        detailFragment.setUpDetails(getCurrentSelection());
-    }
-
-    private DetailFragment getDetailForCurrentLevel() {
-        return currentModule.getDetailFragment(getLevel());
-    }
-
-    private boolean shouldShowDetail() {
-        return currentResults == null || currentResults.isEmpty();
-    }
-
-    private void updateToggleButton() {
-        if (getDetailForCurrentLevel() != null && !shouldShowDetail()) {
-            detailToggleFragment.setEnabled(true);
-            if (!valueFragment.isAdded()) {
-                detailToggleFragment.setHighlighted(true);
-            }
-        } else {
-            detailToggleFragment.setEnabled(false);
-        }
-    }
-
-    private void toggleMiddleFragment() {
-        if (valueFragment.isAdded()) {
-            showDetailFragment();
-            detailToggleFragment.setHighlighted(true);
-        } else if (detailFragment.isAdded()) {
-            showValueFragment();
-            detailToggleFragment.setHighlighted(false);
         }
     }
 
@@ -427,16 +269,26 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         }
     }
 
+    private void launchNewFormAfterSearch(Intent data) {
+        List<EntityFieldSearch> searchModules = data.getParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY);
+        for (EntityFieldSearch plugin : searchModules) {
+            this.data.put(plugin.getName(), plugin.getValue());
+        }
+        launchNewForm();
+    }
+
     /**
      * Handles forms created with launchNewForm on return from ODK.
      */
     private void handleFormResult(Intent data) {
         FormInstance instance = lookup(getContentResolver(), data.getData());
-        associateFormToPath(instance.getFilePath());
+        String formPath = instance.getFilePath();
+        if (formPath != null) {
+            DatabaseAdapter.getInstance(this).attachFormToHierarchy(hierarchyPath.toString(), formPath);
+        }
         if (instance.isComplete()) {
             FormPayloadConsumer consumer = binding.getConsumer();
             try {
-                clearResults();
                 Map<String, String> formData = instance.get();
                 consumerResult = consumer.consumeFormPayload(formData, this);
                 if (consumerResult.hasInstanceUpdates()) {
@@ -447,6 +299,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                         showShortToast(this, "Update failed: " + ue.getMessage());
                     }
                 }
+                update();
                 if (consumerResult.hasFollowUp()) {
                     launchForm(consumerResult.getFollowUp(), consumerResult.getFollowUpHints());
                 }
@@ -456,52 +309,12 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         }
     }
 
-    /**
-     * Resets the cached results for the current hierarchy position. Calling this prior to hierarchySetup ensures
-     * that any changes to the database will be reflected in the user interface once hierarchySetup terminates.
-     */
-    private void clearResults() {
-        currentResults = null;
-    }
-
-    /**
-     * Associates the form instance path to the current hierarchy path of the activity.
-     */
-    private void associateFormToPath(String formPath) {
-        if (formPath != null) {
-            DatabaseAdapter.getInstance(this).attachFormToHierarchy(hierarchyPath.toString(), formPath);
-        }
-    }
-
-    /**
-     * Refreshes the attached forms at the current hierarchy path and prunes sent form associations.
-     */
-    private void updateAttachedForms() {
-        List<FormInstance> unsentForms = new ArrayList<>();
-        List<String> sentFormPaths = new ArrayList<>();
-        for (FormInstance attachedForm : getAttachedForms(hierarchyPath.toString())) {
-            if (attachedForm.isSubmitted()) {
-                sentFormPaths.add(attachedForm.getFilePath());
-            } else {
-                unsentForms.add(attachedForm);
-            }
-        }
-        DatabaseAdapter.getInstance(this).detachFromHierarchy(sentFormPaths);
-        populateFormView(unsentForms);
+    public HierarchyPath getHierarchyPath() {
+        return hierarchyPath;
     }
 
     public DataWrapper getCurrentSelection() {
         return currentSelection;
-    }
-
-    @Override
-    public void onBackPressed() {
-        int currentLevelIndex = config.getLevels().indexOf(getLevel());
-        if (currentLevelIndex > 0) {
-            jumpUp(config.getLevels().get(currentLevelIndex - 1));
-        } else {
-            super.onBackPressed();
-        }
     }
 
     public FieldWorker getCurrentFieldWorker() {
@@ -516,11 +329,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         return consumerResult;
     }
 
-    private void setCurrentVisit(Visit currentVisit) {
-        this.currentVisit = currentVisit;
-        refreshHierarchy();
-    }
-
     public void startVisit(Visit visit) {
         setCurrentVisit(visit);
     }
@@ -529,11 +337,9 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         setCurrentVisit(null);
     }
 
-    private void refreshHierarchy(){
-        String level = getLevel();
-        if (level != null) {
-            moveTo(level);
-        }
+    private void setCurrentVisit(Visit currentVisit) {
+        this.currentVisit = currentVisit;
+        update();
     }
 
     @Override
@@ -553,7 +359,39 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     @Override
     public void onDetailToggled() {
-        toggleMiddleFragment();
+        if (valueFragment.isAdded()) {
+            showDetailFragment();
+            detailToggleFragment.setHighlighted(true);
+        } else if (detailFragment.isAdded()) {
+            showValueFragment();
+            detailToggleFragment.setHighlighted(false);
+        }
+    }
+
+    private void showValueFragment() {
+        // there is only 1 value fragment that can be added
+        if (!valueFragment.isAdded()) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG).commit();
+            getFragmentManager().executePendingTransactions();
+        }
+        valueFragment.populateData(currentResults);
+    }
+
+    private void showDetailFragment() {
+        DetailFragment fragment = getDetailForCurrentLevel();
+        detailFragment = fragment == null? defaultDetailFragment : fragment;
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.middle_column, detailFragment, DETAIL_FRAGMENT_TAG)
+                .commit();
+        getFragmentManager().executePendingTransactions();
+        detailFragment.setUpDetails(getCurrentSelection());
+    }
+
+    private DetailFragment getDetailForCurrentLevel() {
+        return currentModule.getDetailFragment(getLevel());
     }
 
     @Override
@@ -561,52 +399,153 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         jumpUp(level);
     }
 
-    public void onEntering(String level) {
+    private void jumpUp(String level) {
+        if (!hierarchyPath.getLevels().contains(level)) {
+            throw new IllegalStateException("invalid level: " + level);
+        }
+        hierarchyPath.truncate(level);
+        update();
+    }
 
-        updateButtonLabel(level);
+    private void stepDown(DataWrapper selected) {
+        String currentLevel = getLevel(), selectedLevel = selected.getCategory();
+        if (!currentLevel.equals(selectedLevel)) {
+            throw new IllegalStateException("level mismatch: expected " + currentLevel + ", saw " + selectedLevel);
+        } else {
+            int currentIndex = config.getLevels().indexOf(currentLevel);
+            if (currentIndex >= 0 && currentIndex + 1 < config.getLevels().size()) {
+                hierarchyPath.down(currentLevel, selected);
+                update();
+            }
+        }
+    }
 
-        if (!level.equals(config.getBottomLevel())) {
-            hierarchyButtonFragment.setVisible(level, true);
+    @Override
+    public void onBackPressed() {
+        int levelIndex = config.getLevels().indexOf(getLevel());
+        if (levelIndex > 0) {
+            jumpUp(config.getLevels().get(levelIndex - 1));
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private String getLevel() {
+        return config.getLevels().get(hierarchyPath.depth());
+    }
+
+    private void update() {
+        String level = getLevel();
+        if (!config.getLevels().contains(level)) {
+            throw new IllegalStateException("no such level: " + level);
+        }
+        updatePathButtons();
+        updateData();
+        updateMiddle();
+        updateDetailToggle();
+        updateFormLaunchers();
+        updateVisit();
+        updateForms();
+    }
+
+    private void updatePathButtons() {
+        // Configure and show all hierarchy buttons for levels in path
+        for (String lvl : hierarchyPath.getLevels()) {
+            updateButtonLabel(lvl);
+            hierarchyButtonFragment.setVisible(lvl, true);
         }
 
+        // Hide all buttons not in path
+        for (int i = hierarchyPath.depth(); i < config.getLevels().size(); i++) {
+            hierarchyButtonFragment.setVisible(config.getLevels().get(i), false);
+        }
+
+        // If we can go deeper, enable the next level (disabled with the level name)
+        String nextLevel = config.getLevels().get(hierarchyPath.depth());
+        if (!config.getBottomLevel().equals(nextLevel)) {
+            updateButtonLabel(nextLevel);
+            hierarchyButtonFragment.setVisible(nextLevel, true);
+        }
+    }
+
+    private void updateButtonLabel(String level) {
+        DataWrapper selected = hierarchyPath.get(level);
+        if (selected == null) {
+            String levelLabel = getString(config.getLevelLabel(level));
+            hierarchyButtonFragment.setButtonLabel(level, levelLabel, null, true);
+            hierarchyButtonFragment.setHighlighted(level, true);
+        } else {
+            hierarchyButtonFragment.setButtonLabel(level, selected.getName(), selected.getExtId(), false);
+            hierarchyButtonFragment.setHighlighted(level, false);
+        }
+    }
+
+    private void updateData() {
+        int depth = hierarchyPath.depth();
+        String nextLevel = config.getLevels().get(depth);
+        if (depth == 0) {
+            currentResults = queryHelper.getAll(getContentResolver(), nextLevel);
+        } else {
+            String parentLevel = config.getLevels().get(depth - 1);
+            DataWrapper parentItem = hierarchyPath.get(parentLevel);
+            currentSelection = parentItem;
+            currentResults = queryHelper.getChildren(getContentResolver(), parentItem, nextLevel);
+        }
+    }
+
+    private void updateMiddle() {
         if (shouldShowDetail()) {
             showDetailFragment();
         } else {
             showValueFragment();
-            valueFragment.populateData(currentResults);
         }
+    }
 
-        updateToggleButton();
+    private void updateDetailToggle() {
+        if (getDetailForCurrentLevel() != null && !shouldShowDetail()) {
+            detailToggleFragment.setEnabled(true);
+            if (!valueFragment.isAdded()) {
+                detailToggleFragment.setHighlighted(true);
+            }
+        } else {
+            detailToggleFragment.setEnabled(false);
+        }
+    }
 
+    private boolean shouldShowDetail() {
+        return currentResults == null || currentResults.isEmpty();
+    }
+
+    private void updateFormLaunchers() {
         List<Launcher> relevantLaunchers = new ArrayList<>();
-        for (Launcher launcher : currentModule.getLaunchers(level)) {
+        for (Launcher launcher : currentModule.getLaunchers(getLevel())) {
             if (launcher.relevantFor(HierarchyNavigatorActivity.this)) {
                 relevantLaunchers.add(launcher);
             }
         }
         formFragment.createFormButtons(relevantLaunchers);
+    }
 
+    private void updateVisit() {
         visitFragment.setEnabled(currentVisit != null);
-
-        updateAttachedForms();
     }
 
-    public void onLeaving(String level) {
-        updateButtonLabel(level);
-    }
-
-    public String getLevel() {
-        return currentLevel;
-    }
-
-    public void moveTo(String level) {
-        if (!config.getLevels().contains(level)) {
-            throw new IllegalStateException("no such level: " + level);
+    /**
+     * Refreshes the attached forms at the current hierarchy path and prunes sent form associations.
+     */
+    private void updateForms() {
+        List<FormInstance> unsentForms = new ArrayList<>();
+        List<String> sentFormPaths = new ArrayList<>();
+        DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance(this);
+        Collection<String> attachedPaths = dbAdapter.findFormsForHierarchy(hierarchyPath.toString());
+        for (FormInstance attachedForm : OdkCollectHelper.getByPaths(getContentResolver(), attachedPaths)) {
+            if (attachedForm.isSubmitted()) {
+                sentFormPaths.add(attachedForm.getFilePath());
+            } else {
+                unsentForms.add(attachedForm);
+            }
         }
-        if (currentLevel != null) {
-            onLeaving(currentLevel);
-        }
-        currentLevel = level;
-        onEntering(level);
+        dbAdapter.detachFromHierarchy(sentFormPaths);
+        formListFragment.populate(unsentForms);
     }
 }
