@@ -250,8 +250,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             detailToggleFragment.setHighlighted(true);
         }
         updateAttachedForms();
-
-        visitFragment.setEnabled(getCurrentVisit() != null);
     }
 
     private void populateFormView(List<FormInstance> forms) {
@@ -529,21 +527,22 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     private void setCurrentVisit(Visit currentVisit) {
         this.currentVisit = currentVisit;
+        refreshHierarchy();
     }
 
     public void startVisit(Visit visit) {
         setCurrentVisit(visit);
-        visitFragment.setEnabled(true);
     }
 
     public void finishVisit() {
         setCurrentVisit(null);
-        visitFragment.setEnabled(false);
-        refreshHierarchy();
     }
 
     private void refreshHierarchy(){
-        moveTo(getLevel());
+        String level = getLevel();
+        if (level != null) {
+            moveTo(level);
+        }
     }
 
     @Override
@@ -585,6 +584,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             showValueFragment();
             valueFragment.populateData(currentResults);
         }
+
         updateToggleButton();
 
         List<Launcher> relevantLaunchers = new ArrayList<>();
@@ -594,6 +594,8 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             }
         }
         formFragment.createFormButtons(relevantLaunchers);
+
+        visitFragment.setEnabled(currentVisit != null);
 
         updateAttachedForms();
     }
