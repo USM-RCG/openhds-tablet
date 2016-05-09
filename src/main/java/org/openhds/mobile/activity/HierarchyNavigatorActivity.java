@@ -240,7 +240,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
         boolean isAdded = valueFragment.isAdded();
 
-        refreshHierarchy(levelAtDepth); // ensure listeners fire for the current level
+        moveTo(levelAtDepth);
 
         if (isAdded || !currentResults.isEmpty()) {
             showValueFragment();
@@ -539,12 +539,11 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     public void finishVisit() {
         setCurrentVisit(null);
         visitFragment.setEnabled(false);
-        refreshHierarchy(getLevel());
+        refreshHierarchy();
     }
 
-    private void refreshHierarchy(String level){
-        moveTo(config.getTopLevel());
-        moveTo(level);
+    private void refreshHierarchy(){
+        moveTo(getLevel());
     }
 
     @Override
