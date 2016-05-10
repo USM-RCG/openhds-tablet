@@ -449,35 +449,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     private void updatePathButtons() {
-        // Configure and show all hierarchy buttons for levels in path
-        for (String lvl : hierarchyPath.getLevels()) {
-            updateButtonLabel(lvl);
-            hierarchyButtonFragment.setVisible(lvl, true);
-        }
-
-        // Hide all buttons not in path
-        for (int i = hierarchyPath.depth(); i < config.getLevels().size(); i++) {
-            hierarchyButtonFragment.setVisible(config.getLevels().get(i), false);
-        }
-
-        // If we can go deeper, enable the next level (disabled with the level name)
-        String nextLevel = config.getLevels().get(hierarchyPath.depth());
-        if (!config.getBottomLevel().equals(nextLevel)) {
-            updateButtonLabel(nextLevel);
-            hierarchyButtonFragment.setVisible(nextLevel, true);
-        }
-    }
-
-    private void updateButtonLabel(String level) {
-        DataWrapper selected = hierarchyPath.get(level);
-        if (selected == null) {
-            String levelLabel = getString(config.getLevelLabel(level));
-            hierarchyButtonFragment.setButtonLabel(level, levelLabel, null, true);
-            hierarchyButtonFragment.setHighlighted(level, true);
-        } else {
-            hierarchyButtonFragment.setButtonLabel(level, selected.getName(), selected.getExtId(), false);
-            hierarchyButtonFragment.setHighlighted(level, false);
-        }
+        hierarchyButtonFragment.update(hierarchyPath);
     }
 
     private void updateData() {

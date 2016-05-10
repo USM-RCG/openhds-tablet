@@ -12,7 +12,9 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
 import org.openhds.mobile.R;
+import org.openhds.mobile.activity.HierarchyPath;
 import org.openhds.mobile.navconfig.NavigatorConfig;
+import org.openhds.mobile.repository.DataWrapper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +30,13 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 
 	private HierarchyButtonListener listener;
 	private Map<String, RelativeLayout> levelViews;
+	private NavigatorConfig config;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		config = NavigatorConfig.getInstance();
+	}
 
 	public interface HierarchyButtonListener {
 		void onHierarchyButtonClicked(String level);
@@ -71,14 +80,46 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 		return fragmentLayout;
 	}
 
-	public void setVisible(String level, boolean visible) {
+	public void update(HierarchyPath path) {
+
+		// Configure and show all hierarchy buttons for levels in path
+		for (String lvl : path.getLevels()) {
+			updateButton(lvl, path.get(lvl));
+			setVisible(lvl, true);
+		}
+
+		// Hide all buttons not in path
+		for (int i = path.depth(); i < config.getLevels().size(); i++) {
+			setVisible(config.getLevels().get(i), false);
+		}
+
+		// If we can go deeper, enable the next level (disabled with the level name)
+		String nextLevel = config.getLevels().get(path.depth());
+		if (!config.getBottomLevel().equals(nextLevel)) {
+			updateButton(nextLevel, path.get(nextLevel));
+			setVisible(nextLevel, true);
+		}
+	}
+
+	private void updateButton(String level, DataWrapper data) {
+		if (data == null) {
+			String levelLabel = getString(config.getLevelLabel(level));
+			setButtonLabel(level, levelLabel, null, true);
+			setHighlighted(level, true);
+		} else {
+			setButtonLabel(level, data.getName(), data.getExtId(), false);
+			setHighlighted(level, false);
+		}
+	}
+
+	private void setVisible(String level, boolean visible) {
 		RelativeLayout layout = levelViews.get(level);
 		if (layout != null) {
 			layout.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
 		}
 	}
 
-	public void setHighlighted(String level, boolean highlighted) {
+	private void setHighlighted(String level, boolean highlighted) {
 		RelativeLayout layout = levelViews.get(level);
 		if (layout != null) {
 			layout.setPressed(highlighted);
@@ -86,7 +127,7 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 		}
 	}
 
-	public void setButtonLabel(String level, String name, String id, boolean centerText) {
+	private void setButtonLabel(String level, String name, String id, boolean centerText) {
 		RelativeLayout layout = levelViews.get(level);
 		if (layout != null) {
 			configureTextWithPayload(getActivity(), layout, name, id, null, null, centerText);
