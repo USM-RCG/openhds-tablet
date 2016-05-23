@@ -299,7 +299,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                         showShortToast(this, "Update failed: " + ue.getMessage());
                     }
                 }
-                update();
                 if (consumerResult.hasFollowUp()) {
                     launchForm(consumerResult.getFollowUp(), consumerResult.getFollowUpHints());
                 }
@@ -307,6 +306,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                 showShortToast(this, "Read failed: " + e.getMessage());
             }
         }
+        update();
     }
 
     public HierarchyPath getHierarchyPath() {
