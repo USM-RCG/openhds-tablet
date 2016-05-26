@@ -1,6 +1,7 @@
 package org.openhds.mobile.navconfig.forms;
 
 import android.content.ContentResolver;
+import android.content.Context;
 
 import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 import org.openhds.mobile.activity.HierarchyPath;
@@ -18,6 +19,8 @@ import java.util.Map;
  * that dependency can be easily identified and, if necessary, decoupled.
  */
 public interface LaunchContext {
+
+    Context getApplicationContext();
 
     ContentResolver getContentResolver();
 

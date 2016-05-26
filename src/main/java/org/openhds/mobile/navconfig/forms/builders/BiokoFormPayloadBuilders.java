@@ -140,29 +140,22 @@ public class BiokoFormPayloadBuilders {
             PayloadTools.flagForReview(formPayload, false);
 
             DataWrapper mapArea = ctx.getHierarchyPath().get(MAP_AREA);
-            formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, mapArea.getName());
-
             DataWrapper sector = ctx.getHierarchyPath().get(SECTOR);
-            formPayload.put(ProjectFormFields.Locations.SECTOR_NAME, sector.getName());
-
-            // Assign the next sequential building number in sector
-            LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            Iterator<Location> locationIterator = locationGateway.getIterator(contentResolver,
-                    locationGateway.findByHierarchyDescendingBuildingNumber(sector.getUuid()));
-            int buildingNumber = 1;
-            if (locationIterator.hasNext()) {
-                buildingNumber = locationIterator.next().getBuildingNumber() + 1;
-            }
-            formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, formatBuilding(buildingNumber, true));
-
             DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
+
             String locationExtId = household.getExtId();
             String locationUuid = household.getUuid();
 
+            // Assign the next sequential building number in sector
+            LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
             Location existing = locationGateway.getFirst(contentResolver,locationGateway.findById(locationUuid));
+            int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(
+                    ctx.getApplicationContext(), mapArea.getName(), sector.getName());
 
+            formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, mapArea.getName());
+            formPayload.put(ProjectFormFields.Locations.SECTOR_NAME, sector.getName());
+            formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, formatBuilding(nextBuildingNumber, true));
             formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, formatFloor(1, true));
-
             formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);

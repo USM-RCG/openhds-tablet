@@ -31,61 +31,34 @@ public class CensusFormPayloadBuilders {
 
     private static void addNewLocationPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
-        DataWrapper sectorDataWrapper = ctx.getHierarchyPath().get(SECTOR);
         ContentResolver contentResolver = ctx.getContentResolver();
 
-        // sector extid is <hierarchyExtId>
-        // sector name is <sectorname>
+        DataWrapper sectorDataWrapper = ctx.getHierarchyPath().get(SECTOR);
+
         LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
         LocationHierarchy sector = locationHierarchyGateway.getFirst(contentResolver,
                 locationHierarchyGateway.findById(sectorDataWrapper.getUuid()));
+        LocationHierarchy mapArea = locationHierarchyGateway.getFirst(contentResolver,
+                locationHierarchyGateway.findById(sector.getParentUuid()));
+        LocationHierarchy locality = locationHierarchyGateway.getFirst(contentResolver,
+                locationHierarchyGateway.findById(mapArea.getParentUuid()));
+
+        LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
+        int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(
+                ctx.getApplicationContext(), mapArea.getName(), sector.getName());
+        String[] communityNameAndCode = locationGateway.communityForSector(ctx.getApplicationContext(), sector.getUuid());
+
+        formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
+        formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, formatBuilding(nextBuildingNumber, false));
+        formPayload.put(ProjectFormFields.Locations.COMMUNITY_NAME, communityNameAndCode[0]);
+        formPayload.put(ProjectFormFields.Locations.COMMUNITY_CODE, communityNameAndCode[1]);
         formPayload.put(ProjectFormFields.Locations.HIERARCHY_EXTID, sector.getExtId());
         formPayload.put(ProjectFormFields.Locations.HIERARCHY_UUID, sector.getUuid());
         formPayload.put(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID, sector.getParentUuid());
         formPayload.put(ProjectFormFields.Locations.SECTOR_NAME, sector.getName());
-
-        // map area name is <mapAreaName>
-        LocationHierarchy mapArea = locationHierarchyGateway.getFirst(contentResolver,
-                locationHierarchyGateway.findById(sector.getParentUuid()));
-        formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, mapArea.getName());
-
-        // locality is <localityName>
-        LocationHierarchy locality = locationHierarchyGateway.getFirst(contentResolver,
-                locationHierarchyGateway.findById(mapArea.getParentUuid()));
-        formPayload.put(ProjectFormFields.Locations.LOCALITY_NAME, locality.getName());
-
-        // default to 1 for <locationFloorNumber />
         formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, formatFloor(1, false));
-
-        LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-
-        // location with largest building number <locationBuildingNumber />
-        int buildingNumber;
-
-        // Name and code of community will default to empty String if this sector has no neighboring location
-        String communityName, communityCode;
-
-        Iterator<Location> locationIterator = locationGateway.getIterator(
-                contentResolver,
-                locationGateway.findByHierarchyDescendingBuildingNumber(sector.getUuid()));
-
-        if (locationIterator.hasNext()) {
-            Location highest = locationIterator.next();
-            buildingNumber = highest.getBuildingNumber() + 1;
-            communityName = highest.getCommunityName();
-            communityCode = highest.getCommunityCode();
-        } else {
-            buildingNumber = 1;
-            communityName = "";
-            communityCode = "";
-        }
-
-        // Building numbers (E) are left-padded to be at least 3 digits long
-        formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, formatBuilding(buildingNumber, false));
-        formPayload.put(ProjectFormFields.Locations.COMMUNITY_NAME, communityName);
-        formPayload.put(ProjectFormFields.Locations.COMMUNITY_CODE, communityCode);
-        formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
-
+        formPayload.put(ProjectFormFields.Locations.LOCALITY_NAME, locality.getName());
+        formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, mapArea.getName());
     }
 
     private static void addNewIndividualPayload(Map<String, String> formPayload, LaunchContext navigateActivity) {
