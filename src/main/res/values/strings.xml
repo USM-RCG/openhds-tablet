@@ -92,7 +92,6 @@
     <string name="sector_label">Sector</string>
     <string name="household_label">Household</string>
     <string name="individual_label">Individual</string>
-    <string name="bottom_label">Bottom</string>
     <string name="edit_individual_label">Edit Individual</string>
     <string name="house_of_prefix">House of</string>
 

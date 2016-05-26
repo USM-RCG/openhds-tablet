@@ -51,7 +51,7 @@ with (imports) {
     }
 
     var launchers = {
-        individual: [
+        household: [
             launcher({ label: 'bioko.bednetsLabel',
                        bind: 'bed_net',
                        filter: new BiokoFormFilters.DistributeBednets() }),
@@ -66,7 +66,7 @@ with (imports) {
     };
 
     var details = {
-        bottom: new IndividualDetailFragment()
+        individual: new IndividualDetailFragment()
     };
 
     var module = new NavigatorModule({

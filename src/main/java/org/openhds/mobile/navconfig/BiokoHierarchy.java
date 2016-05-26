@@ -24,7 +24,6 @@ public class BiokoHierarchy {
     public static final String SECTOR = "sector";
     public static final String HOUSEHOLD = "household";
     public static final String INDIVIDUAL = "individual";
-    public static final String BOTTOM = "bottom";
 
     private static final Map<String, Integer> levelLabels = new HashMap<>();
     private static final List<String> levels = new ArrayList<>();
@@ -40,7 +39,6 @@ public class BiokoHierarchy {
         levelLabels.put(SECTOR, R.string.sector_label);
         levelLabels.put(HOUSEHOLD, R.string.household_label);
         levelLabels.put(INDIVIDUAL, R.string.individual_label);
-        levelLabels.put(BOTTOM, R.string.bottom_label);
 
         levels.add(REGION);
         levels.add(PROVINCE);
@@ -51,7 +49,6 @@ public class BiokoHierarchy {
         levels.add(SECTOR);
         levels.add(HOUSEHOLD);
         levels.add(INDIVIDUAL);
-        levels.add(BOTTOM);
     }
 
     Map<String, Integer> getLevelLabels() {

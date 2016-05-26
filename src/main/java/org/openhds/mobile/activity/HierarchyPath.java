@@ -49,19 +49,6 @@ public class HierarchyPath implements Parcelable {
     }
 
     /**
-     * Returns the value at the deepest level in the path.
-     *
-     * @return deepest level in the path
-     */
-    public DataWrapper getLeaf() {
-        DataWrapper leaf = null;
-        for (Map.Entry<String, DataWrapper> pathElem : path.entrySet()) {
-            leaf = pathElem.getValue();
-        }
-        return leaf;
-    }
-
-    /**
      * After calling this, the path will only contain values leading up to the named level.
      *
      * @param level the level to traverse up to (the new path leaf)
@@ -78,6 +65,13 @@ public class HierarchyPath implements Parcelable {
                 pathIter.remove();
             }
         }
+    }
+
+    /**
+     * Resets to an empty path.
+     */
+    public void clear() {
+        path.clear();
     }
 
     /**

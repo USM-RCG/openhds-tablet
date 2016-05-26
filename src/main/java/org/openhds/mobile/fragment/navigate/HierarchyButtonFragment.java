@@ -94,8 +94,8 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 		}
 
 		// If we can go deeper, enable the next level (disabled with the level name)
-		String nextLevel = config.getLevels().get(path.depth());
-		if (!config.getBottomLevel().equals(nextLevel)) {
+		if (path.depth() < config.getLevels().size()) {
+			String nextLevel = config.getLevels().get(path.depth());
 			updateButton(nextLevel, path.get(nextLevel));
 			setVisible(nextLevel, true);
 		}

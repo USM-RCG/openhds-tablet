@@ -84,7 +84,6 @@
     <string name="sector_label">Sector</string>
     <string name="household_label">Hogar</string>
     <string name="individual_label">Individuo</string>
-    <string name="bottom_label">Fondo</string>
     <string name="edit_individual_label">Editar Individuo</string>
     <string name="house_of_prefix">Casa de</string>
 

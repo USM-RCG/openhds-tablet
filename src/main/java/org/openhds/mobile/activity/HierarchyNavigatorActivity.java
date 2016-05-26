@@ -65,6 +65,8 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private static final String BINDING_KEY = "bindingKey";
     private static final String FORM_DATA_KEY = "formDataKey";
 
+    private static final String ROOT_LEVEL = "root";
+
     private HierarchyButtonFragment hierarchyButtonFragment;
     private DataSelectionFragment valueFragment;
     private FormSelectionFragment formFragment;
@@ -400,43 +402,44 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     private void jumpUp(String level) {
-        if (!hierarchyPath.getLevels().contains(level)) {
+        boolean isRootLevel = ROOT_LEVEL.equals(level);
+        if (!(isRootLevel || hierarchyPath.getLevels().contains(level))) {
             throw new IllegalStateException("invalid level: " + level);
         }
-        hierarchyPath.truncate(level);
+        if (isRootLevel) {
+            hierarchyPath.clear();
+        } else {
+            hierarchyPath.truncate(level);
+        }
         update();
     }
 
     private void stepDown(DataWrapper selected) {
-        String currentLevel = getLevel(), selectedLevel = selected.getCategory();
-        if (!currentLevel.equals(selectedLevel)) {
-            throw new IllegalStateException("level mismatch: expected " + currentLevel + ", saw " + selectedLevel);
-        } else {
-            int currentIndex = config.getLevels().indexOf(currentLevel);
-            if (currentIndex >= 0 && currentIndex + 1 < config.getLevels().size()) {
-                hierarchyPath.down(currentLevel, selected);
-                update();
-            }
-        }
+        hierarchyPath.down(selected.getCategory(), selected);
+        update();
     }
 
     @Override
     public void onBackPressed() {
-        int levelIndex = config.getLevels().indexOf(getLevel());
-        if (levelIndex > 0) {
-            jumpUp(config.getLevels().get(levelIndex - 1));
+        int depth = hierarchyPath.depth();
+        if (depth > 0) {
+            jumpUp(depth == 1? ROOT_LEVEL : config.getLevels().get(depth - 1));
         } else {
             super.onBackPressed();
         }
     }
 
     private String getLevel() {
-        return config.getLevels().get(hierarchyPath.depth());
+        if (hierarchyPath.depth() <= 0) {
+            return ROOT_LEVEL;
+        } else {
+            return config.getLevels().get(hierarchyPath.depth() - 1);
+        }
     }
 
     private void update() {
         String level = getLevel();
-        if (!config.getLevels().contains(level)) {
+        if (!(ROOT_LEVEL.equals(level) || config.getLevels().contains(level))) {
             throw new IllegalStateException("no such level: " + level);
         }
         updatePathButtons();
@@ -454,14 +457,13 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     private void updateData() {
         int depth = hierarchyPath.depth();
-        String nextLevel = config.getLevels().get(depth);
-        if (depth == 0) {
-            currentResults = queryHelper.getAll(getContentResolver(), nextLevel);
+        String level = getLevel();
+        if (ROOT_LEVEL.equals(level)) {
+            currentResults = queryHelper.getAll(getContentResolver(), config.getTopLevel());
         } else {
-            String parentLevel = config.getLevels().get(depth - 1);
-            DataWrapper parentItem = hierarchyPath.get(parentLevel);
-            currentSelection = parentItem;
-            currentResults = queryHelper.getChildren(getContentResolver(), parentItem, nextLevel);
+            String nextLevel = depth >= config.getLevels().size() ? null : config.getLevels().get(depth);
+            currentSelection = hierarchyPath.get(level);
+            currentResults = queryHelper.getChildren(getContentResolver(), currentSelection, nextLevel);
         }
     }
 

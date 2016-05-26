@@ -67,12 +67,12 @@ with (imports) {
     }
 
     var launchers = {
-        household: [
+        sector: [
             launcher({ label: 'census.locationLabel',
                        bind: 'location',
                        filter: new CensusFormFilters.AddLocation() })
         ],
-        individual: [
+        household: [
             launcher({ label: 'census.evaluateLocationLabel',
                        bind: 'location_evaluation',
                        filter: new CensusFormFilters.EvaluateLocation() }),
@@ -86,7 +86,7 @@ with (imports) {
     };
 
     var details = {
-        bottom: new IndividualDetailFragment()
+        individual: new IndividualDetailFragment()
     };
 
     var module = new NavigatorModule({

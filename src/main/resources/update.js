@@ -85,7 +85,7 @@ with (imports) {
     }
 
     var launchers = {
-        individual: [
+        household: [
             launcher({ label: 'shared.visitLabel',
                        bind: 'visit',
                        filter: new UpdateFormFilters.StartAVisit()}),
@@ -96,7 +96,7 @@ with (imports) {
                        bind: 'in-migrant',
                        filter: new UpdateFormFilters.RegisterInMigration() })
         ],
-        bottom: [
+        individual: [
             launcher({ label: 'update.outMigrationLabel',
                        bind: 'out_migration',
                        filter: new UpdateFormFilters.DeathOrOutMigrationFilter() }),
@@ -113,7 +113,7 @@ with (imports) {
     };
 
     var details = {
-        bottom: new IndividualDetailFragment()
+        individual: new IndividualDetailFragment()
     };
 
     var module = new NavigatorModule({

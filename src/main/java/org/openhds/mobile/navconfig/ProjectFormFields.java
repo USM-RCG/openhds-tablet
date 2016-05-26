@@ -31,7 +31,6 @@ public class ProjectFormFields {
         public static final String SECTOR_STATE_FIELD_NAME = "sectorExtId";
         public static final String HOUSEHOLD_STATE_FIELD_NAME = "householdExtId";
         public static final String INDIVIDUAL_STATE_FIELD_NAME = "individualExtId";
-        public static final String BOTTOM_STATE_FIELD_NAME = "bottomExtId";
 
         private static final Map<String, String> levelExtIdFields = new HashMap<>();
 
@@ -45,7 +44,6 @@ public class ProjectFormFields {
             levelExtIdFields.put(SECTOR, SECTOR_STATE_FIELD_NAME);
             levelExtIdFields.put(HOUSEHOLD, HOUSEHOLD_STATE_FIELD_NAME);
             levelExtIdFields.put(INDIVIDUAL, INDIVIDUAL_STATE_FIELD_NAME);
-            levelExtIdFields.put(BOTTOM, BOTTOM_STATE_FIELD_NAME);
         }
 
         public static String getExtIdFieldForLevel(String level) {
