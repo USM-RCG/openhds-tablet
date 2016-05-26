@@ -216,7 +216,7 @@ public class ChecklistFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Integer tag = (Integer) v.getTag();
-            if (tag.equals(R.string.delete_button_label)) {
+            if (tag.equals(R.string.delete_button_label) && adapter.getCheckedForms().size() > 0) {
                 deleteConfirmDialog.show();
             } else if (tag.equals(R.string.supervisor_approve_selected)) {
                 processApproveSelectedRequest();
