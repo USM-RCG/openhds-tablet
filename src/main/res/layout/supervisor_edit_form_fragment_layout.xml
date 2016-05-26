@@ -13,6 +13,7 @@
             android:layout_alignTop="@+id/checklist_fragment_primary_button"
             android:layout_toRightOf="@+id/view"
             android:background="@drawable/form_selector"
+            android:textColor="@color/White"
             android:textAppearance="@android:style/TextAppearance.Large.Inverse"/>
 
     <View
@@ -32,16 +33,17 @@
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/view"
             android:background="@drawable/form_selector"
+            android:textColor="@color/White"
             android:textAppearance="@android:style/TextAppearance.Large.Inverse"/>
 
     <TextView
             android:id="@+id/checklist_fragment_listview_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:gravity="center"
+            android:padding="5dp"
             android:textAppearance="@android:style/TextAppearance.Large.Inverse"
-            android:background="@drawable/form_list_header_drawable_orange"/>
+            android:background="@drawable/form_list_header"/>
 
     <ListView
             android:id="@+id/checklist_fragment_listview"
@@ -49,11 +51,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/checklist_fragment_listview_header"
-            android:dividerHeight="15dp"
+            android:dividerHeight="5dp"
             android:divider="@android:color/transparent"
             android:listSelector="@android:color/transparent"
-            android:paddingTop="20dp"
-            android:paddingBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_above="@+id/checklist_fragment_primary_button"/>
 
 

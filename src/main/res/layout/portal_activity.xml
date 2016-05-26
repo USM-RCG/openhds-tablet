@@ -20,7 +20,7 @@
         android:baselineAligned="false"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:background="@drawable/gray_middle_column_drawable"
+        android:background="@drawable/gray_middle_column"
         />
 
     <FrameLayout

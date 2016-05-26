@@ -5,16 +5,16 @@
         <shape android:shape="rectangle">
             <corners android:radius="20dp"/>
             <padding android:bottom="10dp" android:right="10dp" android:left="10dp" android:top="10dp"/>
-            <solid android:color="@color/GrayButtonFillPressed"/>
-            <stroke android:width="3dp" android:color="@color/GrayButtonBorder"/>
+            <solid android:color="@color/LightGray"/>
+            <stroke android:width="3dp" android:color="@color/DarkGray"/>
         </shape>
     </item>
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
             <corners android:radius="20dp"/>
             <padding android:bottom="10dp" android:right="10dp" android:left="10dp" android:top="10dp"/>
-            <solid android:color="@color/GrayButtonFill"/>
-            <stroke android:width="3dp" android:color="@color/GrayButtonBorder"/>
+            <solid android:color="@color/Gray"/>
+            <stroke android:width="3dp" android:color="@color/DarkGray"/>
         </shape>
     </item>
 

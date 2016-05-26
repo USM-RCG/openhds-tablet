@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item android:drawable="@drawable/form_drawable_pressed_red" android:state_pressed="true"/>
-    <item android:drawable="@drawable/form_drawable_red" />
+    <item android:state_pressed="true">
+        <shape>
+            <corners android:radius="20dp"/>
+            <padding android:top="10dp" android:right="10dp" android:bottom="10dp" android:left="10dp"/>
+            <solid android:color="@color/LightRed"/>
+            <stroke android:width="3dp" android:color="@color/DarkRed"/>
+        </shape>
+    </item>
+    <item android:state_pressed="false">
+        <shape>
+            <corners android:radius="20dp"/>
+            <padding android:top="10dp" android:right="10dp" android:bottom="10dp" android:left="10dp"/>
+            <solid android:color="@color/Red"/>
+            <stroke android:width="3dp" android:color="@color/DarkRed"/>
+        </shape>
+    </item>
 
 </selector>

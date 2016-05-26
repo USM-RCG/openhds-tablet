@@ -82,9 +82,9 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
 
     private class ModuleListAdapter extends ArrayAdapter<EntityFieldSearch> {
 
-        private static final int LABEL_COLOR = R.color.BiokoDataFill;
-        private static final int VALUE_COLOR = R.color.BiokoDataBorder;
-        private static final int MISSING_COLOR = R.color.RedFillMissing;
+        private static final int LABEL_COLOR = R.color.Gray;
+        private static final int VALUE_COLOR = R.color.DarkGray;
+        private static final int MISSING_COLOR = R.color.Red;
 
         public ModuleListAdapter(Context context, int resource, List<EntityFieldSearch> objects) {
             super(context, resource, objects);

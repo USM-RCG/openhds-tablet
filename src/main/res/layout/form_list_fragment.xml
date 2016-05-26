@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textAppearance="@android:style/TextAppearance.Large.Inverse"
-        android:background="@drawable/form_list_header_drawable_orange"
+        android:background="@drawable/form_list_header"
         android:padding="5dp"
         android:visibility="gone"
         android:layout_marginBottom="5dp"/>

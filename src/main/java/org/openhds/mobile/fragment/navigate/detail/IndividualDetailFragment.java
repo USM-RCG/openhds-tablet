@@ -23,9 +23,9 @@ import static org.openhds.mobile.utilities.LayoutUtils.makeLargeTextWithValueAnd
 
 public class IndividualDetailFragment extends DetailFragment {
 
-    private static final int LABEL_COLOR = R.color.DetailLabel;
-    private static final int VALUE_COLOR = R.color.DetailValue;
-    private static final int MISSING_COLOR = R.color.DetailMissing;
+    private static final int LABEL_COLOR = R.color.DarkGray;
+    private static final int VALUE_COLOR = R.color.White;
+    private static final int MISSING_COLOR = R.color.Gray;
 
     private ScrollView detailContainer;
 

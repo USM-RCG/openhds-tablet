@@ -2,43 +2,32 @@
 <resources>
 
     <color name="White">#FFFFFF</color>
-    <color name="AliceBlue">#F0F8FF</color>
-    <color name="LightGreen">#90EE90</color>
-    <color name="DarkSeaGreen">#8FBC8F</color>
     <color name="Black">#000000</color>
 
-    <color name="AcidGray">#303030</color>
-    <color name="DarkerAcidGray">#222222</color>
+    <color name="DarkBlue">#576a80</color>
+    <color name="Blue">#7090a7</color>
+    <color name="LightBlue">#86b9c6</color>
 
-    <color name="RedBorder">#A30C1B</color>
-    <color name="RedFill">#D72E3E</color>
-    <color name="RedFillPressed">#F76775</color>
-    <color name="RedFillMissing">#B3D72E3E</color>
+    <color name="DarkGreen">#00871b</color>
+    <color name="Green">#00ac13</color>
+    <color name="LightGreen">#00dc1a</color>
 
-    <color name="BiokoDataBorder">#7b7b7b</color>
-    <color name="BiokoDataFill">#919191</color>
-    <color name="BiokoDataFillPressed">#ababab</color>
+    <color name="DarkRedOrange">#a1400e</color>
+    <color name="RedOrange">#d2531c</color>
+    <color name="LightRedOrange">#da9384</color>
 
-    <color name="FormHierarchyBorder">#A84F0D</color>
-    <color name="FormHierarchyFill">#DF7A30</color>
-    <color name="FormHierarchyFillPressed">#FFAA6B</color>
+    <color name="DarkPurple">#6b486e</color>
+    <color name="Purple">#9c67a9</color>
+    <color name="LightPurple">#af89cc</color>
 
-    <color name="GrayButtonBorder">#898989</color>
-    <color name="GrayButtonFill">#C6C6C6</color>
-    <color name="GrayButtonFillPressed">#FAF9F9</color>
-    <color name="GrayMiddleColumnFill">#E5E6E5</color>
-    <color name="GrayMiddleColumnFillLighter">#FAF9F9</color>
-    <color name="GrayListItemFill">#CDCDCC</color>
-    <color name="GrayListItemFillPressed">#FAF9F9</color>
-    <color name="DetailFragGray">#4D464646</color>
-    <color name="DetailLabel">#4D4D4D</color>
-    <color name="DetailValue">#FAF9F9</color>
-    <color name="DetailMissing">#898989</color>
-    <color name="IncompleteForm">#b3b3b3</color>
-    <color name="IncompleteFormPressed">#bfbfbf</color>
-    <color name="CompleteForm">#FFAA6B</color>
-    <color name="CompleteFormPressed">#ffb780</color>
-    <color name="InvalidForm">#F76775</color>
-    <color name="InvalidFormPressed">#f77c88</color>
+    <color name="DarkGray">#646464</color>
+    <color name="Gray">#919191</color>
+    <color name="LightGray">#b7b7b7</color>
+    <color name="LighterGray">#d7d7d7</color>
+    <color name="LightestGray">#ececec</color>
+
+    <color name="DarkRed">#962d38</color>
+    <color name="Red">#b12f2f</color>
+    <color name="LightRed">#e1737d</color>
 
 </resources>

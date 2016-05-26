@@ -100,7 +100,7 @@ public class ChecklistFragment extends Fragment {
             headerView = (TextView) fragmentLayout.findViewById(R.id.checklist_fragment_listview_header);
         }
         headerView.setText(R.string.checklist_fragment_listview_header_delete);
-        headerView.setBackgroundResource(R.drawable.form_list_header_drawable_red);
+        headerView.setBackgroundResource(R.drawable.form_list_header_red);
 
         if (null == primaryListButton) {
             primaryListButton = (Button) fragmentLayout.findViewById(R.id.checklist_fragment_primary_button);
@@ -133,7 +133,7 @@ public class ChecklistFragment extends Fragment {
             headerView = (TextView) fragmentLayout.findViewById(R.id.checklist_fragment_listview_header);
         }
         headerView.setText(R.string.checklist_fragment_listview_header_approve);
-        headerView.setBackgroundResource(R.drawable.form_list_header_drawable_orange);
+        headerView.setBackgroundResource(R.drawable.form_list_header);
 
         if (null == primaryListButton) {
             primaryListButton = (Button) fragmentLayout.findViewById(R.id.checklist_fragment_primary_button);

@@ -15,7 +15,7 @@
                 android:id="@+id/individual_detail_frag_extid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/detail_fragment_drawable"
+                android:background="@drawable/detail_fragment"
                 android:gravity="center"
                 android:textColor="@color/White"
                 android:textSize="25sp"
@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/detail_fragment_drawable"
+                android:background="@drawable/detail_fragment"
                 android:layout_marginBottom="5dp"/>
 
         <LinearLayout
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/detail_fragment_drawable"
+                android:background="@drawable/detail_fragment"
                 android:layout_marginBottom="5dp"/>
 
         <LinearLayout
@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/detail_fragment_drawable"/>
+                android:background="@drawable/detail_fragment"/>
 q
     </LinearLayout>
 

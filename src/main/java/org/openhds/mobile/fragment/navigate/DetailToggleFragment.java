@@ -79,7 +79,7 @@ public class DetailToggleFragment extends Fragment implements OnClickListener {
 				configureTextWithPayload(getActivity(), layout,
 						getString(R.string.toggle_fragment_button_show_children), null, null, null, true);
 			} else if (isEnabled && !isHighlighted) {
-				layout.setBackgroundColor(getResources().getColor(R.color.DarkSeaGreen));
+				layout.setBackgroundColor(getResources().getColor(R.color.DarkGreen));
 				configureTextWithPayload(getActivity(), layout,
 						getString(R.string.toggle_fragment_button_show_details), null, null, null, true);
 			}

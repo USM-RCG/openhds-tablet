@@ -40,7 +40,7 @@
             android:layout_width="0px"
             android:layout_height="match_parent"
             android:layout_weight="5"
-            android:background="@drawable/gray_middle_column_drawable">
+            android:background="@drawable/gray_middle_column">
         <fragment
             android:id="@+id/search_fragment"
             android:name="org.openhds.mobile.fragment.SearchFragment"

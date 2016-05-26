@@ -15,17 +15,13 @@ import android.widget.TextView;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.model.form.FormInstance;
-import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.ProjectFormFields;
-import org.openhds.mobile.navconfig.forms.Binding;
 
 import java.io.IOException;
 import java.util.Map;
 
-import static org.openhds.mobile.model.form.FormInstance.BINDING_MAP_KEY;
 import static org.openhds.mobile.model.form.FormInstance.getBinding;
 import static org.openhds.mobile.model.form.FormInstance.isBound;
-import static org.openhds.mobile.utilities.FormUtils.loadInstance;
 
 public class LayoutUtils {
 
@@ -113,7 +109,7 @@ public class LayoutUtils {
                     continue;
                 }
 
-                RelativeLayout relativeLayout = makeSmallTextWithValueAndLabel(activity, key, value, R.color.Black, R.color.AcidGray, R.color.AliceBlue);
+                RelativeLayout relativeLayout = makeSmallTextWithValueAndLabel(activity, key, value, R.color.Black, R.color.Black, R.color.LightRedOrange);
                 relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 payLoadContainer.addView(relativeLayout);
             }
@@ -127,7 +123,7 @@ public class LayoutUtils {
                     continue;
                 }
 
-                RelativeLayout relativeLayout = makeSmallTextWithValueAndLabel(activity, key, value, R.color.Black, R.color.AcidGray, R.color.AliceBlue);
+                RelativeLayout relativeLayout = makeSmallTextWithValueAndLabel(activity, key, value, R.color.Black, R.color.Black, R.color.LightRedOrange);
                 relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 payLoadContainer.addView(relativeLayout);
             }
@@ -221,7 +217,7 @@ public class LayoutUtils {
     public static void configureFormListItem(Context context, View view, FormInstance instance) {
 
         view.setBackgroundResource(
-                instance.isComplete()? R.drawable.form_list_drawable_orange : R.drawable.form_list_drawable_gray
+                instance.isComplete()? R.drawable.form_list : R.drawable.form_list_gray
         );
 
         try {
@@ -244,7 +240,7 @@ public class LayoutUtils {
             setText(view.findViewById(R.id.form_instance_list_date), date);
 
         } catch (IOException e) {
-            view.setBackgroundResource(R.drawable.form_list_drawable_red);
+            view.setBackgroundResource(R.drawable.form_list_red);
             Log.w(TAG, e.getMessage());
         }
     }
