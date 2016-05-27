@@ -58,15 +58,15 @@ public class LayoutUtils {
         RelativeLayout layout = (RelativeLayout) activity.getLayoutInflater().inflate(R.layout.generic_list_item_white_text, null);
         layout.setTag(layoutTag);
 
-        if (null != listener) {
+        if (listener != null) {
             layout.setOnClickListener(listener);
         }
 
-        if (null != container) {
+        if (container != null) {
             container.addView(layout);
         }
 
-        if (0 != background) {
+        if (background != 0) {
             layout.setBackgroundResource(background);
         }
 
@@ -84,14 +84,14 @@ public class LayoutUtils {
         TextView secondary = (TextView) layout.findViewById(R.id.secondary_text);
         LinearLayout payLoadContainer = (LinearLayout) layout.findViewById(R.id.pay_load_container);
 
-        if (null == primaryText) {
+        if (primaryText == null) {
             primary.setVisibility(View.GONE);
         } else {
             primary.setVisibility(View.VISIBLE);
             primary.setText(primaryText);
         }
 
-        if (null == secondaryText) {
+        if (secondaryText == null) {
             secondary.setVisibility(View.GONE);
         } else {
             secondary.setVisibility(View.VISIBLE);
@@ -101,11 +101,11 @@ public class LayoutUtils {
         // fill in payload strings, if any
         payLoadContainer.removeAllViews();
 
-        if (null != stringsPayload) {
+        if (stringsPayload != null) {
             for (Integer key : stringsPayload.keySet()) {
                 String value = stringsPayload.get(key);
 
-                if (null == value) {
+                if (value == null) {
                     continue;
                 }
 
@@ -115,11 +115,11 @@ public class LayoutUtils {
             }
         }
 
-        if (null != stringsIdsPayload) {
+        if (stringsIdsPayload != null) {
             for (Integer key : stringsIdsPayload.keySet()) {
                 String value = activity.getResources().getString(stringsIdsPayload.get(key));
 
-                if (null == value) {
+                if (value == null) {
                     continue;
                 }
 
@@ -129,7 +129,7 @@ public class LayoutUtils {
             }
         }
 
-        if (0 == payLoadContainer.getChildCount()) {
+        if (payLoadContainer.getChildCount() == 0) {
             payLoadContainer.setVisibility(View.GONE);
         } else {
             payLoadContainer.setVisibility(View.VISIBLE);
