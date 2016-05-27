@@ -53,7 +53,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
         }
 
         formListFragment = (FormListFragment) getFragmentManager().findFragmentById(R.id.portal_form_list);
-        formListFragment.setHeaderText(R.string.form_instance_list_header);
+        formListFragment.setHeaderText(R.string.unsent_forms);
     }
 
     @Override

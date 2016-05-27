@@ -196,9 +196,9 @@
 
     <string name="field_worker_home_menu_text">Encuestador Inicio</string>
     <string name="logout_menu_text">Terminar Sesión</string>
-    <string name="form_instance_list_header">Formularios Recientes</string>
-    <string name="checklist_fragment_listview_header_delete">Eliminar Impresos Recientes</string>
-    <string name="checklist_fragment_listview_header_approve">Aprobar Impresos Recientes</string>
+    <string name="unsent_forms">Formularios no enviado</string>
+    <string name="delete_unsent_forms">Eliminar formularios no enviado</string>
+    <string name="approve_unsent_forms">Aprobar formularios no enviado</string>
     <string name="form_instance_supervisor_approval">Aprobar</string>
     <string name="supervisor_checkbox_header">Aprobado</string>
     <string name="supervisor_approve_all">Aprobar Todo</string>
