@@ -61,8 +61,8 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		LinearLayout fragmentLayout = (LinearLayout) inflater.inflate(
-				R.layout.hierarchy_button_fragment, container, false);
+		View fragmentLayout = inflater.inflate(R.layout.hierarchy_button_fragment, container, false);
+		ViewGroup buttonLayout = (ViewGroup) fragmentLayout.findViewById(R.id.hierbutton_layout);
 
 		levelViews = new HashMap<>();
 
@@ -71,7 +71,7 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 			final String description = null;
 			RelativeLayout layout = makeTextWithPayload(getActivity(),
                     getResourceString(getActivity(), config.getLevelLabel(level)), description, level, this,
-					fragmentLayout, R.drawable.data_selector, null, null,true);
+					buttonLayout, R.drawable.data_selector, null, null,true);
 			LayoutParams params = (LayoutParams) layout.getLayoutParams();
 			params.setMargins(0, 0, 0, BUTTON_MARGIN);
 			levelViews.put(level, layout);
