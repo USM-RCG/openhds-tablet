@@ -25,7 +25,6 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
 
     public static final String ACTIVITY_MODULE_EXTRA = "ACTIVITY_MODULE_EXTRA";
 
-    private static final String TAG = FieldWorkerActivity.class.getSimpleName();
     public static final int MODULE_SPACING = 5;
 
     private FieldWorker currentFieldWorker;
