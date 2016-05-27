@@ -3,6 +3,8 @@ package org.openhds.mobile.fragment.navigate;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -119,11 +121,18 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 		}
 	}
 
-	private void setHighlighted(String level, boolean highlighted) {
-		RelativeLayout layout = levelViews.get(level);
+	private void setHighlighted(String level, final boolean highlighted) {
+		final RelativeLayout layout = levelViews.get(level);
 		if (layout != null) {
-			layout.setPressed(highlighted);
-			layout.setClickable(!highlighted);
+			// Defer setting pressed state so it isn't overwritten when run within click handler
+			Handler h = new Handler(Looper.getMainLooper());
+			h.post(new Runnable() {
+				@Override
+				public void run() {
+					layout.setClickable(!highlighted);
+					layout.setPressed(highlighted);
+				}
+			});
 		}
 	}
 
