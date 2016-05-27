@@ -135,22 +135,18 @@ public class LayoutUtils {
             payLoadContainer.setVisibility(View.VISIBLE);
         }
 
+        primary.setGravity(Gravity.CENTER);
+        primary.setPadding(0,0,0,0);
+
+        secondary.setGravity(Gravity.CENTER);
+        secondary.setPadding(0,0,0,0);
+
         if(centerText){
-            primary.setGravity(Gravity.CENTER);
-            secondary.setGravity(Gravity.CENTER);
             payLoadContainer.setGravity(Gravity.CENTER);
-            primary.setPadding(0,0,0,0);
-            secondary.setPadding(0,0,0,0);
             payLoadContainer.setPadding(0,0,0,0);
-
         } else {
-            primary.setGravity(Gravity.CENTER);
-            secondary.setGravity(Gravity.CENTER);
             payLoadContainer.setGravity(Gravity.NO_GRAVITY);
-            primary.setPadding(0,0,0,0);
-            secondary.setPadding(0,0,0,0);
             payLoadContainer.setPadding(15,0,0,0);
-
         }
     }
 
