@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
@@ -124,15 +123,14 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 	private void setHighlighted(String level, final boolean highlighted) {
 		final RelativeLayout layout = levelViews.get(level);
 		if (layout != null) {
-			// Defer setting pressed state so it isn't overwritten when run within click handler
-			Handler h = new Handler(Looper.getMainLooper());
-			h.post(new Runnable() {
+			// Defer setting pressed state so it isn't overwritten when run within a click handler
+			new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					layout.setClickable(!highlighted);
 					layout.setPressed(highlighted);
 				}
-			});
+			}, 100);
 		}
 	}
 
