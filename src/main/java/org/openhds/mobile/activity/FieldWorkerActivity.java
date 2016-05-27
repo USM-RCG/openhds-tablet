@@ -47,6 +47,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
         for (NavigatorModule module : NavigatorConfig.getInstance().getModules()) {
             RelativeLayout layout = makeTextWithPayload(this, module.getLaunchLabel(), module.getLaunchDescription(),
                     module.getActivityTitle(), this, activitiesLayout, R.drawable.data_selector, null, null, true);
+            layout.setPadding(10, 10, 10, 10);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
             params.setMargins(0, 0, 0, MODULE_SPACING);
         }
