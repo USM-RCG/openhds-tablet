@@ -13,12 +13,19 @@ import java.util.Set;
 /**
  * Represents a path in the navigation hierarchy that can be stored and retrieved automatically by Android.
  */
-public class HierarchyPath implements Parcelable {
+public class HierarchyPath implements Parcelable, Cloneable {
 
     LinkedHashMap<String, DataWrapper> path;
 
     public HierarchyPath() {
         path = new LinkedHashMap<>();
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        HierarchyPath copy = (HierarchyPath) super.clone();
+        copy.path = (LinkedHashMap) this.path.clone();
+        return copy;
     }
 
     /**

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,6 +42,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import static org.openhds.mobile.model.form.FormInstance.generate;
 import static org.openhds.mobile.model.form.FormInstance.lookup;
@@ -51,6 +53,8 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         HierarchyButtonFragment.HierarchyButtonListener, DetailToggleFragment.DetailToggleListener,
         DataSelectionFragment.DataSelectionListener, FormSelectionFragment.FormSelectionListener,
         VisitFragment.VisitFinishedListener {
+
+    private static final String TAG = HierarchyNavigatorActivity.class.getSimpleName();
 
     private static final int ODK_ACTIVITY_REQUEST_CODE = 0;
     private static final int SEARCH_ACTIVITY_REQUEST_CODE = 1;
@@ -64,6 +68,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private static final String VISIT_KEY = "visitKey";
     private static final String BINDING_KEY = "bindingKey";
     private static final String FORM_DATA_KEY = "formDataKey";
+    private static final String HISTORY_KEY = "navHistory";
 
     private static final String ROOT_LEVEL = "root";
 
@@ -84,12 +89,14 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private Map<String, String> data;
 
     private HierarchyPath hierarchyPath;
+    private Stack<HierarchyPath> pathHistory;
     private DataWrapper currentSelection;
     private List<DataWrapper> currentResults;
     private FieldWorker currentFieldWorker;
     private Visit currentVisit;
 
     private HashMap<MenuItem, String> menuItemTags;
+
     private ConsumerResult consumerResult;
 
     private QueryHelper queryHelper;
@@ -128,6 +135,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         valueFragment = new DataSelectionFragment();
 
         if (savedInstanceState == null) {
+            pathHistory = new Stack<>();
             HierarchyPath suppliedPath = intent.getParcelableExtra(HIERARCHY_PATH_KEY);
             if (suppliedPath != null) {
                 hierarchyPath = suppliedPath;
@@ -144,6 +152,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             String bindingName = savedInstanceState.getString(BINDING_KEY);
             binding = bindingName != null ? config.getBinding(bindingName) : null;
             data = (Map<String, String>) savedInstanceState.getSerializable(FORM_DATA_KEY);
+            pathHistory = (Stack<HierarchyPath>) savedInstanceState.getSerializable(HISTORY_KEY);
 
             DataSelectionFragment existingValueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
             if (existingValueFragment != null) {
@@ -164,6 +173,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         savedInstanceState.putSerializable(VISIT_KEY, getCurrentVisit());
         savedInstanceState.putString(BINDING_KEY, binding != null ? binding.getName() : null);
         savedInstanceState.putSerializable(FORM_DATA_KEY, data != null? new HashMap<>(data) : null);
+        savedInstanceState.putSerializable(HISTORY_KEY, pathHistory);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -406,6 +416,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         if (!(isRootLevel || hierarchyPath.getLevels().contains(level))) {
             throw new IllegalStateException("invalid level: " + level);
         }
+        pushHistory();
         if (isRootLevel) {
             hierarchyPath.clear();
         } else {
@@ -415,15 +426,24 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     private void stepDown(DataWrapper selected) {
+        pushHistory();
         hierarchyPath.down(selected.getCategory(), selected);
         update();
     }
 
+    private void pushHistory() {
+        try {
+            pathHistory.push((HierarchyPath) hierarchyPath.clone());
+        } catch (CloneNotSupportedException e) {
+            Log.e(TAG, "failed to push path history", e);
+        }
+    }
+
     @Override
     public void onBackPressed() {
-        int depth = hierarchyPath.depth();
-        if (depth > 0) {
-            jumpUp(depth == 1? ROOT_LEVEL : config.getLevels().get(depth - 1));
+        if (!pathHistory.empty()) {
+            hierarchyPath = pathHistory.pop();
+            update();
         } else {
             super.onBackPressed();
         }
