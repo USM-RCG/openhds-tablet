@@ -172,7 +172,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         savedInstanceState.putParcelableArrayList(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
         savedInstanceState.putSerializable(VISIT_KEY, getCurrentVisit());
         savedInstanceState.putString(BINDING_KEY, binding != null ? binding.getName() : null);
-        savedInstanceState.putSerializable(FORM_DATA_KEY, data != null? new HashMap<>(data) : null);
+        savedInstanceState.putSerializable(FORM_DATA_KEY, data != null ? new HashMap<>(data) : null);
         savedInstanceState.putSerializable(HISTORY_KEY, pathHistory);
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -245,7 +245,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     private Map<String, String> buildDataWithHints(Binding binding, Map<String, String> followUpHints) {
         Map<String, String> formData = binding.getBuilder().buildPayload(this);
-        if(followUpHints != null){
+        if (followUpHints != null) {
             formData.putAll(followUpHints);
         }
         return formData;
@@ -393,7 +393,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     private void showDetailFragment() {
         DetailFragment fragment = getDetailForCurrentLevel();
-        detailFragment = fragment == null? defaultDetailFragment : fragment;
+        detailFragment = fragment == null ? defaultDetailFragment : fragment;
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.middle_column, detailFragment, DETAIL_FRAGMENT_TAG)
