@@ -206,6 +206,7 @@
     <string name="sub_district_label">Subdistrito</string>
     <string name="launching_odk_collect">Iniciando ODKCollect…</string>
     <string name="delete_button_label">Eliminar</string>
+    <string name="find_label">Encontrar</string>
     <string name="edit_label">Editar</string>
     <string name="delete_label">Borrar</string>
     <string name="deleted">Borrado</string>
@@ -231,5 +232,6 @@
     <string name="sync_database_column_updated">Última Actualización</string>
     <string name="sync_database_column_fingerprint">Huella Digital</string>
     <string name="openhds_server_url_title">URL del servidor CIMS</string>
+    <string name="form_not_found">Formulario no encontrado</string>
 
 </resources>

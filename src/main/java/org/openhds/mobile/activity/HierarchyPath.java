@@ -1,12 +1,17 @@
 package org.openhds.mobile.activity;
 
+import android.content.ContentResolver;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.openhds.mobile.navconfig.NavigatorConfig;
+import org.openhds.mobile.navconfig.db.DefaultQueryHelper;
+import org.openhds.mobile.navconfig.db.QueryHelper;
 import org.openhds.mobile.repository.DataWrapper;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,6 +19,8 @@ import java.util.Set;
  * Represents a path in the navigation hierarchy that can be stored and retrieved automatically by Android.
  */
 public class HierarchyPath implements Parcelable, Cloneable {
+
+    public static final String PATH_SEPARATOR = "|";
 
     LinkedHashMap<String, DataWrapper> path;
 
@@ -89,13 +96,35 @@ public class HierarchyPath implements Parcelable, Cloneable {
     }
 
     public String toString() {
-        String SEP = "/";
-        StringBuilder b = new StringBuilder(SEP);
+        StringBuilder b = new StringBuilder();
         for (Map.Entry<String, DataWrapper> pathElem : path.entrySet()) {
-            b.append(pathElem.getValue().getExtId());
-            b.append(SEP);
+            if (b.length() > 0) {
+                b.append(PATH_SEPARATOR);
+            }
+            b.append(pathElem.getValue().getUuid());
         }
         return b.toString();
+    }
+
+    public static HierarchyPath fromString(ContentResolver resolver, String pathStr) {
+        HierarchyPath path = null;
+        List<String> configuredLevels = NavigatorConfig.getInstance().getLevels();
+        String[] pathPieces = pathStr.split("[" + PATH_SEPARATOR + "]");
+        if (pathPieces.length <= configuredLevels.size()) {
+            path = new HierarchyPath();
+            QueryHelper helper = DefaultQueryHelper.getInstance();
+            for (int i = 0; i < pathPieces.length; i++) {
+                String p = pathPieces[i], level = configuredLevels.get(i);
+                DataWrapper value = helper.get(resolver, level, p);
+                if (value != null) {
+                    path.down(level, value);
+                } else {
+                    path = null;
+                    break;
+                }
+            }
+        }
+        return path;
     }
 
     public boolean equals(Object other) {

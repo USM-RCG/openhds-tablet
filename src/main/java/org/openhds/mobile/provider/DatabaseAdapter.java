@@ -144,6 +144,25 @@ public class DatabaseAdapter {
         }
     }
 
+    public String findHierarchyForForm(String filePath) {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Set<String> formPaths = new HashSet<>();
+        String[] columns = {KEY_HIER_PATH};
+        String where = String.format("%s = ?", KEY_FORM_PATH);
+        String[] whereArgs = {filePath};
+        Cursor cursor = db.query(FORM_PATH_TABLE_NAME, columns, where, whereArgs, null, null, null);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToNext()) {
+                    return cursor.getString(cursor.getColumnIndex(KEY_HIER_PATH));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        return null;
+    }
+
     public Collection<String> findFormsForHierarchy(String hierarchyPath) {
         SQLiteDatabase db = helper.getReadableDatabase();
         Set<String> formPaths = new HashSet<>();

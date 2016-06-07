@@ -20,6 +20,7 @@ import org.openhds.mobile.navconfig.NavigatorModule;
 
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInstances;
+import static org.openhds.mobile.fragment.FieldWorkerLoginFragment.FIELD_WORKER_EXTRA;
 
 public class FieldWorkerActivity extends Activity implements OnClickListener {
 
@@ -53,6 +54,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
 
         formListFragment = (FormListFragment) getFragmentManager().findFragmentById(R.id.portal_form_list);
         formListFragment.setHeaderText(R.string.unsent_forms);
+        formListFragment.setFindEnabled(true);
     }
 
     @Override
@@ -78,7 +80,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(this, HierarchyNavigatorActivity.class);
-        intent.putExtra(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA, currentFieldWorker);
+        intent.putExtra(FIELD_WORKER_EXTRA, currentFieldWorker);
         String activityName = (String) v.getTag();
         intent.putExtra(ACTIVITY_MODULE_EXTRA, activityName);
         startActivity(intent);

@@ -62,7 +62,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private static final String VALUE_FRAGMENT_TAG = "hierarchyValueFragment";
     private static final String DETAIL_FRAGMENT_TAG = "hierarchyDetailFragment";
 
-    private static final String HIERARCHY_PATH_KEY = "hierarchyPathKeys";
+    public static final String HIERARCHY_PATH_KEY = "hierarchyPathKeys";
     private static final String CURRENT_RESULTS_KEY = "currentResults";
     private static final String CURRENT_SELECTION_KEY = "currentSelection";
     private static final String VISIT_KEY = "visitKey";

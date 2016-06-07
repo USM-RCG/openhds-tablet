@@ -231,6 +231,7 @@
     <string name="sub_district_label">Subdistrict</string>
     <string name="launching_odk_collect">Launching ODKCollect…</string>
     <string name="delete_button_label">Delete Selected</string>
+    <string name="find_label">Find</string>
     <string name="edit_label">Edit</string>
     <string name="delete_label">Delete</string>
     <string name="deleted">Deleted</string>
@@ -244,5 +245,6 @@
     <string name="supervisor_checkbox_header">Approved</string>
     <string name="syncDatabase">Synchronize Database</string>
     <string name="syncDatabaseMessage"> This procedure attempts to download CIMS entities to the device. Please be patient while the download is in progress.</string>
+    <string name="form_not_found">Form not found</string>
 
 </resources>

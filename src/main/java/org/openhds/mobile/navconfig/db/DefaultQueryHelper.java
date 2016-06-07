@@ -3,7 +3,7 @@ package org.openhds.mobile.navconfig.db;
 import android.content.ContentResolver;
 
 import org.openhds.mobile.repository.DataWrapper;
-import org.openhds.mobile.repository.GatewayRegistry;
+import org.openhds.mobile.repository.gateway.Gateway;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
 import org.openhds.mobile.repository.gateway.LocationGateway;
 import org.openhds.mobile.repository.gateway.LocationHierarchyGateway;
@@ -20,22 +20,16 @@ import static org.openhds.mobile.navconfig.BiokoHierarchy.PROVINCE;
 import static org.openhds.mobile.navconfig.BiokoHierarchy.REGION;
 import static org.openhds.mobile.navconfig.BiokoHierarchy.SECTOR;
 import static org.openhds.mobile.navconfig.BiokoHierarchy.SUBDISTRICT;
+import static org.openhds.mobile.repository.GatewayRegistry.getIndividualGateway;
+import static org.openhds.mobile.repository.GatewayRegistry.getLocationGateway;
+import static org.openhds.mobile.repository.GatewayRegistry.getLocationHierarchyGateway;
 
 public class DefaultQueryHelper implements QueryHelper {
 
-    // These must match the server data.
-    // They come from the name column of the locationhierarchylevel table
-    public static final String REGION_HIERARCHY_LEVEL_NAME = "Region";
-    public static final String PROVINCE_HIERARCHY_LEVEL_NAME = "Province";
-    public static final String DISTRICT_HIERARCHY_LEVEL_NAME = "District";
-    public static final String SUB_DISTRICT_HIERARCHY_LEVEL_NAME = "SubDistrict";
-    public static final String LOCALITY_HIERARCHY_LEVEL_NAME = "Locality";
-    public static final String MAP_AREA_HIERARCHY_LEVEL_NAME = "MapArea";
-    public static final String SECTOR_HIERARCHY_LEVEL_NAME = "Sector";
-
     private static QueryHelper instance;
 
-    protected DefaultQueryHelper() {}
+    protected DefaultQueryHelper() {
+    }
 
     public static synchronized QueryHelper getInstance() {
         if (instance == null) {
@@ -44,61 +38,95 @@ public class DefaultQueryHelper implements QueryHelper {
         return instance;
     }
 
-    public List<DataWrapper> getAll(ContentResolver contentResolver, String level) {
-        LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
+    private String getServerLevel(String level) {
         switch (level) {
             case REGION:
-                return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByLevel(REGION_HIERARCHY_LEVEL_NAME), level);
+                return "Region";
             case PROVINCE:
-                return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByLevel(PROVINCE_HIERARCHY_LEVEL_NAME), level);
+                return "Province";
             case DISTRICT:
-                return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByLevel(DISTRICT_HIERARCHY_LEVEL_NAME), level);
+                return "District";
             case SUBDISTRICT:
-                return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByLevel(SUB_DISTRICT_HIERARCHY_LEVEL_NAME), level);
+                return "SubDistrict";
             case LOCALITY:
-                return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByLevel(LOCALITY_HIERARCHY_LEVEL_NAME), level);
+                return "Locality";
             case MAP_AREA:
-                return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByLevel(MAP_AREA_HIERARCHY_LEVEL_NAME), level);
+                return "MapArea";
             case SECTOR:
-                return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByLevel(SECTOR_HIERARCHY_LEVEL_NAME), level);
-            case HOUSEHOLD:
-                LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-                return locationGateway.getQueryResultList(contentResolver, locationGateway.findAll(), level);
-            case INDIVIDUAL:
-                IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-                return individualGateway.getQueryResultList(contentResolver, individualGateway.findAll(), level);
+                return "Sector";
             default:
-                return new ArrayList<>();
+                return "UNKNOWN_SHOULD_NOT_EXIST";
         }
     }
 
-    public List<DataWrapper> getChildren(ContentResolver contentResolver, DataWrapper qr, String childLevel) {
-        switch (qr.getCategory()) {
+    private Gateway<?> getLevelGateway(String level) {
+        switch (level) {
             case REGION:
             case PROVINCE:
             case DISTRICT:
             case SUBDISTRICT:
             case LOCALITY:
             case MAP_AREA:
-                LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
-                return locationHierarchyGateway.getQueryResultList(contentResolver,
-                        locationHierarchyGateway.findByParent(qr.getUuid()), childLevel);
             case SECTOR:
-                LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-                return locationGateway.getQueryResultList(contentResolver,
-                        locationGateway.findByHierarchy(qr.getUuid()), childLevel);
+                return getLocationHierarchyGateway();
             case HOUSEHOLD:
-                IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-                return individualGateway.getQueryResultList(contentResolver,
-                        individualGateway.findByResidency(qr.getUuid()), childLevel);
+                return getLocationGateway();
+            case INDIVIDUAL:
+                return getIndividualGateway();
+            default:
+                return null;
+        }
+    }
+
+    public List<DataWrapper> getAll(ContentResolver resolver, String level) {
+        switch (level) {
+            case REGION:
+            case PROVINCE:
+            case DISTRICT:
+            case SUBDISTRICT:
+            case LOCALITY:
+            case MAP_AREA:
+            case SECTOR:
+                String serverLevel = getServerLevel(level);
+                LocationHierarchyGateway hierGateway = getLocationHierarchyGateway();
+                return hierGateway.getQueryResultList(resolver, hierGateway.findByLevel(serverLevel), level);
+            case HOUSEHOLD:
+            case INDIVIDUAL:
+                Gateway<?> gateway = getLevelGateway(level);
+                if (gateway != null) {
+                    return gateway.getQueryResultList(resolver, gateway.findAll(), level);
+                }
         }
         return new ArrayList<>();
     }
+
+    public List<DataWrapper> getChildren(ContentResolver resolver, DataWrapper parent, String childLevel) {
+        switch (parent.getCategory()) {
+            case REGION:
+            case PROVINCE:
+            case DISTRICT:
+            case SUBDISTRICT:
+            case LOCALITY:
+            case MAP_AREA:
+                LocationHierarchyGateway locationHierarchyGateway = getLocationHierarchyGateway();
+                return locationHierarchyGateway.getQueryResultList(resolver,
+                        locationHierarchyGateway.findByParent(parent.getUuid()), childLevel);
+            case SECTOR:
+                LocationGateway locationGateway = getLocationGateway();
+                return locationGateway.getQueryResultList(resolver,
+                        locationGateway.findByHierarchy(parent.getUuid()), childLevel);
+            case HOUSEHOLD:
+                IndividualGateway individualGateway = getIndividualGateway();
+                return individualGateway.getQueryResultList(resolver,
+                        individualGateway.findByResidency(parent.getUuid()), childLevel);
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public DataWrapper get(ContentResolver resolver, String level, String uuid) {
+        Gateway gw = getLevelGateway(level);
+        return gw != null ? gw.getFirstQueryResult(resolver, gw.findById(uuid), level) : null;
+    }
+
 }
