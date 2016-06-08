@@ -247,4 +247,9 @@
     <string name="syncDatabaseMessage"> This procedure attempts to download CIMS entities to the device. Please be patient while the download is in progress.</string>
     <string name="form_not_found">Form not found</string>
 
+    <string name="odk_required">ODK Required</string>
+    <string name="odk_install_prompt">This application requires Open Data Kit. Install it now?</string>
+    <string name="quit_label">Quit</string>
+    <string name="install_label">Install</string>
+
 </resources>

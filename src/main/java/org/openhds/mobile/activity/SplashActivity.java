@@ -8,6 +8,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
+import org.openhds.mobile.R;
 import org.openhds.mobile.provider.FormsProviderAPI;
 
 import java.util.List;
@@ -57,11 +58,11 @@ public class SplashActivity extends Activity {
         };
 
         new AlertDialog.Builder(this)
-                .setTitle("ODK Required")
+                .setTitle(R.string.odk_required)
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setMessage("This application requires Open Data Kit. Install it now?")
-                .setNegativeButton("Quit", clickListener)
-                .setPositiveButton("Install", clickListener)
+                .setMessage(R.string.odk_install_prompt)
+                .setNegativeButton(R.string.quit_label, clickListener)
+                .setPositiveButton(R.string.install_label, clickListener)
                 .setOnCancelListener(cancelListener)
                 .show();
     }

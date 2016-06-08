@@ -234,4 +234,9 @@
     <string name="openhds_server_url_title">URL del servidor CIMS</string>
     <string name="form_not_found">Formulario no encontrado</string>
 
+    <string name="odk_required">ODK Requerido</string>
+    <string name="odk_install_prompt">Esta aplicación requiere Open Data Kit. Instalarlo ahora?</string>
+    <string name="quit_label">Salir</string>
+    <string name="install_label">Instalar</string>
+
 </resources>
