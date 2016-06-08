@@ -109,18 +109,20 @@ public class HierarchyPath implements Parcelable, Cloneable {
     public static HierarchyPath fromString(ContentResolver resolver, String pathStr) {
         HierarchyPath path = null;
         List<String> configuredLevels = NavigatorConfig.getInstance().getLevels();
-        String[] pathPieces = pathStr.split("[" + PATH_SEPARATOR + "]");
-        if (pathPieces.length <= configuredLevels.size()) {
-            path = new HierarchyPath();
-            QueryHelper helper = DefaultQueryHelper.getInstance();
-            for (int i = 0; i < pathPieces.length; i++) {
-                String p = pathPieces[i], level = configuredLevels.get(i);
-                DataWrapper value = helper.get(resolver, level, p);
-                if (value != null) {
-                    path.down(level, value);
-                } else {
-                    path = null;
-                    break;
+        if (pathStr != null) {
+            String[] pathPieces = pathStr.split("[" + PATH_SEPARATOR + "]");
+            if (pathPieces.length <= configuredLevels.size()) {
+                path = new HierarchyPath();
+                QueryHelper helper = DefaultQueryHelper.getInstance();
+                for (int i = 0; i < pathPieces.length; i++) {
+                    String p = pathPieces[i], level = configuredLevels.get(i);
+                    DataWrapper value = helper.get(resolver, level, p);
+                    if (value != null) {
+                        path.down(level, value);
+                    } else {
+                        path = null;
+                        break;
+                    }
                 }
             }
         }
