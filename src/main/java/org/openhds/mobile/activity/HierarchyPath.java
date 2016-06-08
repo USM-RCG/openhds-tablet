@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * Represents a path in the navigation hierarchy that can be stored and retrieved automatically by Android.
@@ -127,6 +128,36 @@ public class HierarchyPath implements Parcelable, Cloneable {
             }
         }
         return path;
+    }
+
+    public static HierarchyPath fromLeaf(ContentResolver resolver, DataWrapper leafNode) {
+
+        QueryHelper helper = DefaultQueryHelper.getInstance();
+
+        // Traverse up the hierarchy using child-parent relationships, tracking the nodes traversed
+        Stack<DataWrapper> traversed = new Stack<>();
+        traversed.push(leafNode);
+        while (true) {
+            DataWrapper node = traversed.peek();
+            DataWrapper parent = helper.getParent(resolver, node.getCategory(), node.getUuid());
+            if (parent != null) {
+                traversed.push(parent);
+            } else {
+                break;
+            }
+        }
+
+        // Reconstruct a path from the traversed nodes if it reached the top of the hierarchy
+        if (NavigatorConfig.getInstance().getTopLevel().equals(traversed.peek().getCategory())) {
+            HierarchyPath path = new HierarchyPath();
+            while (!traversed.empty()) {
+                DataWrapper node = traversed.pop();
+                path.down(node.getCategory(), node);
+            }
+            return path;
+        }
+
+        return null;
     }
 
     public boolean equals(Object other) {

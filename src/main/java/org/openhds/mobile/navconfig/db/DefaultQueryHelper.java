@@ -2,6 +2,11 @@ package org.openhds.mobile.navconfig.db;
 
 import android.content.ContentResolver;
 
+import org.openhds.mobile.R;
+import org.openhds.mobile.model.core.Individual;
+import org.openhds.mobile.model.core.Location;
+import org.openhds.mobile.model.core.LocationHierarchy;
+import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.gateway.Gateway;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
@@ -127,6 +132,55 @@ public class DefaultQueryHelper implements QueryHelper {
     public DataWrapper get(ContentResolver resolver, String level, String uuid) {
         Gateway gw = getLevelGateway(level);
         return gw != null ? gw.getFirstQueryResult(resolver, gw.findById(uuid), level) : null;
+    }
+
+    private String getParentLevel(String level) {
+        switch (level) {
+            case PROVINCE:
+                return REGION;
+            case DISTRICT:
+                return PROVINCE;
+            case SUBDISTRICT:
+                return DISTRICT;
+            case LOCALITY:
+                return SUBDISTRICT;
+            case MAP_AREA:
+                return LOCALITY;
+            case SECTOR:
+                return MAP_AREA;
+            case HOUSEHOLD:
+                return SECTOR;
+            case INDIVIDUAL:
+                return HOUSEHOLD;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public DataWrapper getParent(ContentResolver resolver, String level, String uuid) {
+        LocationHierarchyGateway hierarchyGateway = getLocationHierarchyGateway();
+        LocationGateway locationGateway = getLocationGateway();
+        IndividualGateway individualGateway = getIndividualGateway();
+        String parentLevel = getParentLevel(level);
+        switch (level) {
+            case PROVINCE:
+            case DISTRICT:
+            case SUBDISTRICT:
+            case LOCALITY:
+            case MAP_AREA:
+            case SECTOR:
+                LocationHierarchy lh = hierarchyGateway.getFirst(resolver, hierarchyGateway.findById(uuid));
+                return get(resolver, parentLevel, lh.getParentUuid());
+            case HOUSEHOLD:
+                Location l = locationGateway.getFirst(resolver, locationGateway.findById(uuid));
+                return get(resolver, parentLevel, l.getHierarchyUuid());
+            case INDIVIDUAL:
+                Individual i = individualGateway.getFirst(resolver, individualGateway.findById(uuid));
+                return get(resolver, parentLevel, i.getCurrentResidenceUuid());
+            default:
+                return null;
+        }
     }
 
 }

@@ -14,4 +14,6 @@ public interface QueryHelper {
 
     DataWrapper get(ContentResolver resolver, String level, String uuid);
 
+    DataWrapper getParent(ContentResolver resolver, String level, String uuid);
+
 }
