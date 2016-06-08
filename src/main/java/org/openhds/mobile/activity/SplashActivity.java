@@ -1,8 +1,16 @@
 package org.openhds.mobile.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
+
+import org.openhds.mobile.provider.FormsProviderAPI;
+
+import java.util.List;
 
 import static org.openhds.mobile.utilities.FormUtils.migrateTo23Storage;
 
@@ -12,12 +20,66 @@ import static org.openhds.mobile.utilities.FormUtils.migrateTo23Storage;
  * actual opening activity is available as soon as it is ready.
  */
 public class SplashActivity extends Activity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!isODKInstalled()) {
+            promptODKInstall();
+        } else {
+            startApp();
+        }
+    }
+
+    private void promptODKInstall() {
+
+        DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    launchODKMarketInstall();
+                }
+                finish();
+            }
+
+            private void launchODKMarketInstall() {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("market://details?id=org.odk.collect.android"));
+                startActivity(intent);
+            }
+        };
+
+        DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                finish();
+            }
+        };
+
+        new AlertDialog.Builder(this)
+                .setTitle("ODK Required")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setMessage("This application requires Open Data Kit. Install it now?")
+                .setNegativeButton("Quit", clickListener)
+                .setPositiveButton("Install", clickListener)
+                .setOnCancelListener(cancelListener)
+                .show();
+    }
+
+    private void startApp() {
         migrateTo23Storage(this);
+        launchLogin();
+    }
+
+    private void launchLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private boolean isODKInstalled() {
+        Intent odkFormsIntent = new Intent(Intent.ACTION_EDIT, FormsProviderAPI.FormsColumns.CONTENT_URI);
+        List<ResolveInfo> intentMatches = getPackageManager().queryIntentActivities(odkFormsIntent, 0);
+        return !intentMatches.isEmpty();
     }
 }
