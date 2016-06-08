@@ -16,6 +16,7 @@ import static org.openhds.mobile.utilities.FormUtils.formFile;
 import static org.openhds.mobile.utilities.FormUtils.generateODKForm;
 import static org.openhds.mobile.utilities.FormUtils.loadInstance;
 import static org.openhds.mobile.utilities.FormUtils.updateInstance;
+import static org.openhds.mobile.utilities.OdkCollectHelper.getBlankInstance;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getInstance;
 
 public class FormInstance implements Serializable {
@@ -153,7 +154,8 @@ public class FormInstance implements Serializable {
      * @throws IOException
      */
     public static Uri generate(ContentResolver resolver, Binding binding, Map<String, String> data) throws IOException {
-        return generateODKForm(resolver, binding, data, formFile(binding.getForm(), new Date()));
+        FormInstance template = getBlankInstance(resolver, binding.getForm());
+        return generateODKForm(resolver, binding, template, data, formFile(template.getFileName(), new Date()));
     }
 
 }

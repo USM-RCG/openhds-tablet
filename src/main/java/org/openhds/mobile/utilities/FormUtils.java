@@ -106,7 +106,7 @@ public class FormUtils {
      * @return the common base name used in file/dir name construction
      */
     private static String formBaseName(String name, Date time) {
-        return String.format("%s%s", name, formatTime(time));
+        return String.format("%s_%s", name, formatTime(time));
     }
 
     /**
@@ -125,7 +125,7 @@ public class FormUtils {
     }
 
     public static File getInstancesDir() {
-        return new File(getODKDir(), "cims-instances");
+        return new File(getODKDir(), "instances");
     }
 
     /**
@@ -336,10 +336,9 @@ public class FormUtils {
      * @return the content {@link Uri} of the form registered with ODK
      * @throws IOException
      */
-    public static Uri generateODKForm(ContentResolver resolver, Binding binding, Map<String, String> values, File location)
+    public static Uri generateODKForm(ContentResolver resolver, Binding binding, FormInstance template, Map<String, String> values, File location)
             throws IOException {
         String formName = binding.getForm(), bindName = binding.getName();
-        FormInstance template = getBlankInstance(resolver, formName);
         if (template != null) {
             String tName = template.getFormName(), tVersion = template.getFormVersion(), tPath = template.getFilePath();
             File tFile = new File(tPath);

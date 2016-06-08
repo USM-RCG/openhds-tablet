@@ -120,7 +120,9 @@ public class OdkCollectHelper {
         FormInstance metadata = null;
         final String[] columns = {FormsProviderAPI.FormsColumns.JR_FORM_ID,
                 FormsProviderAPI.FormsColumns.FORM_FILE_PATH,
-                FormsProviderAPI.FormsColumns.JR_VERSION};
+                FormsProviderAPI.FormsColumns.JR_VERSION,
+                FormsProviderAPI.FormsColumns.DISPLAY_NAME
+        };
         final String where = FormsProviderAPI.FormsColumns.JR_FORM_ID + " = ?";
         final String[] whereArgs = {formId};
         Cursor cursor = resolver.query(FormsProviderAPI.FormsColumns.CONTENT_URI, columns, where, whereArgs, null);
@@ -131,6 +133,7 @@ public class OdkCollectHelper {
                     metadata.setFormName(cursor.getString(0));
                     metadata.setFilePath(cursor.getString(1));
                     metadata.setFormVersion(cursor.getString(2));
+                    metadata.setFileName(cursor.getString(3));
                 }
             } finally {
                 cursor.close();
