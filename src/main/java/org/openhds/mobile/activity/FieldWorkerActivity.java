@@ -21,6 +21,7 @@ import org.openhds.mobile.navconfig.NavigatorModule;
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInstances;
 import static org.openhds.mobile.fragment.FieldWorkerLoginFragment.FIELD_WORKER_EXTRA;
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 public class FieldWorkerActivity extends Activity implements OnClickListener {
 
@@ -69,7 +70,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
         Intent intent = new Intent();
         switch (item.getItemId()) {
             case R.id.logout_menu_button:
-                intent.setClass(this, LoginActivity.class);
+                intent.setClass(this, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 return true;
             default:

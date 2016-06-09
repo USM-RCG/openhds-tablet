@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static org.openhds.mobile.model.form.FormInstance.generate;
 import static org.openhds.mobile.model.form.FormInstance.lookup;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
@@ -209,7 +210,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         Intent intent = new Intent();
         switch (item.getItemId()) {
             case R.id.logout_menu_button:
-                intent.setClass(this, LoginActivity.class);
+                intent.setClass(this, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             case R.id.field_worker_home_menu_button:
                 intent.setClass(this, FieldWorkerActivity.class);
