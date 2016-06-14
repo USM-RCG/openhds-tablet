@@ -65,7 +65,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     public static final String HIERARCHY_PATH_KEY = "hierarchyPathKeys";
     private static final String CURRENT_RESULTS_KEY = "currentResults";
-    private static final String CURRENT_SELECTION_KEY = "currentSelection";
     private static final String VISIT_KEY = "visitKey";
     private static final String BINDING_KEY = "bindingKey";
     private static final String FORM_DATA_KEY = "formDataKey";
@@ -91,8 +90,8 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     private HierarchyPath hierarchyPath;
     private Stack<HierarchyPath> pathHistory;
-    private DataWrapper currentSelection;
     private List<DataWrapper> currentResults;
+
     private FieldWorker currentFieldWorker;
     private Visit currentVisit;
 
@@ -147,7 +146,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                     .commit();
         } else {
             hierarchyPath = savedInstanceState.getParcelable(HIERARCHY_PATH_KEY);
-            currentSelection = savedInstanceState.getParcelable(CURRENT_SELECTION_KEY);
             currentResults = savedInstanceState.getParcelableArrayList(CURRENT_RESULTS_KEY);
             currentVisit = (Visit) savedInstanceState.getSerializable(VISIT_KEY);
             String bindingName = savedInstanceState.getString(BINDING_KEY);
@@ -169,7 +167,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelable(HIERARCHY_PATH_KEY, hierarchyPath);
-        savedInstanceState.putParcelable(CURRENT_SELECTION_KEY, currentSelection);
         savedInstanceState.putParcelableArrayList(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
         savedInstanceState.putSerializable(VISIT_KEY, getCurrentVisit());
         savedInstanceState.putString(BINDING_KEY, binding != null ? binding.getName() : null);
@@ -327,7 +324,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     public DataWrapper getCurrentSelection() {
-        return currentSelection;
+        return hierarchyPath.get(getLevel());
     }
 
     public FieldWorker getCurrentFieldWorker() {
@@ -483,8 +480,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             currentResults = queryHelper.getAll(getContentResolver(), config.getTopLevel());
         } else {
             String nextLevel = depth >= config.getLevels().size() ? null : config.getLevels().get(depth);
-            currentSelection = hierarchyPath.get(level);
-            currentResults = queryHelper.getChildren(getContentResolver(), currentSelection, nextLevel);
+            currentResults = queryHelper.getChildren(getContentResolver(), getCurrentSelection(), nextLevel);
         }
     }
 
