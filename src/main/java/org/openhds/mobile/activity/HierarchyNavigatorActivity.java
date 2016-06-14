@@ -57,7 +57,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     private static final String TAG = HierarchyNavigatorActivity.class.getSimpleName();
 
-    private static final int ODK_ACTIVITY_REQUEST_CODE = 0;
+    public static final int ODK_ACTIVITY_REQUEST_CODE = 0;
     private static final int SEARCH_ACTIVITY_REQUEST_CODE = 1;
 
     private static final String VALUE_FRAGMENT_TAG = "hierarchyValueFragment";
@@ -278,6 +278,8 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                 case SEARCH_ACTIVITY_REQUEST_CODE:
                     launchNewFormAfterSearch(data);
                     break;
+                default:
+                    super.onActivityResult(requestCode, resultCode, data);
             }
         }
     }

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ import static android.view.View.VISIBLE;
 import static java.util.Arrays.asList;
 import static org.openhds.mobile.activity.FieldWorkerActivity.ACTIVITY_MODULE_EXTRA;
 import static org.openhds.mobile.activity.HierarchyNavigatorActivity.HIERARCHY_PATH_KEY;
+import static org.openhds.mobile.activity.HierarchyNavigatorActivity.ODK_ACTIVITY_REQUEST_CODE;
 import static org.openhds.mobile.fragment.FieldWorkerLoginFragment.FIELD_WORKER_EXTRA;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
@@ -101,7 +103,7 @@ public class FormListFragment extends Fragment {
     private void editForm(FormInstance selected) {
         Uri uri = Uri.parse(selected.getUriString());
         showShortToast(getActivity(), R.string.launching_odk_collect);
-        startActivityForResult(editIntent(uri), 0);
+        getActivity().startActivityForResult(editIntent(uri), ODK_ACTIVITY_REQUEST_CODE);
     }
 
     private void removeForm(FormInstance selected) {
