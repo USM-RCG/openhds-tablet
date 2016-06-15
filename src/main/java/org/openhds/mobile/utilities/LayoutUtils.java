@@ -218,7 +218,7 @@ public class LayoutUtils {
 
         try {
 
-            Map<String, String> data = instance.get();
+            Map<String, String> data = instance.load();
 
             // Set form name based on its embedded binding
             String formTypeName = isBound(data)? getBinding(data).getLabel() : instance.getFormName();

@@ -299,12 +299,12 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         if (instance.isComplete()) {
             FormPayloadConsumer consumer = binding.getConsumer();
             try {
-                Map<String, String> formData = instance.get();
+                Map<String, String> formData = instance.load();
                 consumerResult = consumer.consumeFormPayload(formData, this);
                 if (consumerResult.hasInstanceUpdates()) {
                     consumer.augmentInstancePayload(formData);
                     try {
-                        instance.put(formData);
+                        instance.store(formData);
                     } catch (IOException ue) {
                         showShortToast(this, "Update failed: " + ue.getMessage());
                     }

@@ -99,7 +99,7 @@ public class FormInstance implements Serializable {
      * @param data key/value pairs corresponding to element names to update and their values
      * @throws IOException
      */
-    public void put(Map<String, String> data) throws IOException {
+    public void store(Map<String, String> data) throws IOException {
         updateInstance(data, filePath);
     }
 
@@ -109,7 +109,7 @@ public class FormInstance implements Serializable {
      * @return a map of key/value pairs corresponding to elements and their values
      * @throws IOException
      */
-    public Map<String, String> get() throws IOException {
+    public Map<String, String> load() throws IOException {
         return loadInstance(filePath);
     }
 
