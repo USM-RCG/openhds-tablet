@@ -27,13 +27,16 @@ import static org.openhds.mobile.utilities.LayoutUtils.makeLargeTextWithValueAnd
 public class EntitySearchActivity extends Activity implements DataSelectionFragment.DataSelectionListener {
 
     public static final String SEARCH_MODULES_KEY = "entitySearchModules";
+    public static final String FORM_BINDING_KEY = "entitySearchFormBinding";
 
     private SearchFragment searchFragment;
     private DataSelectionFragment selectionFragment;
-    private ArrayList<EntityFieldSearch> searchModules;
     private EntityFieldSearch selectedModule;
     private ModuleListAdapter moduleListAdapter;
     private ListView listView;
+
+    private String formBinding;
+    private ArrayList<EntityFieldSearch> searchModules;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +51,12 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
         selectionFragment = (DataSelectionFragment) getFragmentManager().findFragmentById(R.id.search_selection_fragment);
 
         if (savedInstanceState == null) {
-            // what does the calling activity need the user to search for?
-            searchModules = getIntent().getParcelableArrayListExtra(SEARCH_MODULES_KEY);
+            Intent intent = getIntent();
+            searchModules = intent.getParcelableArrayListExtra(SEARCH_MODULES_KEY);
+            formBinding = intent.getStringExtra(FORM_BINDING_KEY);
         } else {
-            // recall pending and completed searches
             searchModules = savedInstanceState.getParcelableArrayList(SEARCH_MODULES_KEY);
+            formBinding = savedInstanceState.getString(FORM_BINDING_KEY);
         }
 
         searchFragment.setResultsHandler(new SearchResultsHandler());
@@ -69,8 +73,8 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        // remember pending and completed searches
         savedInstanceState.putParcelableArrayList(SEARCH_MODULES_KEY, searchModules);
+        savedInstanceState.putString(FORM_BINDING_KEY, formBinding);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -126,6 +130,7 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
         public void onClick(View view) {
             Intent data = new Intent();
             data.putParcelableArrayListExtra(SEARCH_MODULES_KEY, searchModules);
+            data.putExtra(FORM_BINDING_KEY, formBinding);
             setResult(RESULT_OK, data);
             finish();
         }
