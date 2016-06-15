@@ -267,6 +267,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             switch (requestCode) {
                 case ODK_ACTIVITY_REQUEST_CODE:
                     handleFormResult(data);
+                    update();
                     break;
                 case SEARCH_ACTIVITY_REQUEST_CODE:
                     launchNewFormAfterSearch(data);
@@ -318,7 +319,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         } catch (IOException e) {
             showShortToast(this, "Read failed: " + e.getMessage());
         }
-        update();
     }
 
     public HierarchyPath getHierarchyPath() {
