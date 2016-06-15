@@ -37,6 +37,7 @@ import org.openhds.mobile.repository.search.EntityFieldSearch;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -67,7 +68,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     public static final String HIERARCHY_PATH_KEY = "hierarchyPathKeys";
     private static final String CURRENT_RESULTS_KEY = "currentResults";
     private static final String VISIT_KEY = "visitKey";
-    private static final String FORM_DATA_KEY = "formDataKey";
     private static final String HISTORY_KEY = "navHistory";
 
     private static final String ROOT_LEVEL = "root";
@@ -84,8 +84,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private NavigatorConfig config;
     private String currentModuleName;
     private NavigatorModule currentModule;
-
-    private Map<String, String> data;
 
     private HierarchyPath hierarchyPath;
     private Stack<HierarchyPath> pathHistory;
@@ -147,7 +145,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             hierarchyPath = savedInstanceState.getParcelable(HIERARCHY_PATH_KEY);
             currentResults = savedInstanceState.getParcelableArrayList(CURRENT_RESULTS_KEY);
             currentVisit = (Visit) savedInstanceState.getSerializable(VISIT_KEY);
-            data = (Map<String, String>) savedInstanceState.getSerializable(FORM_DATA_KEY);
             pathHistory = (Stack<HierarchyPath>) savedInstanceState.getSerializable(HISTORY_KEY);
 
             DataSelectionFragment existingValueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
@@ -166,7 +163,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         savedInstanceState.putParcelable(HIERARCHY_PATH_KEY, hierarchyPath);
         savedInstanceState.putParcelableArrayList(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
         savedInstanceState.putSerializable(VISIT_KEY, getCurrentVisit());
-        savedInstanceState.putSerializable(FORM_DATA_KEY, data != null ? new HashMap<>(data) : null);
         savedInstanceState.putSerializable(HISTORY_KEY, pathHistory);
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -227,11 +223,11 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     private void launchForm(Binding binding, Map<String, String> followUpFormHints) {
         if (binding != null) {
-            this.data = buildDataWithHints(binding, followUpFormHints);
+            Map<String, String> data = buildDataWithHints(binding, followUpFormHints);
             if (binding.requiresSearch()) {
-                launchSearch(binding);
+                launchSearch(binding, data);
             } else {
-                launchNewForm(binding);
+                launchNewForm(binding, data);
             }
         }
     }
@@ -244,15 +240,16 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         return formData;
     }
 
-    private void launchSearch(Binding binding) {
+    private void launchSearch(Binding binding, Map<String, String> data) {
         Intent intent = new Intent(this, EntitySearchActivity.class);
         List<EntityFieldSearch> searchModules = binding.getSearches();
         intent.putParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY, new ArrayList<>(searchModules));
         intent.putExtra(EntitySearchActivity.FORM_BINDING_KEY, binding.getName());
+        intent.putExtra(EntitySearchActivity.ORIGINAL_DATA_KEY, (Serializable) data);
         startActivityForResult(intent, SEARCH_ACTIVITY_REQUEST_CODE);
     }
 
-    private void launchNewForm(Binding binding) {
+    private void launchNewForm(Binding binding, Map<String, String> data) {
         try {
             showShortToast(this, R.string.launching_odk_collect);
             startActivityForResult(editIntent(generate(getContentResolver(), binding, data)), ODK_ACTIVITY_REQUEST_CODE);
@@ -279,11 +276,12 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private void launchNewFormAfterSearch(Intent data) {
         Binding binding = config.getBinding(data.getStringExtra(EntitySearchActivity.FORM_BINDING_KEY));
         if (binding != null) {
+            Map<String, String> formData = (Map<String, String>) data.getSerializableExtra(EntitySearchActivity.ORIGINAL_DATA_KEY);
             List<EntityFieldSearch> searchModules = data.getParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY);
             for (EntityFieldSearch plugin : searchModules) {
-                this.data.put(plugin.getName(), plugin.getValue());
+                formData.put(plugin.getName(), plugin.getValue());
             }
-            launchNewForm(binding);
+            launchNewForm(binding, formData);
         } else {
             showShortToast(this, "failed to launch form: unknown binding");
         }

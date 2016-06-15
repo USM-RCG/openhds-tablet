@@ -11,12 +11,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.DataSelectionFragment;
 import org.openhds.mobile.fragment.SearchFragment;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.search.EntityFieldSearch;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
 
     public static final String SEARCH_MODULES_KEY = "entitySearchModules";
     public static final String FORM_BINDING_KEY = "entitySearchFormBinding";
+    public static final String ORIGINAL_DATA_KEY = "entitySearchOriginalData";
 
     private SearchFragment searchFragment;
     private DataSelectionFragment selectionFragment;
@@ -36,6 +39,7 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
     private ListView listView;
 
     private String formBinding;
+    private Serializable originalData;
     private ArrayList<EntityFieldSearch> searchModules;
 
     @Override
@@ -54,9 +58,11 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
             Intent intent = getIntent();
             searchModules = intent.getParcelableArrayListExtra(SEARCH_MODULES_KEY);
             formBinding = intent.getStringExtra(FORM_BINDING_KEY);
+            originalData = intent.getSerializableExtra(ORIGINAL_DATA_KEY);
         } else {
             searchModules = savedInstanceState.getParcelableArrayList(SEARCH_MODULES_KEY);
             formBinding = savedInstanceState.getString(FORM_BINDING_KEY);
+            originalData = savedInstanceState.getSerializable(ORIGINAL_DATA_KEY);
         }
 
         searchFragment.setResultsHandler(new SearchResultsHandler());
@@ -75,6 +81,7 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelableArrayList(SEARCH_MODULES_KEY, searchModules);
         savedInstanceState.putString(FORM_BINDING_KEY, formBinding);
+        savedInstanceState.putSerializable(ORIGINAL_DATA_KEY, originalData);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -131,6 +138,7 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
             Intent data = new Intent();
             data.putParcelableArrayListExtra(SEARCH_MODULES_KEY, searchModules);
             data.putExtra(FORM_BINDING_KEY, formBinding);
+            data.putExtra(ORIGINAL_DATA_KEY, originalData);
             setResult(RESULT_OK, data);
             finish();
         }
