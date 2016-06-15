@@ -91,11 +91,9 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     private FieldWorker currentFieldWorker;
     private Visit currentVisit;
-
-    private HashMap<MenuItem, String> menuItemTags;
-
     private ConsumerResult consumerResult;
 
+    private HashMap<MenuItem, String> menuItemTags;
     private QueryHelper queryHelper;
 
 
