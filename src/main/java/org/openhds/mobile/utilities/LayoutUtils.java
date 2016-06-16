@@ -109,7 +109,7 @@ public class LayoutUtils {
                     continue;
                 }
 
-                RelativeLayout relativeLayout = makeSmallTextWithValueAndLabel(activity, key, value, R.color.Black, R.color.Black, R.color.LightRedOrange);
+                RelativeLayout relativeLayout = makeSmallTextWithValueAndLabel(activity, key, value, R.color.Black, R.color.Black, R.color.LightGray);
                 relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 payLoadContainer.addView(relativeLayout);
             }
@@ -123,7 +123,7 @@ public class LayoutUtils {
                     continue;
                 }
 
-                RelativeLayout relativeLayout = makeSmallTextWithValueAndLabel(activity, key, value, R.color.Black, R.color.Black, R.color.LightRedOrange);
+                RelativeLayout relativeLayout = makeSmallTextWithValueAndLabel(activity, key, value, R.color.Black, R.color.Black, R.color.LightGray);
                 relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 payLoadContainer.addView(relativeLayout);
             }
