@@ -4,14 +4,11 @@ import android.content.ContentResolver;
 import android.content.Context;
 
 import org.openhds.mobile.activity.HierarchyNavigatorActivity;
-import org.openhds.mobile.activity.HierarchyPath;
+import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.update.Visit;
 import org.openhds.mobile.navconfig.forms.consumers.ConsumerResult;
 import org.openhds.mobile.repository.DataWrapper;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * This is the formal contract currently required to build a payload and launch a form. Currently,

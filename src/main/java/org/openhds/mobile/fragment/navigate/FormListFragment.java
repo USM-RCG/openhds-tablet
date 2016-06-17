@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.HierarchyNavigatorActivity;
-import org.openhds.mobile.activity.HierarchyPath;
+import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.adapter.FormInstanceAdapter;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.form.FormInstance;

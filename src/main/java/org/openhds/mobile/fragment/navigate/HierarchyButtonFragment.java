@@ -13,7 +13,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
 import org.openhds.mobile.R;
-import org.openhds.mobile.activity.HierarchyPath;
+import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.repository.DataWrapper;
 

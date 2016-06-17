@@ -2,7 +2,7 @@ package org.openhds.mobile.navconfig.forms.builders;
 
 import android.content.ContentResolver;
 
-import org.openhds.mobile.activity.HierarchyPath;
+import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.model.core.*;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.navconfig.forms.adapters.IndividualFormAdapter;
@@ -13,7 +13,6 @@ import org.openhds.mobile.repository.gateway.*;
 import org.openhds.mobile.utilities.IdHelper;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import static org.openhds.mobile.navconfig.BiokoHierarchy.*;

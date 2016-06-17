@@ -22,6 +22,7 @@ import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.model.update.Visit;
+import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
 import org.openhds.mobile.navconfig.db.DefaultQueryHelper;

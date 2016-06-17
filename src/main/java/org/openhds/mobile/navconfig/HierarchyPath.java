@@ -1,10 +1,9 @@
-package org.openhds.mobile.activity;
+package org.openhds.mobile.navconfig;
 
 import android.content.ContentResolver;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.db.DefaultQueryHelper;
 import org.openhds.mobile.navconfig.db.QueryHelper;
 import org.openhds.mobile.repository.DataWrapper;
@@ -30,7 +29,7 @@ public class HierarchyPath implements Parcelable, Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         HierarchyPath copy = (HierarchyPath) super.clone();
         copy.path = (LinkedHashMap) this.path.clone();
         return copy;
