@@ -42,12 +42,6 @@ public class SupervisorActivity extends Activity {
 
         LinearLayout supervisorButtonLayout = (LinearLayout) findViewById(R.id.supervisor_activity_options);
         ButtonClickListener buttonClickListener = new ButtonClickListener();
-        makeButton(this,
-                R.string.search_database_description,
-                R.string.search_database_label,
-                R.string.search_database_label,
-                buttonClickListener,
-                supervisorButtonLayout);
 
         makeButton(this,
                 R.string.send_finalized_forms_description,
@@ -92,18 +86,6 @@ public class SupervisorActivity extends Activity {
         super.onResume();
     }
 
-    private void searchDatabase() {
-        ArrayList<EntityFieldSearch> searchPluginModules = new ArrayList<>();
-        searchPluginModules.add(SearchUtils.getFieldWorkerModule("fieldWorker"));
-        searchPluginModules.add(SearchUtils.getIndividualModule("individual", R.string.search_individual_label));
-        searchPluginModules.add(SearchUtils.getLocationModule("location"));
-        searchPluginModules.add(SearchUtils.getSocialGroupModule("socialGroup"));
-
-        Intent intent = new Intent(this, EntitySearchActivity.class);
-        intent.putParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY, searchPluginModules);
-        startActivity(intent);
-    }
-
     public void sendApprovedForms() {
         List<FormInstance> allFormInstances = OdkCollectHelper.getAllUnsentFormInstances(this.getContentResolver());
         for (FormInstance instance: allFormInstances) {
@@ -123,9 +105,7 @@ public class SupervisorActivity extends Activity {
         @Override
         public void onClick(View v) {
             Integer tag = (Integer) v.getTag();
-            if (tag.equals(R.string.search_database_label)) {
-                searchDatabase();
-            } else if (tag.equals(R.string.send_finalized_forms_label)) {
+            if (tag.equals(R.string.send_finalized_forms_label)) {
                 sendApprovedForms();
             } else if (tag.equals(R.string.delete_recent_forms_label)) {
                 checklistFragment.setMode(ChecklistFragment.DELETE_MODE);
