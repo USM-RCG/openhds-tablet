@@ -81,11 +81,6 @@ public class SupervisorActivity extends Activity {
         installAccount(this, username, password);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
     public void sendApprovedForms() {
         List<FormInstance> allFormInstances = OdkCollectHelper.getAllUnsentFormInstances(this.getContentResolver());
         for (FormInstance instance: allFormInstances) {
