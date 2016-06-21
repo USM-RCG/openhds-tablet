@@ -1,26 +1,24 @@
 package org.openhds.mobile.task;
 
-import org.openhds.mobile.provider.DatabaseAdapter;
-import org.openhds.mobile.model.core.Supervisor;
 import android.os.AsyncTask;
+
+import org.openhds.mobile.model.core.Supervisor;
+import org.openhds.mobile.provider.DatabaseAdapter;
 
 /**
  * The Login task will verify a local user exists in the database If no user
  * exist, the user must initially make a request to download forms with the
  * typed in username/password. If successfully
  */
-public class SupervisorLoginTask extends AsyncTask<Boolean, Void, SupervisorLoginTask.Result> {
+public class SupervisorLoginTask extends AsyncTask<Boolean, Void, Supervisor> {
+
 	private DatabaseAdapter storage;
 	private String username;
 	private String password;
 	private Listener listener;
 
-	public enum Result {
-		AUTHENTICATED, BAD_AUTHENTICATION
-	}
-
 	public interface Listener {
-		void onAuthenticated();
+		void onAuthenticated(Supervisor user);
 
 		void onBadAuthentication();
 	}
@@ -34,25 +32,22 @@ public class SupervisorLoginTask extends AsyncTask<Boolean, Void, SupervisorLogi
 	}
 
 	@Override
-	protected Result doInBackground(Boolean... params) {
+	protected Supervisor doInBackground(Boolean... params) {
 		Supervisor user = storage.findSupervisorByUsername(username);
 		if (user != null && user.getPassword().equals(password)) {
-			return Result.AUTHENTICATED;
+			return user;
 		} else {
-			return Result.BAD_AUTHENTICATION;
+			return null;
 		}
 	}
 
-	@Override
-	protected void onPostExecute(Result result) {
-		switch (result) {
-		case BAD_AUTHENTICATION:
-			listener.onBadAuthentication();
-			break;
-		case AUTHENTICATED:
-			listener.onAuthenticated();
-			break;
-		}
-	}
+    @Override
+    protected void onPostExecute(Supervisor user) {
+        if (user == null) {
+            listener.onBadAuthentication();
+        } else {
+            listener.onAuthenticated(user);
+        }
+    }
 
 }

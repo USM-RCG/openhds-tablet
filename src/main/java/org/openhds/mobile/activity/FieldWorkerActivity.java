@@ -12,15 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import org.openhds.mobile.R;
-import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
 import org.openhds.mobile.fragment.navigate.FormListFragment;
-import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
 
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInstances;
-import static org.openhds.mobile.fragment.FieldWorkerLoginFragment.FIELD_WORKER_EXTRA;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 public class FieldWorkerActivity extends Activity implements OnClickListener {
@@ -29,7 +26,6 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
 
     public static final int MODULE_SPACING = 5;
 
-    private FieldWorker currentFieldWorker;
     private FormListFragment formListFragment;
 
     @Override
@@ -39,9 +35,6 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
         // basic view setup
         setContentView(R.layout.portal_activity);
         setTitle(this.getResources().getString(R.string.field_worker_home_menu_text));
-
-        // who logged in?
-        currentFieldWorker = (FieldWorker) getIntent().getExtras().get(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA);
 
         // fill the middle column with a button for each available activity
         LinearLayout activitiesLayout = (LinearLayout) findViewById(R.id.portal_middle_column);
@@ -81,7 +74,6 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(this, HierarchyNavigatorActivity.class);
-        intent.putExtra(FIELD_WORKER_EXTRA, currentFieldWorker);
         String activityName = (String) v.getTag();
         intent.putExtra(ACTIVITY_MODULE_EXTRA, activityName);
         startActivity(intent);

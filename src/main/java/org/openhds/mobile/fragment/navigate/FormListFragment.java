@@ -35,7 +35,6 @@ import static android.view.View.VISIBLE;
 import static java.util.Arrays.asList;
 import static org.openhds.mobile.activity.FieldWorkerActivity.ACTIVITY_MODULE_EXTRA;
 import static org.openhds.mobile.activity.HierarchyNavigatorActivity.HIERARCHY_PATH_KEY;
-import static org.openhds.mobile.fragment.FieldWorkerLoginFragment.FIELD_WORKER_EXTRA;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 import static org.openhds.mobile.utilities.OdkCollectHelper.deleteFormInstances;
@@ -114,13 +113,11 @@ public class FormListFragment extends Fragment {
 
     private void findForm(FormInstance selected) {
         Activity activity = getActivity();
-        FieldWorker fieldWorker = (FieldWorker) activity.getIntent().getExtras().get(FIELD_WORKER_EXTRA);
         String pathStr = DatabaseAdapter.getInstance(activity).findHierarchyForForm(selected.getFilePath());
         HierarchyPath path = HierarchyPath.fromString(activity.getContentResolver(), pathStr);
         if (path != null) {
             NavigatorModule firstModule = NavigatorConfig.getInstance().getModules().iterator().next();
             Intent intent = new Intent(activity, HierarchyNavigatorActivity.class);
-            intent.putExtra(FIELD_WORKER_EXTRA, fieldWorker);
             intent.putExtra(ACTIVITY_MODULE_EXTRA, firstModule.getActivityTitle());
             intent.putExtra(HIERARCHY_PATH_KEY, path);
             startActivity(intent);

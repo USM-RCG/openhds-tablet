@@ -51,6 +51,7 @@ import static org.openhds.mobile.model.form.FormInstance.generate;
 import static org.openhds.mobile.model.form.FormInstance.getBinding;
 import static org.openhds.mobile.model.form.FormInstance.lookup;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
+import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 public class HierarchyNavigatorActivity extends Activity implements LaunchContext,
@@ -90,7 +91,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private Stack<HierarchyPath> pathHistory;
     private List<DataWrapper> currentResults;
 
-    private FieldWorker currentFieldWorker;
     private Visit currentVisit;
     private ConsumerResult consumerResult;
 
@@ -113,8 +113,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         currentModule = config.getModule(currentModuleName);
 
         setTitle(currentModule.getActivityTitle());
-
-        currentFieldWorker = (FieldWorker) extras.get(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA);
 
         queryHelper = DefaultQueryHelper.getInstance();
 
@@ -202,7 +200,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                 break;
             case R.id.field_worker_home_menu_button:
                 intent.setClass(this, FieldWorkerActivity.class);
-                intent.putExtra(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA, getCurrentFieldWorker());
                 break;
             default:
                 String menuModule = menuItemTags.get(item);
@@ -211,7 +208,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                     intent.putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, menuModule);
                     intent.putExtra(HIERARCHY_PATH_KEY, hierarchyPath);
                     intent.putParcelableArrayListExtra(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
-                    intent.putExtra(FieldWorkerLoginFragment.FIELD_WORKER_EXTRA, getCurrentFieldWorker());
                 } else {
                     return super.onOptionsItemSelected(item);
                 }
@@ -327,7 +323,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     }
 
     public FieldWorker getCurrentFieldWorker() {
-        return currentFieldWorker;
+        return getLogin(FieldWorker.class).getAuthenticatedUser();
     }
 
     public Visit getCurrentVisit() {

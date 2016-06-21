@@ -1,9 +1,11 @@
 package org.openhds.mobile.model.core;
 
+import java.io.Serializable;
+
 /**
  * A Supervisor is someone capable of downloading partial forms
  */
-public class Supervisor {
+public class Supervisor implements Serializable {
 
 	private long id;
 	private String name;

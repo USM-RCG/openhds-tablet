@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import org.apache.http.HttpStatus;
 import org.openhds.mobile.R;
-import org.openhds.mobile.activity.LoginActivity;
 import org.openhds.mobile.activity.SupervisorActivity;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.model.core.Supervisor;
@@ -24,7 +23,9 @@ import org.openhds.mobile.task.http.HttpTaskRequest;
 import org.openhds.mobile.task.http.HttpTaskResponse;
 
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
+import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
+import static org.openhds.mobile.utilities.SyncUtils.installAccount;
 import static org.openhds.mobile.utilities.UrlUtils.buildServerUrl;
 
 public class SupervisorLoginFragment extends Fragment implements
@@ -129,10 +130,7 @@ public class SupervisorLoginFragment extends Fragment implements
     }
 
     private void launchSupervisorMainActivity() {
-        Intent intent = new Intent(getActivity(), SupervisorActivity.class);
-        intent.putExtra(LoginActivity.USERNAME_KEY, getUsernameFromEditText());
-        intent.putExtra(LoginActivity.PASSWORD_KEY, getPasswordFromEditText());
-        startActivity(intent);
+        startActivity(new Intent(getActivity(), SupervisorActivity.class));
     }
 
     private class AuthenticateListener implements HttpTask.HttpTaskResponseHandler {
@@ -152,11 +150,14 @@ public class SupervisorLoginFragment extends Fragment implements
     }
 
     private class LoginListener implements SupervisorLoginTask.Listener {
-        public void onAuthenticated() {
+        public void onAuthenticated(Supervisor user) {
+            installAccount(getActivity(), user.getName(), user.getPassword());
+            getLogin(Supervisor.class).setAuthenticatedUser(user);
             launchSupervisorMainActivity();
         }
 
         public void onBadAuthentication() {
+            getLogin(Supervisor.class).logout();
             showLongToast(getActivity(), R.string.supervisor_bad_credentials);
         }
     }

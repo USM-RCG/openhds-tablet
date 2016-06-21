@@ -14,9 +14,6 @@ import static org.openhds.mobile.utilities.ConfigUtils.getAppFullName;
 
 public class LoginActivity extends Activity {
 
-    public static final String USERNAME_KEY = "usernameKey";
-    public static final String PASSWORD_KEY = "passwordKey";
-
     private final String PREF_STATE_KEY = "prefStateKey";
 
     private FrameLayout prefsLayout;

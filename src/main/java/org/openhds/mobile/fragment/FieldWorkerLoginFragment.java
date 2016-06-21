@@ -23,12 +23,11 @@ import org.openhds.mobile.repository.gateway.FieldWorkerGateway;
 
 import static android.text.InputType.TYPE_CLASS_TEXT;
 import static android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS;
+import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
 
 public class FieldWorkerLoginFragment extends Fragment implements
         OnClickListener, OnKeyListener {
-
-    public static final String FIELD_WORKER_EXTRA = "FieldWorker";
 
     private EditText usernameEditText;
     private EditText passwordEditText;
@@ -83,16 +82,15 @@ public class FieldWorkerLoginFragment extends Fragment implements
         ContentResolver contentResolver = getActivity().getContentResolver();
         FieldWorker fieldWorker = fieldWorkerGateway.getFirst(contentResolver, fieldWorkerGateway.findByExtId(username));
 
-        if (null == fieldWorker || !BCrypt.checkpw(password, fieldWorker.getPasswordHash())) {
-            showLongToast(getActivity(), R.string.field_worker_bad_credentials);
+        if (fieldWorker != null && BCrypt.checkpw(password, fieldWorker.getPasswordHash())) {
+            getLogin(FieldWorker.class).setAuthenticatedUser(fieldWorker);
+            launchPortalActivity();
         } else {
-            launchPortalActivity(fieldWorker);
+            showLongToast(getActivity(), R.string.field_worker_bad_credentials);
         }
     }
 
-    private void launchPortalActivity(FieldWorker fieldWorker) {
-        Intent intent = new Intent(getActivity(), FieldWorkerActivity.class);
-        intent.putExtra(FIELD_WORKER_EXTRA, fieldWorker);
-        startActivity(intent);
+    private void launchPortalActivity() {
+        startActivity(new Intent(getActivity(), FieldWorkerActivity.class));
     }
 }
