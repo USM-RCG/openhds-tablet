@@ -16,13 +16,11 @@ import android.widget.TextView;
 import org.openhds.mobile.R;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.navconfig.ProjectFormFields;
-import org.openhds.mobile.navconfig.forms.Binding;
 
 import java.io.IOException;
 import java.util.Map;
 
 import static org.openhds.mobile.model.form.FormInstance.getBinding;
-import static org.openhds.mobile.model.form.FormInstance.isBound;
 
 public class LayoutUtils {
 
