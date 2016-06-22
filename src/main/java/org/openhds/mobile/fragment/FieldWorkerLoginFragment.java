@@ -20,6 +20,7 @@ import org.openhds.mobile.activity.FieldWorkerActivity;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.FieldWorkerGateway;
+import org.openhds.mobile.utilities.LoginUtils;
 
 import static android.text.InputType.TYPE_CLASS_TEXT;
 import static android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS;
@@ -82,10 +83,12 @@ public class FieldWorkerLoginFragment extends Fragment implements
         ContentResolver contentResolver = getActivity().getContentResolver();
         FieldWorker fieldWorker = fieldWorkerGateway.getFirst(contentResolver, fieldWorkerGateway.findByExtId(username));
 
+        LoginUtils.Login login = getLogin(FieldWorker.class);
         if (fieldWorker != null && BCrypt.checkpw(password, fieldWorker.getPasswordHash())) {
-            getLogin(FieldWorker.class).setAuthenticatedUser(fieldWorker);
+            login.setAuthenticatedUser(fieldWorker);
             launchPortalActivity();
         } else {
+            login.logout();
             showLongToast(getActivity(), R.string.field_worker_bad_credentials);
         }
     }
