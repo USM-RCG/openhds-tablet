@@ -27,8 +27,7 @@ import static android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
 
-public class FieldWorkerLoginFragment extends Fragment implements
-        OnClickListener, OnKeyListener {
+public class FieldWorkerLoginFragment extends Fragment implements OnClickListener, OnKeyListener {
 
     private EditText usernameEditText;
     private EditText passwordEditText;
