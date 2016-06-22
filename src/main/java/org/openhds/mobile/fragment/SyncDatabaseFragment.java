@@ -17,7 +17,7 @@ import org.openhds.mobile.utilities.SyncUtils;
 import java.io.File;
 
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
-import static org.openhds.mobile.syncadpt.SyncAdapter.SYNC_NOTIFICATION_ID;
+import static org.openhds.mobile.utilities.SyncUtils.SYNC_NOTIFICATION_ID;
 import static org.openhds.mobile.utilities.SyncUtils.downloadedContentExists;
 import static org.openhds.mobile.utilities.SyncUtils.getDatabaseFile;
 import static org.openhds.mobile.utilities.SyncUtils.getDatabaseFingerprint;

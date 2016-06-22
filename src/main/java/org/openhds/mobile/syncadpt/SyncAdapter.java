@@ -20,9 +20,7 @@ import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static org.openhds.mobile.utilities.SyncUtils.downloadUpdate;
 
 
-public class SyncAdapter extends AbstractThreadedSyncAdapter implements SyncUtils.DatabaseDownloadListener {
-
-    public static final int SYNC_NOTIFICATION_ID = 42;
+public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -32,21 +30,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements SyncUtil
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider,
                               SyncResult syncResult) {
         Context ctx = getContext();
-        String username = account.name, password = AccountManager.get(ctx).getPassword(account);
-        downloadUpdate(ctx, username, password, this);
-    }
-
-    @Override
-    public void downloaded() {
-        Context ctx = getContext();
-        NotificationManager manager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent intent = new Intent(ctx, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification.Builder builder = new Notification.Builder(ctx)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle(ctx.getString(R.string.sync_database_new_data))
-                .setContentText(ctx.getString(R.string.sync_database_new_data_instructions))
-                .setContentIntent(pending);
-        manager.notify(SYNC_NOTIFICATION_ID, builder.getNotification());
+        downloadUpdate(ctx, account.name, AccountManager.get(ctx).getPassword(account));
     }
 }

@@ -2,11 +2,15 @@ package org.openhds.mobile.utilities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import org.openhds.mobile.R;
+import org.openhds.mobile.activity.LoginActivity;
 import org.openhds.mobile.provider.OpenHDSProvider;
 
 import java.io.BufferedOutputStream;
@@ -27,16 +31,16 @@ import java.net.URL;
 
 import static android.content.ContentResolver.setIsSyncable;
 import static android.content.ContentResolver.setSyncAutomatically;
+import static android.content.Context.NOTIFICATION_SERVICE;
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.openhds.mobile.OpenHDS.AUTHORITY;
 import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
-import static org.openhds.mobile.syncadpt.SyncAdapter.SYNC_NOTIFICATION_ID;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
 import static org.openhds.mobile.utilities.HttpUtils.get;
-import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * Dumping grounds for miscellaneous sync-related functions.
@@ -44,6 +48,8 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 public class SyncUtils {
 
     private static final String TAG = SyncUtils.class.getSimpleName();
+
+    public static final int SYNC_NOTIFICATION_ID = 42;
 
     private static final int BUFFER_SIZE = 8192;
 
@@ -280,7 +286,7 @@ public class SyncUtils {
      * <p/>
      * Add the ability to 'apply update' if temp fingerprint is present
      */
-    public static void downloadUpdate(Context ctx, String username, String password, DatabaseDownloadListener listener) {
+    public static void downloadUpdate(Context ctx, String username, String password) {
 
         File dbFile = getDatabaseFile(ctx), dbTempFile = getTempFile(dbFile);
 
@@ -288,6 +294,8 @@ public class SyncUtils {
         String existingFingerprint = loadFirstLine(getFingerprintFile(
                 downloadExists ? getTempFile(getDatabaseFile(ctx)) : getDatabaseFile(ctx)
         ));
+
+        NotificationManager manager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
 
         try {
             String creds = encodeBasicCreds(username, password);
@@ -298,28 +306,48 @@ public class SyncUtils {
                     Log.i(TAG, "no update found");
                     break;
                 case SC_OK:
-                    File fingerprintFile = getFingerprintFile(dbTempFile);
-                    String fingerprint = httpConn.getHeaderField("ETag");
-                    Log.i(TAG, "update " + fingerprint + " found, fetching");
-                    if (fingerprintFile.exists()) {
-                        NotificationManager manager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+                    try {
                         manager.cancel(SYNC_NOTIFICATION_ID);
-                        if (!fingerprintFile.delete()) {
-                            Log.w(TAG, "failed to clear old fingerprint, user could install partial content!");
+                        File fingerprintFile = getFingerprintFile(dbTempFile);
+                        String fingerprint = httpConn.getHeaderField("ETag");
+                        Log.i(TAG, "update " + fingerprint + " found, fetching");
+                        if (fingerprintFile.exists()) {
+                            if (!fingerprintFile.delete()) {
+                                Log.w(TAG, "failed to clear old fingerprint, user could install partial content!");
+                            }
                         }
+                        manager.notify(SYNC_NOTIFICATION_ID, new Notification.Builder(ctx)
+                                .setSmallIcon(R.drawable.ic_downloading)
+                                .setContentTitle(ctx.getString(R.string.sync_database_new_data))
+                                .setContentText("Download in progress")
+                                .setProgress(0, 0, true)
+                                .setOngoing(true)
+                                .getNotification());
+                        streamToFile(httpConn.getInputStream(), dbTempFile);
+                        store(fingerprintFile, fingerprint);  // install fingerprint after downloaded finishes
+                        Log.i(TAG, "database downloaded");
+                        Intent intent = new Intent(ctx, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                        PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        manager.notify(SYNC_NOTIFICATION_ID, new Notification.Builder(ctx)
+                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setContentTitle(ctx.getString(R.string.sync_database_new_data))
+                                .setContentText(ctx.getString(R.string.sync_database_new_data_instructions))
+                                .setContentIntent(pending)
+                                .getNotification());
+                    } catch (IOException e) {
+                        Log.e(TAG, "sync io failure", e);
+                        manager.notify(SYNC_NOTIFICATION_ID, new Notification.Builder(ctx)
+                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setContentTitle(ctx.getString(R.string.sync_database_new_data))
+                                .setContentText("Download failed")
+                                .getNotification());
                     }
-                    streamToFile(httpConn.getInputStream(), dbTempFile);
-                    store(fingerprintFile, fingerprint);  // install fingerprint after downloaded finishes
-                    Log.i(TAG, "database downloaded");
-                    listener.downloaded();
                     break;
                 default:
                     Log.i(TAG, "unexpected status code " + result);
             }
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "invalid sync endpoint", e);
         } catch (IOException e) {
-            Log.e(TAG, "sync io failure", e);
+            Log.e(TAG, "sync failed: " + e.getMessage());
         }
     }
 
