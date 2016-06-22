@@ -12,8 +12,10 @@ import android.widget.LinearLayout;
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.ChecklistFragment;
 import org.openhds.mobile.fragment.LoginPreferenceFragment;
+import org.openhds.mobile.model.core.Supervisor;
 import org.openhds.mobile.model.form.FormInstance;
 
+import org.openhds.mobile.utilities.LoginUtils;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.io.IOException;
@@ -21,7 +23,9 @@ import java.util.List;
 
 import static org.openhds.mobile.utilities.FormUtils.isFormReviewed;
 import static org.openhds.mobile.utilities.LayoutUtils.makeButton;
+import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
+import static org.openhds.mobile.utilities.SyncUtils.installAccount;
 
 public class SupervisorActivity extends Activity {
 
@@ -64,6 +68,11 @@ public class SupervisorActivity extends Activity {
                     .beginTransaction()
                     .add(R.id.supervisor_activity_options, new LoginPreferenceFragment())
                     .commit();
+            LoginUtils.Login<Supervisor> login = getLogin(Supervisor.class);
+            if (login.hasAuthenticatedUser()) {
+                Supervisor user = login.getAuthenticatedUser();
+                installAccount(this, user.getName(), user.getPassword());
+            }
         }
         checklistFragment = (ChecklistFragment) getFragmentManager().findFragmentById(R.id.supervisor_checklist_fragment);
     }

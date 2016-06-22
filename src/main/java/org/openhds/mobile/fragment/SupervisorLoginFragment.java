@@ -6,18 +6,18 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnKeyListener;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import org.apache.http.HttpStatus;
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.SupervisorActivity;
-import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.model.core.Supervisor;
-import org.openhds.mobile.task.SupervisorLoginTask;
+import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.task.http.HttpTask;
 import org.openhds.mobile.task.http.HttpTaskRequest;
 import org.openhds.mobile.task.http.HttpTaskResponse;
@@ -25,14 +25,12 @@ import org.openhds.mobile.task.http.HttpTaskResponse;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
-import static org.openhds.mobile.utilities.SyncUtils.installAccount;
 import static org.openhds.mobile.utilities.UrlUtils.buildServerUrl;
 
-public class SupervisorLoginFragment extends Fragment implements
-        OnClickListener, OnKeyListener {
+public class SupervisorLoginFragment extends Fragment implements OnClickListener, OnKeyListener {
 
-    private EditText usernameEditText;
-    private EditText passwordEditText;
+    private EditText usernameText;
+    private EditText passwordText;
     private DatabaseAdapter databaseAdapter;
 
     @Override
@@ -41,10 +39,10 @@ public class SupervisorLoginFragment extends Fragment implements
         TextView title = (TextView) v.findViewById(R.id.titleTextView);
         title.setText(R.string.supervisor_login);
 
-        usernameEditText = (EditText) v.findViewById(R.id.usernameEditText);
-        passwordEditText = (EditText) v.findViewById(R.id.passwordEditText);
-        usernameEditText.setOnKeyListener(this);
-        passwordEditText.setOnKeyListener(this);
+        usernameText = (EditText) v.findViewById(R.id.usernameEditText);
+        passwordText = (EditText) v.findViewById(R.id.passwordEditText);
+        usernameText.setOnKeyListener(this);
+        passwordText.setOnKeyListener(this);
         Button loginButton = (Button) v.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
         databaseAdapter = DatabaseAdapter.getInstance(getActivity());
@@ -68,97 +66,87 @@ public class SupervisorLoginFragment extends Fragment implements
         authenticateSupervisor();
     }
 
-    private String getUsernameFromEditText() {
-        return usernameEditText.getText().toString();
+    private String getUsername() {
+        return usernameText.getText().toString();
     }
 
-    private String getPasswordFromEditText() {
-        return passwordEditText.getText().toString();
-    }
-
-    private String getUrl() {
-        // supervisor_login_url needs to be a secured resource on the sever
-        // for example openhds/api/rest/socialgroups
-        String path = getResourceString(getActivity(), R.string.supervisor_login_url);
-
-        return buildServerUrl(getActivity(), path);
+    private String getPassword() {
+        return passwordText.getText().toString();
     }
 
     private void authenticateSupervisor() {
-        HttpTaskRequest httpTaskRequest = new HttpTaskRequest(
-                getUrl(), null, getUsernameFromEditText(), getPasswordFromEditText()
-        );
+        HttpTaskRequest httpTaskRequest = new HttpTaskRequest(getUrl(), null, getUsername(), getPassword());
         HttpTask httpTask = new HttpTask(new AuthenticateListener());
         httpTask.execute(httpTaskRequest);
     }
 
-    private void onConnectedAndAuthenticated() {
-        // valid credentials were cached in tablet database by AuthenticateTask
-        // delete any stale credentials from local then add authenticated
-        // credentials to match server
-        deleteSupervisor();
-        addSupervisor();
-        launchSupervisorMainActivity();
-    }
-
-    private void onConnectedButNotAuthenticated() {
-        // delete unauthorized user from tablet database
-        // to prevent login when not connected to network
-        showLongToast(getActivity(), R.string.supervisor_bad_credentials);
-        deleteSupervisor();
-    }
-
-    private void deleteSupervisor() {
-        Supervisor user = new Supervisor();
-        user.setName(getUsernameFromEditText());
-        databaseAdapter.deleteSupervisor(user);
-    }
-
-    private void addSupervisor() {
-        Supervisor user = new Supervisor();
-        user.setName(getUsernameFromEditText());
-        user.setPassword(getPasswordFromEditText());
-        databaseAdapter.addSupervisor(user);
-    }
-
-    private void onNotConnected() {
-        // attempt to log in using cached credentials in tablet database
-        SupervisorLoginTask loginTask = new SupervisorLoginTask(
-                databaseAdapter, getUsernameFromEditText(),
-                getPasswordFromEditText(), new LoginListener());
-        loginTask.execute();
-    }
-
-    private void launchSupervisorMainActivity() {
-        startActivity(new Intent(getActivity(), SupervisorActivity.class));
+    private String getUrl() {
+        String path = getResourceString(getActivity(), R.string.supervisor_login_url);
+        return buildServerUrl(getActivity(), path);
     }
 
     private class AuthenticateListener implements HttpTask.HttpTaskResponseHandler {
+
         @Override
         public void handleHttpTaskResponse(HttpTaskResponse httpTaskResponse) {
             if (httpTaskResponse.isSuccess()) {
-                onConnectedAndAuthenticated();
-                return;
+                onSuccess();
+            } else if (HttpStatus.SC_FORBIDDEN == httpTaskResponse.getHttpStatus()) {
+                onFailure(true);
+            } else {
+                authDisconnected();
             }
-
-            if (HttpStatus.SC_FORBIDDEN == httpTaskResponse.getHttpStatus()) {
-                onConnectedButNotAuthenticated();
-            }
-
-            onNotConnected();
-        }
-    }
-
-    private class LoginListener implements SupervisorLoginTask.Listener {
-        public void onAuthenticated(Supervisor user) {
-            installAccount(getActivity(), user.getName(), user.getPassword());
-            getLogin(Supervisor.class).setAuthenticatedUser(user);
-            launchSupervisorMainActivity();
         }
 
-        public void onBadAuthentication() {
-            getLogin(Supervisor.class).logout();
+        private void onSuccess() {
+            deleteSupervisor(getUsername());
+            Supervisor user = new Supervisor();
+            user.setName(getUsername());
+            user.setPassword(getPassword());
+            addSupervisor(user);
+            setAuthenticatedUser(user);
+            launchSupervisorActivity();
+        }
+
+        private void onFailure(boolean connected) {
+            logoutAuthenticatedUser();
+            if (connected) {
+                deleteSupervisor(getUsername());
+            }
             showLongToast(getActivity(), R.string.supervisor_bad_credentials);
         }
+
+        private void authDisconnected() {
+            Supervisor user = databaseAdapter.findSupervisorByUsername(getUsername());
+            if (user != null && user.getPassword().equals(getPassword())) {
+                setAuthenticatedUser(user);
+                launchSupervisorActivity();
+            } else {
+                onFailure(false);
+            }
+        }
+
+        private void deleteSupervisor(String username) {
+            Supervisor user = new Supervisor();
+            user.setName(username);
+            databaseAdapter.deleteSupervisor(user);
+        }
+
+        private void addSupervisor(Supervisor user) {
+            databaseAdapter.addSupervisor(user);
+        }
+
+        private void setAuthenticatedUser(Supervisor user) {
+            getLogin(Supervisor.class).setAuthenticatedUser(user);
+        }
+
+        private void logoutAuthenticatedUser() {
+            getLogin(Supervisor.class).logout();
+        }
+
+        private void launchSupervisorActivity() {
+            startActivity(new Intent(getActivity(), SupervisorActivity.class));
+        }
+
     }
 }
