@@ -16,6 +16,7 @@ import android.widget.TextView;
 import org.openhds.mobile.R;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.navconfig.ProjectFormFields;
+import org.openhds.mobile.navconfig.forms.Binding;
 
 import java.io.IOException;
 import java.util.Map;
@@ -221,7 +222,7 @@ public class LayoutUtils {
             Map<String, String> data = instance.load();
 
             // Set form name based on its embedded binding
-            String formTypeName = isBound(data)? getBinding(data).getLabel() : instance.getFormName();
+            String formTypeName = getBinding(data) != null? getBinding(data).getLabel() : instance.getFormName();
             TextView formTypeView = (TextView) view.findViewById(R.id.form_instance_list_type);
             formTypeView.setText(formTypeName);
 
