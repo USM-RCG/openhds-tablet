@@ -130,7 +130,7 @@ public class SyncUtils {
      *
      * @param closeables a list of possibly null closeable references or null
      */
-    public static void close(Closeable ... closeables) {
+    public static void close(Closeable... closeables) {
         if (closeables != null) {
             for (Closeable c : closeables) {
                 if (c != null) {
@@ -271,7 +271,7 @@ public class SyncUtils {
      */
     public static String getDatabaseFingerprint(Context ctx) {
         String fingerprint = loadFirstLine(getFingerprintFile(getDatabaseFile(ctx)));
-        return fingerprint != null? fingerprint : ctx.getString(R.string.sync_database_no_fingerprint);
+        return fingerprint != null ? fingerprint : ctx.getString(R.string.sync_database_no_fingerprint);
     }
 
     /**
