@@ -35,6 +35,10 @@ public class SearchUtils {
         return plugin;
     }
 
+    public static EntityFieldSearch getIndividualModule(String fieldName) {
+        return getIndividualModule(fieldName, R.string.search_individual_label);
+    }
+
     // Search for a location based on name, id, and location hierarchy names.
     public static EntityFieldSearch getLocationModule(String fieldName) {
         EntityFieldSearch plugin = new EntityFieldSearch(getLocationGateway(), R.string.search_location_label, fieldName);
