@@ -11,7 +11,6 @@ import android.view.MenuItem;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.DataSelectionFragment;
-import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
 import org.openhds.mobile.fragment.FormSelectionFragment;
 import org.openhds.mobile.fragment.navigate.DetailToggleFragment;
 import org.openhds.mobile.fragment.navigate.FormListFragment;
@@ -34,11 +33,9 @@ import org.openhds.mobile.navconfig.forms.consumers.ConsumerResult;
 import org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.repository.DataWrapper;
-import org.openhds.mobile.repository.search.EntityFieldSearch;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -62,7 +59,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private static final String TAG = HierarchyNavigatorActivity.class.getSimpleName();
 
     private static final int ODK_ACTIVITY_REQUEST_CODE = 0;
-    private static final int SEARCH_ACTIVITY_REQUEST_CODE = 1;
 
     private static final String VALUE_FRAGMENT_TAG = "hierarchyValueFragment";
     private static final String DETAIL_FRAGMENT_TAG = "hierarchyDetailFragment";
@@ -218,12 +214,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     private void launchForm(Binding binding, Map<String, String> followUpFormHints) {
         if (binding != null) {
-            Map<String, String> data = buildDataWithHints(binding, followUpFormHints);
-            if (binding.requiresSearch()) {
-                launchSearch(binding, data);
-            } else {
-                launchNewForm(binding, data);
-            }
+            launchNewForm(binding, buildDataWithHints(binding, followUpFormHints));
         }
     }
 
@@ -233,15 +224,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             formData.putAll(followUpHints);
         }
         return formData;
-    }
-
-    private void launchSearch(Binding binding, Map<String, String> data) {
-        Intent intent = new Intent(this, EntitySearchActivity.class);
-        List<EntityFieldSearch> searchModules = binding.getSearches();
-        intent.putParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY, new ArrayList<>(searchModules));
-        intent.putExtra(EntitySearchActivity.FORM_BINDING_KEY, binding.getName());
-        intent.putExtra(EntitySearchActivity.ORIGINAL_DATA_KEY, (Serializable) data);
-        startActivityForResult(intent, SEARCH_ACTIVITY_REQUEST_CODE);
     }
 
     private void launchNewForm(Binding binding, Map<String, String> data) {
@@ -261,24 +243,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                     handleFormResult(data);
                     update();
                     break;
-                case SEARCH_ACTIVITY_REQUEST_CODE:
-                    launchNewFormAfterSearch(data);
-                    break;
             }
-        }
-    }
-
-    private void launchNewFormAfterSearch(Intent data) {
-        Binding binding = config.getBinding(data.getStringExtra(EntitySearchActivity.FORM_BINDING_KEY));
-        if (binding != null) {
-            Map<String, String> formData = (Map<String, String>) data.getSerializableExtra(EntitySearchActivity.ORIGINAL_DATA_KEY);
-            List<EntityFieldSearch> searchModules = data.getParcelableArrayListExtra(EntitySearchActivity.SEARCH_MODULES_KEY);
-            for (EntityFieldSearch plugin : searchModules) {
-                formData.put(plugin.getName(), plugin.getValue());
-            }
-            launchNewForm(binding, formData);
-        } else {
-            showShortToast(this, "failed to launch form: unknown binding");
         }
     }
 

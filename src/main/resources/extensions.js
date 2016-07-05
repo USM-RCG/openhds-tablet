@@ -19,8 +19,6 @@ with (imports) {
             getLabel: function() { return config.getString(b.label); },
             getBuilder: function() { return b.builder; },
             getConsumer: function() { return b.consumer || new DefaultConsumer(); },
-            getSearches: function() { return b.searches || []; },
-            requiresSearch: function() { return b.searches? b.searches.length > 0 : false; }
         });
     }
 

@@ -1,12 +1,10 @@
 var imports = JavaImporter(
-    org.openhds.mobile.R,
     org.openhds.mobile.navconfig,
     org.openhds.mobile.navconfig.forms,
     org.openhds.mobile.navconfig.forms.filters,
     org.openhds.mobile.navconfig.forms.builders,
     org.openhds.mobile.navconfig.forms.consumers,
-    org.openhds.mobile.fragment.navigate.detail,
-    org.openhds.mobile.repository.search.SearchUtils
+    org.openhds.mobile.fragment.navigate.detail
 );
 
 with (imports) {
@@ -21,8 +19,6 @@ with (imports) {
             getLabel: function() { return config.getString(b.label); },
             getBuilder: function() { return b.builder; },
             getConsumer: function() { return b.consumer || new DefaultConsumer(); },
-            getSearches: function() { return b.searches || []; },
-            requiresSearch: function() { return b.searches? b.searches.length > 0 : false; }
         });
     }
 
@@ -31,15 +27,11 @@ with (imports) {
            builder: new UpdateFormPayloadBuilders.StartAVisit(),
            consumer: new UpdateFormPayloadConsumers.StartAVisit() });
 
-    var migrantSearch = SearchUtils.getIndividualModule(
-        ProjectFormFields.Individuals.INDIVIDUAL_UUID, R.string.search_individual_label);
-
     bind({ name: 'internal_in_migration',
            form: 'in_migration',
            label: 'inMigrationFormLabel',
            builder: new UpdateFormPayloadBuilders.RegisterInternalInMigration(),
-           consumer: new UpdateFormPayloadConsumers.RegisterInMigration(),
-           searches: [ migrantSearch ] });
+           consumer: new UpdateFormPayloadConsumers.RegisterInMigration() });
 
     bind({ name: 'external_in_migration',
            form: 'in_migration',
@@ -68,13 +60,9 @@ with (imports) {
            label: 'pregnancyObservationFormLabel',
            builder: new UpdateFormPayloadBuilders.RecordPregnancyObservation() });
 
-    var paternitySearch = SearchUtils.getIndividualModule(
-        ProjectFormFields.PregnancyOutcome.FATHER_UUID, R.string.search_father_label);
-
     bind({ form: 'pregnancy_outcome',
            label: 'pregnancyOutcomeFormLabel',
-           builder: new UpdateFormPayloadBuilders.RecordPregnancyOutcome(),
-           searches: [ paternitySearch ] });
+           builder: new UpdateFormPayloadBuilders.RecordPregnancyOutcome() });
 
     function launcher(l) {
         return new Launcher({
