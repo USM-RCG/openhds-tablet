@@ -38,6 +38,7 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
     private static final String TAG = EntitySearchActivity.class.getSimpleName();
     private static final String ACTION_EXTERNAL = "org.cims_bioko.ENTITY_SEARCH";
     private static final String ENTITY_UUID = "uuid";
+    private static final String VALUE = "value";
 
     enum Entity {
         INDIVIDUAL, FIELD_WORKER, LOCATION, SOCIAL_GROUP
@@ -231,12 +232,13 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
         if (entityUuid != null) {
             Intent data = new Intent();
             data.putExtra(ENTITY_UUID, entityUuid);
+            data.putExtra(VALUE, entityUuid);
             Gateway gw = searchResult.getGateway();
             Object entity = gw.getFirst(getContentResolver(), gw.findById(entityUuid));
             if (entity != null) {
                 for (Field f : entity.getClass().getDeclaredFields()) {
                     String fieldName = f.getName(); // will obfuscators like proguard break this?
-                    if (!fieldName.equals(ENTITY_UUID)) {
+                    if (!(ENTITY_UUID.equals(fieldName) || VALUE.equals(fieldName))) {
                         try {
                             f.setAccessible(true);
                             Object fieldValue = f.get(entity);
