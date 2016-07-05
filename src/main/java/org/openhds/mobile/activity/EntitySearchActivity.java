@@ -37,7 +37,7 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
 
     private static final String TAG = EntitySearchActivity.class.getSimpleName();
     private static final String ACTION_EXTERNAL = "org.cims_bioko.ENTITY_SEARCH";
-    private static final String ENTITY_UUID = "uuid";
+    private static final String UUID = "uuid";
     private static final String VALUE = "value";
 
     enum Entity {
@@ -123,13 +123,13 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
             Entity entity = Entity.valueOf(entityStr);
             switch (entity) {
                 case INDIVIDUAL:
-                    return getIndividualModule(ENTITY_UUID);
+                    return getIndividualModule(UUID);
                 case FIELD_WORKER:
-                    return getFieldWorkerModule(ENTITY_UUID);
+                    return getFieldWorkerModule(UUID);
                 case LOCATION:
-                    return getLocationModule(ENTITY_UUID);
+                    return getLocationModule(UUID);
                 case SOCIAL_GROUP:
-                    return getSocialGroupModule(ENTITY_UUID);
+                    return getSocialGroupModule(UUID);
             }
         } catch (IllegalArgumentException e) {
             Log.e(TAG, "invalid search entity " + entityStr);
@@ -231,14 +231,14 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
         String entityUuid = searchResult.getValue();
         if (entityUuid != null) {
             Intent data = new Intent();
-            data.putExtra(ENTITY_UUID, entityUuid);
+            data.putExtra(UUID, entityUuid);
             data.putExtra(VALUE, entityUuid);
             Gateway gw = searchResult.getGateway();
             Object entity = gw.getFirst(getContentResolver(), gw.findById(entityUuid));
             if (entity != null) {
                 for (Field f : entity.getClass().getDeclaredFields()) {
                     String fieldName = f.getName(); // will obfuscators like proguard break this?
-                    if (!(ENTITY_UUID.equals(fieldName) || VALUE.equals(fieldName))) {
+                    if (!(UUID.equals(fieldName) || VALUE.equals(fieldName))) {
                         try {
                             f.setAccessible(true);
                             Object fieldValue = f.get(entity);
