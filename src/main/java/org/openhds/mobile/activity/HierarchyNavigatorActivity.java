@@ -212,9 +212,14 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         return true;
     }
 
-    private void launchForm(Binding binding, Map<String, String> followUpFormHints) {
+    private void launchNewForm(Binding binding, Map<String, String> followUpFormHints) {
         if (binding != null) {
-            launchNewForm(binding, buildDataWithHints(binding, followUpFormHints));
+            try {
+                showShortToast(this, R.string.launching_odk_collect);
+                startActivityForResult(editIntent(generate(getContentResolver(), binding, buildDataWithHints(binding, followUpFormHints))), ODK_ACTIVITY_REQUEST_CODE);
+            } catch (Exception e) {
+                showShortToast(this, "failed to launch form: " + e.getMessage());
+            }
         }
     }
 
@@ -224,15 +229,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             formData.putAll(followUpHints);
         }
         return formData;
-    }
-
-    private void launchNewForm(Binding binding, Map<String, String> data) {
-        try {
-            showShortToast(this, R.string.launching_odk_collect);
-            startActivityForResult(editIntent(generate(getContentResolver(), binding, data)), ODK_ACTIVITY_REQUEST_CODE);
-        } catch (Exception e) {
-            showShortToast(this, "failed to launch form: " + e.getMessage());
-        }
     }
 
     @Override
@@ -271,7 +267,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                     }
                 }
                 if (consumerResult.hasFollowUp()) {
-                    launchForm(consumerResult.getFollowUp(), consumerResult.getFollowUpHints());
+                    launchNewForm(consumerResult.getFollowUp(), consumerResult.getFollowUpHints());
                 }
             }
         } catch (IOException e) {
@@ -314,7 +310,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     @Override
     public void onFormSelected(Binding binding) {
-        launchForm(binding, null);
+        launchNewForm(binding, null);
     }
 
     @Override
