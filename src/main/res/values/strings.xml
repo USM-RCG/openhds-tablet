@@ -223,9 +223,9 @@
     <string name="action_settings">Settings</string>
 
     <string name="unsent_forms">Unsent Forms</string>
-    <string name="field_worker_home_menu_text">Field Worker Home</string>
-    <string name="logout_menu_text">Logout</string>
+    <string name="field_worker_home">Field Worker Home</string>
     <string name="supervisor_home">Supervisor Home</string>
+    <string name="logout">Logout</string>
     <string name="delete_unsent_forms">Delete Unsent Forms</string>
     <string name="approve_unsent_forms">Approve Unsent Forms</string>
 

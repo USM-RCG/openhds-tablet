@@ -34,7 +34,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
 
         // basic view setup
         setContentView(R.layout.portal_activity);
-        setTitle(this.getResources().getString(R.string.field_worker_home_menu_text));
+        setTitle(getText(R.string.field_worker_home));
 
         // fill the middle column with a button for each available activity
         LinearLayout activitiesLayout = (LinearLayout) findViewById(R.id.portal_middle_column);
