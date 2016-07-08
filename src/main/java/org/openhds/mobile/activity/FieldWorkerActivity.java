@@ -55,6 +55,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.fieldworker_menu, menu);
+        menu.findItem(R.id.field_worker_home_menu_button).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
 
