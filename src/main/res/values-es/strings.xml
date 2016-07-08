@@ -1,70 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="amendments">Enmiendas</string>
-    <string name="bad_authentication">Autenticación Falló</string>
-    <string name="changePassword">Cambiar Contraseña</string>
-    <string name="changeServer">Cambiar Servidor</string>
-    <string name="changeUsername">Cambiar Nombre de Usuario</string>
-    <string name="configuration">Configuración</string>
-    <string name="configureDatabase">Configurar Base de Datos </string>
-    <string name="databaseSync">Sincronizar con CIMS Base de Datos</string>
-    <string name="default_interop_server_url">https://cims-bioko.org/openhds</string>
     <string name="default_openhds_server_url">https://cims-bioko.org/openhds</string>
     <string name="delete_form_btn">Borrar Impreso(s)</string>
-    <string name="download_form_button">Descargar Impresos</string>
-    <string name="failure_reasons_txt">Mensajes de Falla:</string>
-    <string name="fatherNotFound">Un padre no se pudo encontrar</string>
-    <string name="field_worker_already_exists">Enucestador Ya Existe</string>
-    <string name="field_worker_created">Enucestador Creado con Éxito</string>
-    <string name="form_status">Estado de Impreso:</string>
-    <string name="form_view_lbl">Vista de Impreso:</string>
-    <string name="household_not_found">Un domicilio no se ha encontrado para esto individuo</string>
-    <string name="idGenerationFailure">Se ha producido un error al generar un ID</string>
-    <string name="location_lbl">Ubicación:</string>
-    <string name="form_lbl">Impreso:</string>
     <string name="login_btn">Entrar</string>
-    <string name="logout_btn">Cerrar sesión</string>
-    <string name="main_txt">Administración de Impresos</string>
-    <string name="owner_txt">Proprietario del Impreso ID:</string>
-    <string name="passwordHash">CIMS Contraseña</string>
-    <string name="retrieving_fieldworkers_interrupted">Descargar Enucestadores se ha Interrumpido</string>
-    <string name="send_to_odk_btn">Editar en ODK</string>
-    <string name="syncDatabase">Sincronizar Base de Datos</string>
-    <string name="syncDatabaseMessage">Este procedimiento intentará descargar entidades CIMS en el dispositivo. Por favor tenga paciencia mientras que la descarga está en curso</string>
-    <string name="sync_forms_successful">Impresos recopilado con éxito</string>
-    <string name="sync_forms_failure">Recopilación de Impresos Falló</string>
     <string name="send_forms">Enviar Impresos</string>
-    <string name="unable_to_connect">No se puede conectar</string>
-    <string name="url_error">URL inválido!</string>
-    <string name="update">Actualizar</string>
-    <string name="username">CIMS Nombre de Usuario</string>
-    <string name="view_forms_btn">Examinar Mis Impresos</string>
-    <string name="see_list">Consulte la Lista</string>
-    <string name="location_hint_lbl">Ubicación ID Externa</string>
-    <string name="form_hint_lbl">Nombre de Impreso</string>
-    <string name="firstname_lbl">Nombre:</string>
-    <string name="firstname_hint_lbl">Nombre</string>
-    <string name="lastname_lbl">Apellido:</string>
-    <string name="lastname_hint_lbl">Apellido</string>
     <string name="gender_lbl">Género</string>
-    <string name="clear_lbl">Clear</string>
-    <string name="external_id_lbl">ExtId:</string>
-    <string name="hierarchy1_select_lbl">Seleccionar una Región</string>
-    <string name="hierarchy1_lbl">Región:</string>
-    <string name="hierarchy1_hint_lbl">Región ID Externa</string>
-    <string name="hierarchy2_select_lbl">Seleccionar Área de Mapa</string>
-    <string name="hierarchy2_lbl">Área de Mapa:</string>
-    <string name="hierarchy2_hint_lbl">Área de Mapa ID Externa</string>
-    <string name="hierarchy3_select_lbl">Seleccionar Sector</string>
-    <string name="hierarchy3_lbl">Sector:</string>
-    <string name="hierarchy3_hint_lbl">Sector ID Externa</string>
-    <string name="hierarchy4_select_lbl">Seleccionar Edificio</string>
-    <string name="hierarchy4_lbl">Edificio:</string>
-    <string name="hierarchy4_hint_lbl">Edificio ID Externa</string>
-    <string name="hierarchy5_select_lbl">Seleccionar piso</string>
-    <string name="hierarchy5_lbl">Piso:</string>
-    <string name="hierarchy5_hint_lbl">Piso ID Externa</string>
     <string name="login_username">Nombre de Usuario</string>
     <string name="login_password">Contraseña</string>
     <string name="fieldworker_login">Informacion del Encuestador </string>
@@ -73,8 +14,6 @@
     <string name="malformed_url">URL malformada</string>
     <string name="malformed_url_msg">El valor introducido no es una URL válida.</string>
     <string name="supervisor_bad_credentials">Credenciales inválidas</string>
-    <string name="preference_invalid_label">¡Inválido!</string>
-    <string name="preference_invalid_warning">Valor de preferencia inválido</string>
     <string name="sync_database_description">Sincroniza los datos del censo con el servidor</string>
     <string name="field_worker_bad_credentials">Credenciales inválidas</string>
     <string name="region_label">Región</string>
@@ -85,15 +24,11 @@
     <string name="sector_label">Sector</string>
     <string name="household_label">Hogar</string>
     <string name="individual_label">Individuo</string>
-    <string name="edit_individual_label">Editar Individuo</string>
-    <string name="house_of_prefix">Casa de</string>
 
     <!-- Search Labels-->
     <string name="search_database_label">Buscar</string>
     <string name="search_done_label">Completado</string>
-    <string name="search_database_description">Buscar en la Base de Datos</string>
     <string name="search_individual_label">Buscar un Individuo</string>
-    <string name="search_father_label">Buscar Padre</string>
     <string name="search_field_worker_label">Buscar un Encuestador</string>
     <string name="search_results_label">Resultados</string>
     <string name="search_in_progress_label">Buscando&#8230;</string>
@@ -103,10 +38,8 @@
 
     <!-- Details Fragment Values -->
     <string name="toggle_fragment_button_show_details">Mostrar Detalles</string>
-    <string name="toggle_fragment_button_none">Ninguno</string>
     <string name="toggle_fragment_button_show_children">Esconder Detalles</string>
     <string name="not_available">No Aplicable</string>
-    <string name="details_not_available">Detalles no Disponsibles</string>
 
     <!-- Database/Form Values -->
     <string name="db_val_true">True</string>
@@ -159,9 +92,6 @@
     <string name="individual_point_of_contact_phone_number_label">Número de Teléfono de Punto de Contacto</string>
     <string name="individual_language_preference_label">Idioma de Preferencia</string>
     <string name="individual_nationality_label">Nacionalidad</string>
-    <string name="individual_dip_label">Numero de DIP</string>
-    <string name="individual_member_status_label">Estado del Miembro</string>
-    <string name="individual_socialgroup_extid_label">GrupoSocial Ext ID</string>
 
     <!-- Fieldworker Labels -->
     <string name="field_worker_first_name_label">Nombre</string>
@@ -179,8 +109,6 @@
     <string name="location_building_number_label">Numero del Edificio</string>
     <string name="location_floor_number_label">Numero del Piso</string>
     <string name="location_description_label">Descripción</string>
-    <string name="location_status_label">Status</string>
-    <string name="location_coordinates_label">Latitude/Longitude</string>
     <string name="location_has_recieved_bednets_label">Ha Recibido Telas Mosquiteras</string>
     <string name="location_spraying_status_label">Estado de rociamiento</string>
 
@@ -188,12 +116,9 @@
     <string name="social_group_name">Nombre del Hogar</string>
     <string name="social_group_ext_id">Ext ID del Hogar</string>
     <string name="social_group_head_ext_id">Ext ID del Jefe del Hogar</string>
-    <string name="social_group_member_count">Número de Miembros del Hogar</string>
 
     <!-- UpdateActivity Labels -->
     <string name="finish_visit">Terminar la Visita</string>
-
-    <string name="action_settings">Configuración</string>
 
     <string name="field_worker_home">Encuestador Inicio</string>
     <string name="supervisor_home">Supervisor Inicio</string>
@@ -201,8 +126,6 @@
     <string name="unsent_forms">Formularios no enviado</string>
     <string name="delete_unsent_forms">Eliminar formularios no enviado</string>
     <string name="approve_unsent_forms">Aprobar formularios no enviado</string>
-    <string name="form_instance_supervisor_approval">Aprobar</string>
-    <string name="supervisor_checkbox_header">Aprobado</string>
     <string name="supervisor_approve_all">Aprobar Todo</string>
     <string name="supervisor_approve_selected">Aprobar Seleccionado</string>
     <string name="sub_district_label">Subdistrito</string>
@@ -219,10 +142,8 @@
     <string name="approve_forms">Aprobar Impresos</string>
     <string name="uuid">UUID</string>
     <string name="db_val_age_not_applicable">n/a</string>
-    <string name="bad_xml">Error de análisis XML</string>
     <string name="individual_first_name_label">Nombre</string>
     <string name="individual_last_name_label">Apellido</string>
-    <string name="openhds_server_url_default_summary">Misma URL utilizada para CIMS Server a través del navegador Web</string>
     <string name="sync_database_updated_never">Nunca</string>
     <string name="sync_database_updated">Base de datos actualizada</string>
     <string name="sync_database_new_data">Los nuevos datos disponibles</string>

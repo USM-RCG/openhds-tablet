@@ -6,7 +6,6 @@
     android:animateLayoutChanges="true"
     android:baselineAligned="false"
     android:orientation="horizontal"
-    android:tag="@string/landscape_layout_tag"
     android:gravity="center">
 
     <android.support.v4.view.ViewPager
