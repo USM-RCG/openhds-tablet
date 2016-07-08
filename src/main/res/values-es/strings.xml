@@ -164,7 +164,7 @@
     <string name="individual_member_status_label">Estado del Miembro</string>
     <string name="individual_socialgroup_extid_label">GrupoSocial Ext ID</string>
 
-    <!-- Field Worker Labels -->
+    <!-- Fieldworker Labels -->
     <string name="field_worker_first_name_label">Nombre</string>
     <string name="field_worker_last_name_label">Apellido</string>
     <string name="field_worker_id_label">Id</string>
