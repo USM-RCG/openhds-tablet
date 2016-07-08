@@ -36,6 +36,7 @@ public class SupervisorActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        setTitle(R.string.supervisor_home);
         setContentView(R.layout.supervisor_main);
 
         LinearLayout supervisorButtonLayout = (LinearLayout) findViewById(R.id.supervisor_activity_options);
