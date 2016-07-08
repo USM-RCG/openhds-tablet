@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -20,6 +22,7 @@ import org.openhds.mobile.utilities.OdkCollectHelper;
 import java.io.IOException;
 import java.util.List;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static org.openhds.mobile.utilities.FormUtils.isFormReviewed;
 import static org.openhds.mobile.utilities.LayoutUtils.makeButton;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
@@ -72,6 +75,23 @@ public class SupervisorActivity extends Activity {
         }
 
         checklistFragment = (ChecklistFragment) getFragmentManager().findFragmentById(R.id.supervisor_checklist_fragment);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.supervisor_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout_menu_button:
+                startActivity(new Intent(this, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP));
+                return true;
+            default:
+                return super.onMenuItemSelected(featureId, item);
+        }
     }
 
     public void sendApprovedForms() {
