@@ -61,11 +61,9 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent();
         switch (item.getItemId()) {
             case R.id.logout_menu_button:
-                intent.setClass(this, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                startActivity(new Intent(this, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
