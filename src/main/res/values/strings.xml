@@ -68,6 +68,8 @@
     <string name="fieldworker_login">Field Worker Login</string>
     <string name="supervisor_login">Supervisor Login</string>
     <string name="preferences">Preferences</string>
+    <string name="malformed_url">Malformed URL</string>
+    <string name="malformed_url_msg">The value entered is not a valid URL.</string>
     <string name="openhds_server_url_key" translatable="false">openhds_server_url</string>
     <string name="interop_server_url_key" translatable="false">interop_server_url</string>
     <string name="openhds_server_url_default_summary">Same URL used for CIMS Server via Web browser</string>

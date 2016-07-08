@@ -169,7 +169,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.action_bar_menu, menu);
+        inflater.inflate(R.menu.fieldworker_menu, menu);
 
         // MenuItems do not have their own tags, so I am using a map as a substitute. This map uses the MenuItem itself
         // as a key and the moduleName.

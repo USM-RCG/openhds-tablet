@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/preferences">
 
     <EditTextPreference
-        android:defaultValue="@string/default_openhds_server_url"
-        android:dialogTitle="Enter your CIMS Server URL"
-        android:inputType="textUri"
         android:key="@string/openhds_server_url_key"
-        android:summary="@string/openhds_server_url_default_summary"
-        android:title="@string/openhds_server_url_title" />
+        android:title="@string/openhds_server_url_title"
+        android:inputType="textUri"
+        android:defaultValue="@string/default_openhds_server_url"
+        />
 
 </PreferenceScreen>

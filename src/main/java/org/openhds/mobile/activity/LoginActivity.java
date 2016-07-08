@@ -1,60 +1,117 @@
 package org.openhds.mobile.activity;
 
-import android.app.Activity;
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 
 import org.openhds.mobile.R;
+import org.openhds.mobile.fragment.FieldWorkerLoginFragment;
+import org.openhds.mobile.fragment.SupervisorLoginFragment;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static org.openhds.mobile.utilities.ConfigUtils.getAppFullName;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends FragmentActivity {
 
-    private final String PREF_STATE_KEY = "prefStateKey";
-
-    private FrameLayout prefsLayout;
+    private final Map<String, Fragment> fragments = new LinkedHashMap<>();
+    private ViewPager pager;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         setTitle(getAppFullName(this));
-        setContentView(R.layout.opening_activity);
-        prefsLayout = (FrameLayout) findViewById(R.id.login_pref_container);
-    }
+        setContentView(R.layout.login);
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(PREF_STATE_KEY, prefsLayout.getVisibility());
-        super.onSaveInstanceState(outState);
-    }
+        fragments.put(getString(R.string.fieldworker_login), new FieldWorkerLoginFragment());
+        fragments.put(getString(R.string.supervisor_login), new SupervisorLoginFragment());
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        showPrefs(savedInstanceState.getInt(PREF_STATE_KEY) == VISIBLE);
+        pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+
+        actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        for (Map.Entry<String, Fragment> fragment : fragments.entrySet()) {
+            actionBar.addTab(actionBar.newTab().setText(fragment.getKey()).setTabListener(new TabListener()));
+        }
+
+        pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                actionBar.setSelectedNavigationItem(position);
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.login_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.login_menu, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        togglePrefs();
-        return true;
+        switch (item.getItemId()) {
+            case R.id.configure_server:
+                startActivity(new Intent(this, PreferenceActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
-    private void togglePrefs() {
-        showPrefs(prefsLayout.getVisibility() != VISIBLE);
+    class TabListener implements ActionBar.TabListener {
+
+        @Override
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+            pager.setCurrentItem(tab.getPosition(), true);
+        }
+
+        @Override
+        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+        }
+
+        @Override
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+        }
     }
 
-    private void showPrefs(boolean show) {
-        prefsLayout.setVisibility(show ? VISIBLE : GONE);
+    class PagerAdapter extends FragmentPagerAdapter {
+
+        private String[] fragmentKeys = fragments.keySet().toArray(new String[]{});
+
+        public PagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(fragmentKeys[position]);
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return fragmentKeys[position];
+        }
     }
 }

@@ -21,7 +21,6 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.adapter.FormInstanceAdapter;
-import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
@@ -155,7 +154,7 @@ public class FormListFragment extends Fragment {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         Activity activity = getActivity();
         if (v.getId() == R.id.form_list) {
-            activity.getMenuInflater().inflate(R.menu.form_menu, menu);
+            activity.getMenuInflater().inflate(R.menu.formlist_menu, menu);
             menu.findItem(R.id.find_form).setVisible(isFindEnabled);
         }
     }
