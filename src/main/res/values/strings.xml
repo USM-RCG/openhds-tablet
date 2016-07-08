@@ -79,12 +79,9 @@
     <string name="supervisor_bad_credentials">Invalid supervisor credentials</string>
     <string name="preference_invalid_label">Invalid!</string>
     <string name="preference_invalid_warning">Invalid preference value</string>
-    <string name="send_finalized_forms_label">Send Forms</string>
-    <string name="send_finalized_forms_description">Send Finished Forms to ODKAggregate</string>
-    <string name="delete_recent_forms_label">Delete Forms</string>
-    <string name="delete_recent_forms_description">Delete Forms Created Since Last Sync</string>
-    <string name="approve_recent_forms_label">Approve Forms</string>
-    <string name="approve_recent_forms_description">Approve Forms Created Since Last Sync</string>
+    <string name="send_forms">Send Forms</string>
+    <string name="delete_forms">Delete Forms</string>
+    <string name="approve_forms">Approve Forms</string>
     <string name="field_worker_bad_credentials">Invalid field worker credentials</string>
     <string name="region_label">Region</string>
     <string name="province_label">Province</string>

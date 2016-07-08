@@ -34,8 +34,7 @@
     <string name="syncDatabaseMessage">Este procedimiento intentará descargar entidades CIMS en el dispositivo. Por favor tenga paciencia mientras que la descarga está en curso</string>
     <string name="sync_forms_successful">Impresos recopilado con éxito</string>
     <string name="sync_forms_failure">Recopilación de Impresos Falló</string>
-    <string name="send_finalized_forms_description">Enviar Impresos Finalizados a ODKAggregate</string>
-    <string name="send_finalized_forms_label">Enviar Impresos</string>
+    <string name="send_forms">Enviar Impresos</string>
     <string name="unable_to_connect">No se puede conectar</string>
     <string name="url_error">URL inválido!</string>
     <string name="update">Actualizar</string>
@@ -216,11 +215,8 @@
     <string name="delete_forms_dialog_warning">Eliminación de los impresos puede provocar un comportamiento inesperado. Estás seguro?</string>
     <string name="cancel_label">Cancelar</string>
     <string name="delete_dialog_warning_title">¡Aviso!</string>
-
-    <string name="delete_recent_forms_label">Eliminar Impresos</string>
-    <string name="delete_recent_forms_description">Eliminar los impresos desde la última sincronización</string>
-    <string name="approve_recent_forms_label">Aprobar Impresos</string>
-    <string name="approve_recent_forms_description">Aprobar los impresos desde la última sincronización</string>
+    <string name="delete_forms">Eliminar Impresos</string>
+    <string name="approve_forms">Aprobar Impresos</string>
     <string name="uuid">UUID</string>
     <string name="db_val_age_not_applicable">n/a</string>
     <string name="bad_xml">Error de análisis XML</string>

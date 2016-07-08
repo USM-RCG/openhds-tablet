@@ -9,13 +9,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.ChecklistFragment;
 import org.openhds.mobile.model.core.Supervisor;
 import org.openhds.mobile.model.form.FormInstance;
-
 import org.openhds.mobile.utilities.LoginUtils;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
@@ -45,26 +46,21 @@ public class SupervisorActivity extends Activity {
         LinearLayout supervisorButtonLayout = (LinearLayout) findViewById(R.id.supervisor_activity_options);
         ButtonClickListener buttonClickListener = new ButtonClickListener();
 
-        makeButton(this,
-                R.string.send_finalized_forms_description,
-                R.string.send_finalized_forms_label,
-                R.string.send_finalized_forms_label,
-                buttonClickListener,
-                supervisorButtonLayout);
+        makeButton(this, -1, R.string.send_forms, R.string.send_forms,
+                buttonClickListener, supervisorButtonLayout);
 
-        makeButton(this,
-                R.string.delete_recent_forms_description,
-                R.string.delete_recent_forms_label,
-                R.string.delete_recent_forms_label,
-                buttonClickListener,
-                supervisorButtonLayout);
+        Button button;
+        final int BUTTON_SPACING = 10;
 
-        makeButton(this,
-                R.string.approve_recent_forms_description,
-                R.string.approve_recent_forms_label,
-                R.string.approve_recent_forms_label,
-                buttonClickListener,
-                supervisorButtonLayout);
+        button = makeButton(this, -1, R.string.delete_forms, R.string.delete_forms,
+                buttonClickListener, supervisorButtonLayout);
+
+        ((RelativeLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
+
+        button = makeButton(this, -1, R.string.approve_forms, R.string.approve_forms,
+                buttonClickListener, supervisorButtonLayout);
+
+        ((RelativeLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
 
         if (savedInstanceState == null) {
             LoginUtils.Login<Supervisor> login = getLogin(Supervisor.class);
@@ -96,7 +92,7 @@ public class SupervisorActivity extends Activity {
 
     public void sendApprovedForms() {
         List<FormInstance> allFormInstances = OdkCollectHelper.getAllUnsentFormInstances(this.getContentResolver());
-        for (FormInstance instance: allFormInstances) {
+        for (FormInstance instance : allFormInstances) {
             try {
                 if (!isFormReviewed(instance.getFilePath())) {
                     OdkCollectHelper.setStatusIncomplete(this.getContentResolver(), Uri.parse(instance.getUriString()));
@@ -113,11 +109,11 @@ public class SupervisorActivity extends Activity {
         @Override
         public void onClick(View v) {
             Integer tag = (Integer) v.getTag();
-            if (tag.equals(R.string.send_finalized_forms_label)) {
+            if (tag.equals(R.string.send_forms)) {
                 sendApprovedForms();
-            } else if (tag.equals(R.string.delete_recent_forms_label)) {
+            } else if (tag.equals(R.string.delete_forms)) {
                 checklistFragment.setMode(ChecklistFragment.DELETE_MODE);
-            } else if (tag.equals(R.string.approve_recent_forms_label)) {
+            } else if (tag.equals(R.string.approve_forms)) {
                 checklistFragment.setMode(ChecklistFragment.APPROVE_MODE);
             }
         }
