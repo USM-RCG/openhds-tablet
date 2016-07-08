@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.navconfig.HierarchyPath;
@@ -29,6 +30,7 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 	// for some reason margin in layout XML is ignored
 	private static final int BUTTON_MARGIN = 5;
 
+	private ScrollView scrollView;
 	private HierarchyButtonListener listener;
 	private Map<String, RelativeLayout> levelViews;
 	private NavigatorConfig config;
@@ -61,6 +63,7 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View fragmentLayout = inflater.inflate(R.layout.hierarchy_button_fragment, container, false);
+		scrollView = (ScrollView)fragmentLayout.findViewById(R.id.hierbutton_scroll);
 		ViewGroup buttonLayout = (ViewGroup) fragmentLayout.findViewById(R.id.hierbutton_layout);
 
 		levelViews = new HashMap<>();
@@ -100,6 +103,16 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 			updateButton(nextLevel, path.get(nextLevel));
 			setVisible(nextLevel, true);
 		}
+
+		// Scroll to the bottom when the buttons overflow
+		scrollView.post(new Runnable() {
+			@Override
+			public void run() {
+				if (scrollView.canScrollVertically(1)) {
+					scrollView.fullScroll(View.FOCUS_DOWN);
+				}
+			}
+		});
 	}
 
 	private void updateButton(String level, DataWrapper data) {
@@ -116,7 +129,7 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 	private void setVisible(String level, boolean visible) {
 		RelativeLayout layout = levelViews.get(level);
 		if (layout != null) {
-			layout.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+			layout.setVisibility(visible ? View.VISIBLE : View.GONE);
 		}
 	}
 
