@@ -96,6 +96,9 @@
     <string name="sync_database_description">Download data from the server</string>
     <string name="sync_database_column_updated">Last Updated</string>
     <string name="sync_database_column_fingerprint">Fingerprint</string>
+    <string name="sync_history_retention_key" translatable="false">sync_history_retention</string>
+    <string name="sync_history_retention">Retain Sync History (Days)</string>
+    <string name="sync_history_retention_default" translatable="false">30</string>
 
     <!-- Individual Labels -->
     <string name="individual_first_name_label">First Name</string>

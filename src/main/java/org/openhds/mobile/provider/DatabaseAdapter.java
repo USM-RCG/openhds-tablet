@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import org.openhds.mobile.model.core.Supervisor;
 
@@ -18,7 +19,7 @@ import static org.openhds.mobile.utilities.SQLUtils.makePlaceholders;
 public class DatabaseAdapter {
 
     private static final String DATABASE_NAME = "entityData";
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 17;
 
     private static final String SUPERVISOR_TABLE_NAME = "openhds_supervisor";
     private static final String KEY_ID = "_id";
@@ -30,14 +31,31 @@ public class DatabaseAdapter {
     private static final String KEY_HIER_PATH = "hierarchyPath";
     private static final String KEY_FORM_PATH = "formPath";
 
-    private static final String USER_CREATE = "CREATE TABLE " + SUPERVISOR_TABLE_NAME + " ("
+    private static final String SYNC_HISTORY_TABLE_NAME = "sync_history";
+    private static final String KEY_FINGERPRINT = "fingerprint";
+    private static final String START_TIME_IDX_NAME = "start_time_idx";
+    private static final String KEY_START_TIME = "start_time";
+    private static final String KEY_END_TIME = "end_time";
+    private static final String KEY_RESULT = "result";
+
+    private static final String USER_CREATE = "CREATE TABLE IF NOT EXISTS " + SUPERVISOR_TABLE_NAME + " ("
             + KEY_ID + " INTEGER PRIMARY KEY, "
             + KEY_SUPERVISOR_NAME + " TEXT, "
             + KEY_SUPERVISOR_PASS + " TEXT)";
 
-    private static final String FORM_PATH_CREATE = "CREATE TABLE " + FORM_PATH_TABLE_NAME + " ("
-            + KEY_HIER_PATH + " TEXT, " + KEY_FORM_PATH + " TEXT, CONSTRAINT "
+    private static final String FORM_PATH_CREATE = "CREATE TABLE IF NOT EXISTS " + FORM_PATH_TABLE_NAME + " ("
+            + KEY_HIER_PATH + " TEXT, "
+            + KEY_FORM_PATH + " TEXT, CONSTRAINT "
             + FORM_PATH_IDX_NAME + " UNIQUE (" + KEY_HIER_PATH + ", " + KEY_FORM_PATH + " ) )";
+
+    private static final String SYNC_HISTORY_CREATE = "CREATE TABLE IF NOT EXISTS " + SYNC_HISTORY_TABLE_NAME + " ("
+            + KEY_FINGERPRINT + " TEXT NOT NULL, "
+            + KEY_START_TIME + " INTEGER NOT NULL, "
+            + KEY_END_TIME + " INTEGER NOT NULL, "
+            + KEY_RESULT + " TEXT NOT NULL)";
+
+    private static final String START_TIME_IDX_CREATE = "CREATE INDEX IF NOT EXISTS " + START_TIME_IDX_NAME + " ON "
+            + SYNC_HISTORY_TABLE_NAME + "(" + KEY_START_TIME + " DESC)";
 
     private static DatabaseAdapter instance;
 
@@ -197,21 +215,69 @@ public class DatabaseAdapter {
         }
     }
 
+    public void addSyncResult(String fingerprint, long startTime, long endTime, String result) {
+        final int MILLIS_IN_SEC = 1000;
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_FINGERPRINT, fingerprint);
+            cv.put(KEY_START_TIME, startTime / MILLIS_IN_SEC);
+            cv.put(KEY_END_TIME, endTime / MILLIS_IN_SEC);
+            cv.put(KEY_RESULT, result);
+            db.insert(SYNC_HISTORY_TABLE_NAME, null, cv);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void pruneSyncResults(int daysToKeep) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            String where = String.format("%s > date('now','-%s days')", KEY_START_TIME, daysToKeep);
+            db.delete(SYNC_HISTORY_TABLE_NAME, where, null);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
     private static class DatabaseHelper extends SQLiteOpenHelper {
+
+        private final String TAG = DatabaseHelper.class.getSimpleName();
 
         public DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
+        private void execSQL(SQLiteDatabase db, String... statements) {
+            for (String statement : statements) {
+                db.execSQL(statement);
+            }
+        }
+
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL(USER_CREATE);
-            db.execSQL(FORM_PATH_CREATE);
+            Log.i(TAG, "creating database");
+            execSQL(db, USER_CREATE, FORM_PATH_CREATE, SYNC_HISTORY_CREATE, START_TIME_IDX_CREATE);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            onCreate(db);
+            Log.i(TAG, String.format("upgrading db version %s to %s", oldVersion, newVersion));
+            if (oldVersion < 17) {
+                execSQL(db, SYNC_HISTORY_CREATE, START_TIME_IDX_CREATE);
+            }
+        }
+
+        @Override
+        public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            Log.i(TAG, String.format("downgrading db version %s to %s", oldVersion, newVersion));
+            if (newVersion < 17) {
+                db.execSQL("DROP TABLE IF EXISTS " + SYNC_HISTORY_TABLE_NAME);
+            }
         }
     }
 }

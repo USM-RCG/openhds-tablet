@@ -9,4 +9,11 @@
         android:defaultValue="@string/default_openhds_server_url"
         />
 
+    <EditTextPreference
+        android:key="@string/sync_history_retention_key"
+        android:title="@string/sync_history_retention"
+        android:inputType="number"
+        android:defaultValue="@string/sync_history_retention_default"
+        />
+
 </PreferenceScreen>

@@ -11,6 +11,7 @@ import android.util.Log;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.LoginActivity;
+import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.provider.OpenHDSProvider;
 
 import java.io.BufferedOutputStream;
@@ -37,6 +38,7 @@ import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.openhds.mobile.OpenHDS.AUTHORITY;
 import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
+import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceInt;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
@@ -121,6 +123,16 @@ public class SyncUtils {
         String baseUrl = getPreferenceString(ctx, R.string.openhds_server_url_key, "");
         String path = getResourceString(ctx, R.string.sync_database_path);
         return new URL(baseUrl + path);
+    }
+
+    /**
+     * Gets the configured sync history retention in days.
+     *
+     * @param ctx application context to use for config values
+     * @return the configured sync history retention in days
+     */
+    public static int getHistoryRetention(Context ctx) {
+        return getPreferenceInt(ctx, R.string.sync_history_retention_key, 30);
     }
 
     /**
@@ -295,13 +307,18 @@ public class SyncUtils {
                 downloadExists ? getTempFile(getDatabaseFile(ctx)) : getDatabaseFile(ctx)
         ));
 
+        DatabaseAdapter db = DatabaseAdapter.getInstance(ctx);
+
         NotificationManager manager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
 
+        String fingerprint = "?";
+
         try {
+            long startTime = System.currentTimeMillis();
             String creds = encodeBasicCreds(username, password);
             HttpURLConnection httpConn = get(getSyncEndpoint(ctx), SQLITE_MIME_TYPE, creds, existingFingerprint);
-            int result = httpConn.getResponseCode();
-            switch (result) {
+            int httpResult = httpConn.getResponseCode();
+            switch (httpResult) {
                 case SC_NOT_MODIFIED:
                     Log.i(TAG, "no update found");
                     break;
@@ -309,7 +326,7 @@ public class SyncUtils {
                     try {
                         manager.cancel(SYNC_NOTIFICATION_ID);
                         File fingerprintFile = getFingerprintFile(dbTempFile);
-                        String fingerprint = httpConn.getHeaderField("ETag");
+                        fingerprint = httpConn.getHeaderField("ETag");
                         Log.i(TAG, "update " + fingerprint + " found, fetching");
                         if (fingerprintFile.exists()) {
                             if (!fingerprintFile.delete()) {
@@ -326,6 +343,7 @@ public class SyncUtils {
                         streamToFile(httpConn.getInputStream(), dbTempFile);
                         store(fingerprintFile, fingerprint);  // install fingerprint after downloaded finishes
                         Log.i(TAG, "database downloaded");
+                        db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "success");
                         Intent intent = new Intent(ctx, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                         PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                         manager.notify(SYNC_NOTIFICATION_ID, new Notification.Builder(ctx)
@@ -336,6 +354,7 @@ public class SyncUtils {
                                 .getNotification());
                     } catch (IOException e) {
                         Log.e(TAG, "sync io failure", e);
+                        db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "error: " + httpResult);
                         manager.notify(SYNC_NOTIFICATION_ID, new Notification.Builder(ctx)
                                 .setSmallIcon(R.drawable.ic_launcher)
                                 .setContentTitle(ctx.getString(R.string.sync_database_new_data))
@@ -344,11 +363,12 @@ public class SyncUtils {
                     }
                     break;
                 default:
-                    Log.i(TAG, "unexpected status code " + result);
+                    Log.i(TAG, "unexpected status code " + httpResult);
             }
         } catch (IOException e) {
             Log.e(TAG, "sync failed: " + e.getMessage());
         }
+        db.pruneSyncResults(getHistoryRetention(ctx));
     }
 
     /**

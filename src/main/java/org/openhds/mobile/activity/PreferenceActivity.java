@@ -15,6 +15,7 @@ import static org.openhds.mobile.utilities.ConfigUtils.getAppFullName;
 public class PreferenceActivity extends android.preference.PreferenceActivity implements Preference.OnPreferenceChangeListener {
 
     EditTextPreference serverUrlPref;
+    EditTextPreference syncHistoryPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,10 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
         serverUrlPref = (EditTextPreference) findPreference(getText(R.string.openhds_server_url_key));
         serverUrlPref.setOnPreferenceChangeListener(this);
         updateSummary(serverUrlPref, serverUrlPref.getText());
+
+        syncHistoryPref = (EditTextPreference) findPreference(getText(R.string.sync_history_retention_key));
+        syncHistoryPref.setOnPreferenceChangeListener(this);
+        updateSummary(syncHistoryPref, syncHistoryPref.getText());
     }
 
     @Override

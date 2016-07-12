@@ -13,6 +13,10 @@ public class ConfigUtils {
         return context.getString(id);
     }
 
+    public static int getPreferenceInt(Context context, int key, int defaultValue) {
+        return getDefaultSharedPreferences(context).getInt(getResourceString(context, key), defaultValue);
+    }
+
     public static String getPreferenceString(Context context, int key, String defaultValue) {
         return getDefaultSharedPreferences(context).getString(getResourceString(context, key), defaultValue);
     }
