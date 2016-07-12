@@ -164,7 +164,6 @@ public class DatabaseAdapter {
 
     public String findHierarchyForForm(String filePath) {
         SQLiteDatabase db = helper.getReadableDatabase();
-        Set<String> formPaths = new HashSet<>();
         String[] columns = {KEY_HIER_PATH};
         String where = String.format("%s = ?", KEY_FORM_PATH);
         String[] whereArgs = {filePath};
