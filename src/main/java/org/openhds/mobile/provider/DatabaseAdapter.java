@@ -55,7 +55,7 @@ public class DatabaseAdapter {
             + KEY_RESULT + " TEXT NOT NULL)";
 
     private static final String START_TIME_IDX_CREATE = "CREATE INDEX IF NOT EXISTS " + START_TIME_IDX_NAME + " ON "
-            + SYNC_HISTORY_TABLE_NAME + "(" + KEY_START_TIME + " DESC)";
+            + SYNC_HISTORY_TABLE_NAME + "(" + KEY_START_TIME + ")";
 
     private static DatabaseAdapter instance;
 
