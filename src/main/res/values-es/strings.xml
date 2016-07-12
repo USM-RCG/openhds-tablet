@@ -152,6 +152,8 @@
     <string name="sync_database_column_updated">Última Actualización</string>
     <string name="sync_database_column_fingerprint">Huella Digital</string>
     <string name="sync_history_retention">Conservar historial de sincronización (Días)</string>
+    <string name="sync_download_times">El Tiempo de Descarga</string>
+    <string name="sync_duration_minutes">Duración (minutos)</string>
     <string name="openhds_server_url_title">URL del servidor CIMS</string>
     <string name="form_not_found">Formulario no encontrado</string>
 

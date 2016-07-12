@@ -9,6 +9,7 @@ import android.util.Log;
 
 import org.openhds.mobile.model.core.Supervisor;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -241,6 +242,25 @@ public class DatabaseAdapter {
         } finally {
             db.endTransaction();
         }
+    }
+
+    public Number[] getSyncResults() {
+        ArrayList<Number> results = new ArrayList<>();
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String [] columns = {KEY_START_TIME, "(end_time-start_time)/60.0"};
+        String where = String.format("%s = 'success'", KEY_RESULT);
+        Cursor cursor = db.query(SYNC_HISTORY_TABLE_NAME, columns, where, null, null, null, KEY_START_TIME);
+        if (cursor != null) {
+            try {
+                while (cursor.moveToNext()) {
+                    results.add(cursor.getFloat(0));
+                    results.add(cursor.getFloat(1));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        return results.toArray(new Number[]{});
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {

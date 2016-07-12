@@ -6,18 +6,27 @@
               android:orientation="horizontal"
               android:tag="landscape" >
 
-    <FrameLayout
-            android:id="@+id/supervisor_auxiliary_container"
-            android:layout_weight="3"
-            android:layout_width="0px"
-            android:layout_height="match_parent"
-            android:padding="15dp">
+    <LinearLayout
+        android:layout_weight="3"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:padding="15dp"
+        android:orientation="vertical">
+
         <fragment
             android:id="@+id/supervisor_sync_fragment"
             android:name="org.openhds.mobile.fragment.SyncDatabaseFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
+            android:layout_height="wrap_content" />
+
+        <fragment
+            android:id="@+id/supervisor_sync_history_fragment"
+            android:name="org.openhds.mobile.fragment.SyncHistoryFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp" />
+
+    </LinearLayout>
 
     <LinearLayout
             android:id="@+id/supervisor_activity_options"

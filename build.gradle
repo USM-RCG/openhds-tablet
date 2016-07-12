@@ -20,6 +20,7 @@ dependencies {
     compile 'org.mindrot:jbcrypt:0.3m'
     compile 'org.mozilla:rhino:1.7.7.1'
     compile 'com.android.support:support-v4:18.0.+'
+    compile 'com.androidplot:androidplot-core:0.9.8'
 }
 
 android {
