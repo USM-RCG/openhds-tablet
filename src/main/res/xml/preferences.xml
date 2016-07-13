@@ -9,6 +9,14 @@
         android:defaultValue="@string/default_openhds_server_url"
         />
 
+    <SwitchPreference
+        android:key="@string/use_rsync_key"
+        android:title="@string/use_rsync"
+        android:summaryOn="@string/use_rsync_enabled"
+        android:summaryOff="@string/use_rsync_disabled"
+        android:defaultValue="@bool/use_rsync_default"
+        />
+
     <EditTextPreference
         android:key="@string/sync_history_retention_key"
         android:title="@string/sync_history_retention"
