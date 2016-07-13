@@ -22,7 +22,7 @@ import java.io.File;
 
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
 import static org.openhds.mobile.utilities.SyncUtils.SYNC_NOTIFICATION_ID;
-import static org.openhds.mobile.utilities.SyncUtils.downloadedContentExists;
+import static org.openhds.mobile.utilities.SyncUtils.canUpdateDatabase;
 import static org.openhds.mobile.utilities.SyncUtils.getDatabaseFile;
 import static org.openhds.mobile.utilities.SyncUtils.getDatabaseFingerprint;
 import static org.openhds.mobile.utilities.SyncUtils.installUpdate;
@@ -89,7 +89,7 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
         String fpVal = getDatabaseFingerprint(ctx);
         fingerprint.setText(fpVal.length() > 8 ? fpVal.substring(0, 8) + '\u2026' : fpVal);
         lastUpdated.setText(getLastUpdated());
-        updateButton.setEnabled(downloadedContentExists(ctx));
+        updateButton.setEnabled(canUpdateDatabase(ctx));
     }
 
     @Override

@@ -255,7 +255,7 @@ public class SyncUtils {
      * @param ctx the app context to use for determining content paths
      * @return true if there appears to be temp content to replace app db, otherwise false
      */
-    public static boolean downloadedContentExists(Context ctx) {
+    public static boolean canUpdateDatabase(Context ctx) {
         return getFingerprintFile(getTempFile(getDatabaseFile(ctx))).exists();
     }
 
@@ -295,8 +295,7 @@ public class SyncUtils {
 
         File dbFile = getDatabaseFile(ctx), dbTempFile = getTempFile(dbFile);
 
-        boolean downloadExists = downloadedContentExists(ctx);
-        String existingFingerprint = loadFirstLine(getFingerprintFile(downloadExists ? dbTempFile : dbFile));
+        String existingFingerprint = loadFirstLine(getFingerprintFile(dbTempFile.exists() ? dbTempFile : dbFile));
 
         DatabaseAdapter db = DatabaseAdapter.getInstance(ctx);
 
@@ -374,7 +373,7 @@ public class SyncUtils {
     public static void installUpdate(Context ctx, DatabaseInstallationListener listener) {
         File dbFile = getDatabaseFile(ctx), dbTempFile = getTempFile(dbFile),
                 dbFpFile = getFingerprintFile(dbFile), dbTempFpFile = getFingerprintFile(dbTempFile);
-        if (downloadedContentExists(ctx)) {
+        if (canUpdateDatabase(ctx)) {
             if (dbTempFile.renameTo(dbFile) && dbTempFpFile.renameTo(dbFpFile)) {
                 OpenHDSProvider.getDatabaseHelper(ctx).close();
                 listener.installed();
