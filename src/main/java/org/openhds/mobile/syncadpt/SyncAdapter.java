@@ -24,6 +24,5 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                               SyncResult syncResult) {
         Context ctx = getContext();
         downloadUpdate(ctx, account.name, AccountManager.get(ctx).getPassword(account));
-        ctx.getContentResolver().notifyChange(OpenHDS.CONTENT_BASE_URI, null, false);
     }
 }

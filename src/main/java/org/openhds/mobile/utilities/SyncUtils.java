@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.LoginActivity;
 import org.openhds.mobile.provider.DatabaseAdapter;
@@ -330,6 +331,7 @@ public class SyncUtils {
                         if (fingerprintFile.exists()) {
                             if (!fingerprintFile.delete()) {
                                 Log.w(TAG, "failed to clear old fingerprint, user could install partial content!");
+                                ctx.getContentResolver().notifyChange(OpenHDS.CONTENT_BASE_URI, null, false);
                             }
                         }
                         manager.notify(SYNC_NOTIFICATION_ID, new Notification.Builder(ctx)
@@ -368,6 +370,7 @@ public class SyncUtils {
             Log.e(TAG, "sync failed: " + e.getMessage());
         }
         db.pruneSyncResults(getHistoryRetention(ctx));
+        ctx.getContentResolver().notifyChange(OpenHDS.CONTENT_BASE_URI, null, false);
     }
 
     /**
