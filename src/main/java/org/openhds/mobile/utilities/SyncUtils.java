@@ -296,9 +296,7 @@ public class SyncUtils {
         File dbFile = getDatabaseFile(ctx), dbTempFile = getTempFile(dbFile);
 
         boolean downloadExists = downloadedContentExists(ctx);
-        String existingFingerprint = loadFirstLine(getFingerprintFile(
-                downloadExists ? getTempFile(getDatabaseFile(ctx)) : getDatabaseFile(ctx)
-        ));
+        String existingFingerprint = loadFirstLine(getFingerprintFile(downloadExists ? dbTempFile : dbFile));
 
         DatabaseAdapter db = DatabaseAdapter.getInstance(ctx);
 
