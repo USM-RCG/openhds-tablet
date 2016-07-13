@@ -4,7 +4,11 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class OpenHDS {
+
 	public static final String AUTHORITY = "org.openhds.Application";
+	private static final String SCHEME = "content://";
+	public static final String CONTENT_BASE = SCHEME + AUTHORITY;
+	public static final Uri CONTENT_BASE_URI = Uri.parse(SCHEME + AUTHORITY);
 
 	private OpenHDS() {
 	}
@@ -17,7 +21,6 @@ public class OpenHDS {
 		}
 
 		public static final String TABLE_NAME = "individuals";
-		private static final String SCHEME = "content://";
 
 		private static final String PATH_NOTES = "/individuals";
 		private static final String PATH_NOTE_ID = "/individuals/";
@@ -25,10 +28,10 @@ public class OpenHDS {
 
 		public static final int NOTE_ID_PATH_POSITION = 1;
 
-		public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + PATH_NOTES);
-		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID);
-		public static final Uri CONTENT_SG_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_SG);
-		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID + "/#");
+		public static final Uri CONTENT_URI = Uri.parse(CONTENT_BASE + PATH_NOTES);
+		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(CONTENT_BASE + PATH_NOTE_ID);
+		public static final Uri CONTENT_SG_URI_BASE = Uri.parse(CONTENT_BASE + PATH_SG);
+		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(CONTENT_BASE + PATH_NOTE_ID + "/#");
 
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openhds.individual";
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openhds.individual";
@@ -70,9 +73,9 @@ public class OpenHDS {
 
 		public static final int NOTE_ID_PATH_POSITION = 1;
 
-		public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + PATH_NOTES);
-		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID);
-		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID + "/#");
+		public static final Uri CONTENT_URI = Uri.parse(CONTENT_BASE + PATH_NOTES);
+		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(CONTENT_BASE + PATH_NOTE_ID);
+		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(CONTENT_BASE + PATH_NOTE_ID + "/#");
 
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openhds.location";
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openhds.location";
@@ -112,9 +115,9 @@ public class OpenHDS {
 
 		public static final int NOTE_ID_PATH_POSITION = 1;
 
-		public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + PATH_NOTES);
-		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID);
-		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID + "/#");
+		public static final Uri CONTENT_URI = Uri.parse(CONTENT_BASE + PATH_NOTES);
+		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(CONTENT_BASE + PATH_NOTE_ID);
+		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(CONTENT_BASE + PATH_NOTE_ID + "/#");
 
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openhds.hierarchyitem";
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openhds.hierarchyitem";
@@ -136,9 +139,9 @@ public class OpenHDS {
 
 		public static final int ID_PATH_POSITION = 1;
 
-		public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + PATH_NOTES);
-		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID);
-		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID + "/#");
+		public static final Uri CONTENT_URI = Uri.parse(CONTENT_BASE + PATH_NOTES);
+		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(CONTENT_BASE + PATH_NOTE_ID);
+		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(CONTENT_BASE + PATH_NOTE_ID + "/#");
 
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openhds.visit";
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openhds.visit";
@@ -161,9 +164,9 @@ public class OpenHDS {
 
 		public static final int ID_PATH_POSITION = 1;
 
-		public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + PATH_NOTES);
-		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID);
-		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID + "/#");
+		public static final Uri CONTENT_URI = Uri.parse(CONTENT_BASE + PATH_NOTES);
+		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(CONTENT_BASE + PATH_NOTE_ID);
+		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(CONTENT_BASE + PATH_NOTE_ID + "/#");
 
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openhds.relationship";
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openhds.relationship";
@@ -185,9 +188,9 @@ public class OpenHDS {
 
 		public static final int ID_PATH_POSITION = 1;
 
-		public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + PATH_NOTES);
-		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID);
-		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID + "/#");
+		public static final Uri CONTENT_URI = Uri.parse(CONTENT_BASE + PATH_NOTES);
+		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(CONTENT_BASE + PATH_NOTE_ID);
+		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(CONTENT_BASE + PATH_NOTE_ID + "/#");
 
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openhds.fieldworker";
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openhds.fieldworker";
@@ -213,18 +216,18 @@ public class OpenHDS {
 		public static final int ID_PATH_POSITION = 1;
 		public static final int LOCATION_PATH_POSITION = 2;
 
-		public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + PATH_NOTES);
-		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID);
-		public static final Uri CONTENT_LOCATION_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY
+		public static final Uri CONTENT_URI = Uri.parse(CONTENT_BASE + PATH_NOTES);
+		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(CONTENT_BASE + PATH_NOTE_ID);
+		public static final Uri CONTENT_LOCATION_ID_URI_BASE = Uri.parse(CONTENT_BASE
 				+ PATH_LOCATION_ID);
-		public static final Uri CONTENT_LOCATION_ID_URI_PATTERN = Uri.parse(SCHEME + AUTHORITY
+		public static final Uri CONTENT_LOCATION_ID_URI_PATTERN = Uri.parse(CONTENT_BASE
 				+ PATH_LOCATION_ID + "/*");
-		public static final Uri CONTENT_INDIVIDUAL_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY
+		public static final Uri CONTENT_INDIVIDUAL_ID_URI_BASE = Uri.parse(CONTENT_BASE
 				+ PATH_INDIVIDUAL_ID);
-		public static final Uri CONTENT_INDIVIDUAL_ID_URI_PATTERN = Uri.parse(SCHEME + AUTHORITY
+		public static final Uri CONTENT_INDIVIDUAL_ID_URI_PATTERN = Uri.parse(CONTENT_BASE
 				+ PATH_INDIVIDUAL_ID + "/*");
 
-		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID + "/#");
+		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(CONTENT_BASE + PATH_NOTE_ID + "/#");
 
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openhds.socialgroups";
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openhds.socialgroups";
@@ -246,9 +249,9 @@ public class OpenHDS {
 
 		public static final int ID_PATH_POSITION = 2;
 
-		public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + PATH_NOTES);
-		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID);
-		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(SCHEME + AUTHORITY + PATH_NOTE_ID + "/#");
+		public static final Uri CONTENT_URI = Uri.parse(CONTENT_BASE + PATH_NOTES);
+		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(CONTENT_BASE + PATH_NOTE_ID);
+		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(CONTENT_BASE + PATH_NOTE_ID + "/#");
 
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openhds.memberships";
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openhds.memberships";

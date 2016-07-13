@@ -38,7 +38,6 @@ import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.openhds.mobile.OpenHDS.AUTHORITY;
 import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
-import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceInt;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
@@ -132,7 +131,7 @@ public class SyncUtils {
      * @return the configured sync history retention in days
      */
     public static int getHistoryRetention(Context ctx) {
-        return getPreferenceInt(ctx, R.string.sync_history_retention_key, 30);
+        return Integer.parseInt(getPreferenceString(ctx, R.string.sync_history_retention_key, "30"));
     }
 
     /**

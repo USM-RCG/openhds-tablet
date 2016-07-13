@@ -1,15 +1,19 @@
 package org.openhds.mobile.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.database.ContentObserver;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.R;
 import org.openhds.mobile.utilities.MessageUtils;
 import org.openhds.mobile.utilities.SyncUtils;
@@ -31,6 +35,7 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
     private TextView lastUpdated;
     private TextView fingerprint;
     private Button updateButton;
+    private ContentObserver observer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,6 +48,24 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
         return view;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        observer = new ContentObserver(new Handler()) {
+            @Override
+            public void onChange(boolean selfChange) {
+                updateStatus();
+            }
+        };
+        activity.getContentResolver().registerContentObserver(OpenHDS.CONTENT_BASE_URI, false, observer);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (observer != null) {
+            getActivity().getContentResolver().unregisterContentObserver(observer);
+        }
+    }
 
     private File getFingerprintFile() {
         return SyncUtils.getFingerprintFile(getDatabaseFile(getActivity()));
