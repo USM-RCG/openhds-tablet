@@ -260,13 +260,6 @@ public class SyncUtils {
     }
 
     /**
-     * Interface for a simple status callback when a database update is downloaded.
-     */
-    public interface DatabaseDownloadListener {
-        void downloaded();
-    }
-
-    /**
      * Interface for a simple status callback when a database update is successfully applied.
      */
     public interface DatabaseInstallationListener {
