@@ -65,6 +65,7 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
         if (observer != null) {
             getActivity().getContentResolver().unregisterContentObserver(observer);
         }
+        super.onDestroy();
     }
 
     private File getFingerprintFile() {
