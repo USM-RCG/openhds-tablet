@@ -9,15 +9,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.github.batkinson.jrsync.Metadata;
+import com.github.batkinson.jrsync.zsync.RangeRequest;
+import com.github.batkinson.jrsync.zsync.RangeRequestFactory;
+
 import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.LoginActivity;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.provider.OpenHDSProvider;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.Closeable;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,14 +33,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.channels.FileChannel;
+import java.security.NoSuchAlgorithmException;
 
 import static android.content.ContentResolver.setIsSyncable;
 import static android.content.ContentResolver.setSyncAutomatically;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import static com.github.batkinson.jrsync.zsync.ZSync.sync;
 import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.openhds.mobile.OpenHDS.AUTHORITY;
@@ -43,6 +54,7 @@ import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
 import static org.openhds.mobile.utilities.HttpUtils.get;
+import static org.openhds.mobile.utilities.StringUtils.join;
 
 /**
  * Dumping grounds for miscellaneous sync-related functions.
@@ -166,6 +178,16 @@ public class SyncUtils {
         return new BufferedOutputStream(toWrap);
     }
 
+    /**
+     * A convenience method to wrap an input stream with a buffer to minimize system calls for multiple reads.
+     *
+     * @param toWrap the stram to wrap
+     * @return a {@link BufferedInputStream} wrapping toWrap
+     */
+    public static InputStream buffer(InputStream toWrap) {
+        return new BufferedInputStream(toWrap);
+    }
+
     private static String loadFirstLine(File file) {
         String line = null;
         if (file.exists() && file.canRead()) {
@@ -280,16 +302,24 @@ public class SyncUtils {
     }
 
     /**
-     * Sync should work like this:
-     * <p/>
-     * Get latest database fingerprint: coalesce(fingerprint(dbtmp), fingerprint(db))
-     * If HTTP_OK:
-     * remove temp fingerprint file
-     * stream response to dbtmp
-     * store etag as temp fingerprint
-     * send notification that database can be updated (with intent to launch app)
-     * <p/>
-     * Add the ability to 'apply update' if temp fingerprint is present
+     * Returns whether zsync-based download optimization is currently enabled based on user settings.
+     *
+     * @param ctx the app context to use for accessing preferences
+     * @return true if zsync optimization is enabled, otherwise false
+     */
+    public static boolean isZyncEnabled(Context ctx) {
+        return getDefaultSharedPreferences(ctx).getBoolean(ctx.getString(R.string.use_zsync_key), true);
+    }
+
+    /**
+     * Downloads an SQLite database and notifies the user to apply it manually via system notifications. There are two
+     * modes of downloading the SQLite file, incremental and direct. By default, incremental downloading is enabled,
+     * though the user can disable it via preferences. The first time a database is downloaded, it is downloaded
+     * directly. Subsequent downloads use zsync to download only differences from the local content.
+     *
+     * @param ctx      app context to use for locating resources like files, etc.
+     * @param username username to use for http auth
+     * @param password password to use for http auth
      */
     public static void downloadUpdate(Context ctx, String username, String password) {
 
@@ -303,11 +333,24 @@ public class SyncUtils {
 
         String fingerprint = "?";
 
+        boolean downloadedContentBefore = getFingerprintFile(dbFile).exists();
+        boolean useZsync = isZyncEnabled(ctx) && downloadedContentBefore;
+
+        String accept;
+        if (useZsync) {
+            accept = join(", ", SQLITE_MIME_TYPE, Metadata.MIME_TYPE);
+        } else {
+            accept = SQLITE_MIME_TYPE;
+        }
+
         try {
+
             long startTime = System.currentTimeMillis();
+
             String creds = encodeBasicCreds(username, password);
-            HttpURLConnection httpConn = get(getSyncEndpoint(ctx), SQLITE_MIME_TYPE, creds, existingFingerprint);
+            HttpURLConnection httpConn = get(getSyncEndpoint(ctx), accept, creds, existingFingerprint);
             int httpResult = httpConn.getResponseCode();
+
             switch (httpResult) {
                 case SC_NOT_MODIFIED:
                     Log.i(TAG, "no update found");
@@ -331,7 +374,27 @@ public class SyncUtils {
                                 .setProgress(0, 0, true)
                                 .setOngoing(true)
                                 .getNotification());
-                        streamToFile(httpConn.getInputStream(), dbTempFile);
+
+                        InputStream responseBody = httpConn.getInputStream();
+                        String responseType = httpConn.getContentType();
+                        if (useZsync && responseType.equals(Metadata.MIME_TYPE)) {
+                            Log.i(TAG, "syncing incrementally");
+                            if (!dbTempFile.exists()) {
+                                Log.i(TAG, "no downloaded content, copying existing database");
+                                copyFile(dbFile, dbTempFile);
+                            }
+                            RangeRequestFactory factory = new RangeRequestFactoryImpl(
+                                    getSyncEndpoint(ctx), SQLITE_MIME_TYPE, creds);
+                            File scratch = new File(dbTempFile.getParentFile(), dbTempFile.getName() + ".syncing");
+                            incrementalSync(responseBody, dbTempFile, scratch, factory);
+                            if (!scratch.renameTo(dbTempFile)) {
+                                Log.e(TAG, "failed to move file " + scratch);
+                            }
+                        } else if (responseType.equals(SQLITE_MIME_TYPE)) {
+                            Log.i(TAG, "downloading directly");
+                            streamToFile(responseBody, dbTempFile);
+                        }
+
                         store(fingerprintFile, fingerprint);  // install fingerprint after downloaded finishes
                         Log.i(TAG, "database downloaded");
                         db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "success");
@@ -343,7 +406,7 @@ public class SyncUtils {
                                 .setContentText(ctx.getString(R.string.sync_database_new_data_instructions))
                                 .setContentIntent(pending)
                                 .getNotification());
-                    } catch (IOException e) {
+                    } catch (IOException | NoSuchAlgorithmException e) {
                         Log.e(TAG, "sync io failure", e);
                         db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "error: " + httpResult);
                         manager.notify(SYNC_NOTIFICATION_ID, new Notification.Builder(ctx)
@@ -364,6 +427,50 @@ public class SyncUtils {
     }
 
     /**
+     * Copies the contents of one file to another.
+     *
+     * @param source {@link File} specifying location of file to copy
+     * @param target {@link File} specifying location to copy to
+     * @throws IOException
+     */
+    private static void copyFile(File source, File target) throws IOException {
+        FileInputStream sStream = new FileInputStream(source);
+        FileOutputStream tStream = new FileOutputStream(target);
+        FileChannel sChannel = sStream.getChannel(), tChannel = tStream.getChannel();
+        long sourceSize = sChannel.size(), position = 0;
+        while (position < sourceSize) {
+            position += sChannel.transferTo(position, BUFFER_SIZE, tChannel);
+        }
+    }
+
+    /**
+     * Reads metadata from the specified stream and closes stream.
+     */
+    private static Metadata readMetadata(InputStream in) throws IOException, NoSuchAlgorithmException {
+        DataInputStream metaIn = new DataInputStream(buffer(in));
+        try {
+            return Metadata.read(metaIn);
+        } finally {
+            close(metaIn);
+        }
+    }
+
+    /**
+     * Performs an incremental sync based on a local existing file.
+     */
+    private static void incrementalSync(InputStream responseBody, File basis, File target, RangeRequestFactory factory)
+            throws NoSuchAlgorithmException, IOException {
+        RandomAccessFile file = null;
+        try {
+            file = new RandomAccessFile(basis, "r");
+            Metadata metadata = readMetadata(responseBody);
+            sync(metadata, file, target, factory, null);
+        } finally {
+            close(file);
+        }
+    }
+
+    /**
      * Replaces the application's sqlite database with previously downloaded content if present and reloads the content
      * provider to make the updated content immediately available to the application.
      *
@@ -380,6 +487,71 @@ public class SyncUtils {
             } else {
                 Log.e(TAG, "failed to install update");
             }
+        }
+    }
+
+
+    /**
+     * Used to create range requests for fetching remote file data.
+     */
+    private static class RangeRequestFactoryImpl implements RangeRequestFactory {
+
+        private final URL endpoint;
+        private final String mimeType;
+        private final String auth;
+
+        public RangeRequestFactoryImpl(URL endpoint, String mimeType, String auth) {
+            this.endpoint = endpoint;
+            this.mimeType = mimeType;
+            this.auth = auth;
+        }
+
+        @Override
+        public RangeRequest create() throws IOException {
+            return new RangeRequestImpl(HttpUtils.get(endpoint, mimeType, auth, null));
+        }
+    }
+
+    /**
+     * A wrapper around android's {@link HttpURLConnection} to make them usable
+     * with sync range requests.
+     */
+    private static class RangeRequestImpl implements RangeRequest {
+
+        private final HttpURLConnection c;
+
+        RangeRequestImpl(HttpURLConnection c) {
+            this.c = c;
+        }
+
+        @Override
+        public int getResponseCode() throws IOException {
+            return c.getResponseCode();
+        }
+
+        @Override
+        public String getContentType() {
+            return c.getContentType();
+        }
+
+        @Override
+        public String getHeader(String name) {
+            return c.getHeaderField(name);
+        }
+
+        @Override
+        public void setHeader(String name, String value) {
+            c.setRequestProperty(name, value);
+        }
+
+        @Override
+        public InputStream getInputStream() throws IOException {
+            return c.getInputStream();
+        }
+
+        @Override
+        public void close() throws IOException {
+            c.disconnect();
         }
     }
 }
