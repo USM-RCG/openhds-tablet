@@ -151,9 +151,9 @@
     <string name="sync_database_button_update">Actualizar</string>
     <string name="sync_database_column_updated">Última Actualización</string>
     <string name="sync_database_column_fingerprint">Huella Digital</string>
-    <string name="use_rsync">Optimización de sincronización</string>
-    <string name="use_rsync_enabled">Utilizar rsync cuando esté disponible</string>
-    <string name="use_rsync_disabled">Sólo descarga directa</string>
+    <string name="use_zsync">Optimización de sincronización</string>
+    <string name="use_zsync_enabled">Utilizar zsync cuando esté disponible</string>
+    <string name="use_zsync_disabled">Sólo descarga directa</string>
     <string name="sync_history_retention">Conservar historial de sincronización (Días)</string>
     <string name="sync_download_times">El Tiempo de Descarga</string>
     <string name="sync_duration_minutes">Duración (minutos)</string>

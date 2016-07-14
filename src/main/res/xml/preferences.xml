@@ -10,11 +10,11 @@
         />
 
     <SwitchPreference
-        android:key="@string/use_rsync_key"
-        android:title="@string/use_rsync"
-        android:summaryOn="@string/use_rsync_enabled"
-        android:summaryOff="@string/use_rsync_disabled"
-        android:defaultValue="@bool/use_rsync_default"
+        android:key="@string/use_zsync_key"
+        android:title="@string/use_zsync"
+        android:summaryOn="@string/use_zsync_enabled"
+        android:summaryOff="@string/use_zsync_disabled"
+        android:defaultValue="@bool/use_zsync_default"
         />
 
     <EditTextPreference

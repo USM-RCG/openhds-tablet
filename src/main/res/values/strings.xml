@@ -101,12 +101,11 @@
     <string name="sync_history_retention_default" translatable="false">30</string>
     <string name="sync_download_times">Download Times</string>
     <string name="sync_duration_minutes">Duration (minutes)</string>
-    <string name="use_rsync_key" translatable="false">use_rsync</string>
-    <bool name="use_rsync_default" translatable="false">true</bool>
-    <string name="use_rsync">Sync Download Optimization</string>
-    <string name="use_rsync_enabled">Use rsync when available</string>
-    <string name="use_rsync_disabled">Direct download only</string>
-
+    <string name="use_zsync_key" translatable="false">use_zsync</string>
+    <bool name="use_zsync_default" translatable="false">true</bool>
+    <string name="use_zsync">Sync Download Optimization</string>
+    <string name="use_zsync_enabled">Use zsync when available</string>
+    <string name="use_zsync_disabled">Direct download only</string>
 
     <!-- Individual Labels -->
     <string name="individual_first_name_label">First Name</string>
