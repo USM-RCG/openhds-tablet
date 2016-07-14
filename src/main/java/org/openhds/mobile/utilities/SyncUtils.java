@@ -188,6 +188,12 @@ public class SyncUtils {
         return new BufferedInputStream(toWrap);
     }
 
+    /**
+     * Returns the first line of the specified file's contents.
+     *
+     * @param file the file to read
+     * @return the first line of content as delimited by system line separator
+     */
     private static String loadFirstLine(File file) {
         String line = null;
         if (file.exists() && file.canRead()) {
@@ -208,6 +214,12 @@ public class SyncUtils {
         return line;
     }
 
+    /**
+     * Stores the specified string in the specified file, creating if necessary.
+     *
+     * @param file the location of the file to write to
+     * @param s the string to store
+     */
     private static void store(File file, String s) {
         if (!file.exists() || (file.exists() && file.canWrite())) {
             OutputStream out = null;
