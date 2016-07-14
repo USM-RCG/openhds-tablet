@@ -23,6 +23,7 @@ import java.io.File;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
 import static org.openhds.mobile.utilities.SyncUtils.SYNC_NOTIFICATION_ID;
 import static org.openhds.mobile.utilities.SyncUtils.canUpdateDatabase;
+import static org.openhds.mobile.utilities.SyncUtils.checkForUpdate;
 import static org.openhds.mobile.utilities.SyncUtils.getDatabaseFile;
 import static org.openhds.mobile.utilities.SyncUtils.getDatabaseFingerprint;
 import static org.openhds.mobile.utilities.SyncUtils.installUpdate;
@@ -34,6 +35,7 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
 
     private TextView lastUpdated;
     private TextView fingerprint;
+    private Button checkButton;
     private Button updateButton;
     private ContentObserver observer;
 
@@ -42,6 +44,8 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
         View view = inflater.inflate(R.layout.sync_database_fragment, container, false);
         lastUpdated = (TextView) view.findViewById(R.id.sync_updated_column);
         fingerprint = (TextView) view.findViewById(R.id.sync_fingerprint_column);
+        checkButton = (Button) view.findViewById(R.id.sync_check_button);
+        checkButton.setOnClickListener(this);
         updateButton = (Button) view.findViewById(R.id.sync_update_button);
         updateButton.setOnClickListener(this);
         updateStatus();
@@ -94,7 +98,11 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        installUpdate(getActivity(), this);
+        if (v == checkButton) {
+            checkForUpdate(getActivity());
+        } else if (v == updateButton) {
+            installUpdate(getActivity(), this);
+        }
     }
 
     @Override

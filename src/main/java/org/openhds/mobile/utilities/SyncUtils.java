@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.github.batkinson.jrsync.Metadata;
@@ -218,7 +219,7 @@ public class SyncUtils {
      * Stores the specified string in the specified file, creating if necessary.
      *
      * @param file the location of the file to write to
-     * @param s the string to store
+     * @param s    the string to store
      */
     private static void store(File file, String s) {
         if (!file.exists() || (file.exists() && file.canWrite())) {
@@ -322,6 +323,24 @@ public class SyncUtils {
     public static boolean isZyncEnabled(Context ctx) {
         return getDefaultSharedPreferences(ctx).getBoolean(ctx.getString(R.string.use_zsync_key), true);
     }
+
+    /**
+     * Requests a database synchronization occur for the CIMS account.
+     *
+     * @param ctx used to gain access to {@link android.content.ContentProvider} and {@link AccountManager} required to
+     *            make sync request.
+     */
+    public static void checkForUpdate(Context ctx) {
+        AccountManager manager = AccountManager.get(ctx);
+        Account[] accounts = manager.getAccountsByType(ACCOUNT_TYPE);
+        if (accounts.length > 0) {
+            Log.i(TAG, "sync requested manually");
+            ctx.getContentResolver().requestSync(accounts[0], AUTHORITY, new Bundle());
+        } else {
+            Log.w(TAG, "sync request ignored, no account");
+        }
+    }
+
 
     /**
      * Downloads an SQLite database and notifies the user to apply it manually via system notifications. There are two

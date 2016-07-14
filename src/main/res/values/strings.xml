@@ -91,6 +91,7 @@
     <string name="sync_database_updated">Database updated</string>
     <string name="sync_database_new_data">New data available</string>
     <string name="sync_database_new_data_instructions">Login as supervisor to apply the update</string>
+    <string name="sync_database_button_check">Check</string>
     <string name="sync_database_button_update">Update</string>
     <string name="sync_database_no_fingerprint" translatable="false">-</string>
     <string name="sync_database_description">Download data from the server</string>

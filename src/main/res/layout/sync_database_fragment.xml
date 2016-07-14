@@ -63,7 +63,7 @@
                       android:textAppearance="?android:attr/textAppearanceLarge" />
         </TableRow>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -73,6 +73,15 @@
             android:gravity="center">
 
             <Button
+                android:id="@+id/sync_check_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button"
+                android:padding="10dp"
+                android:text="@string/sync_database_button_check"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+            <Button
                 android:id="@+id/sync_update_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -80,9 +89,11 @@
                 android:padding="10dp"
                 android:text="@string/sync_database_button_update"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:enabled="false"/>
+                android:enabled="false"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </TableLayout>
 
