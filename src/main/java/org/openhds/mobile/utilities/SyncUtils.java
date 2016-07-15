@@ -409,7 +409,6 @@ public class SyncUtils {
                         InputStream responseBody = httpConn.getInputStream();
                         String responseType = httpConn.getContentType();
                         if (useZsync && responseType.equals(Metadata.MIME_TYPE)) {
-                            Log.i(TAG, "syncing incrementally");
                             if (!dbTempFile.exists()) {
                                 Log.i(TAG, "no downloaded content, copying existing database");
                                 copyFile(dbFile, dbTempFile);
@@ -417,6 +416,7 @@ public class SyncUtils {
                             RangeRequestFactory factory = new RangeRequestFactoryImpl(
                                     getSyncEndpoint(ctx), SQLITE_MIME_TYPE, creds);
                             File scratch = new File(dbTempFile.getParentFile(), dbTempFile.getName() + ".syncing");
+                            Log.i(TAG, "syncing incrementally");
                             incrementalSync(responseBody, dbTempFile, scratch, factory);
                             if (!scratch.renameTo(dbTempFile)) {
                                 Log.e(TAG, "failed to move file " + scratch);
