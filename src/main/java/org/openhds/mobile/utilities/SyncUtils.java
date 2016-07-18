@@ -34,7 +34,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -379,7 +378,8 @@ public class SyncUtils {
             long startTime = System.currentTimeMillis();
 
             String creds = encodeBasicCreds(username, password);
-            HttpURLConnection httpConn = get(getSyncEndpoint(ctx), accept, creds, existingFingerprint);
+            URL endpoint = getSyncEndpoint(ctx);
+            HttpURLConnection httpConn = get(endpoint, accept, creds, existingFingerprint);
             int httpResult = httpConn.getResponseCode();
 
             switch (httpResult) {
@@ -413,8 +413,7 @@ public class SyncUtils {
                                 Log.i(TAG, "no downloaded content, copying existing database");
                                 copyFile(dbFile, dbTempFile);
                             }
-                            RangeRequestFactory factory = new RangeRequestFactoryImpl(
-                                    getSyncEndpoint(ctx), SQLITE_MIME_TYPE, creds);
+                            RangeRequestFactory factory = new RangeRequestFactoryImpl(endpoint, SQLITE_MIME_TYPE, creds);
                             File scratch = new File(dbTempFile.getParentFile(), dbTempFile.getName() + ".syncing");
                             Log.i(TAG, "syncing incrementally");
                             incrementalSync(responseBody, dbTempFile, scratch, factory);
@@ -490,15 +489,9 @@ public class SyncUtils {
      * Performs an incremental sync based on a local existing file.
      */
     private static void incrementalSync(InputStream responseBody, File basis, File target, RangeRequestFactory factory)
-            throws NoSuchAlgorithmException, IOException {
-        RandomAccessFile file = null;
-        try {
-            file = new RandomAccessFile(basis, "r");
-            Metadata metadata = readMetadata(responseBody);
-            sync(metadata, file, target, factory, null);
-        } finally {
-            close(file);
-        }
+        throws NoSuchAlgorithmException, IOException {
+        Metadata metadata = readMetadata(responseBody);
+        sync(metadata, basis, target, factory, null);
     }
 
     /**
