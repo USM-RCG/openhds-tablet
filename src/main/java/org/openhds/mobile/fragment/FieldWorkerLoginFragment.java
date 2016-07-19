@@ -87,7 +87,7 @@ public class FieldWorkerLoginFragment extends Fragment implements OnClickListene
             login.setAuthenticatedUser(fieldWorker);
             launchPortalActivity();
         } else {
-            login.logout();
+            login.logout(getActivity(), false);
             showLongToast(getActivity(), R.string.field_worker_bad_credentials);
         }
     }

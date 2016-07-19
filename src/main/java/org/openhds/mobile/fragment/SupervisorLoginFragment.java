@@ -141,7 +141,7 @@ public class SupervisorLoginFragment extends Fragment implements OnClickListener
         }
 
         private void logoutAuthenticatedUser() {
-            getLogin(Supervisor.class).logout();
+            getLogin(Supervisor.class).logout(getActivity(), false);
         }
 
         private void launchSupervisorActivity() {

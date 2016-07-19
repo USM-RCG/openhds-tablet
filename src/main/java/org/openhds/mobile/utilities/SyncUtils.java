@@ -429,6 +429,7 @@ public class SyncUtils {
                         Log.i(TAG, "database downloaded");
                         db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "success");
                         Intent intent = new Intent(ctx, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra(LoginActivity.SELECTED_LOGIN_KEY, LoginActivity.SUPERVISOR_IDX);
                         PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                         manager.notify(SYNC_NOTIFICATION_ID, new Notification.Builder(ctx)
                                 .setSmallIcon(R.drawable.ic_launcher)
@@ -489,7 +490,7 @@ public class SyncUtils {
      * Performs an incremental sync based on a local existing file.
      */
     private static void incrementalSync(InputStream responseBody, File basis, File target, RangeRequestFactory factory)
-        throws NoSuchAlgorithmException, IOException {
+            throws NoSuchAlgorithmException, IOException {
         Metadata metadata = readMetadata(responseBody);
         sync(metadata, basis, target, factory, null);
     }

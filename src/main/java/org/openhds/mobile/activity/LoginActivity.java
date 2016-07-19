@@ -24,6 +24,10 @@ import static org.openhds.mobile.utilities.ConfigUtils.getAppFullName;
 
 public class LoginActivity extends FragmentActivity {
 
+    public static final String SELECTED_LOGIN_KEY = "selected_login";
+    public static final byte FIELD_WORKER_IDX = 0;
+    public static final byte SUPERVISOR_IDX = 1;
+
     private final Map<String, Fragment> fragments = new LinkedHashMap<>();
     private ViewPager pager;
     private ActionBar actionBar;
@@ -45,8 +49,12 @@ public class LoginActivity extends FragmentActivity {
         actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
+        byte tabIndex = 0, selectedIndex = getIntent().getByteExtra(SELECTED_LOGIN_KEY, FIELD_WORKER_IDX);
         for (Map.Entry<String, Fragment> fragment : fragments.entrySet()) {
-            actionBar.addTab(actionBar.newTab().setText(fragment.getKey()).setTabListener(new TabListener()));
+            ActionBar.Tab t = actionBar.newTab().setText(fragment.getKey()).setTabListener(new TabListener());
+            boolean tabSelected = tabIndex == selectedIndex;
+            actionBar.addTab(t, tabSelected);
+            tabIndex++;
         }
 
         pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {

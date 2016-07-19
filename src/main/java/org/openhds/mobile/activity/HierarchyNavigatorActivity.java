@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static org.openhds.mobile.model.form.FormInstance.generate;
 import static org.openhds.mobile.model.form.FormInstance.getBinding;
 import static org.openhds.mobile.model.form.FormInstance.lookup;
@@ -192,10 +191,11 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         Intent intent = new Intent();
         switch (item.getItemId()) {
             case R.id.logout_menu_button:
-                intent.setClass(this, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                getLogin(FieldWorker.class).logout(this, true);
                 break;
             case R.id.field_worker_home_menu_button:
                 intent.setClass(this, FieldWorkerActivity.class);
+                startActivity(intent);
                 break;
             default:
                 String menuModule = menuItemTags.get(item);
@@ -204,11 +204,12 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                     intent.putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, menuModule);
                     intent.putExtra(HIERARCHY_PATH_KEY, hierarchyPath);
                     intent.putParcelableArrayListExtra(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
+                    startActivity(intent);
                 } else {
                     return super.onOptionsItemSelected(item);
                 }
         }
-        startActivity(intent);
+
         return true;
     }
 

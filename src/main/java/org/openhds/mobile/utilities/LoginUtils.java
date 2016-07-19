@@ -1,8 +1,19 @@
 package org.openhds.mobile.utilities;
 
+import android.app.Activity;
+import android.content.Intent;
+
+import org.openhds.mobile.activity.LoginActivity;
+import org.openhds.mobile.model.core.Supervisor;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static org.openhds.mobile.activity.LoginActivity.FIELD_WORKER_IDX;
+import static org.openhds.mobile.activity.LoginActivity.SELECTED_LOGIN_KEY;
+import static org.openhds.mobile.activity.LoginActivity.SUPERVISOR_IDX;
 
 public class LoginUtils {
 
@@ -27,8 +38,13 @@ public class LoginUtils {
             return authenticatedUser;
         }
 
-        public void logout() {
+        public void logout(Activity ctx, boolean launchLoginActivity) {
+            byte loginTab = authenticatedUser instanceof Supervisor ? SUPERVISOR_IDX : FIELD_WORKER_IDX;
             authenticatedUser = null;
+            if (launchLoginActivity) {
+                ctx.startActivity(new Intent(ctx, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP)
+                        .putExtra(SELECTED_LOGIN_KEY, loginTab));
+            }
         }
 
     }

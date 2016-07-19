@@ -23,7 +23,6 @@ import org.openhds.mobile.utilities.OdkCollectHelper;
 import java.io.IOException;
 import java.util.List;
 
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static org.openhds.mobile.utilities.FormUtils.isFormReviewed;
 import static org.openhds.mobile.utilities.LayoutUtils.makeButton;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
@@ -83,7 +82,7 @@ public class SupervisorActivity extends Activity {
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout_menu_button:
-                startActivity(new Intent(this, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP));
+                getLogin(Supervisor.class).logout(this, true);
                 return true;
             default:
                 return super.onMenuItemSelected(featureId, item);

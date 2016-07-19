@@ -13,12 +13,13 @@ import android.widget.RelativeLayout;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.navigate.FormListFragment;
+import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
 
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
+import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInstances;
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 public class FieldWorkerActivity extends Activity implements OnClickListener {
 
@@ -63,7 +64,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout_menu_button:
-                startActivity(new Intent(this, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP));
+                getLogin(FieldWorker.class).logout(this, true);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
