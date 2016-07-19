@@ -26,6 +26,7 @@ import java.util.List;
 import static org.openhds.mobile.utilities.FormUtils.isFormReviewed;
 import static org.openhds.mobile.utilities.LayoutUtils.makeButton;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
+import static org.openhds.mobile.utilities.LoginUtils.launchLogin;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 import static org.openhds.mobile.utilities.SyncUtils.installAccount;
 
@@ -70,6 +71,15 @@ public class SupervisorActivity extends Activity {
         }
 
         checklistFragment = (ChecklistFragment) getFragmentManager().findFragmentById(R.id.supervisor_checklist_fragment);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!getLogin(Supervisor.class).hasAuthenticatedUser()) {
+            launchLogin(this, true);
+            finish();
+        }
     }
 
     @Override

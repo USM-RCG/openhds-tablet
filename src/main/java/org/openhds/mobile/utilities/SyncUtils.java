@@ -16,7 +16,7 @@ import com.github.batkinson.jrsync.zsync.RangeRequestFactory;
 
 import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.R;
-import org.openhds.mobile.activity.LoginActivity;
+import org.openhds.mobile.activity.SupervisorActivity;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.provider.OpenHDSProvider;
 
@@ -428,8 +428,7 @@ public class SyncUtils {
                         store(fingerprintFile, fingerprint);  // install fingerprint after downloaded finishes
                         Log.i(TAG, "database downloaded");
                         db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "success");
-                        Intent intent = new Intent(ctx, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.putExtra(LoginActivity.SELECTED_LOGIN_KEY, LoginActivity.SUPERVISOR_IDX);
+                        Intent intent = new Intent(ctx, SupervisorActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                         PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                         manager.notify(SYNC_NOTIFICATION_ID, new Notification.Builder(ctx)
                                 .setSmallIcon(R.drawable.ic_launcher)

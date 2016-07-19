@@ -39,11 +39,9 @@ public class LoginUtils {
         }
 
         public void logout(Activity ctx, boolean launchLoginActivity) {
-            byte loginTab = authenticatedUser instanceof Supervisor ? SUPERVISOR_IDX : FIELD_WORKER_IDX;
             authenticatedUser = null;
             if (launchLoginActivity) {
-                ctx.startActivity(new Intent(ctx, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP)
-                        .putExtra(SELECTED_LOGIN_KEY, loginTab));
+                launchLogin(ctx, authenticatedUser instanceof Supervisor);
             }
         }
 
@@ -54,5 +52,10 @@ public class LoginUtils {
             logins.put(type, new Login<T>());
         }
         return logins.get(type);
+    }
+
+    public static void launchLogin(Activity ctx, boolean showSupervisor) {
+        ctx.startActivity(new Intent(ctx, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP)
+                .putExtra(SELECTED_LOGIN_KEY, showSupervisor ? SUPERVISOR_IDX : FIELD_WORKER_IDX));
     }
 }
