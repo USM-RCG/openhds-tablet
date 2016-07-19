@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.DataSelectionFragment;
 import org.openhds.mobile.fragment.SearchFragment;
+import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.gateway.Gateway;
 import org.openhds.mobile.repository.search.EntityFieldSearch;
@@ -31,6 +32,8 @@ import static org.openhds.mobile.repository.search.SearchUtils.getLocationModule
 import static org.openhds.mobile.repository.search.SearchUtils.getSocialGroupModule;
 import static org.openhds.mobile.utilities.LayoutUtils.configureTextWithValueAndLabel;
 import static org.openhds.mobile.utilities.LayoutUtils.makeLargeTextWithValueAndLabel;
+import static org.openhds.mobile.utilities.LoginUtils.getLogin;
+import static org.openhds.mobile.utilities.LoginUtils.launchLogin;
 
 
 public class EntitySearchActivity extends Activity implements DataSelectionFragment.DataSelectionListener {
@@ -102,6 +105,14 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
 
         if (!searches.isEmpty()) {
             setupSearch(0);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!getLogin(FieldWorker.class).hasAuthenticatedUser()) {
+            launchLogin(this, false);
         }
     }
 

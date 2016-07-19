@@ -1,5 +1,6 @@
 package org.openhds.mobile.fragment;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
@@ -82,10 +83,15 @@ public class FieldWorkerLoginFragment extends Fragment implements OnClickListene
         ContentResolver contentResolver = getActivity().getContentResolver();
         FieldWorker fieldWorker = fieldWorkerGateway.getFirst(contentResolver, fieldWorkerGateway.findByExtId(username));
 
+        Activity activity = getActivity();
         LoginUtils.Login login = getLogin(FieldWorker.class);
         if (fieldWorker != null && BCrypt.checkpw(password, fieldWorker.getPasswordHash())) {
             login.setAuthenticatedUser(fieldWorker);
-            launchPortalActivity();
+            if (activity.isTaskRoot()) {
+                launchPortalActivity();
+            } else {
+                activity.finish();
+            }
         } else {
             login.logout(getActivity(), false);
             showLongToast(getActivity(), R.string.field_worker_bad_credentials);
