@@ -401,7 +401,7 @@ public class SyncUtils {
                         manager.notify(SYNC_NOTIFICATION_ID, new Notification.Builder(ctx)
                                 .setSmallIcon(R.drawable.ic_downloading)
                                 .setContentTitle(ctx.getString(R.string.sync_database_new_data))
-                                .setContentText("Download in progress")
+                                .setContentText(ctx.getString(R.string.sync_database_in_progress))
                                 .setProgress(0, 0, true)
                                 .setOngoing(true)
                                 .getNotification());
@@ -442,7 +442,7 @@ public class SyncUtils {
                         manager.notify(SYNC_NOTIFICATION_ID, new Notification.Builder(ctx)
                                 .setSmallIcon(R.drawable.ic_launcher)
                                 .setContentTitle(ctx.getString(R.string.sync_database_new_data))
-                                .setContentText("Download failed")
+                                .setContentText(ctx.getString(R.string.sync_database_failed))
                                 .getNotification());
                     }
                     break;

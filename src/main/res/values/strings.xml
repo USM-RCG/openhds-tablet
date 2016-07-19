@@ -90,6 +90,8 @@
     <string name="sync_database_updated_never">Never</string>
     <string name="sync_database_updated">Database updated</string>
     <string name="sync_database_new_data">New data available</string>
+    <string name="sync_database_in_progress">Download in progress</string>
+    <string name="sync_database_failed">Download failed</string>
     <string name="sync_database_new_data_instructions">Login as supervisor to apply the update</string>
     <string name="sync_database_button_check">Check</string>
     <string name="sync_database_button_update">Update</string>
