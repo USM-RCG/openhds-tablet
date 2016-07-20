@@ -47,7 +47,7 @@ public class SyncHistoryFragment extends Fragment {
         final float MAX_DIVISIONS = 15.0f;
         plot.getLegendWidget().setVisible(false);
         plot.getDomainLabelWidget().setVisible(false);
-        plot.setPlotPadding(10, 10, 10, 0);
+        plot.setPlotPadding(5, 5, 5, 0);
         double dayStep = 1;
         if (series.size() > 0) {
             plot.setDomainLeftMin(series.getX(0).longValue() % SECONDS_IN_DAY);
