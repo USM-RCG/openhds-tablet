@@ -101,7 +101,7 @@
     <string name="sync_database_column_fingerprint">Fingerprint</string>
     <string name="sync_history_retention_key" translatable="false">sync_history_retention</string>
     <string name="sync_history_retention">Retain Sync History (Days)</string>
-    <string name="sync_history_retention_default" translatable="false">30</string>
+    <string name="sync_history_retention_default" translatable="false">7</string>
     <string name="sync_download_times">Download Times</string>
     <string name="sync_duration_minutes">Duration (minutes)</string>
     <string name="use_zsync_key" translatable="false">use_zsync</string>

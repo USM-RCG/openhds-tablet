@@ -144,7 +144,7 @@ public class SyncUtils {
      * @return the configured sync history retention in days
      */
     public static int getHistoryRetention(Context ctx) {
-        return Integer.parseInt(getPreferenceString(ctx, R.string.sync_history_retention_key, "30"));
+        return Integer.parseInt(getPreferenceString(ctx, R.string.sync_history_retention_key, "7"));
     }
 
     /**
