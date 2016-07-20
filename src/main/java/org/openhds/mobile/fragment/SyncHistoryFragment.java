@@ -58,7 +58,7 @@ public class SyncHistoryFragment extends Fragment {
         plot.setDomainValueFormat(new SyncHistoryTimeFormat());
 
         XYGraphWidget graph = plot.getGraphWidget();
-        graph.setDomainLabelOrientation(-90);
+        graph.setDomainLabelOrientation(-75);
         graph.setDomainTickLabelVerticalOffset(5);
         graph.setDomainTickLabelHorizontalOffset(5);
 
