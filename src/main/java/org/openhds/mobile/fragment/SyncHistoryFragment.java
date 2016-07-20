@@ -49,7 +49,7 @@ public class SyncHistoryFragment extends Fragment {
         plot.getDomainLabelWidget().setVisible(false);
         plot.setPlotPadding(5, 5, 5, 0);
         double dayStep = 1;
-        if (series.size() > 0) {
+        if (series.size() > 1) {
             plot.setDomainLeftMin(series.getX(0).longValue() % SECONDS_IN_DAY);
             int daySpan = (series.getX(series.size() - 1).intValue() - series.getX(0).intValue()) / SECONDS_IN_DAY;
             dayStep = Math.max(1.0, Math.ceil(daySpan / MAX_DIVISIONS));
