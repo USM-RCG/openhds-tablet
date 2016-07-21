@@ -165,4 +165,17 @@ public class BiokoFormPayloadBuilders {
             return formPayload;
         }
     }
+
+    public static class MalariaIndicatorSurvey implements FormPayloadBuilder {
+        @Override
+        public Map<String, String> buildPayload(LaunchContext ctx) {
+            Map<String,String> formPayload = new HashMap<>();
+            PayloadTools.addMinimalFormPayload(formPayload, ctx);
+            PayloadTools.flagForReview(formPayload, false);
+            DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
+            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
+            formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
+            return formPayload;
+        }
+    }
 }
