@@ -46,6 +46,7 @@ with (imports) {
     };
 
     var module = new NavigatorModule({
+        getName: function() { return 'mis'; },
         getActivityTitle: function() { return config.getString('mis.activityTitle'); },
         getLaunchLabel: function() { return config.getString('mis.launchTitle'); },
         getLaunchDescription: function() { return config.getString('mis.launchDescription'); },

@@ -88,6 +88,7 @@ with (imports) {
     };
 
     var module = new NavigatorModule({
+        getName: function() { return 'census'; },
         getActivityTitle: function() { return config.getString('census.activityTitle'); },
         getLaunchLabel: function() { return config.getString('census.launchTitle'); },
         getLaunchDescription: function() { return config.getString('census.launchDescription'); },

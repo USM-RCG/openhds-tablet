@@ -66,7 +66,7 @@ public class NavigatorConfig {
     }
 
     private void initCoreModules() throws IOException {
-        executeConfigScript("/core.js");
+        executeConfigScript("/census.js");
         executeConfigScript("/update.js");
     }
 
@@ -99,7 +99,7 @@ public class NavigatorConfig {
     }
 
     public void addModule(NavigatorModule module) {
-        modules.put(module.getActivityTitle(), module);
+        modules.put(module.getName(), module);
     }
 
     public static synchronized NavigatorConfig getInstance() {

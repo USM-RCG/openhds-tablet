@@ -176,11 +176,11 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
         // Configures the menu for switching between inactive modules (ones other than the 'current' one)
         for (NavigatorModule module : NavigatorConfig.getInstance().getModules()) {
-            if (!module.getActivityTitle().equals(currentModuleName)) {
+            if (!module.getName().equals(currentModuleName)) {
                 MenuItem menuItem = menu.add(module.getActivityTitle());
                 menuItem.setIcon(R.drawable.data_selector);
                 menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-                menuItemTags.put(menuItem, module.getActivityTitle());
+                menuItemTags.put(menuItem, module.getName());
             }
         }
         return super.onCreateOptionsMenu(menu);

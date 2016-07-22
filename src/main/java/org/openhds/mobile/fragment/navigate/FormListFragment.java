@@ -117,7 +117,7 @@ public class FormListFragment extends Fragment {
         if (path != null) {
             NavigatorModule firstModule = NavigatorConfig.getInstance().getModules().iterator().next();
             Intent intent = new Intent(activity, HierarchyNavigatorActivity.class);
-            intent.putExtra(ACTIVITY_MODULE_EXTRA, firstModule.getActivityTitle());
+            intent.putExtra(ACTIVITY_MODULE_EXTRA, firstModule.getName());
             intent.putExtra(HIERARCHY_PATH_KEY, path);
             startActivity(intent);
         } else {

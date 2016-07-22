@@ -9,6 +9,8 @@ import java.util.Map;
 
 public interface NavigatorModule {
 
+    String getName();
+
     String getActivityTitle();
 
     String getLaunchLabel();

@@ -105,6 +105,7 @@ with (imports) {
     };
 
     var module = new NavigatorModule({
+        getName: function() { return 'update'; },
         getActivityTitle: function() { return config.getString('update.activityTitle'); },
         getLaunchLabel: function() { return config.getString('update.launchTitle'); },
         getLaunchDescription: function() { return config.getString('update.launchDescription'); },

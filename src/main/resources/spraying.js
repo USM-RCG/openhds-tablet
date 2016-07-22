@@ -68,6 +68,7 @@ with (imports) {
     };
 
     var module = new NavigatorModule({
+        getName: function() { return 'spraying'; },
         getActivityTitle: function() { return config.getString('bioko.activityTitle'); },
         getLaunchLabel: function() { return config.getString('bioko.launchTitle'); },
         getLaunchDescription: function() { return config.getString('bioko.launchDescription'); },
