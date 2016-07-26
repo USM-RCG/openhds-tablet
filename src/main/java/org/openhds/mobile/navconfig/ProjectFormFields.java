@@ -297,4 +297,8 @@ public class ProjectFormFields {
         public static final String OJO_DATE = "ojo_date";
     }
 
+    public static final class MalariaIndicatorSurvey {
+        public static final String SURVEY_DATE = "survey_date";
+    }
+
 }

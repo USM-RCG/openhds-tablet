@@ -20,6 +20,7 @@ import java.util.Map;
 
 import static org.openhds.mobile.navconfig.BiokoHierarchy.*;
 import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.formatBuilding;
+import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.formatDate;
 import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.formatFloor;
 import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.formatTime;
 
@@ -175,6 +176,7 @@ public class BiokoFormPayloadBuilders {
             DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
+            formPayload.put(ProjectFormFields.MalariaIndicatorSurvey.SURVEY_DATE, formatDate(Calendar.getInstance()));
             return formPayload;
         }
     }
