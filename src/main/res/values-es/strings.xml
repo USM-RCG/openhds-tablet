@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="default_openhds_server_url">https://cims-bioko.org/openhds</string>
     <string name="delete_form_btn">Borrar Impreso(s)</string>
     <string name="login_btn">Entrar</string>
     <string name="send_forms">Enviar Impresos</string>
@@ -167,5 +166,6 @@
     <string name="sync_database_button_check">Buscar</string>
     <string name="sync_database_failed">Error de descarga</string>
     <string name="sync_database_in_progress">Descarga en curso</string>
+    <string name="no_server_url">No URL del servidor se ha establecido</string>
 
 </resources>
