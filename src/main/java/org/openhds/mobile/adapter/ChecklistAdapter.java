@@ -40,6 +40,7 @@ public class ChecklistAdapter extends ArrayAdapter<FormInstance> {
         List<Boolean> newStates = new ArrayList<>(getCount());
         for (int i = 0; i < getCount(); i++) {
             newStates.add(false);
+
         }
         checkStates = newStates;
     }
@@ -90,7 +91,7 @@ public class ChecklistAdapter extends ArrayAdapter<FormInstance> {
         }
         return unmodifiableList(checkedForms);
     }
-
+    
     public List<FormInstance> getInstances() {
         return unmodifiableList(instances);
     }

@@ -22,6 +22,7 @@ dependencies {
     compile 'com.android.support:support-v4:18.0.+'
     compile 'com.androidplot:androidplot-core:0.9.8'
     compile 'com.github.batkinson:jrsync:1.2'
+    compile 'org.apache.lucene:lucene-core:3.6.2'
 }
 
 android {

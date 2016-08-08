@@ -1,6 +1,10 @@
 package org.openhds.mobile.activity;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.navigate.FormListFragment;
@@ -54,9 +59,16 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.fieldworker_menu, menu);
         menu.findItem(R.id.field_worker_home_menu_button).setVisible(false);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.field_worker_search).getActionView();
+        SearchableInfo searchInfo = searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class));
+        searchView.setSearchableInfo(searchInfo);
+
         return super.onCreateOptionsMenu(menu);
     }
 

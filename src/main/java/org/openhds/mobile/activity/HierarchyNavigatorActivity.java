@@ -2,12 +2,17 @@ package org.openhds.mobile.activity;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SearchView;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.DataSelectionFragment;
@@ -165,6 +170,17 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         update(); // called here since it expects fragments to be created
     }
 
+    /*
+     * A hack to inject extra context when starting the search activity, onSearchRequested was not being called.
+     */
+    @Override
+    public void startActivity(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            intent.putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, currentModuleName);
+        }
+        super.startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -183,7 +199,13 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                 menuItemTags.put(menuItem, module.getName());
             }
         }
-        return super.onCreateOptionsMenu(menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.field_worker_search).getActionView();
+        SearchableInfo searchInfo = searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class));
+        searchView.setSearchableInfo(searchInfo);
+
+        return true;
     }
 
     @Override
