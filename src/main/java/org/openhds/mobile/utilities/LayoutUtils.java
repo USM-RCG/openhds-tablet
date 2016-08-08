@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.openhds.mobile.model.form.FormInstance.getBinding;
+import static org.openhds.mobile.navconfig.ProjectFormFields.General.NEEDS_REVIEW;
+import static org.openhds.mobile.navconfig.ProjectResources.General.FORM_NEEDS_REVIEW;
 
 public class LayoutUtils {
 
@@ -211,13 +213,19 @@ public class LayoutUtils {
     // Set up a form list item based on a given form instance.
     public static void configureFormListItem(Context context, View view, FormInstance instance) {
 
-        view.setBackgroundResource(
-                instance.isComplete()? R.drawable.form_list : R.drawable.form_list_gray
-        );
-
         try {
 
             Map<String, String> data = instance.load();
+
+            boolean needsReview = FORM_NEEDS_REVIEW.equalsIgnoreCase(data.get(NEEDS_REVIEW));
+
+            if (needsReview) {
+                view.setBackgroundResource(R.drawable.form_list_yellow);
+            } else if (instance.isComplete()) {
+                view.setBackgroundResource(R.drawable.form_list);
+            } else {
+                view.setBackgroundResource(R.drawable.form_list_gray);
+            }
 
             // Set form name based on its embedded binding
             String formTypeName = getBinding(data) != null? getBinding(data).getLabel() : instance.getFormName();

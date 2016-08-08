@@ -16,6 +16,10 @@
     <color name="RedOrange">#d2531c</color>
     <color name="LightRedOrange">#da9384</color>
 
+    <color name="DarkYellow">#ae9808</color>
+    <color name="Yellow">#dec313</color>
+    <color name="LightYellow">#e6dc9a</color>
+
     <color name="DarkPurple">#6b486e</color>
     <color name="Purple">#9c67a9</color>
     <color name="LightPurple">#af89cc</color>
