@@ -55,6 +55,7 @@ import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
 import static org.openhds.mobile.utilities.HttpUtils.get;
 import static org.openhds.mobile.utilities.StringUtils.join;
+import static org.openhds.mobile.utilities.UrlUtils.buildServerUrl;
 
 /**
  * Dumping grounds for miscellaneous sync-related functions.
@@ -132,9 +133,7 @@ public class SyncUtils {
      * @throws MalformedURLException when the constructed value is not a valid URL
      */
     public static URL getSyncEndpoint(Context ctx) throws MalformedURLException {
-        String baseUrl = getPreferenceString(ctx, R.string.openhds_server_url_key, "");
-        String path = getResourceString(ctx, R.string.sync_database_path);
-        return new URL(baseUrl + path);
+        return new URL(buildServerUrl(ctx, ctx.getString(R.string.sync_database_path)));
     }
 
     /**
