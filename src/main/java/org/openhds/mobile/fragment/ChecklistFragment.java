@@ -175,53 +175,54 @@ public class ChecklistFragment extends Fragment {
     }
 
     public void deleteSelected() {
-        List<FormInstance> formsToDelete = adapter.getCheckedForms(), allForms = adapter.getFormInstanceList();
+        List<FormInstance> formsToDelete = adapter.getCheckedInstances();
         int deleted = deleteFormInstances(getActivity().getContentResolver(), formsToDelete);
         if (deleted != formsToDelete.size()) {
             Log.w(TAG, String.format("wrong number of forms deleted: expected %d, got %d", formsToDelete.size(), deleted));
         }
-        if (allForms.removeAll(formsToDelete)) {
-            adapter.resetFormInstanceList(allForms);
-        }
+        adapter.removeAll(formsToDelete);
     }
 
-    private void processApproveSelectedRequest() {
-        List<FormInstance> approvedForms = adapter.getCheckedForms();
-        approveForms(approvedForms);
-
-        List<FormInstance> allForms = adapter.getFormInstanceList();
-        allForms.removeAll(approvedForms);
-        adapter.resetFormInstanceList(allForms);
+    private void approveSelected() {
+        adapter.removeAll(approveForms(adapter.getCheckedInstances()));
     }
 
-    private void processApproveAllRequest() {
-        List<FormInstance> approvedForms = adapter.getFormInstanceList();
-        approveForms(approvedForms);
-        adapter.resetFormInstanceList(new ArrayList<FormInstance>());
+    private void approveAll() {
+        adapter.removeAll(approveForms(adapter.getInstances()));
     }
 
-    private void approveForms(List<FormInstance> forms) {
+    private List<FormInstance> approveForms(List<FormInstance> forms) {
+        List<FormInstance> approved = new ArrayList<>();
         for (FormInstance instance: forms) {
             try {
-                updateFormElement(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NO_REVIEW_NEEDED,
-                        instance.getFilePath());
-                OdkCollectHelper.setStatusComplete(getActivity().getContentResolver(), Uri.parse(instance.getUriString()));
+                String needsReview = getFormElement(ProjectFormFields.General.NEEDS_REVIEW, instance.getFilePath());
+                if (ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(needsReview)) {
+                    approveForm(instance);
+                    approved.add(instance);
+                }
             } catch (IOException e) {
                 Log.e(TAG, "failed to mark form approved: " + e.getMessage());
             }
         }
+        return approved;
+    }
+
+    private void approveForm(FormInstance instance) throws IOException {
+        updateFormElement(ProjectFormFields.General.NEEDS_REVIEW,
+                ProjectResources.General.FORM_NO_REVIEW_NEEDED, instance.getFilePath());
+        OdkCollectHelper.setStatusComplete(getActivity().getContentResolver(), Uri.parse(instance.getUriString()));
     }
 
     private class ButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             Integer tag = (Integer) v.getTag();
-            if (tag.equals(R.string.delete_button_label) && adapter.getCheckedForms().size() > 0) {
+            if (tag.equals(R.string.delete_button_label) && adapter.getCheckedInstances().size() > 0) {
                 deleteConfirmDialog.show();
             } else if (tag.equals(R.string.supervisor_approve_selected)) {
-                processApproveSelectedRequest();
+                approveSelected();
             } else if(tag.equals(R.string.supervisor_approve_all)) {
-                processApproveAllRequest();
+                approveAll();
             }
         }
     }

@@ -17,30 +17,31 @@ import org.openhds.mobile.utilities.LayoutUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.unmodifiableList;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 
-public class ChecklistAdapter extends ArrayAdapter {
+public class ChecklistAdapter extends ArrayAdapter<FormInstance> {
 
-    private List<FormInstance> formInstanceList;
-    private List<Boolean> checkList;
+    private final List<FormInstance> instances;
+    private List<Boolean> checkStates;
     private LayoutInflater inflater;
 
     @SuppressWarnings("unchecked")
     public ChecklistAdapter(Context context, int checklistItemId, List<FormInstance> formInstances) {
         super(context, checklistItemId, formInstances);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.formInstanceList = formInstances;
-        initializeCheckBoxes(this.formInstanceList);
+        instances = formInstances;
+        initCheckStates();
     }
 
-    private void initializeCheckBoxes(List<FormInstance> instances) {
-        ArrayList<Boolean> newCheckList = new ArrayList<>();
-        for (int i = 0; i < instances.size(); i++) {
-            newCheckList.add(false);
+    private void initCheckStates() {
+        List<Boolean> newStates = new ArrayList<>(getCount());
+        for (int i = 0; i < getCount(); i++) {
+            newStates.add(false);
         }
-        this.checkList = newCheckList;
+        checkStates = newStates;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class ChecklistAdapter extends ArrayAdapter {
         }
 
         // set up the basics to display the form instance info
-        FormInstance instance = formInstanceList.get(position);
+        FormInstance instance = getItem(position);
         LayoutUtils.configureFormListItem(getContext(), convertView, instance);
 
         // add callback when the form instance info is pressed
@@ -72,35 +73,37 @@ public class ChecklistAdapter extends ArrayAdapter {
         checkBoxView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                checkList.set(position, isChecked);
+                checkStates.set(position, isChecked);
             }
         });
-        checkBoxView.setChecked(checkList.get(position));
+        checkBoxView.setChecked(checkStates.get(position));
 
         return convertView;
     }
 
-    public List<FormInstance> getCheckedForms() {
-
+    public List<FormInstance> getCheckedInstances() {
         List<FormInstance> checkedForms = new ArrayList<>();
-
-        for (int i = 0; i < checkList.size(); i++) {
-            if (checkList.get(i)) {
-                FormInstance formInstance = formInstanceList.get(i);
-                checkedForms.add(formInstance);
+        for (int i = 0; i < checkStates.size(); i++) {
+            if (checkStates.get(i)) {
+                checkedForms.add(getItem(i));
             }
         }
-
-        return checkedForms;
+        return unmodifiableList(checkedForms);
     }
 
-    public List<FormInstance> getFormInstanceList() {
-        return formInstanceList;
+    public List<FormInstance> getInstances() {
+        return unmodifiableList(instances);
     }
 
-    public void resetFormInstanceList(List<FormInstance> formInstanceList) {
-        this.formInstanceList = formInstanceList;
-        initializeCheckBoxes(this.formInstanceList);
-        notifyDataSetChanged();
+    public boolean removeAll(List<FormInstance> instances) {
+        try {
+            setNotifyOnChange(false);  // disable auto-notify until we're done
+            boolean result = this.instances.removeAll(instances);
+            initCheckStates();
+            notifyDataSetChanged();  // manually notify
+            return result;
+        } finally {
+            setNotifyOnChange(true);  // re-enable auto-notify
+        }
     }
 }
