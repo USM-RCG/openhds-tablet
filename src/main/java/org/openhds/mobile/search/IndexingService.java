@@ -203,6 +203,9 @@ abstract class CursorDocumentSource implements DocumentSource {
 
 class SimpleHierarchySource extends CursorDocumentSource {
 
+    private static final float MAX_SIMILARITY = 0.99f;
+    private static final JaroWinklerDistance jwd = new JaroWinklerDistance();
+
     private final Set<String> nameColumns;
 
     SimpleHierarchySource(Cursor c, String ... nameCols) {
@@ -262,10 +265,7 @@ class SimpleHierarchySource extends CursorDocumentSource {
         }
     }
 
-    private static final float MAX_SIMILARITY = 0.99f;
-
     private boolean containsSimilar(Set<String> values, String value) {
-        JaroWinklerDistance jwd = new JaroWinklerDistance();
         for (String v : values) {
             if (jwd.getDistance(v, value) > MAX_SIMILARITY)
                 return true;
