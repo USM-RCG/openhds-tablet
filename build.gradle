@@ -23,6 +23,10 @@ dependencies {
     compile 'com.androidplot:androidplot-core:0.9.8'
     compile 'com.github.batkinson:jrsync:1.2'
     compile 'org.apache.lucene:lucene-core:3.6.2'
+    compile('org.apache.lucene:lucene-suggest:4.0.0') {
+        exclude module: 'lucene-analyzers-common'
+        exclude module: 'lucene-core'
+    }
 }
 
 android {
