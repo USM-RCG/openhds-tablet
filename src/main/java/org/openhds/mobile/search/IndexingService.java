@@ -137,7 +137,7 @@ interface DocumentSource {
 
 abstract class CursorDocumentSource implements DocumentSource {
 
-    protected final Document document;  // shared instace to reduce memory allocations during indexing
+    protected final Document document;  // shared instance to reduce memory allocations during indexing
     protected final Cursor cursor;
     protected Field[] fields;
     private List<Field> nullFields;
