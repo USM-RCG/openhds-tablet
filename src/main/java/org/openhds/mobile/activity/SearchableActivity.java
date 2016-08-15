@@ -26,6 +26,8 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.SearcherFactory;
+import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.WildcardQuery;
@@ -39,6 +41,7 @@ import org.openhds.mobile.navconfig.db.QueryHelper;
 import org.openhds.mobile.repository.DataWrapper;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -49,7 +52,6 @@ import java.util.regex.Pattern;
 import static org.apache.lucene.util.ReaderUtil.getMergedFieldInfos;
 import static org.openhds.mobile.activity.FieldWorkerActivity.ACTIVITY_MODULE_EXTRA;
 import static org.openhds.mobile.activity.HierarchyNavigatorActivity.HIERARCHY_PATH_KEY;
-import static org.openhds.mobile.utilities.SyncUtils.close;
 
 public class SearchableActivity extends ListActivity {
 
@@ -58,7 +60,7 @@ public class SearchableActivity extends ListActivity {
     private static final Pattern ID_PATTERN = Pattern.compile("(?i)m\\d+(s\\d+(e\\d+(p\\d+)?)?)?");
     private static final ExecutorService execService = Executors.newSingleThreadExecutor();
     private static final Handler handler = new Handler(Looper.getMainLooper());
-
+    private static SearcherManager searcherManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,23 +115,36 @@ public class SearchableActivity extends ListActivity {
         });
     }
 
+    private IndexSearcher acquireSearcher() throws IOException {
+        File indexFile = new File(getFilesDir(), "search-index");
+        Directory indexDir = FSDirectory.open(indexFile);
+        if (searcherManager == null) {
+            searcherManager = new SearcherManager(indexDir, new SearcherFactory());
+        } else if (!searcherManager.isSearcherCurrent()){
+            searcherManager.maybeRefresh();
+        }
+        return searcherManager.acquire();
+    }
+
+    private void releaseSearcher(IndexSearcher searcher) throws IOException {
+        searcherManager.release(searcher);
+    }
+
     private void performSearch(final String query) {
 
         setProgressBarIndeterminateVisibility(true);
 
-        Runnable search = new Runnable() {
+        final Runnable search = new Runnable() {
             @Override
             public void run() {
 
                 Log.i(TAG, "received query: " + query);
 
-                File indexFile = new File(getFilesDir(), "search-index");
                 final List<DataWrapper> items = new ArrayList<>();
                 try {
                     long start = System.currentTimeMillis();
-                    Directory indexDir = FSDirectory.open(indexFile);
-                    IndexReader indexReader = IndexReader.open(indexDir);
-                    IndexSearcher searcher = new IndexSearcher(indexReader);
+                    IndexSearcher searcher = acquireSearcher();
+                    IndexReader indexReader = searcher.getIndexReader();
                     try {
                         String[] split = query.split("\\s+");
                         // construct a query over all known fields
@@ -179,7 +194,7 @@ public class SearchableActivity extends ListActivity {
                             }
                         }
                     } finally {
-                        close(searcher, indexReader, indexDir);
+                        releaseSearcher(searcher);
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "search error", e);
@@ -197,7 +212,6 @@ public class SearchableActivity extends ListActivity {
 
         execService.submit(search);
     }
-
 }
 
 class ResultAdapter extends ArrayAdapter<DataWrapper> {
