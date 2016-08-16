@@ -24,12 +24,10 @@ import org.openhds.mobile.provider.OpenHDSProvider;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
 import static org.apache.lucene.index.IndexWriterConfig.OpenMode.CREATE_OR_APPEND;
 import static org.apache.lucene.util.Version.LUCENE_36;
 
@@ -77,7 +75,7 @@ public class IndexingService extends IntentService {
                 OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID,
                 OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME, OpenHDS.HierarchyItems.TABLE_NAME);
         Cursor c = db.rawQuery(query, new String[]{});
-        buildIndex("hierarchy items", new SimpleHierarchySource(c), writer);
+        buildIndex("hierarchy items", new SimpleDocumentSource(c), writer);
     }
 
     private void buildLocationIndex(SQLiteDatabase db, IndexWriter writer) throws IOException {
@@ -85,17 +83,22 @@ public class IndexingService extends IntentService {
                 OpenHDS.Locations.COLUMN_LOCATION_EXTID, OpenHDS.Locations.COLUMN_LOCATION_NAME,
                 OpenHDS.Locations.TABLE_NAME);
         Cursor c = db.rawQuery(query, new String[]{});
-        buildIndex("locations", new SimpleHierarchySource(c), writer);
+        buildIndex("locations", new SimpleDocumentSource(c), writer);
     }
 
     private void buildIndividualIndex(SQLiteDatabase db, IndexWriter writer) throws IOException {
         String query = String.format("select %s, 'individual' as level, %s," +
-                " ifnull(%s,'') || ' ' || ifnull(%s,'') || ' ' || ifnull(%s,'') as name from %s",
+                        " ifnull(%s,'') || ' ' || ifnull(%s,'') || ' ' || ifnull(%s,'') as name," +
+                        " ifnull(%s,'') || ' ' || ifnull(%s,'') || ' ' || ifnull(%s,'') as phone" +
+                        " from %s",
                 OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID,
                 OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES,
-                OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME, OpenHDS.Individuals.TABLE_NAME);
+                OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER,
+                OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER,
+                OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER,
+                OpenHDS.Individuals.TABLE_NAME);
         Cursor c = db.rawQuery(query, new String[]{});
-        buildIndex("individuals", new SimpleHierarchySource(c, "name"), writer);
+        buildIndex("individuals", new IndividualDocumentSource(c, "name", "phone"), writer);
     }
 
     private void buildIndex(String indexName, DocumentSource source, IndexWriter writer) throws IOException {
@@ -129,9 +132,13 @@ public class IndexingService extends IntentService {
 }
 
 interface DocumentSource {
+
     boolean next();
+
     int size();
+
     Document getDocument();
+
     void close();
 }
 
@@ -201,20 +208,10 @@ abstract class CursorDocumentSource implements DocumentSource {
     }
 }
 
-class SimpleHierarchySource extends CursorDocumentSource {
+class SimpleDocumentSource extends CursorDocumentSource {
 
-    private static final float MAX_SIMILARITY = 0.99f;
-    private static final JaroWinklerDistance jwd = new JaroWinklerDistance();
-
-    private final Set<String> nameColumns;
-
-    SimpleHierarchySource(Cursor c, String ... nameCols) {
+    SimpleDocumentSource(Cursor c) {
         super(c);
-        if (nameCols != null && nameCols.length > 0) {
-            nameColumns = new HashSet<>(asList(nameCols));
-        } else {
-            nameColumns = Collections.emptySet();
-        }
     }
 
     @Override
@@ -234,35 +231,81 @@ class SimpleHierarchySource extends CursorDocumentSource {
 
     @Override
     public String getFieldValue(int index) {
-        if (nameColumns.contains(fields[index].name())) {
+        return cursor.getString(index);
+    }
+}
+
+class IndividualDocumentSource extends SimpleDocumentSource {
+
+    private static final float MAX_SIMILARITY = 0.99f;
+    private static final JaroWinklerDistance jwd = new JaroWinklerDistance();
+
+    private String nameColumn, phoneColumn;
+
+    IndividualDocumentSource(Cursor c, String nameCol, String phoneCol) {
+        super(c);
+        nameColumn = nameCol;
+        phoneColumn = phoneCol;
+    }
+
+    @Override
+    public String getFieldValue(int index) {
+        String fieldName = fields[index].name();
+        if (nameColumn.equals(fieldName)) {
             return getNameValue(index);
+        } else if (phoneColumn.equals(fieldName)) {
+            return getPhoneValue(index);
         } else {
-            return cursor.getString(index);
+            return super.getFieldValue(index);
         }
     }
 
-    protected String getNameValue(int index) {
+    private String getPhoneValue(int index) {
         String rawValue = cursor.getString(index);
-        if (rawValue == null) {
-            return rawValue;
+        if (rawValue != null) {
+            return join(extractUniquePhones(rawValue), " ");
         } else {
-            Set<String> names = new HashSet<>();
-            for (String name : rawValue.trim().toLowerCase().split("\\s+")) {
-                name = name.replaceAll("\\W+", "");
-                if (names.contains(name) || containsSimilar(names, name)) {
-                    continue;
-                }
+            return rawValue;
+        }
+    }
+
+    private Set<String> extractUniquePhones(String phoneValue) {
+        Set<String> phones = new HashSet<>();
+        for (String phone : phoneValue.trim().split("\\s+")) {
+            phones.add(phone);
+        }
+        return phones;
+    }
+
+    private String getNameValue(int index) {
+        String rawValue = cursor.getString(index);
+        if (rawValue != null) {
+            return join(extractDissimilarNames(rawValue), " ");
+        } else {
+            return rawValue;
+        }
+    }
+
+    private Set<String> extractDissimilarNames(String nameValue) {
+        Set<String> names = new HashSet<>();
+        for (String name : nameValue.trim().toLowerCase().split("\\s+")) {
+            name = name.replaceAll("\\W+", "");
+            if (!containsSimilar(names, name)) {
                 names.add(name);
             }
-            StringBuilder buf = new StringBuilder();
-            for (String name : names) {
-                if (buf.length() > 0) {
-                    buf.append(' ');
-                }
-                buf.append(name);
-            }
-            return buf.toString();
         }
+        return names;
+    }
+
+    private String join(Set<String> values, String separator) {
+        StringBuilder buf = new StringBuilder();
+        for (String name : values) {
+            if (buf.length() > 0) {
+                buf.append(separator);
+            }
+            buf.append(name);
+        }
+        return buf.toString();
     }
 
     private boolean containsSimilar(Set<String> values, String value) {
