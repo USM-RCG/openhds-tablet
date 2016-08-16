@@ -7,20 +7,13 @@ import android.net.Uri;
 import org.openhds.mobile.repository.Converter;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.Query;
-import org.openhds.mobile.repository.QueryResultsIterator;
-import org.openhds.mobile.repository.ResultsIterator;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import static org.openhds.mobile.repository.RepositoryUtils.EQUALS;
 import static org.openhds.mobile.repository.RepositoryUtils.LIKE;
 import static org.openhds.mobile.repository.RepositoryUtils.insert;
-import static org.openhds.mobile.repository.RepositoryUtils.bulkInsert;
 import static org.openhds.mobile.repository.RepositoryUtils.update;
-import static org.openhds.mobile.repository.RepositoryUtils.delete;
-import static org.openhds.mobile.repository.RepositoryUtils.countRecords;
 
 
 /**
@@ -54,31 +47,10 @@ public abstract class Gateway<T> {
         }
     }
 
-    // insert many entities, return number of new rows
-    public int insertMany(ContentResolver contentResolver, List<T> entities) {
-        ContentValues[] allContentValues = fromList(entities);
-        return bulkInsert(contentResolver, tableUri, allContentValues);
-    }
-
-    // true if entity was deleted
-    public boolean deleteById(ContentResolver contentResolver, String id){
-        return delete(contentResolver, tableUri, idColumnName, id) > 0;
-    }
-
-    // clear the whole table and return rows deleted--be careful
-    public int deleteAll(ContentResolver resolver) {
-        return resolver.delete(tableUri, null, null);
-    }
-
     // true if entity was found with given id
     public boolean exists(ContentResolver contentResolver, String id) {
         Query query = findById(id);
         return null != getFirst(contentResolver, query);
-    }
-
-    // count all the records in the table
-    public int countAll(ContentResolver resolver) {
-        return countRecords(resolver, tableUri);
     }
 
     // get the first result from a query as an entity or null
@@ -91,16 +63,6 @@ public abstract class Gateway<T> {
     public List<T> getList(ContentResolver contentResolver, Query query) {
         Cursor cursor = query.select(contentResolver);
         return toList(cursor);
-    }
-
-    // get an iterator over all results from a query
-    public Iterator<T> getIterator(ContentResolver contentResolver, Query query) {
-        return new ResultsIterator<>(contentResolver, query, converter);
-    }
-
-    // get an iterator over all results from a query, with given iterator window size
-    public Iterator<T> getIterator(ContentResolver contentResolver, Query query, int windowSize) {
-        return new ResultsIterator<>(contentResolver, query, converter, windowSize);
     }
 
     // get the first result from a query as a QueryResult or null
@@ -123,16 +85,6 @@ public abstract class Gateway<T> {
         return dataWrappers;
     }
 
-    // get an iterator over all results from a query as QueryResults
-    public Iterator<DataWrapper> getQueryResultIterator(ContentResolver contentResolver, Query query, String level) {
-        return new QueryResultsIterator<>(contentResolver, query, converter, level);
-    }
-
-    // get an iterator over all results from a query as QueryResults, with given iterator window size
-    public Iterator<DataWrapper> getQueryResultIterator(ContentResolver contentResolver, Query query, String level, int windowSize) {
-        return new QueryResultsIterator<>(contentResolver, query, converter, level, windowSize);
-    }
-
     // find entities with given id
     public Query findById(String id) {
         return new Query(tableUri, idColumnName, id, idColumnName);
@@ -141,11 +93,6 @@ public abstract class Gateway<T> {
     // find entities ordered by id, might be huge
     public Query findAll() {
         return new Query(tableUri, null, null, idColumnName);
-    }
-
-    // find entities where given columns equal corresponding values
-    public Query findByCriteriaEqual(String[] columnNames, String[] columnValues, String columnOrderBy) {
-        return new Query(tableUri, columnNames, columnValues, columnOrderBy, EQUALS);
     }
 
     // find entities where given columns are SQL "LIKE" corresponding value
@@ -174,12 +121,4 @@ public abstract class Gateway<T> {
         return list;
     }
 
-    // read all entities into content values
-    protected ContentValues[] fromList(List<T> entities) {
-        List<ContentValues> allContentValues = new ArrayList<>();
-        for (T entity : entities) {
-            allContentValues.add(converter.toContentValues(entity));
-        }
-        return allContentValues.toArray(new ContentValues[allContentValues.size()]);
-    }
 }
