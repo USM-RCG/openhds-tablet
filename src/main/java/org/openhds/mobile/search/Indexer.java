@@ -115,7 +115,6 @@ public class Indexer {
     private void bulkIndex(String indexName, DocumentSource source, IndexWriter writer) throws IOException {
 
         NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
-
         Notification.Builder notificationBuilder = new Notification.Builder(ctx)
                 .setSmallIcon(R.drawable.ic_downloading)
                 .setContentTitle("Building search indices")
@@ -124,13 +123,15 @@ public class Indexer {
 
         try {
             if (source.next()) {
-                int totalCount = source.size(), processed = 0;
+                int totalCount = source.size(), processed = 0, lastNotified = -1;
                 do {
                     writer.addDocument(source.getDocument());
                     processed++;
-                    if (processed % 1000 == 0) {
+                    int percentFinished = (int)((processed / (float)totalCount) * 100);
+                    if (lastNotified != percentFinished) {
                         notificationBuilder.setProgress(totalCount, processed, false);
                         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.getNotification());
+                        lastNotified = percentFinished;
                     }
                 } while (source.next());
             }
