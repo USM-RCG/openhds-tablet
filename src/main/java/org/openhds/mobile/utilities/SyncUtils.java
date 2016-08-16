@@ -51,7 +51,6 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.openhds.mobile.OpenHDS.AUTHORITY;
 import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
-import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
 import static org.openhds.mobile.utilities.HttpUtils.get;
 import static org.openhds.mobile.utilities.StringUtils.join;
@@ -398,7 +397,7 @@ public class SyncUtils {
                             }
                         }
                         manager.notify(SYNC_NOTIFICATION_ID, new Notification.Builder(ctx)
-                                .setSmallIcon(R.drawable.ic_downloading)
+                                .setSmallIcon(R.drawable.ic_progress)
                                 .setContentTitle(ctx.getString(R.string.sync_database_new_data))
                                 .setContentText(ctx.getString(R.string.sync_database_in_progress))
                                 .setProgress(0, 0, true)

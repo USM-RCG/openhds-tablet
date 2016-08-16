@@ -116,7 +116,7 @@ public class Indexer {
 
         NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
         Notification.Builder notificationBuilder = new Notification.Builder(ctx)
-                .setSmallIcon(R.drawable.ic_downloading)
+                .setSmallIcon(R.drawable.ic_progress)
                 .setContentTitle("Building search indices")
                 .setContentText("Indexing in progress: " + indexName)
                 .setOngoing(true);
