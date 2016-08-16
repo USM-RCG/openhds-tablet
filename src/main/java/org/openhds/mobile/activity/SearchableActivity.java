@@ -18,8 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.FieldInfo;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -28,7 +26,6 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
@@ -49,7 +46,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
-import static org.apache.lucene.util.ReaderUtil.getMergedFieldInfos;
 import static org.openhds.mobile.activity.FieldWorkerActivity.ACTIVITY_MODULE_EXTRA;
 import static org.openhds.mobile.activity.HierarchyNavigatorActivity.HIERARCHY_PATH_KEY;
 
@@ -58,6 +54,7 @@ public class SearchableActivity extends ListActivity {
     private static final String TAG = SearchableActivity.class.getSimpleName();
 
     private static final Pattern ID_PATTERN = Pattern.compile("(?i)m\\d+(s\\d+(e\\d+(p\\d+)?)?)?");
+    private static final Pattern PHONE_PATTERN = Pattern.compile("\\d{7,}");
     private static final ExecutorService execService = Executors.newSingleThreadExecutor();
     private static final Handler handler = new Handler(Looper.getMainLooper());
     private static SearcherManager searcherManager;
@@ -79,7 +76,7 @@ public class SearchableActivity extends ListActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                DataWrapper clickedItem = (DataWrapper)listView.getItemAtPosition(position);
+                DataWrapper clickedItem = (DataWrapper) listView.getItemAtPosition(position);
 
                 Stack<DataWrapper> revPath = new Stack<>();
                 revPath.push(clickedItem);
@@ -120,7 +117,7 @@ public class SearchableActivity extends ListActivity {
         Directory indexDir = FSDirectory.open(indexFile);
         if (searcherManager == null) {
             searcherManager = new SearcherManager(indexDir, new SearcherFactory());
-        } else if (!searcherManager.isSearcherCurrent()){
+        } else if (!searcherManager.isSearcherCurrent()) {
             searcherManager.maybeRefresh();
         }
         return searcherManager.acquire();
@@ -144,35 +141,16 @@ public class SearchableActivity extends ListActivity {
                 try {
                     long start = System.currentTimeMillis();
                     IndexSearcher searcher = acquireSearcher();
-                    IndexReader indexReader = searcher.getIndexReader();
                     try {
-                        String[] split = query.split("\\s+");
-                        // construct a query over all known fields
+                        // construct the query
                         BooleanQuery boolQuery = new BooleanQuery();
-                        for (FieldInfo fieldInfo : getMergedFieldInfos(indexReader)) {
-                            switch (fieldInfo.name) {
-                                case "uuid":
-                                case "level":
-                                    // do not query these fields directly
-                                    break;
-                                case "extId":
-                                    for (String part : split) {
-                                        if (ID_PATTERN.matcher(part).matches()) {
-                                            boolQuery.add(
-                                                    new WildcardQuery(new Term(fieldInfo.name, query + "*")),
-                                                    BooleanClause.Occur.SHOULD);
-                                        }
-                                    }
-                                    break;
-                                case "name":
-                                    for (String part : split) {
-                                        if (!ID_PATTERN.matcher(part).matches()) {
-                                            boolQuery.add(new FuzzyQuery(new Term(fieldInfo.name, part)), BooleanClause.Occur.SHOULD);
-                                        }
-                                    }
-                                    break;
-                                default:
-                                    boolQuery.add(new TermQuery(new Term(fieldInfo.name, query)), BooleanClause.Occur.SHOULD);
+                        for (String part : query.split("\\s+")) {
+                            if (ID_PATTERN.matcher(part).matches()) {
+                                boolQuery.add(new WildcardQuery(new Term("extId", part + "*")), BooleanClause.Occur.SHOULD);
+                            } else if (PHONE_PATTERN.matcher(part).matches()) {
+                                boolQuery.add(new FuzzyQuery(new Term("phone", part), .85f), BooleanClause.Occur.SHOULD);
+                            } else {
+                                boolQuery.add(new FuzzyQuery(new Term("name", part)), BooleanClause.Occur.SHOULD);
                             }
                         }
 
