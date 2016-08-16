@@ -86,7 +86,7 @@ public class Indexer {
                 OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID,
                 OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME, OpenHDS.HierarchyItems.TABLE_NAME);
         Cursor c = db.rawQuery(query, new String[]{});
-        bulkIndex("hierarchy items", new SimpleCursorDocumentSource(c), writer);
+        bulkIndex(R.string.indexing_hierarchy_items, new SimpleCursorDocumentSource(c), writer);
     }
 
     private void bulkIndexLocations(SQLiteDatabase db, IndexWriter writer) throws IOException {
@@ -94,7 +94,7 @@ public class Indexer {
                 OpenHDS.Locations.COLUMN_LOCATION_EXTID, OpenHDS.Locations.COLUMN_LOCATION_NAME,
                 OpenHDS.Locations.TABLE_NAME);
         Cursor c = db.rawQuery(query, new String[]{});
-        bulkIndex("locations", new SimpleCursorDocumentSource(c), writer);
+        bulkIndex(R.string.indexing_locations, new SimpleCursorDocumentSource(c), writer);
     }
 
     private void bulkIndexIndividuals(SQLiteDatabase db, IndexWriter writer) throws IOException {
@@ -109,16 +109,16 @@ public class Indexer {
                 OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER,
                 OpenHDS.Individuals.TABLE_NAME);
         Cursor c = db.rawQuery(query, new String[]{});
-        bulkIndex("individuals", new IndividualCursorDocumentSource(c, "name", "phone"), writer);
+        bulkIndex(R.string.indexing_individuals, new IndividualCursorDocumentSource(c, "name", "phone"), writer);
     }
 
-    private void bulkIndex(String indexName, DocumentSource source, IndexWriter writer) throws IOException {
+    private void bulkIndex(int label, DocumentSource source, IndexWriter writer) throws IOException {
 
         NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
         Notification.Builder notificationBuilder = new Notification.Builder(ctx)
                 .setSmallIcon(R.drawable.ic_progress)
-                .setContentTitle("Building search indices")
-                .setContentText("Indexing in progress: " + indexName)
+                .setContentTitle(ctx.getString(R.string.updating_index))
+                .setContentText(ctx.getString(label))
                 .setOngoing(true);
 
         try {
@@ -127,7 +127,7 @@ public class Indexer {
                 do {
                     writer.addDocument(source.getDocument());
                     processed++;
-                    int percentFinished = (int)((processed / (float)totalCount) * 100);
+                    int percentFinished = (int) ((processed / (float) totalCount) * 100);
                     if (lastNotified != percentFinished) {
                         notificationBuilder.setProgress(totalCount, processed, false);
                         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.getNotification());

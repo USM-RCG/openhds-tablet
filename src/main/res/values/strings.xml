@@ -183,5 +183,9 @@
     <string name="install_label">Install</string>
     <string name="search_label">Search</string>
     <string name="search_hint">Find a location or individual</string>
+    <string name="updating_index">Updating search index</string>
+    <string name="indexing_locations">Indexing locations</string>
+    <string name="indexing_hierarchy_items">Indexing hierarchy items</string>
+    <string name="indexing_individuals">Indexing individuals</string>
 
 </resources>

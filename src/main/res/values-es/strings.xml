@@ -169,5 +169,9 @@
     <string name="no_server_url">No URL del servidor se ha establecido</string>
     <string name="search_label">Buscar</string>
     <string name="search_hint">Buscar una ubicación o individuo</string>
+    <string name="updating_index">Índice de búsqueda de actualización</string>
+    <string name="indexing_locations">Actualización de las ubicaciones</string>
+    <string name="indexing_hierarchy_items">Actualización de elementos de jerarquía</string>
+    <string name="indexing_individuals">Actualización de los individuos</string>
 
 </resources>
