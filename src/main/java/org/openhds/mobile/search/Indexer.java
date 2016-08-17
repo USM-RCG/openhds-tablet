@@ -52,6 +52,7 @@ public class Indexer {
 
     private Context ctx;
 
+    private SQLiteDatabase db;
     private IndexWriterConfig config;
     private File indexFile;
     private IndexWriter writer;
@@ -62,6 +63,7 @@ public class Indexer {
         config = new IndexWriterConfig(LUCENE_36, analyzer);
         config.setOpenMode(CREATE_OR_APPEND);
         indexFile = new File(ctx.getFilesDir(), "search-index");
+        db = OpenHDSProvider.getDatabaseHelper(ctx).getReadableDatabase();
     }
 
     public static Indexer getInstance(Context ctx) {
@@ -85,31 +87,30 @@ public class Indexer {
 
     public void bulkIndexAll() {
         try {
-            SQLiteDatabase db = OpenHDSProvider.getDatabaseHelper(ctx).getReadableDatabase();
             IndexWriter indexWriter = getWriter(false);
             try {
-                bulkIndexHierarchy(db, indexWriter);
-                bulkIndexLocations(db, indexWriter);
-                bulkIndexIndividuals(db, indexWriter);
+                bulkIndexHierarchy(indexWriter);
+                bulkIndexLocations(indexWriter);
+                bulkIndexIndividuals(indexWriter);
             } finally {
-                close(db, indexWriter);
+                close(indexWriter);
             }
         } catch (IOException e) {
             Log.w(TAG, "io error, indexing failed: " + e.getMessage());
         }
     }
 
-    private void bulkIndexHierarchy(SQLiteDatabase db, IndexWriter writer) throws IOException {
+    private void bulkIndexHierarchy(IndexWriter writer) throws IOException {
         Cursor c = db.rawQuery(HIERARCHY_INDEX_QUERY, new String[]{});
         bulkIndex(R.string.indexing_hierarchy_items, new SimpleCursorDocumentSource(c), writer);
     }
 
-    private void bulkIndexLocations(SQLiteDatabase db, IndexWriter writer) throws IOException {
+    private void bulkIndexLocations(IndexWriter writer) throws IOException {
         Cursor c = db.rawQuery(LOCATION_INDEX_QUERY, new String[]{});
         bulkIndex(R.string.indexing_locations, new SimpleCursorDocumentSource(c), writer);
     }
 
-    private void bulkIndexIndividuals(SQLiteDatabase db, IndexWriter writer) throws IOException {
+    private void bulkIndexIndividuals(IndexWriter writer) throws IOException {
         Cursor c = db.rawQuery(INDIVIDUAL_INDEX_QUERY, new String[]{});
         bulkIndex(R.string.indexing_individuals, new IndividualCursorDocumentSource(c, "name", "phone"), writer);
     }
