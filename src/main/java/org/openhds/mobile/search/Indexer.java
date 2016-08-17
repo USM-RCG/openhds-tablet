@@ -97,7 +97,23 @@ public class Indexer {
         return writer;
     }
 
-    public void bulkIndexAll() {
+    public void reindexAll() {
+        try {
+            IndexWriter indexWriter = getWriter(false);
+            try {
+                indexWriter.deleteAll();
+                bulkIndexHierarchy(indexWriter);
+                bulkIndexLocations(indexWriter);
+                bulkIndexIndividuals(indexWriter);
+            } finally {
+                close(indexWriter);
+            }
+        } catch (IOException e) {
+            Log.w(TAG, "io error, indexing failed: " + e.getMessage());
+        }
+    }
+
+    public void indexAll() {
         try {
             IndexWriter indexWriter = getWriter(false);
             try {

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,14 +15,13 @@ import android.widget.TextView;
 
 import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.R;
-import org.openhds.mobile.search.IndexingService;
 import org.openhds.mobile.utilities.MessageUtils;
 import org.openhds.mobile.utilities.SyncUtils;
 
 import java.io.File;
 
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
-import static org.openhds.mobile.search.IndexingService.queueFullBuild;
+import static org.openhds.mobile.search.IndexingService.queueFullIndex;
 import static org.openhds.mobile.utilities.SyncUtils.SYNC_NOTIFICATION_ID;
 import static org.openhds.mobile.utilities.SyncUtils.canUpdateDatabase;
 import static org.openhds.mobile.utilities.SyncUtils.checkForUpdate;
@@ -115,6 +113,6 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
         NotificationManager manager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(SYNC_NOTIFICATION_ID);
         MessageUtils.showLongToast(ctx, ctx.getString(R.string.sync_database_updated));
-        queueFullBuild(ctx);
+        queueFullIndex(ctx);
     }
 }
