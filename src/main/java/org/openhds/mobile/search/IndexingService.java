@@ -1,6 +1,7 @@
 package org.openhds.mobile.search;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 
 public class IndexingService extends IntentService {
@@ -11,8 +12,11 @@ public class IndexingService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Indexer indexer = Indexer.getInstance(getApplicationContext());
-        indexer.bulkIndexAll();
+        Indexer.getInstance(getApplicationContext()).bulkIndexAll();
+    }
+
+    public static void queueFullBuild(Context ctx) {
+        ctx.startService(new Intent(ctx, IndexingService.class));
     }
 }
 
