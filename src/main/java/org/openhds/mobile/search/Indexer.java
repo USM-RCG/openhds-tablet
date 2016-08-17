@@ -26,6 +26,24 @@ import static org.openhds.mobile.utilities.SyncUtils.close;
 
 public class Indexer {
 
+    public static final String INDIVIDUAL_INDEX_QUERY = String.format("select %s, 'individual' as level, %s," +
+                    " ifnull(%s,'') || ' ' || ifnull(%s,'') || ' ' || ifnull(%s,'') as name," +
+                    " ifnull(%s,'') || ' ' || ifnull(%s,'') || ' ' || ifnull(%s,'') as phone" +
+                    " from %s", OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID,
+            OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES,
+            OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER,
+            OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER,
+            OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER,
+            OpenHDS.Individuals.TABLE_NAME);
+
+    public static final String LOCATION_INDEX_QUERY = String.format("select %s, 'household' as level, %s, %s from %s",
+            OpenHDS.Locations.COLUMN_LOCATION_UUID, OpenHDS.Locations.COLUMN_LOCATION_EXTID,
+            OpenHDS.Locations.COLUMN_LOCATION_NAME, OpenHDS.Locations.TABLE_NAME);
+
+    public static final String HIERARCHY_INDEX_QUERY = String.format("select %s, lower(%s) as level, %s, %s from %s", OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID,
+            OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID,
+            OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME, OpenHDS.HierarchyItems.TABLE_NAME);
+
     private static final int NOTIFICATION_ID = 13;
 
     private static final String TAG = IndexingService.class.getSimpleName();
@@ -82,33 +100,17 @@ public class Indexer {
     }
 
     private void bulkIndexHierarchy(SQLiteDatabase db, IndexWriter writer) throws IOException {
-        String query = String.format("select %s, lower(%s) as level, %s, %s from %s", OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID,
-                OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID,
-                OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME, OpenHDS.HierarchyItems.TABLE_NAME);
-        Cursor c = db.rawQuery(query, new String[]{});
+        Cursor c = db.rawQuery(HIERARCHY_INDEX_QUERY, new String[]{});
         bulkIndex(R.string.indexing_hierarchy_items, new SimpleCursorDocumentSource(c), writer);
     }
 
     private void bulkIndexLocations(SQLiteDatabase db, IndexWriter writer) throws IOException {
-        String query = String.format("select %s, 'household' as level, %s, %s from %s", OpenHDS.Locations.COLUMN_LOCATION_UUID,
-                OpenHDS.Locations.COLUMN_LOCATION_EXTID, OpenHDS.Locations.COLUMN_LOCATION_NAME,
-                OpenHDS.Locations.TABLE_NAME);
-        Cursor c = db.rawQuery(query, new String[]{});
+        Cursor c = db.rawQuery(LOCATION_INDEX_QUERY, new String[]{});
         bulkIndex(R.string.indexing_locations, new SimpleCursorDocumentSource(c), writer);
     }
 
     private void bulkIndexIndividuals(SQLiteDatabase db, IndexWriter writer) throws IOException {
-        String query = String.format("select %s, 'individual' as level, %s," +
-                        " ifnull(%s,'') || ' ' || ifnull(%s,'') || ' ' || ifnull(%s,'') as name," +
-                        " ifnull(%s,'') || ' ' || ifnull(%s,'') || ' ' || ifnull(%s,'') as phone" +
-                        " from %s",
-                OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID,
-                OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES,
-                OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER,
-                OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER,
-                OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER,
-                OpenHDS.Individuals.TABLE_NAME);
-        Cursor c = db.rawQuery(query, new String[]{});
+        Cursor c = db.rawQuery(INDIVIDUAL_INDEX_QUERY, new String[]{});
         bulkIndex(R.string.indexing_individuals, new IndividualCursorDocumentSource(c, "name", "phone"), writer);
     }
 
