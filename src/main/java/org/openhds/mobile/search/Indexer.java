@@ -8,8 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.openhds.mobile.OpenHDS;
@@ -36,13 +38,23 @@ public class Indexer {
             OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER,
             OpenHDS.Individuals.TABLE_NAME);
 
+    public static final String INDIVIDUAL_UPDATE_QUERY = String.format(INDIVIDUAL_INDEX_QUERY + " where %s = ?",
+            OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID);
+
     public static final String LOCATION_INDEX_QUERY = String.format("select %s, 'household' as level, %s, %s from %s",
             OpenHDS.Locations.COLUMN_LOCATION_UUID, OpenHDS.Locations.COLUMN_LOCATION_EXTID,
             OpenHDS.Locations.COLUMN_LOCATION_NAME, OpenHDS.Locations.TABLE_NAME);
 
-    public static final String HIERARCHY_INDEX_QUERY = String.format("select %s, lower(%s) as level, %s, %s from %s", OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID,
-            OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID,
-            OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME, OpenHDS.HierarchyItems.TABLE_NAME);
+    public static final String LOCATION_UPDATE_QUERY = String.format(LOCATION_INDEX_QUERY + " where %s = ?",
+            OpenHDS.Locations.COLUMN_LOCATION_UUID);
+
+    public static final String HIERARCHY_INDEX_QUERY = String.format("select %s, lower(%s) as level, %s, %s from %s",
+            OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL,
+            OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME,
+            OpenHDS.HierarchyItems.TABLE_NAME);
+
+    public static final String HIERARCHY_UPDATE_QUERY = String.format(HIERARCHY_INDEX_QUERY + " where %s = ?",
+            OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID);
 
     private static final int NOTIFICATION_ID = 13;
 
@@ -53,15 +65,12 @@ public class Indexer {
     private Context ctx;
 
     private SQLiteDatabase db;
-    private IndexWriterConfig config;
+
     private File indexFile;
     private IndexWriter writer;
 
     protected Indexer(Context ctx) {
         this.ctx = ctx;
-        Analyzer analyzer = new CustomAnalyzer();
-        config = new IndexWriterConfig(LUCENE_36, analyzer);
-        config.setOpenMode(CREATE_OR_APPEND);
         indexFile = new File(ctx.getFilesDir(), "search-index");
         db = OpenHDSProvider.getDatabaseHelper(ctx).getReadableDatabase();
     }
@@ -80,6 +89,9 @@ public class Indexer {
         }
         if (writer == null) {
             Directory indexDir = FSDirectory.open(indexFile);
+            Analyzer analyzer = new CustomAnalyzer();
+            IndexWriterConfig config = new IndexWriterConfig(LUCENE_36, analyzer);
+            config.setOpenMode(CREATE_OR_APPEND);
             writer = new IndexWriter(indexDir, config);
         }
         return writer;
@@ -105,14 +117,44 @@ public class Indexer {
         bulkIndex(R.string.indexing_hierarchy_items, new SimpleCursorDocumentSource(c), writer);
     }
 
+    public void reindexHierarchy(String uuid) throws IOException {
+        IndexWriter writer = getWriter(false);
+        try {
+            Cursor c = db.rawQuery(HIERARCHY_UPDATE_QUERY, new String[]{uuid});
+            updateIndex(new SimpleCursorDocumentSource(c), writer, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID);
+        } finally {
+            writer.commit();
+        }
+    }
+
     private void bulkIndexLocations(IndexWriter writer) throws IOException {
         Cursor c = db.rawQuery(LOCATION_INDEX_QUERY, new String[]{});
         bulkIndex(R.string.indexing_locations, new SimpleCursorDocumentSource(c), writer);
     }
 
+    public void reindexLocation(String uuid) throws IOException {
+        IndexWriter writer = getWriter(false);
+        try {
+            Cursor c = db.rawQuery(LOCATION_UPDATE_QUERY, new String[]{uuid});
+            updateIndex(new SimpleCursorDocumentSource(c), writer, OpenHDS.Locations.COLUMN_LOCATION_UUID);
+        } finally {
+            writer.commit();
+        }
+    }
+
     private void bulkIndexIndividuals(IndexWriter writer) throws IOException {
         Cursor c = db.rawQuery(INDIVIDUAL_INDEX_QUERY, new String[]{});
         bulkIndex(R.string.indexing_individuals, new IndividualCursorDocumentSource(c, "name", "phone"), writer);
+    }
+
+    public void reindexIndividual(String uuid) throws IOException {
+        IndexWriter writer = getWriter(false);
+        try {
+            Cursor c = db.rawQuery(INDIVIDUAL_UPDATE_QUERY, new String[]{uuid});
+            updateIndex(new SimpleCursorDocumentSource(c), writer, OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID);
+        } finally {
+            writer.commit();
+        }
     }
 
     private void bulkIndex(int label, DocumentSource source, IndexWriter writer) throws IOException {
@@ -140,6 +182,20 @@ public class Indexer {
             }
         } finally {
             notificationManager.cancel(NOTIFICATION_ID);
+            source.close();
+        }
+    }
+
+    private void updateIndex(DocumentSource source, IndexWriter writer, String idField) throws IOException {
+        try {
+            Term idTerm = new Term(idField);
+            if (source.next()) {
+                do {
+                    Document doc = source.getDocument();
+                    writer.updateDocument(idTerm.createTerm(doc.get(idField)), doc);
+                } while (source.next());
+            }
+        } finally {
             source.close();
         }
     }

@@ -3,6 +3,7 @@ package org.openhds.mobile.provider;
 import java.util.HashMap;
 
 import org.openhds.mobile.OpenHDS;
+import org.openhds.mobile.search.IndexingService;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -535,19 +536,27 @@ public class OpenHDSProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues initialValues) {
         String table;
         Uri contentUriBase;
+        IndexingService.EntityType reindexType = null;
+        String uuid = null;
 
         switch (sUriMatcher.match(uri)) {
             case INDIVIDUALS:
                 table = OpenHDS.Individuals.TABLE_NAME;
                 contentUriBase = OpenHDS.Individuals.CONTENT_ID_URI_BASE;
+                reindexType = IndexingService.EntityType.INDIVIDUAL;
+                uuid = initialValues.getAsString(OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID);
                 break;
             case LOCATIONS:
                 table = OpenHDS.Locations.TABLE_NAME;
                 contentUriBase = OpenHDS.Locations.CONTENT_ID_URI_BASE;
+                reindexType = IndexingService.EntityType.LOCATION;
+                uuid = initialValues.getAsString(OpenHDS.Locations.COLUMN_LOCATION_UUID);
                 break;
             case HIERARCHYITEMS:
                 table = OpenHDS.HierarchyItems.TABLE_NAME;
                 contentUriBase = OpenHDS.HierarchyItems.CONTENT_ID_URI_BASE;
+                reindexType = IndexingService.EntityType.HIERARCHY;
+                uuid = initialValues.getAsString(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID);
                 break;
             case VISITS:
                 table = OpenHDS.Visits.TABLE_NAME;
@@ -587,6 +596,9 @@ public class OpenHDSProvider extends ContentProvider {
 
         if (rowId > 0) {
             Uri noteUri = ContentUris.withAppendedId(contentUriBase, rowId);
+            if (reindexType != null && uuid != null) {
+                IndexingService.queueReindex(getContext(), reindexType, uuid);
+            }
             getContext().getContentResolver().notifyChange(noteUri, null);
             return noteUri;
         }
@@ -698,42 +710,47 @@ public class OpenHDSProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String where,
-                      String[] whereArgs) {
+    public int update(Uri uri, ContentValues values, String where, String[] whereArgs) {
+
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         int count;
         String finalWhere;
+        IndexingService.EntityType reindexType = null;
+        String uuid = null;
 
         switch (sUriMatcher.match(uri)) {
             case INDIVIDUALS:
-                count = db.update(OpenHDS.Individuals.TABLE_NAME, values, where,
-                        whereArgs);
+                count = db.update(OpenHDS.Individuals.TABLE_NAME, values, where, whereArgs);
+                reindexType = IndexingService.EntityType.INDIVIDUAL;
+                uuid = values.getAsString(OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID);
                 break;
             case INDIVIDUAL_ID:
-                finalWhere = buildFinalWhere(uri,
-                        OpenHDS.Individuals.NOTE_ID_PATH_POSITION, where);
-                count = db.update(OpenHDS.Individuals.TABLE_NAME, values,
-                        finalWhere, whereArgs);
+                finalWhere = buildFinalWhere(uri, OpenHDS.Individuals.NOTE_ID_PATH_POSITION, where);
+                count = db.update(OpenHDS.Individuals.TABLE_NAME, values, finalWhere, whereArgs);
+                reindexType = IndexingService.EntityType.INDIVIDUAL;
+                uuid = values.getAsString(OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID);
                 break;
             case LOCATIONS:
-                count = db.update(OpenHDS.Locations.TABLE_NAME, values, where,
-                        whereArgs);
+                count = db.update(OpenHDS.Locations.TABLE_NAME, values, where, whereArgs);
+                reindexType = IndexingService.EntityType.LOCATION;
+                uuid = values.getAsString(OpenHDS.Locations.COLUMN_LOCATION_UUID);
                 break;
             case LOCATION_ID:
-                finalWhere = buildFinalWhere(uri,
-                        OpenHDS.Locations.NOTE_ID_PATH_POSITION, where);
-                count = db.update(OpenHDS.Locations.TABLE_NAME, values, finalWhere,
-                        whereArgs);
+                finalWhere = buildFinalWhere(uri, OpenHDS.Locations.NOTE_ID_PATH_POSITION, where);
+                count = db.update(OpenHDS.Locations.TABLE_NAME, values, finalWhere, whereArgs);
+                reindexType = IndexingService.EntityType.LOCATION;
+                uuid = values.getAsString(OpenHDS.Locations.COLUMN_LOCATION_UUID);
                 break;
             case HIERARCHYITEMS:
-                count = db.update(OpenHDS.HierarchyItems.TABLE_NAME, values, where,
-                        whereArgs);
+                count = db.update(OpenHDS.HierarchyItems.TABLE_NAME, values, where, whereArgs);
+                reindexType = IndexingService.EntityType.HIERARCHY;
+                uuid = values.getAsString(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID);
                 break;
             case HIERARCHYITEM_ID:
-                finalWhere = buildFinalWhere(uri,
-                        OpenHDS.HierarchyItems.NOTE_ID_PATH_POSITION, where);
-                count = db.update(OpenHDS.HierarchyItems.TABLE_NAME, values,
-                        finalWhere, whereArgs);
+                finalWhere = buildFinalWhere(uri, OpenHDS.HierarchyItems.NOTE_ID_PATH_POSITION, where);
+                count = db.update(OpenHDS.HierarchyItems.TABLE_NAME, values, finalWhere, whereArgs);
+                reindexType = IndexingService.EntityType.HIERARCHY;
+                uuid = values.getAsString(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID);
                 break;
             case VISITS:
                 count = db.update(OpenHDS.Visits.TABLE_NAME, values, where,
@@ -787,6 +804,9 @@ public class OpenHDSProvider extends ContentProvider {
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+        if (reindexType != null && uuid != null) {
+            IndexingService.queueReindex(getContext(), reindexType, uuid);
         }
         getContext().getContentResolver().notifyChange(uri, null);
 
