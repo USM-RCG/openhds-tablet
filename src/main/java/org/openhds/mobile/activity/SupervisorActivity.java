@@ -17,6 +17,7 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.ChecklistFragment;
 import org.openhds.mobile.model.core.Supervisor;
 import org.openhds.mobile.model.form.FormInstance;
+import org.openhds.mobile.search.IndexingService;
 import org.openhds.mobile.utilities.LoginUtils;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
@@ -58,6 +59,11 @@ public class SupervisorActivity extends Activity {
         ((RelativeLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
 
         button = makeButton(this, -1, R.string.approve_forms, R.string.approve_forms,
+                buttonClickListener, supervisorButtonLayout);
+
+        ((RelativeLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
+
+        button = makeButton(this, -1, R.string.rebuild_search_indices, R.string.rebuild_search_indices,
                 buttonClickListener, supervisorButtonLayout);
 
         ((RelativeLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
@@ -124,6 +130,8 @@ public class SupervisorActivity extends Activity {
                 checklistFragment.setMode(ChecklistFragment.DELETE_MODE);
             } else if (tag.equals(R.string.approve_forms)) {
                 checklistFragment.setMode(ChecklistFragment.APPROVE_MODE);
+            } else if (tag.equals(R.string.rebuild_search_indices)) {
+                IndexingService.queueFullReindex(SupervisorActivity.this);
             }
         }
     }

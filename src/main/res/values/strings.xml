@@ -193,5 +193,6 @@
     <string name="auto_index_on_db_update_disabled">Do not rebuild indices after database updates</string>
     <bool name="auto_index_on_db_update_default">true</bool>
 
+    <string name="rebuild_search_indices">Rebuild Search Indices</string>
 
 </resources>
