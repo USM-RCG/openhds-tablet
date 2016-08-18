@@ -24,4 +24,12 @@
         android:defaultValue="@string/sync_history_retention_default"
         />
 
+    <SwitchPreference
+        android:key="@string/auto_index_on_db_update_key"
+        android:title="@string/auto_index_on_db_update"
+        android:summaryOn="@string/auto_index_on_db_update_enabled"
+        android:summaryOff="@string/auto_index_on_db_update_disabled"
+        android:defaultValue="@bool/auto_index_on_db_update_default"
+        />
+
 </PreferenceScreen>

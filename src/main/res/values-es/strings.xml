@@ -173,5 +173,8 @@
     <string name="indexing_locations">Actualización de las ubicaciones</string>
     <string name="indexing_hierarchy_items">Actualización de elementos de jerarquía</string>
     <string name="indexing_individuals">Actualización de los individuos</string>
+    <string name="auto_index_on_db_update">Base de datos automático de indización de búsqueda</string>
+    <string name="auto_index_on_db_update_enabled">Reconstruir los índices después de actualizaciones de la base</string>
+    <string name="auto_index_on_db_update_disabled">No reconstruir los índices después de actualizaciones de la base</string>
 
 </resources>

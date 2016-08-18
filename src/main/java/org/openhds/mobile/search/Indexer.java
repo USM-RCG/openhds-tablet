@@ -113,21 +113,6 @@ public class Indexer {
         }
     }
 
-    public void indexAll() {
-        try {
-            IndexWriter indexWriter = getWriter(false);
-            try {
-                bulkIndexHierarchy(indexWriter);
-                bulkIndexLocations(indexWriter);
-                bulkIndexIndividuals(indexWriter);
-            } finally {
-                close(indexWriter);
-            }
-        } catch (IOException e) {
-            Log.w(TAG, "io error, indexing failed: " + e.getMessage());
-        }
-    }
-
     private void bulkIndexHierarchy(IndexWriter writer) throws IOException {
         Cursor c = db.rawQuery(HIERARCHY_INDEX_QUERY, new String[]{});
         bulkIndex(R.string.indexing_hierarchy_items, new SimpleCursorDocumentSource(c), writer);

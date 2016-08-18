@@ -1,10 +1,14 @@
 package org.openhds.mobile.search;
 
+import android.content.Context;
+
 import org.apache.lucene.search.spell.JaroWinklerDistance;
+import org.openhds.mobile.R;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class Utils {
 
@@ -48,4 +52,15 @@ public class Utils {
         }
         return false;
     }
+
+    /**
+     * Returns whether automatic database re-indexing is enabled based on user settings.
+     *
+     * @param ctx the app context to use for accessing preferences
+     * @return true if auto-update is enabled, otherwise false
+     */
+    public static boolean isAutoReindexingEnabled(Context ctx) {
+        return getDefaultSharedPreferences(ctx).getBoolean(ctx.getString(R.string.auto_index_on_db_update_key), true);
+    }
+
 }

@@ -21,7 +21,8 @@ import org.openhds.mobile.utilities.SyncUtils;
 import java.io.File;
 
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
-import static org.openhds.mobile.search.IndexingService.queueFullIndex;
+import static org.openhds.mobile.search.IndexingService.queueFullReindex;
+import static org.openhds.mobile.search.Utils.isAutoReindexingEnabled;
 import static org.openhds.mobile.utilities.SyncUtils.SYNC_NOTIFICATION_ID;
 import static org.openhds.mobile.utilities.SyncUtils.canUpdateDatabase;
 import static org.openhds.mobile.utilities.SyncUtils.checkForUpdate;
@@ -113,6 +114,8 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
         NotificationManager manager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(SYNC_NOTIFICATION_ID);
         MessageUtils.showLongToast(ctx, ctx.getString(R.string.sync_database_updated));
-        queueFullIndex(ctx);
+        if (isAutoReindexingEnabled(ctx)) {
+            queueFullReindex(ctx);
+        }
     }
 }

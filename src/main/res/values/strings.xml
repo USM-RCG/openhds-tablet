@@ -106,7 +106,7 @@
     <string name="sync_download_times">Download Times</string>
     <string name="sync_duration_minutes">Duration (minutes)</string>
     <string name="use_zsync_key" translatable="false">use_zsync</string>
-    <bool name="use_zsync_default" translatable="false">true</bool>
+    <bool name="use_zsync_default">true</bool>
     <string name="use_zsync">Sync Download Optimization</string>
     <string name="use_zsync_enabled">Use zsync when available</string>
     <string name="use_zsync_disabled">Direct download only</string>
@@ -187,5 +187,11 @@
     <string name="indexing_locations">Indexing locations</string>
     <string name="indexing_hierarchy_items">Indexing hierarchy items</string>
     <string name="indexing_individuals">Indexing individuals</string>
+    <string name="auto_index_on_db_update_key" translatable="false">reindex_on_db_update</string>
+    <string name="auto_index_on_db_update">Automatic Database Search Indexing</string>
+    <string name="auto_index_on_db_update_enabled">Rebuild indices after database updates</string>
+    <string name="auto_index_on_db_update_disabled">Do not rebuild indices after database updates</string>
+    <bool name="auto_index_on_db_update_default">true</bool>
+
 
 </resources>
