@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.openhds.mobile.R;
 import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
@@ -205,14 +207,25 @@ class ResultAdapter extends ArrayAdapter<DataWrapper> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = inflater.inflate(android.R.layout.two_line_list_item, null);
+            convertView = inflater.inflate(R.layout.search_result, null);
         }
 
         DataWrapper item = getItem(position);
 
+        ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
         TextView text1 = (TextView) convertView.findViewById(android.R.id.text1);
         TextView text2 = (TextView) convertView.findViewById(android.R.id.text2);
 
+        switch(item.getCategory()) {
+            case "household":
+                icon.setImageResource(R.drawable.location_logo);
+                break;
+            case "individual":
+                icon.setImageResource(R.drawable.individual_logo);
+            break;
+            default:
+                icon.setImageResource(R.drawable.hierarchy_logo);
+        }
         text1.setText(item.getName());
         text2.setText(item.getExtId());
 
