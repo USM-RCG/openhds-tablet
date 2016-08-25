@@ -66,7 +66,7 @@ public class SearchableActivity extends ListActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         setContentView(android.R.layout.list_content);
-        final ListView listView = (ListView) findViewById(android.R.id.list);
+        ListView listView = (ListView) findViewById(android.R.id.list);
 
         final Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -74,44 +74,62 @@ public class SearchableActivity extends ListActivity {
             performSearch(query);
         }
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String moduleName = intent.getStringExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA);
+        listView.setOnItemClickListener(new ItemClickListener(listView, moduleName));
+    }
 
-                DataWrapper clickedItem = (DataWrapper) listView.getItemAtPosition(position);
+    private class ItemClickListener implements AdapterView.OnItemClickListener {
 
-                Stack<DataWrapper> revPath = new Stack<>();
-                revPath.push(clickedItem);
-                for (DataWrapper item = getParent(clickedItem); item != null; item = getParent(item)) {
-                    revPath.push(item);
-                }
+        private ListView listView;
+        private String fromModule;
 
-                if (!revPath.isEmpty()) {
-                    HierarchyPath path = new HierarchyPath();
-                    while (!revPath.isEmpty()) {
-                        DataWrapper item = revPath.pop();
-                        path.down(item.getCategory(), item);
-                    }
+        public ItemClickListener(ListView listView) {
+            this.listView = listView;
+        }
 
-                    String moduleToLaunch;
-                    if (intent.hasExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA)) {
-                        moduleToLaunch = intent.getStringExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA);
-                    } else {
-                        NavigatorModule firstModule = NavigatorConfig.getInstance().getModules().iterator().next();
-                        moduleToLaunch = firstModule.getName();
-                    }
+        public ItemClickListener(ListView listView, String fromModule) {
+            this(listView);
+            this.fromModule = fromModule;
+        }
 
-                    Intent intent = new Intent(SearchableActivity.this, HierarchyNavigatorActivity.class);
-                    intent.putExtra(ACTIVITY_MODULE_EXTRA, moduleToLaunch);
-                    intent.putExtra(HIERARCHY_PATH_KEY, path);
-                    startActivity(intent);
-                }
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            DataWrapper clickedItem = (DataWrapper) listView.getItemAtPosition(position);
+
+            Stack<DataWrapper> revPath = new Stack<>();
+            revPath.push(clickedItem);
+            for (DataWrapper item = getParent(clickedItem); item != null; item = getParent(item)) {
+                revPath.push(item);
             }
 
-            private DataWrapper getParent(DataWrapper item) {
-                return DefaultQueryHelper.getInstance().getParent(getContentResolver(), item.getCategory(), item.getUuid());
+            if (!revPath.isEmpty()) {
+                HierarchyPath path = new HierarchyPath();
+                while (!revPath.isEmpty()) {
+                    DataWrapper item = revPath.pop();
+                    path.down(item.getCategory(), item);
+                }
+
+                String moduleToLaunch;
+                if (fromModule != null) {
+                    moduleToLaunch = fromModule;
+                } else {
+                    NavigatorModule firstModule = NavigatorConfig.getInstance().getModules().iterator().next();
+                    moduleToLaunch = firstModule.getName();
+                }
+
+                listView.getContext();
+
+                Intent intent = new Intent(listView.getContext(), HierarchyNavigatorActivity.class);
+                intent.putExtra(ACTIVITY_MODULE_EXTRA, moduleToLaunch);
+                intent.putExtra(HIERARCHY_PATH_KEY, path);
+                startActivity(intent);
             }
-        });
+        }
+
+        private DataWrapper getParent(DataWrapper item) {
+            return DefaultQueryHelper.getInstance().getParent(getContentResolver(), item.getCategory(), item.getUuid());
+        }
     }
 
     private IndexSearcher acquireSearcher() throws IOException {
@@ -216,13 +234,13 @@ class ResultAdapter extends ArrayAdapter<DataWrapper> {
         TextView text1 = (TextView) convertView.findViewById(android.R.id.text1);
         TextView text2 = (TextView) convertView.findViewById(android.R.id.text2);
 
-        switch(item.getCategory()) {
+        switch (item.getCategory()) {
             case "household":
                 icon.setImageResource(R.drawable.location_logo);
                 break;
             case "individual":
                 icon.setImageResource(R.drawable.individual_logo);
-            break;
+                break;
             default:
                 icon.setImageResource(R.drawable.hierarchy_logo);
         }
