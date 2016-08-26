@@ -142,9 +142,9 @@ public class SearchableActivity extends ListActivity {
             if (ID_PATTERN.matcher(part).matches()) {
                 boolQuery.add(new WildcardQuery(new Term("extId", part + "*")), BooleanClause.Occur.SHOULD);
             } else if (PHONE_PATTERN.matcher(part).matches()) {
-                boolQuery.add(new FuzzyQuery(new Term("phone", part), .85f), BooleanClause.Occur.SHOULD);
+                boolQuery.add(new FuzzyQuery(new Term("phone", part), 1), BooleanClause.Occur.SHOULD);
             } else {
-                boolQuery.add(new FuzzyQuery(new Term("name", part)), BooleanClause.Occur.SHOULD);
+                boolQuery.add(new FuzzyQuery(new Term("name", part), 1), BooleanClause.Occur.SHOULD);
             }
         }
         return boolQuery;

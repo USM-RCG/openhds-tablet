@@ -23,7 +23,7 @@ import java.io.IOException;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static org.apache.lucene.index.IndexWriterConfig.OpenMode.CREATE_OR_APPEND;
-import static org.apache.lucene.util.Version.LUCENE_36;
+import static org.apache.lucene.util.Version.LUCENE_40;
 import static org.openhds.mobile.utilities.SyncUtils.close;
 
 public class Indexer {
@@ -90,7 +90,7 @@ public class Indexer {
         if (writer == null) {
             Directory indexDir = FSDirectory.open(indexFile);
             Analyzer analyzer = new CustomAnalyzer();
-            IndexWriterConfig config = new IndexWriterConfig(LUCENE_36, analyzer);
+            IndexWriterConfig config = new IndexWriterConfig(LUCENE_40, analyzer);
             config.setOpenMode(CREATE_OR_APPEND);
             writer = new IndexWriter(indexDir, config);
         }
@@ -189,11 +189,11 @@ public class Indexer {
 
     private void updateIndex(DocumentSource source, IndexWriter writer, String idField) throws IOException {
         try {
-            Term idTerm = new Term(idField);
             if (source.next()) {
                 do {
                     Document doc = source.getDocument();
-                    writer.updateDocument(idTerm.createTerm(doc.get(idField)), doc);
+                    Term idTerm = new Term(idField, doc.get(idField));
+                    writer.updateDocument(idTerm, doc);
                 } while (source.next());
             }
         } finally {

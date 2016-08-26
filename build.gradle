@@ -22,11 +22,8 @@ dependencies {
     compile 'com.android.support:support-v4:18.0.+'
     compile 'com.androidplot:androidplot-core:0.9.8'
     compile 'com.github.batkinson:jrsync:1.2'
-    compile 'org.apache.lucene:lucene-core:3.6.2'
-    compile('org.apache.lucene:lucene-suggest:4.0.0') {
-        exclude module: 'lucene-analyzers-common'
-        exclude module: 'lucene-core'
-    }
+    compile 'org.apache.lucene:lucene-core:4.0.0'
+    compile 'org.apache.lucene:lucene-suggest:4.0.0'
 }
 
 android {
@@ -40,6 +37,7 @@ android {
         targetSdkVersion 19
         versionCode 24
         versionName '2.7'
+        multiDexEnabled true
     }
 
     compileOptions {

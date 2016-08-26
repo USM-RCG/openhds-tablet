@@ -1,24 +1,23 @@
 package org.openhds.mobile.search;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.LowerCaseFilter;
-import org.apache.lucene.analysis.ReusableAnalyzerBase;
+import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 
 import java.io.Reader;
 
-import static org.apache.lucene.util.Version.LUCENE_36;
+import static org.apache.lucene.util.Version.LUCENE_40;
 
 /**
  * A custom lucene {@link Analyzer} that processes input during indexing. It processes input into a
  * stream of lowercase alphanumeric tokens.
  */
-public class CustomAnalyzer extends ReusableAnalyzerBase {
+public class CustomAnalyzer extends Analyzer {
     @Override
-    protected ReusableAnalyzerBase.TokenStreamComponents createComponents(String fieldName, Reader reader) {
-        Tokenizer src = new AlphaNumericTokenizer(LUCENE_36, reader);
-        TokenStream tok = new LowerCaseFilter(LUCENE_36, src);
+    protected Analyzer.TokenStreamComponents createComponents(String fieldName, Reader reader) {
+        Tokenizer src = new AlphaNumericTokenizer(LUCENE_40, reader);
+        TokenStream tok = new LowerCaseFilter(LUCENE_40, src);
         return new TokenStreamComponents(src, tok);
     }
 }

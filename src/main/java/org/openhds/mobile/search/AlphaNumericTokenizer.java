@@ -1,6 +1,6 @@
 package org.openhds.mobile.search;
 
-import org.apache.lucene.analysis.CharTokenizer;
+import org.apache.lucene.analysis.util.CharTokenizer;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.util.Version;
 

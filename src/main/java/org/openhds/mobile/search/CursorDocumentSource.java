@@ -40,7 +40,7 @@ abstract class CursorDocumentSource implements DocumentSource {
             Field field = fields[f];
             String value = getFieldValue(f);
             if (value != null) {
-                field.setValue(value);
+                field.setStringValue(value);
             } else {
                 document.removeField(field.name());
                 nullFields.add(field);
