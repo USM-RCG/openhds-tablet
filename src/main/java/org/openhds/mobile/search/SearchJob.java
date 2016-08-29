@@ -1,10 +1,13 @@
 package org.openhds.mobile.search;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.apache.lucene.search.IndexSearcher;
 
 public abstract class SearchJob implements Runnable {
+
+    private static final String TAG = SearchJob.class.getSimpleName();
 
     protected Context ctx;
     protected SearchQueue service;
@@ -48,6 +51,6 @@ public abstract class SearchJob implements Runnable {
     protected abstract void postResult() throws Exception;
 
     public void handleException(Exception e) {
-        // do nothing by default
+        Log.e(TAG, "search job failed", e);
     }
 }
