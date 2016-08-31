@@ -1,6 +1,9 @@
 
 -dontobfuscate
 
+# androidplot accesses resources dynamically
+-keep class org.openhds.mobile.R$* { *; }
+
 # app's scriptable classes
 -keep class org.openhds.mobile.navconfig.NavigatorConfig { *; }
 -keep class * extends org.openhds.mobile.navconfig.forms.builders.FormPayloadBuilder { *; }
