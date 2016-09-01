@@ -86,7 +86,6 @@ android {
         exclude 'org/mozilla/javascript/Node.java.orig'
         exclude 'org/mozilla/javascript/Parser.java.orig'
         exclude 'org/mozilla/javascript/Token.java.orig'
-        exclude 'org/mozilla/javascript/resources/Messages.properties'
         exclude 'org/mozilla/javascript/resources/Messages_fr.properties'
         exclude 'org/mozilla/javascript/tools/debugger/build.xml'
         exclude 'org/mozilla/javascript/tools/debugger/test.js'
