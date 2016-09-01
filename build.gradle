@@ -46,6 +46,7 @@ android {
 
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
+        // unfortunately, android gradle plugin doesn't support globs yet
         exclude 'org/apache/lucene/analysis/ar/stopwords.txt'
         exclude 'org/apache/lucene/analysis/bg/stopwords.txt'
         exclude 'org/apache/lucene/analysis/br/stopwords.txt'
