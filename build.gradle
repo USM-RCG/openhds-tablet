@@ -22,8 +22,8 @@ dependencies {
     compile 'com.android.support:support-v4:18.0.+'
     compile 'com.androidplot:androidplot-core:0.9.8'
     compile 'com.github.batkinson:jrsync:1.2'
-    compile 'org.apache.lucene:lucene-core:4.0.0'
-    compile 'org.apache.lucene:lucene-suggest:4.0.0'
+    compile 'org.apache.lucene:lucene-core:4.7.2'
+    compile 'org.apache.lucene:lucene-suggest:4.7.2'
 }
 
 android {
@@ -50,6 +50,7 @@ android {
         exclude 'org/apache/lucene/analysis/bg/stopwords.txt'
         exclude 'org/apache/lucene/analysis/br/stopwords.txt'
         exclude 'org/apache/lucene/analysis/ca/stopwords.txt'
+        exclude 'org/apache/lucene/analysis/ckb/stopwords.txt'
         exclude 'org/apache/lucene/analysis/cjk/stopwords.txt'
         exclude 'org/apache/lucene/analysis/compound/hyphenation/hyphenation.dtd'
         exclude 'org/apache/lucene/analysis/cz/stopwords.txt'

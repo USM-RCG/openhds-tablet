@@ -22,7 +22,7 @@ import java.io.IOException;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static org.apache.lucene.index.IndexWriterConfig.OpenMode.CREATE_OR_APPEND;
-import static org.apache.lucene.util.Version.LUCENE_40;
+import static org.apache.lucene.util.Version.LUCENE_47;
 import static org.openhds.mobile.provider.OpenHDSProvider.getDatabaseHelper;
 import static org.openhds.mobile.utilities.SyncUtils.close;
 
@@ -91,7 +91,7 @@ public class Indexer {
         if (writer == null) {
             Directory indexDir = FSDirectory.open(indexFile);
             Analyzer analyzer = new CustomAnalyzer();
-            IndexWriterConfig config = new IndexWriterConfig(LUCENE_40, analyzer);
+            IndexWriterConfig config = new IndexWriterConfig(LUCENE_47, analyzer);
             config.setOpenMode(CREATE_OR_APPEND);
             writer = new IndexWriter(indexDir, config);
         }

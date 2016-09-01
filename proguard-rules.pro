@@ -31,6 +31,7 @@
 
 # lucene (full-text search)
 -dontwarn org.apache.lucene.util.RamUsageEstimator
--keep class org.apache.lucene.codecs.lucene40.Lucene40Codec
--keep class org.apache.lucene.codecs.lucene40.Lucene40PostingsFormat
+-keep class * extends org.apache.lucene.codecs.Codec
+-keep class * extends org.apache.lucene.codecs.PostingsFormat
+-keep class * extends org.apache.lucene.codecs.DocValuesFormat
 -keep class * implements org.apache.lucene.util.Attribute
