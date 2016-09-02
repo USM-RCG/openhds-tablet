@@ -207,6 +207,17 @@ public class SearchableActivity extends ListActivity {
                 }
             });
         }
+
+        @Override
+        public void handleException(Exception e) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    showLoading(false);
+                }
+            });
+            super.handleException(e);
+        }
     }
 
     private static class ResultsAdapter extends ArrayAdapter<DataWrapper> {
