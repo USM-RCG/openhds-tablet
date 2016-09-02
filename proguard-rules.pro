@@ -31,6 +31,7 @@
 
 # lucene (full-text search)
 -dontwarn org.apache.lucene.util.RamUsageEstimator
+-dontwarn org.apache.lucene.sandbox.queries.regex.**
 -keep class * extends org.apache.lucene.codecs.Codec
 -keep class * extends org.apache.lucene.codecs.PostingsFormat
 -keep class * extends org.apache.lucene.codecs.DocValuesFormat

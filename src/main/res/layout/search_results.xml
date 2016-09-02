@@ -24,20 +24,44 @@
 
     </LinearLayout>
 
-    <FrameLayout android:id="@+id/listContainer"
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/listContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <ListView android:id="@android:id/list"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:drawSelectorOnTop="false" />
-        <TextView android:id="@android:id/empty"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:gravity="center"
-                  android:text="@string/no_results"
-                  android:textAppearance="?android:attr/textAppearanceLarge" />
-    </FrameLayout>
+        <EditText
+            android:id="@+id/query_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/search_button"
+            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@id/search_button"
+            android:layout_alignParentLeft="true"
+            android:hint="@string/search_hint"
+            android:maxLines="1"
+            android:inputType="textNoSuggestions"/>
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/search_label"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/query_text"
+            android:layout_marginTop="5dp">
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawSelectorOnTop="false"/>
+
+        </FrameLayout>
+
+    </RelativeLayout>
 
 </FrameLayout>

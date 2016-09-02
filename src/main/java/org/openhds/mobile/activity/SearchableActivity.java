@@ -7,17 +7,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryparser.flexible.core.QueryNodeException;
+import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
@@ -58,6 +63,8 @@ public class SearchableActivity extends ListActivity {
     private Handler handler;
 
     private View listContainer, progressContainer;
+    private EditText searchText;
+    private Button searchButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +72,8 @@ public class SearchableActivity extends ListActivity {
         setContentView(R.layout.search_results);
 
         listContainer = findViewById(R.id.listContainer);
+        searchText = (EditText) listContainer.findViewById(R.id.query_text);
+        searchButton = (Button) listContainer.findViewById(R.id.search_button);
         ListView listView = (ListView) listContainer.findViewById(android.R.id.list);
         progressContainer = findViewById(R.id.progressContainer);
 
@@ -73,18 +82,53 @@ public class SearchableActivity extends ListActivity {
 
         final Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY).toLowerCase();
-            performSearch(buildQuery(query));
+            String origSearch = intent.getStringExtra(SearchManager.QUERY).toLowerCase();
+            Query builtQuery = buildLuceneQuery(origSearch);
+            searchText.setText(builtQuery.toString());
+            performSearch(builtQuery);
         }
 
         String moduleName = intent.getStringExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA);
         listView.setOnItemClickListener(new ItemClickListener(listView, moduleName));
+
+        SearchListener searchListener = new SearchListener();
+        searchButton.setOnClickListener(searchListener);
+        searchText.setOnClickListener(searchListener);
     }
 
     @Override
     protected void onDestroy() {
         searchQueue.shutdown();
         super.onDestroy();
+    }
+
+    private void humanSearch() {
+        try {
+            performSearch(parseLuceneQuery(searchText.getText().toString()));
+        } catch (QueryNodeException e) {
+            Log.e(TAG, "bad query", e);
+            setListAdapter(new ResultsAdapter(this, new ArrayList<DataWrapper>()));
+        }
+    }
+
+    private class SearchListener implements Button.OnClickListener, EditText.OnKeyListener {
+
+        @Override
+        public void onClick(View v) {
+            humanSearch();
+        }
+
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                switch (keyCode) {
+                    case KeyEvent.KEYCODE_ENTER:
+                        searchButton.performClick();
+                        return true;
+                }
+            }
+            return false;
+        }
     }
 
     private class ItemClickListener implements AdapterView.OnItemClickListener {
@@ -141,7 +185,7 @@ public class SearchableActivity extends ListActivity {
         }
     }
 
-    private BooleanQuery buildQuery(String query) {
+    private Query buildLuceneQuery(String query) {
         BooleanQuery boolQuery = new BooleanQuery();
         for (String part : query.split("\\s+")) {
             if (ID_PATTERN.matcher(part).matches()) {
@@ -153,6 +197,12 @@ public class SearchableActivity extends ListActivity {
             }
         }
         return boolQuery;
+    }
+
+    private Query parseLuceneQuery(String query) throws QueryNodeException {
+        StandardQueryParser parser = new StandardQueryParser();
+        parser.setAllowLeadingWildcard(true);
+        return parser.parse(query, "name");
     }
 
     private void showLoading(boolean loading) {
