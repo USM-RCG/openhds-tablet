@@ -81,7 +81,7 @@ public class SearchFragment extends Fragment {
             statusText.setVisibility(View.VISIBLE);
 
             if (resultCount == RESULTS_PENDING) {
-                statusText.setText(R.string.search_in_progress_label);
+                statusText.setText(R.string.searching);
             } else {
                 final String resultsStatus = Integer.toString(resultCount)
                         + " "

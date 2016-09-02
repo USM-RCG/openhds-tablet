@@ -80,7 +80,6 @@
     <!-- Search Labels-->
     <string name="search_database_label">Search</string>
     <string name="search_done_label">Done</string>
-    <string name="search_in_progress_label">Searching&#8230;</string>
     <string name="search_results_label">Results</string>
     <string name="search_individual_label">Find an Individual</string>
     <string name="search_location_label">Find a Location</string>

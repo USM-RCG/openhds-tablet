@@ -30,7 +30,6 @@
     <string name="search_individual_label">Buscar un Individuo</string>
     <string name="search_field_worker_label">Buscar un Encuestador</string>
     <string name="search_results_label">Resultados</string>
-    <string name="search_in_progress_label">Buscando&#8230;</string>
     <string name="search_location_label">Buscar una Locación</string>
     <string name="search_social_group_label">Buscar un Hogar</string>
 
