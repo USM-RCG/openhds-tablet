@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -43,6 +42,8 @@ import java.util.List;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static org.openhds.mobile.activity.FieldWorkerActivity.ACTIVITY_MODULE_EXTRA;
 import static org.openhds.mobile.activity.HierarchyNavigatorActivity.HIERARCHY_PATH_KEY;
 
@@ -56,12 +57,16 @@ public class SearchableActivity extends ListActivity {
     private SearchQueue searchQueue;
     private Handler handler;
 
+    private View listContainer, progressContainer;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
-        setContentView(android.R.layout.list_content);
-        ListView listView = (ListView) findViewById(android.R.id.list);
+        setContentView(R.layout.search_results);
+
+        listContainer = findViewById(R.id.listContainer);
+        ListView listView = (ListView) listContainer.findViewById(android.R.id.list);
+        progressContainer = findViewById(R.id.progressContainer);
 
         searchQueue = new SearchQueue();
         handler = new Handler();
@@ -150,14 +155,19 @@ public class SearchableActivity extends ListActivity {
         return boolQuery;
     }
 
+    private void showLoading(boolean loading) {
+        progressContainer.setVisibility(loading ? VISIBLE : GONE);
+        listContainer.setVisibility(loading ? GONE : VISIBLE);
+    }
+
     private void performSearch(Query query) {
-        setProgressBarIndeterminateVisibility(true);
+        showLoading(true);
         searchQueue.queue(new BoundedSearch(query, 100));
     }
 
     private void handleSearchResults(List<DataWrapper> results) {
         setListAdapter(new ResultsAdapter(this, results));
-        setProgressBarIndeterminateVisibility(false);
+        showLoading(false);
     }
 
     private class BoundedSearch extends SearchJob {

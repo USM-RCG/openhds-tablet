@@ -194,5 +194,7 @@
     <bool name="auto_index_on_db_update_default">true</bool>
 
     <string name="rebuild_search_indices">Rebuild Search Indices</string>
+    <string name="searching">Searching…</string>
+    <string name="no_results">No Results</string>
 
 </resources>
