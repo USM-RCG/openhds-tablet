@@ -61,6 +61,8 @@ public class SearchableActivity extends ListActivity {
 
     private static final String TAG = SearchableActivity.class.getSimpleName();
 
+    private static final String ADVANCED_SET_KEY = "advanced_set";
+
     private static final Pattern ID_PATTERN = Pattern.compile("(?i)m\\d+(s\\d+(e\\d+(p\\d+)?)?)?");
     private static final Pattern PHONE_PATTERN = Pattern.compile("\\d{7,}");
 
@@ -70,7 +72,7 @@ public class SearchableActivity extends ListActivity {
     private View listContainer, progressContainer;
     private EditText basicQuery;
     private EditText advancedQuery;
-    private Spinner searchType;
+    private boolean advancedSelected;
     private Button searchButton;
 
     @Override
@@ -98,6 +100,10 @@ public class SearchableActivity extends ListActivity {
         searchQueue = new SearchQueue();
         handler = new Handler();
 
+        if (savedInstanceState != null) {
+            advancedSelected = savedInstanceState.getBoolean(ADVANCED_SET_KEY);
+        }
+
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String origSearch = intent.getStringExtra(SearchManager.QUERY).toLowerCase();
             basicQuery.setText(origSearch);
@@ -106,11 +112,18 @@ public class SearchableActivity extends ListActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(ADVANCED_SET_KEY, advancedSelected);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
         MenuItem item = menu.findItem(R.id.search_type);
-        searchType = (Spinner) item.getActionView();
-        searchType.setOnItemSelectedListener(new SearchTypeSelectionHandler());
+        Spinner spinner = (Spinner) item.getActionView();
+        spinner.setOnItemSelectedListener(new SearchTypeSelectionHandler());
+        spinner.setSelection(advancedSelected? 1 : 0); // depends on array order
         return true;
     }
 
@@ -132,14 +145,17 @@ public class SearchableActivity extends ListActivity {
     private class SearchTypeSelectionHandler implements AdapterView.OnItemSelectedListener {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            String selectedType = String.valueOf(parent.getItemAtPosition(position));
-            boolean advancedSelected = getString(R.string.advanced_search).equals(selectedType);
-            basicQuery.setVisibility(advancedSelected ? GONE : VISIBLE);
-            advancedQuery.setVisibility(advancedSelected ? VISIBLE : GONE);
+            advancedSelected = position == 1; // depends on array order
+            updateQueryViews();
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
+        }
+
+        private void updateQueryViews() {
+            basicQuery.setVisibility(advancedSelected ? GONE : VISIBLE);
+            advancedQuery.setVisibility(advancedSelected ? VISIBLE : GONE);
         }
     }
 
