@@ -179,4 +179,9 @@
     <string name="no_results">No Hay Resultados</string>
     <string name="searching">Buscando…</string>
 
+    <string name="basic_search">Búsqueda Básica</string>
+    <string name="advanced_search">Búsqueda Avanzada</string>
+    <string name="search_type">Tipo de Búsqueda</string>
+
+
 </resources>

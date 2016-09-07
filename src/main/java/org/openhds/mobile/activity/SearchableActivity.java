@@ -6,9 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.apache.lucene.document.Document;
@@ -63,7 +68,9 @@ public class SearchableActivity extends ListActivity {
     private Handler handler;
 
     private View listContainer, progressContainer;
-    private EditText searchText;
+    private EditText basicQuery;
+    private EditText advancedQuery;
+    private Spinner searchType;
     private Button searchButton;
 
     @Override
@@ -72,28 +79,39 @@ public class SearchableActivity extends ListActivity {
         setContentView(R.layout.search_results);
 
         listContainer = findViewById(R.id.listContainer);
-        searchText = (EditText) listContainer.findViewById(R.id.query_text);
+        basicQuery = (EditText) listContainer.findViewById(R.id.basic_query_text);
+        advancedQuery = (EditText) listContainer.findViewById(R.id.advanced_query_text);
         searchButton = (Button) listContainer.findViewById(R.id.search_button);
         ListView listView = (ListView) listContainer.findViewById(android.R.id.list);
         progressContainer = findViewById(R.id.progressContainer);
 
-        searchQueue = new SearchQueue();
-        handler = new Handler();
+        basicQuery.addTextChangedListener(new BasicQueryTranslator());
 
         final Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String origSearch = intent.getStringExtra(SearchManager.QUERY).toLowerCase();
-            Query builtQuery = buildLuceneQuery(origSearch);
-            searchText.setText(builtQuery.toString());
-            performSearch(builtQuery);
-        }
-
         String moduleName = intent.getStringExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA);
         listView.setOnItemClickListener(new ItemClickListener(listView, moduleName));
 
-        SearchListener searchListener = new SearchListener();
-        searchButton.setOnClickListener(searchListener);
-        searchText.setOnClickListener(searchListener);
+        SearchOnEnterKeyHandler searchOnEnterKeyHandler = new SearchOnEnterKeyHandler();
+        searchButton.setOnClickListener(new SearchOnClickHandler());
+        advancedQuery.setOnKeyListener(searchOnEnterKeyHandler);
+
+        searchQueue = new SearchQueue();
+        handler = new Handler();
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String origSearch = intent.getStringExtra(SearchManager.QUERY).toLowerCase();
+            basicQuery.setText(origSearch);
+            doSearch();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        MenuItem item = menu.findItem(R.id.search_type);
+        searchType = (Spinner) item.getActionView();
+        searchType.setOnItemSelectedListener(new SearchTypeSelectionHandler());
+        return true;
     }
 
     @Override
@@ -102,21 +120,37 @@ public class SearchableActivity extends ListActivity {
         super.onDestroy();
     }
 
-    private void humanSearch() {
+    private void doSearch() {
         try {
-            performSearch(parseLuceneQuery(searchText.getText().toString()));
+            executeQuery(parseLuceneQuery(advancedQuery.getText().toString()));
         } catch (QueryNodeException e) {
             Log.e(TAG, "bad query", e);
             setListAdapter(new ResultsAdapter(this, new ArrayList<DataWrapper>()));
         }
     }
 
-    private class SearchListener implements Button.OnClickListener, EditText.OnKeyListener {
+    private class SearchTypeSelectionHandler implements AdapterView.OnItemSelectedListener {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            String selectedType = String.valueOf(parent.getItemAtPosition(position));
+            boolean advancedSelected = getString(R.string.advanced_search).equals(selectedType);
+            basicQuery.setVisibility(advancedSelected ? GONE : VISIBLE);
+            advancedQuery.setVisibility(advancedSelected ? VISIBLE : GONE);
+        }
 
         @Override
-        public void onClick(View v) {
-            humanSearch();
+        public void onNothingSelected(AdapterView<?> parent) {
         }
+    }
+
+    private class SearchOnClickHandler implements Button.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            doSearch();
+        }
+    }
+
+    private class SearchOnEnterKeyHandler implements EditText.OnKeyListener {
 
         @Override
         public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -128,6 +162,23 @@ public class SearchableActivity extends ListActivity {
                 }
             }
             return false;
+        }
+    }
+
+    private class BasicQueryTranslator implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            advancedQuery.setText(buildLuceneQuery(basicQuery.getText().toString()).toString());
         }
     }
 
@@ -210,7 +261,7 @@ public class SearchableActivity extends ListActivity {
         listContainer.setVisibility(loading ? GONE : VISIBLE);
     }
 
-    private void performSearch(Query query) {
+    private void executeQuery(Query query) {
         showLoading(true);
         searchQueue.queue(new BoundedSearch(query, 100));
     }
