@@ -66,6 +66,9 @@ public class SearchableActivity extends ListActivity {
     private static final Pattern ID_PATTERN = Pattern.compile("(?i)m\\d+(s\\d+(e\\d+(p\\d+)?)?)?");
     private static final Pattern PHONE_PATTERN = Pattern.compile("\\d{7,}");
 
+    public static final int ADVANCED_POS = 1;
+    public static final int BASIC_POS = 0;
+
     private SearchQueue searchQueue;
     private Handler handler;
 
@@ -123,7 +126,7 @@ public class SearchableActivity extends ListActivity {
         MenuItem item = menu.findItem(R.id.search_type);
         Spinner spinner = (Spinner) item.getActionView();
         spinner.setOnItemSelectedListener(new SearchTypeSelectionHandler());
-        spinner.setSelection(advancedSelected? 1 : 0); // depends on array order
+        spinner.setSelection(advancedSelected ? ADVANCED_POS : BASIC_POS);
         return true;
     }
 
@@ -145,7 +148,7 @@ public class SearchableActivity extends ListActivity {
     private class SearchTypeSelectionHandler implements AdapterView.OnItemSelectedListener {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            advancedSelected = position == 1; // depends on array order
+            advancedSelected = position == ADVANCED_POS;
             updateQueryViews();
         }
 
