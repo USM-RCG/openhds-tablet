@@ -30,7 +30,7 @@ dependencies {
 android {
 
     compileSdkVersion 19
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '23.0.3'
 
     defaultConfig {
         applicationId 'org.openhds.mobile'
