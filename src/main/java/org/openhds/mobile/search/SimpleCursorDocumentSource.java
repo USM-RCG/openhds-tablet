@@ -6,6 +6,9 @@ import org.apache.lucene.document.Field;
 
 class SimpleCursorDocumentSource extends CursorDocumentSource {
 
+    private static final int UUID_COL_IDX = 0;
+    private static final int LEVEL_COL_IDX = 1;
+
     SimpleCursorDocumentSource(Cursor c) {
         super(c);
     }
@@ -15,11 +18,12 @@ class SimpleCursorDocumentSource extends CursorDocumentSource {
         int columns = cursor.getColumnCount();
         Field[] fields = new Field[columns];
         for (int c = 0; c < columns; c++) {
-            boolean dataCol = c <= 1;  // first two columns are assumed to be uuid and level
+            boolean isStored = c == UUID_COL_IDX || c == LEVEL_COL_IDX;
+            boolean isIndexed = c != UUID_COL_IDX;
             String columnName = cursor.getColumnName(c);
             fields[c] = new Field(columnName, "",
-                    dataCol ? Field.Store.YES : Field.Store.NO,
-                    dataCol ? Field.Index.NO : Field.Index.ANALYZED);
+                    isStored ? Field.Store.YES : Field.Store.NO,
+                    isIndexed ? Field.Index.ANALYZED : Field.Index.NO);
             document.add(fields[c]);
         }
         return fields;
