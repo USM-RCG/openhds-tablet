@@ -8,14 +8,14 @@ import org.openhds.mobile.model.core.LocationHierarchy;
 import org.openhds.mobile.model.core.Membership;
 import org.openhds.mobile.model.core.Relationship;
 import org.openhds.mobile.model.core.SocialGroup;
-import org.openhds.mobile.navconfig.forms.Binding;
 import org.openhds.mobile.model.update.Visit;
+import org.openhds.mobile.navconfig.ProjectFormFields;
+import org.openhds.mobile.navconfig.ProjectResources;
+import org.openhds.mobile.navconfig.forms.Binding;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.navconfig.forms.adapters.IndividualFormAdapter;
 import org.openhds.mobile.navconfig.forms.adapters.LocationFormAdapter;
 import org.openhds.mobile.navconfig.forms.adapters.VisitFormAdapter;
-import org.openhds.mobile.navconfig.ProjectFormFields;
-import org.openhds.mobile.navconfig.ProjectResources;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
@@ -35,30 +35,40 @@ import static org.openhds.mobile.navconfig.BiokoHierarchy.SECTOR;
 
 public class CensusFormPayloadConsumers {
 
-    private static void ensureLocationSectorExists(Map<String, String> formPayload, ContentResolver contentResolver) {
+    private static void ensureLocationSectorExists(Map<String, String> payload, ContentResolver resolver) {
 
-        LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
-        LocationHierarchy mapArea = locationHierarchyGateway.getFirst(contentResolver,
-                locationHierarchyGateway.findById(formPayload.get(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID)));
-        String sectorName =  formPayload.get(ProjectFormFields.Locations.SECTOR_NAME);
-        String sectorExtId = mapArea.getExtId().replaceFirst("^(M\\d+)\\b", "$1\\" + sectorName);
-        LocationHierarchy sector = locationHierarchyGateway.getFirst(contentResolver,
-                locationHierarchyGateway.findByExtId(sectorExtId));
+        LocationHierarchyGateway gw = GatewayRegistry.getLocationHierarchyGateway();
 
-        if(sector == null){
-            sector = new LocationHierarchy();
-            sector.setUuid(IdHelper.generateEntityUuid());
-            sector.setParentUuid(mapArea.getUuid());
-            sector.setExtId(sectorExtId);
-            sector.setName(sectorName);
-            sector.setLevel(SECTOR);
-            locationHierarchyGateway.insertOrUpdate(contentResolver,sector);
+        // lookup relevant values from the form
+        String formMapUuid = payload.get(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID);
+        String formSectorUuid = payload.get(ProjectFormFields.Locations.HIERARCHY_UUID);
+        String formSectorName = payload.get(ProjectFormFields.Locations.SECTOR_NAME);
 
-            // Modify the payload to refer to the created sector
-            formPayload.put(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NEEDS_REVIEW);
-            formPayload.put(ProjectFormFields.Locations.HIERARCHY_UUID, sector.getUuid());
-            formPayload.put(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID, sector.getParentUuid());
-            formPayload.put(ProjectFormFields.Locations.HIERARCHY_EXTID, sector.getExtId());
+        // compute the sector's expected extid based on embedded map uuid and specified sector name
+        LocationHierarchy mapArea = gw.getFirst(resolver, gw.findById(formMapUuid));
+        String computedSectorExtId = mapArea.getExtId().replaceFirst("^(M\\d+)\\b", "$1\\" + formSectorName);
+
+        // lookup the sectors by expected extid and embedded sector uuid
+        LocationHierarchy sectorByUuid = gw.getFirst(resolver, gw.findById(formSectorUuid));
+        LocationHierarchy sectorByComputedExtId = gw.getFirst(resolver, gw.findByExtId(computedSectorExtId));
+
+        boolean sectorNeedsUpdate = sectorByUuid == null || !computedSectorExtId.equals(sectorByUuid.getExtId());
+
+        if (sectorNeedsUpdate && sectorByComputedExtId == null) {
+            sectorByComputedExtId = new LocationHierarchy();
+            sectorByComputedExtId.setUuid(IdHelper.generateEntityUuid());
+            sectorByComputedExtId.setParentUuid(mapArea.getUuid());
+            sectorByComputedExtId.setExtId(computedSectorExtId);
+            sectorByComputedExtId.setName(formSectorName);
+            sectorByComputedExtId.setLevel(SECTOR);
+            gw.insertOrUpdate(resolver, sectorByComputedExtId);
+        }
+
+        if (sectorNeedsUpdate) {
+            payload.put(ProjectFormFields.Locations.HIERARCHY_UUID, sectorByComputedExtId.getUuid());
+            payload.put(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID, sectorByComputedExtId.getParentUuid());
+            payload.put(ProjectFormFields.Locations.HIERARCHY_EXTID, sectorByComputedExtId.getExtId());
+            payload.put(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NEEDS_REVIEW);
         }
     }
 
