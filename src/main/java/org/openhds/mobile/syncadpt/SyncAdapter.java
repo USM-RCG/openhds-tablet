@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 
-import org.openhds.mobile.OpenHDS;
-
 import static org.openhds.mobile.utilities.SyncUtils.downloadUpdate;
 
 
