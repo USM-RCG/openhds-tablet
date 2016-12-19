@@ -242,12 +242,15 @@ public class SyncUtils {
      * @param f  location to write contents to
      * @throws IOException
      */
-    public static void streamToFile(InputStream in, File f) throws IOException {
+    public static void streamToFile(InputStream in, File f) throws IOException, InterruptedException {
         OutputStream out = buffer(new FileOutputStream(f));
         try {
             byte[] buf = new byte[BUFFER_SIZE];
             int read;
             while ((read = in.read(buf)) >= 0) {
+                if (Thread.interrupted()) {
+                    throw new InterruptedException();
+                }
                 out.write(buf, 0, read);
             }
         } finally {
@@ -338,6 +341,16 @@ public class SyncUtils {
         }
     }
 
+    public static void cancelUpdate(Context ctx) {
+        AccountManager manager = AccountManager.get(ctx);
+        Account[] accounts = manager.getAccountsByType(ACCOUNT_TYPE);
+        if (accounts.length > 0) {
+            Log.i(TAG, "sync cancellation requested by user");
+            ctx.getContentResolver().cancelSync(accounts[0], AUTHORITY);
+        } else {
+            Log.w(TAG, "sync cancellation ignored, no account");
+        }
+    }
 
     /**
      * Downloads an SQLite database and notifies the user to apply it manually via system notifications. There are two
@@ -445,6 +458,10 @@ public class SyncUtils {
                                 .setContentTitle(ctx.getString(R.string.sync_database_new_data))
                                 .setContentText(ctx.getString(R.string.sync_database_failed))
                                 .getNotification());
+                    } catch (InterruptedException e) {
+                        Log.e(TAG, "sync thread canceled", e);
+                        db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "canceled");
+                        manager.cancel(SYNC_NOTIFICATION_ID);
                     }
                     break;
                 default:
@@ -490,7 +507,7 @@ public class SyncUtils {
      * Performs an incremental sync based on a local existing file.
      */
     private static void incrementalSync(InputStream responseBody, File basis, File target, RangeRequestFactory factory)
-            throws NoSuchAlgorithmException, IOException {
+            throws NoSuchAlgorithmException, IOException, InterruptedException {
         Metadata metadata = readMetadata(responseBody);
         sync(metadata, basis, target, factory, null);
     }

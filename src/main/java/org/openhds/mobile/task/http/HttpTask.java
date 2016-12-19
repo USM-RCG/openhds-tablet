@@ -72,7 +72,7 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
                 try {
                     streamToFile(responseStream, saveFile);
                     responseStream = new BufferedInputStream(new FileInputStream(saveFile));
-                } catch (IOException e) {
+                } catch (InterruptedException | IOException e) {
                     return new HttpTaskResponse(false, MESSAGE_SAVE_ERROR, statusCode, responseStream, eTag, contentType);
                 }
             }
