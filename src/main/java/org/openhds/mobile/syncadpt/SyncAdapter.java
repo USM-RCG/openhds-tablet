@@ -7,11 +7,14 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
+import android.util.Log;
 
 import static org.openhds.mobile.utilities.SyncUtils.downloadUpdate;
 
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
+
+    private static final String TAG = SyncAdapter.class.getSimpleName();
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -22,5 +25,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                               SyncResult syncResult) {
         Context ctx = getContext();
         downloadUpdate(ctx, account.name, AccountManager.get(ctx).getPassword(account));
+    }
+
+    @Override
+    public void onSyncCanceled() {
+        super.onSyncCanceled();
+        Log.i(TAG, "sync cancelled");
     }
 }
