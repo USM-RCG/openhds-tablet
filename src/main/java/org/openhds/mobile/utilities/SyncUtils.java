@@ -416,7 +416,7 @@ public class SyncUtils {
                                 .setContentText(ctx.getString(R.string.sync_database_in_progress))
                                 .setProgress(0, 0, true)
                                 .setOngoing(true)
-                                .build());
+                                .getNotification());
 
                         InputStream responseBody = httpConn.getInputStream();
                         String responseType = httpConn.getContentType();
@@ -450,7 +450,7 @@ public class SyncUtils {
                                 .setContentTitle(ctx.getString(R.string.sync_database_new_data))
                                 .setContentText(ctx.getString(R.string.sync_database_new_data_instructions))
                                 .setContentIntent(pending)
-                                .build());
+                                .getNotification());
                     } catch (IOException | NoSuchAlgorithmException e) {
                         Log.e(TAG, "sync io failure", e);
                         db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "error: " + httpResult);
@@ -458,7 +458,7 @@ public class SyncUtils {
                                 .setSmallIcon(R.drawable.ic_launcher)
                                 .setContentTitle(ctx.getString(R.string.sync_database_new_data))
                                 .setContentText(ctx.getString(R.string.sync_database_failed))
-                                .build());
+                                .getNotification());
                     } catch (InterruptedException e) {
                         Log.e(TAG, "sync thread canceled", e);
                         db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "canceled");
