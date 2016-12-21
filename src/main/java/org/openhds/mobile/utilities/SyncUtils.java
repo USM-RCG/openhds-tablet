@@ -242,6 +242,7 @@ public class SyncUtils {
      * @param in stream to read contents from
      * @param f  location to write contents to
      * @throws IOException
+     * @throws InterruptedException
      */
     public static void streamToFile(InputStream in, File f) throws IOException, InterruptedException {
         OutputStream out = buffer(new FileOutputStream(f));
