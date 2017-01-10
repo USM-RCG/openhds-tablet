@@ -433,7 +433,7 @@ public class SyncUtils {
                             }
                             RangeRequestFactory factory = new RangeRequestFactoryImpl(endpoint, SQLITE_MIME_TYPE, creds);
                             Log.i(TAG, "syncing incrementally");
-                            incrementalSync(responseBody, dbTempFile, scratch, factory, builder, manager);
+                            incrementalSync(responseBody, dbTempFile, scratch, factory, builder, manager, ctx);
                             if (!scratch.renameTo(dbTempFile)) {
                                 Log.e(TAG, "failed to install sync result " + scratch);
                             }
@@ -508,11 +508,23 @@ public class SyncUtils {
         }
     }
 
+    private static String getStageLabel(Context ctx, ProgressTracker.Stage stage) {
+        switch (stage) {
+            case SEARCH:
+                return ctx.getString(R.string.sync_stage_searching);
+            case BUILD:
+                return ctx.getString(R.string.sync_stage_building);
+            default:
+                return "?";
+        }
+    }
+
     /**
      * Performs an incremental sync based on a local existing file.
      */
     private static void incrementalSync(InputStream responseBody, File basis, File target, RangeRequestFactory factory,
-                                        final Notification.Builder builder, final NotificationManager manager)
+                                        final Notification.Builder builder, final NotificationManager manager,
+                                        final Context ctx)
             throws NoSuchAlgorithmException, IOException, InterruptedException {
         Metadata metadata = readMetadata(responseBody);
         ProgressTracker tracker = new ProgressTracker() {
@@ -524,7 +536,7 @@ public class SyncUtils {
                     text = stage.name();
                     percent = percentComplete;
                     Log.i(TAG, text + " " + percent);
-                    builder.setContentText(stage.name());
+                    builder.setContentText(getStageLabel(ctx, stage));
                     builder.setProgress(100, percentComplete, false);
                     manager.notify(SYNC_NOTIFICATION_ID, builder.getNotification());
                 }
