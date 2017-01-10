@@ -109,6 +109,8 @@
     <string name="use_zsync">Sync Download Optimization</string>
     <string name="use_zsync_enabled">Use zsync when available</string>
     <string name="use_zsync_disabled">Direct download only</string>
+    <string name="sync_stage_searching">Determining similarities</string>
+    <string name="sync_stage_building">Building file</string>
 
     <!-- Individual Labels -->
     <string name="individual_first_name_label">First Name</string>

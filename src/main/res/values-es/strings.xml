@@ -166,6 +166,9 @@
     <string name="sync_database_failed">Error de descarga</string>
     <string name="sync_database_in_progress">Descarga en curso</string>
     <string name="no_server_url">No URL del servidor se ha establecido</string>
+    <string name="sync_stage_searching">Determinación de similitudes</string>
+    <string name="sync_stage_building">Archivo de construcción</string>
+
     <string name="search_label">Buscar</string>
     <string name="search_hint">Buscar una ubicación o individuo</string>
     <string name="updating_index">Índice de búsqueda de actualización</string>
@@ -182,6 +185,5 @@
     <string name="basic_search">Búsqueda Básica</string>
     <string name="advanced_search">Búsqueda Avanzada</string>
     <string name="search_type">Tipo de Búsqueda</string>
-
 
 </resources>
