@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.github.batkinson.jrsync.Metadata;
+import com.github.batkinson.jrsync.zsync.ProgressTracker;
 import com.github.batkinson.jrsync.zsync.RangeRequest;
 import com.github.batkinson.jrsync.zsync.RangeRequestFactory;
 
@@ -398,7 +399,7 @@ public class SyncUtils {
                     .setSmallIcon(R.drawable.ic_downloading)
                     .setContentTitle(ctx.getString(R.string.sync_database_new_data))
                     .setContentText(ctx.getString(R.string.sync_database_in_progress))
-                    .setProgress(0, 0, true)
+                    .setProgress(0, 0, false)
                     .setOngoing(true);
 
             switch (httpResult) {
@@ -432,7 +433,7 @@ public class SyncUtils {
                             }
                             RangeRequestFactory factory = new RangeRequestFactoryImpl(endpoint, SQLITE_MIME_TYPE, creds);
                             Log.i(TAG, "syncing incrementally");
-                            incrementalSync(responseBody, dbTempFile, scratch, factory);
+                            incrementalSync(responseBody, dbTempFile, scratch, factory, builder, manager);
                             if (!scratch.renameTo(dbTempFile)) {
                                 Log.e(TAG, "failed to install sync result " + scratch);
                             }
@@ -510,10 +511,26 @@ public class SyncUtils {
     /**
      * Performs an incremental sync based on a local existing file.
      */
-    private static void incrementalSync(InputStream responseBody, File basis, File target, RangeRequestFactory factory)
+    private static void incrementalSync(InputStream responseBody, File basis, File target, RangeRequestFactory factory,
+                                        final Notification.Builder builder, final NotificationManager manager)
             throws NoSuchAlgorithmException, IOException, InterruptedException {
         Metadata metadata = readMetadata(responseBody);
-        sync(metadata, basis, target, factory, null);
+        ProgressTracker tracker = new ProgressTracker() {
+            String text = "";
+            int percent = -1;
+            @Override
+            public void onProgress(Stage stage, int percentComplete) {
+                if (!text.equals(stage.name()) || percent != percentComplete) {
+                    text = stage.name();
+                    percent = percentComplete;
+                    Log.i(TAG, text + " " + percent);
+                    builder.setContentText(stage.name());
+                    builder.setProgress(100, percentComplete, false);
+                    manager.notify(SYNC_NOTIFICATION_ID, builder.getNotification());
+                }
+            }
+        };
+        sync(metadata, basis, target, factory, tracker);
     }
 
     /**
