@@ -536,7 +536,6 @@ public class SyncUtils {
                 if (!text.equals(stage.name()) || percent != percentComplete) {
                     text = stage.name();
                     percent = percentComplete;
-                    Log.i(TAG, text + " " + percent);
                     builder.setContentText(getStageLabel(ctx, stage));
                     builder.setProgress(100, percentComplete, false);
                     manager.notify(SYNC_NOTIFICATION_ID, builder.getNotification());
