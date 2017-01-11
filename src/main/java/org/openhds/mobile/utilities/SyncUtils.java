@@ -235,16 +235,28 @@ public class SyncUtils {
         }
     }
 
+    interface StreamListener {
+        void streamed(int bytes);
+    }
+
+    /**
+     * Convenience method for {@link SyncUtils#streamToFile(InputStream, File, StreamListener)}.
+     */
+    public static void streamToFile(InputStream in, File f) throws IOException, InterruptedException {
+        streamToFile(in, f, null);
+    }
+
     /**
      * Streams the contents of the specified {@link InputStream} to a specified
      * location, always closing the stream.
      *
      * @param in stream to read contents from
      * @param f  location to write contents to
+     * @param listener observer to receive notifications of streaming events
      * @throws IOException
      * @throws InterruptedException
      */
-    public static void streamToFile(InputStream in, File f) throws IOException, InterruptedException {
+    public static void streamToFile(InputStream in, File f, StreamListener listener) throws IOException, InterruptedException {
         OutputStream out = buffer(new FileOutputStream(f));
         try {
             byte[] buf = new byte[BUFFER_SIZE];
@@ -254,6 +266,9 @@ public class SyncUtils {
                     throw new InterruptedException();
                 }
                 out.write(buf, 0, read);
+                if (listener != null) {
+                    listener.streamed(read);
+                }
             }
         } finally {
             close(out);
@@ -364,7 +379,7 @@ public class SyncUtils {
      * @param username username to use for http auth
      * @param password password to use for http auth
      */
-    public static void downloadUpdate(Context ctx, String username, String password) {
+    public static void downloadUpdate(final Context ctx, String username, String password) {
 
         File dbFile = getDatabaseFile(ctx), dbTempFile = getTempFile(dbFile);
 
@@ -372,7 +387,7 @@ public class SyncUtils {
 
         DatabaseAdapter db = DatabaseAdapter.getInstance(ctx);
 
-        NotificationManager manager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+        final NotificationManager manager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
 
         String fingerprint = "?";
 
@@ -395,11 +410,11 @@ public class SyncUtils {
             HttpURLConnection httpConn = get(endpoint, accept, creds, existingFingerprint);
             int httpResult = httpConn.getResponseCode();
 
-            Notification.Builder builder = new Notification.Builder(ctx)
+            final Notification.Builder builder = new Notification.Builder(ctx)
                     .setSmallIcon(R.drawable.ic_downloading)
                     .setContentTitle(ctx.getString(R.string.sync_database_new_data))
                     .setContentText(ctx.getString(R.string.sync_database_in_progress))
-                    .setProgress(0, 0, false)
+                    .setProgress(0, 0, true)
                     .setOngoing(true);
 
             switch (httpResult) {
@@ -439,7 +454,23 @@ public class SyncUtils {
                             }
                         } else if (responseType.equals(SQLITE_MIME_TYPE)) {
                             Log.i(TAG, "downloading directly");
-                            streamToFile(responseBody, dbTempFile);
+                            final int totalSize = httpConn.getContentLength();
+                            StreamListener progressListener = new StreamListener() {
+                                int streamed;
+                                int fileProgress;
+                                @Override
+                                public void streamed(int bytes) {
+                                    streamed += bytes;
+                                    int nextValue = totalSize <= 0 ? 100 : (int) ((((double) streamed) / totalSize) * 100);
+                                    if (nextValue != fileProgress) {
+                                        builder.setProgress(totalSize, nextValue, false);
+                                        builder.setContentText(ctx.getString(R.string.sync_downloading));
+                                        manager.notify(SYNC_NOTIFICATION_ID, builder.getNotification());
+                                    }
+                                    fileProgress = nextValue;
+                                }
+                            };
+                            streamToFile(responseBody, dbTempFile, totalSize == -1? null : progressListener);
                         }
 
                         store(fingerprintFile, fingerprint);  // install fingerprint after downloaded finishes

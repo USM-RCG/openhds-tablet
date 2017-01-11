@@ -169,5 +169,6 @@
     <string name="no_server_url">No URL del servidor se ha establecido</string>
     <string name="sync_stage_searching">Determinación de similitudes</string>
     <string name="sync_stage_building">Archivo de construcción</string>
+    <string name="sync_downloading">Descargando archivo</string>
 
 </resources>
