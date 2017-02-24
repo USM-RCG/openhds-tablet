@@ -437,8 +437,9 @@ public class SyncUtils {
                         manager.notify(SYNC_NOTIFICATION_ID, builder.getNotification());
 
                         InputStream responseBody = httpConn.getInputStream();
-                        String responseType = httpConn.getContentType();
-                        if (useZsync && responseType.equals(Metadata.MIME_TYPE)) {
+                        String responseType = httpConn.getContentType().split(";")[0].toLowerCase();
+
+                        if (useZsync && Metadata.MIME_TYPE.equals(responseType)) {
                             File scratch = new File(dbTempFile.getParentFile(), dbTempFile.getName() + ".syncing");
                             if (scratch.exists() && !scratch.renameTo(dbTempFile)) {
                                 Log.w(TAG, "resume failed, failed to move " + scratch);
@@ -453,7 +454,7 @@ public class SyncUtils {
                             if (!scratch.renameTo(dbTempFile)) {
                                 Log.e(TAG, "failed to install sync result " + scratch);
                             }
-                        } else if (responseType.equals(SQLITE_MIME_TYPE)) {
+                        } else if (SQLITE_MIME_TYPE.equals(responseType)) {
                             Log.i(TAG, "downloading directly");
                             final int totalSize = httpConn.getContentLength();
                             StreamListener progressListener = new StreamListener() {
