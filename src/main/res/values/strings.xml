@@ -166,7 +166,7 @@
     <string name="supervisor_approve_all"> Approve All </string>
     <string name="supervisor_approve_selected"> Approve Selected </string>
     <string name="sub_district_label">Subdistrict</string>
-    <string name="launching_odk_collect">Launching ODKCollect…</string>
+    <string name="launching_odk_collect">Launching ODK Collect…</string>
     <string name="delete_button_label">Delete Selected</string>
     <string name="find_label">Find</string>
     <string name="edit_label">Edit</string>
