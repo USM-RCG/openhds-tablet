@@ -416,8 +416,6 @@ public class FormUtils {
      * @return an {@link Intent} useful for launching the editing activity in ODK
      */
     public static Intent editIntent(Uri formUri) {
-        Intent intent = new Intent(Intent.ACTION_EDIT, formUri);
-        intent.putExtra("formMode", "editSaved");  // see https://github.com/opendatakit/collect/issues/535
-        return intent;
+        return new Intent(Intent.ACTION_EDIT, formUri);
     }
 }
