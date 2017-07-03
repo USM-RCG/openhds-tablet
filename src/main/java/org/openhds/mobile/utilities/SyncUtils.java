@@ -440,8 +440,16 @@ public class SyncUtils {
 
                         if (useZsync && Metadata.MIME_TYPE.equals(responseType)) {
                             File scratch = new File(dbTempFile.getParentFile(), dbTempFile.getName() + ".syncing");
-                            if (scratch.exists() && !scratch.renameTo(dbTempFile)) {
-                                Log.w(TAG, "resume failed, failed to move " + scratch);
+                            if (scratch.exists()) {
+                                if (scratch.length() > dbTempFile.length()) {
+                                    Log.i(TAG, "resuming partial content (" + scratch.length() + " bytes)");
+                                    if (!scratch.renameTo(dbTempFile)) {
+                                        Log.w(TAG, "resume failed, failed to move " + scratch);
+                                    }
+                                } else {
+                                    Log.i(TAG, "ignoring partial content (" + scratch.length() + " bytes):" +
+                                            " smaller than basis (" + dbTempFile.length() + " bytes)");
+                                }
                             }
                             if (!dbTempFile.exists()) {
                                 Log.i(TAG, "no downloaded content, copying existing database");
