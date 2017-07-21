@@ -24,7 +24,7 @@ dependencies {
     compile 'org.apache.lucene:lucene-core:4.7.2'
     compile 'org.apache.lucene:lucene-queryparser:4.7.2'
     compile 'org.apache.lucene:lucene-suggest:4.7.2'
-    compile 'com.github.batkinson:jrsync:1.4'
+    compile 'com.github.batkinson:jrsync:1.4.1'
 }
 
 android {
