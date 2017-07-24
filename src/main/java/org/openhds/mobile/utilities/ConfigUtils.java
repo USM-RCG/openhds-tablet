@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 
 import org.openhds.mobile.R;
 
+import java.util.Set;
+
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class ConfigUtils {
@@ -19,6 +21,10 @@ public class ConfigUtils {
 
     public static String getPreferenceString(Context context, String key, String defaultValue) {
         return getDefaultSharedPreferences(context).getString(key, defaultValue);
+    }
+
+    public static Set<String> getMultiSelectPreference(Context context, String key, Set<String> defaultValues) {
+        return getDefaultSharedPreferences(context).getStringSet(key, defaultValues);
     }
 
     public static String getVersion(Context ctx) throws PackageManager.NameNotFoundException {

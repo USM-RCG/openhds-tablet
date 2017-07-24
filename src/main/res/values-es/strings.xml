@@ -187,4 +187,6 @@
     <string name="advanced_search">Búsqueda Avanzada</string>
     <string name="search_type">Tipo de Búsqueda</string>
 
+    <string name="active_modules">Módulos Activos</string>
+
 </resources>

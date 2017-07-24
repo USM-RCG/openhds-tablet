@@ -32,4 +32,8 @@
         android:defaultValue="@bool/auto_index_on_db_update_default"
         />
 
+    <MultiSelectListPreference
+        android:key="@string/active_modules_key"
+        android:title="@string/active_modules"/>
+
 </PreferenceScreen>

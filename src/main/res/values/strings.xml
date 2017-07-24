@@ -208,4 +208,7 @@
         <item>@string/advanced_search</item>
     </string-array>
 
+    <string name="active_modules_key" translatable="false">active_modules_key</string>
+    <string name="active_modules">Active Modules</string>
+
 </resources>
