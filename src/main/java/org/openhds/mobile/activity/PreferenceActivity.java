@@ -3,12 +3,16 @@ package org.openhds.mobile.activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 
 import org.openhds.mobile.R;
+import org.openhds.mobile.navconfig.NavigatorConfig;
+import org.openhds.mobile.navconfig.NavigatorModule;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 
 import static org.openhds.mobile.utilities.ConfigUtils.getAppFullName;
 
@@ -16,6 +20,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 
     EditTextPreference serverUrlPref;
     EditTextPreference syncHistoryPref;
+    MultiSelectListPreference activeModulesPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,18 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
         syncHistoryPref = (EditTextPreference) findPreference(getText(R.string.sync_history_retention_key));
         syncHistoryPref.setOnPreferenceChangeListener(this);
         updateSummary(syncHistoryPref, syncHistoryPref.getText());
+
+        activeModulesPref = (MultiSelectListPreference) findPreference(getText(R.string.active_modules_key));
+        activeModulesPref.setOnPreferenceChangeListener(this);
+        Collection<NavigatorModule> availableModules = NavigatorConfig.getInstance().getModules();
+        CharSequence[] availableModuleNames = new CharSequence[availableModules.size()];
+        int added = 0;
+        for (NavigatorModule module : availableModules) {
+            availableModuleNames[added++] = module.getName();
+        }
+        activeModulesPref.setEntries(availableModuleNames);
+        activeModulesPref.setEntryValues(availableModuleNames);
+        updateSummary(activeModulesPref, activeModulesPref.getValues());
     }
 
     @Override
@@ -69,6 +86,8 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
     private void updateSummary(Preference preference, Object newValue) {
         if (preference instanceof EditTextPreference) {
             preference.setSummary((String)newValue);
+        } else if (preference instanceof MultiSelectListPreference) {
+            preference.setSummary(String.valueOf(newValue));
         }
     }
 }

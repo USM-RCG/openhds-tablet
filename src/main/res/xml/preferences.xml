@@ -24,4 +24,8 @@
         android:defaultValue="@string/sync_history_retention_default"
         />
 
+    <MultiSelectListPreference
+        android:key="@string/active_modules_key"
+        android:title="@string/active_modules"/>
+
 </PreferenceScreen>

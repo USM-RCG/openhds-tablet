@@ -16,6 +16,10 @@ import org.openhds.mobile.fragment.navigate.FormListFragment;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
+import org.openhds.mobile.utilities.ConfigUtils;
+
+import java.util.Collections;
+import java.util.Set;
 
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
@@ -39,12 +43,17 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
 
         // fill the middle column with a button for each available activity
         LinearLayout activitiesLayout = (LinearLayout) findViewById(R.id.portal_middle_column);
-        for (NavigatorModule module : NavigatorConfig.getInstance().getModules()) {
-            RelativeLayout layout = makeTextWithPayload(this, module.getLaunchLabel(), module.getLaunchDescription(),
-                    module.getName(), this, activitiesLayout, R.drawable.data_selector, null, null, true);
-            layout.setPadding(10, 10, 10, 10);
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-            params.setMargins(0, 0, 0, MODULE_SPACING);
+        NavigatorConfig navConfig = NavigatorConfig.getInstance();
+        Set<String> activeModuleNames = ConfigUtils.getMultiSelectPreference(
+                this, getString(R.string.active_modules_key), Collections.EMPTY_SET);
+        for (NavigatorModule module : navConfig.getModules()) {
+            if (activeModuleNames.contains(module.getName())) {
+                RelativeLayout layout = makeTextWithPayload(this, module.getLaunchLabel(), module.getLaunchDescription(),
+                        module.getName(), this, activitiesLayout, R.drawable.data_selector, null, null, true);
+                layout.setPadding(10, 10, 10, 10);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
+                params.setMargins(0, 0, 0, MODULE_SPACING);
+            }
         }
 
         formListFragment = (FormListFragment) getFragmentManager().findFragmentById(R.id.portal_form_list);

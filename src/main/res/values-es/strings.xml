@@ -171,4 +171,6 @@
     <string name="sync_stage_building">Archivo de construcción</string>
     <string name="sync_downloading">Descargando archivo</string>
 
+    <string name="active_modules">Módulos Activos</string>
+
 </resources>
