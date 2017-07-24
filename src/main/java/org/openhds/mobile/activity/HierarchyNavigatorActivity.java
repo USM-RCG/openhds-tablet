@@ -38,14 +38,17 @@ import org.openhds.mobile.navconfig.forms.consumers.ConsumerResult;
 import org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.repository.DataWrapper;
+import org.openhds.mobile.utilities.ConfigUtils;
 import org.openhds.mobile.utilities.OdkCollectHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 import static org.openhds.mobile.model.form.FormInstance.generate;
@@ -191,8 +194,12 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         menuItemTags = new HashMap<>();
 
         // Configures the menu for switching between inactive modules (ones other than the 'current' one)
-        for (NavigatorModule module : NavigatorConfig.getInstance().getModules()) {
-            if (!module.getName().equals(currentModuleName)) {
+        NavigatorConfig config = NavigatorConfig.getInstance();
+        Set<String> activeModuleNames = ConfigUtils.getMultiSelectPreference(
+                this, getString(R.string.active_modules_key), Collections.EMPTY_SET);
+        for (NavigatorModule module : config.getModules()) {
+            String moduleName = module.getName();
+            if (activeModuleNames.contains(moduleName) && !moduleName.equals(currentModuleName)) {
                 MenuItem menuItem = menu.add(module.getActivityTitle());
                 menuItem.setIcon(R.drawable.data_selector);
                 menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
