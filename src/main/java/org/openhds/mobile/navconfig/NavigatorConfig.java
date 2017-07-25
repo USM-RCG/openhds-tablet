@@ -15,9 +15,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableCollection;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.ResourceBundle.getBundle;
 
 
@@ -116,6 +118,15 @@ public class NavigatorConfig {
      */
     public Collection<NavigatorModule> getModules() {
         return unmodifiableCollection(modules.values());
+    }
+
+    /**
+     * Gets all configured navigator module names.
+     *
+     * @return a list of configured {@link NavigatorModule} names in definition order
+     */
+    public Set<String> getModuleNames() {
+        return unmodifiableSet(modules.keySet());
     }
 
     /**

@@ -23,7 +23,6 @@ import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
 import org.openhds.mobile.utilities.ConfigUtils;
 
-import java.util.Collections;
 import java.util.Set;
 
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
@@ -48,10 +47,10 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
 
         // fill the middle column with a button for each available activity
         LinearLayout activitiesLayout = (LinearLayout) findViewById(R.id.portal_middle_column);
-        NavigatorConfig navConfig = NavigatorConfig.getInstance();
+        NavigatorConfig config = NavigatorConfig.getInstance();
         Set<String> activeModuleNames = ConfigUtils.getMultiSelectPreference(
-                this, getString(R.string.active_modules_key), Collections.EMPTY_SET);
-        for (NavigatorModule module : navConfig.getModules()) {
+                this, getString(R.string.active_modules_key), config.getModuleNames());
+        for (NavigatorModule module : config.getModules()) {
             if (activeModuleNames.contains(module.getName())) {
                 RelativeLayout layout = makeTextWithPayload(this, module.getLaunchLabel(), module.getLaunchDescription(),
                         module.getName(), this, activitiesLayout, R.drawable.data_selector, null, null, true);
