@@ -8,11 +8,11 @@ import android.preference.Preference;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.navconfig.NavigatorConfig;
-import org.openhds.mobile.navconfig.NavigatorModule;
+import org.openhds.mobile.utilities.ConfigUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
+import java.util.Set;
 
 import static org.openhds.mobile.utilities.ConfigUtils.getAppFullName;
 
@@ -39,16 +39,17 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
         syncHistoryPref.setOnPreferenceChangeListener(this);
         updateSummary(syncHistoryPref, syncHistoryPref.getText());
 
+        NavigatorConfig config = NavigatorConfig.getInstance();
+        Set<String> moduleNames = config.getModuleNames();
+        Set<String> activeModules = ConfigUtils.getMultiSelectPreference(
+                this, getString(R.string.active_modules_key), moduleNames);
+        String[] moduleNameArray = moduleNames.toArray(new String[]{});
+
         activeModulesPref = (MultiSelectListPreference) findPreference(getText(R.string.active_modules_key));
         activeModulesPref.setOnPreferenceChangeListener(this);
-        Collection<NavigatorModule> availableModules = NavigatorConfig.getInstance().getModules();
-        CharSequence[] availableModuleNames = new CharSequence[availableModules.size()];
-        int added = 0;
-        for (NavigatorModule module : availableModules) {
-            availableModuleNames[added++] = module.getName();
-        }
-        activeModulesPref.setEntries(availableModuleNames);
-        activeModulesPref.setEntryValues(availableModuleNames);
+        activeModulesPref.setEntries(moduleNameArray);
+        activeModulesPref.setEntryValues(moduleNameArray);
+        activeModulesPref.setValues(activeModules);
         updateSummary(activeModulesPref, activeModulesPref.getValues());
     }
 

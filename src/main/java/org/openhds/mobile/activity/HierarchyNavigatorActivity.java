@@ -39,7 +39,6 @@ import org.openhds.mobile.utilities.OdkCollectHelper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -180,7 +179,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         // Configures the menu for switching between inactive modules (ones other than the 'current' one)
         NavigatorConfig config = NavigatorConfig.getInstance();
         Set<String> activeModuleNames = ConfigUtils.getMultiSelectPreference(
-                this, getString(R.string.active_modules_key), Collections.EMPTY_SET);
+                this, getString(R.string.active_modules_key), config.getModuleNames());
         for (NavigatorModule module : config.getModules()) {
             String moduleName = module.getName();
             if (activeModuleNames.contains(moduleName) && !moduleName.equals(currentModuleName)) {
