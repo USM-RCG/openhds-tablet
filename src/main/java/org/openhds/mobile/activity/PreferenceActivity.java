@@ -8,10 +8,15 @@ import android.preference.Preference;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.navconfig.NavigatorConfig;
+import org.openhds.mobile.navconfig.NavigatorModule;
 import org.openhds.mobile.utilities.ConfigUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static org.openhds.mobile.utilities.ConfigUtils.getAppFullName;
@@ -40,17 +45,21 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
         updateSummary(syncHistoryPref, syncHistoryPref.getText());
 
         NavigatorConfig config = NavigatorConfig.getInstance();
-        Set<String> moduleNames = config.getModuleNames();
-        Set<String> activeModules = ConfigUtils.getMultiSelectPreference(
-                this, getString(R.string.active_modules_key), moduleNames);
-        String[] moduleNameArray = moduleNames.toArray(new String[]{});
+        Collection<NavigatorModule> modules = config.getModules();
+        Map<String, String> moduleLaunchLabels = new LinkedHashMap<>();
+        for (NavigatorModule module : modules) {
+            moduleLaunchLabels.put(module.getName(), module.getLaunchLabel());
+        }
 
         activeModulesPref = (MultiSelectListPreference) findPreference(getText(R.string.active_modules_key));
         activeModulesPref.setOnPreferenceChangeListener(this);
-        activeModulesPref.setEntries(moduleNameArray);
-        activeModulesPref.setEntryValues(moduleNameArray);
+        activeModulesPref.setEntries(moduleLaunchLabels.values().toArray(new String[]{}));
+        activeModulesPref.setEntryValues(moduleLaunchLabels.keySet().toArray(new String[]{}));
+
+        Set<String> activeModules = ConfigUtils.getMultiSelectPreference(
+                this, getString(R.string.active_modules_key), config.getModuleNames());
         activeModulesPref.setValues(activeModules);
-        updateSummary(activeModulesPref, activeModulesPref.getValues());
+        updateSummary(activeModulesPref, activeModules);
     }
 
     @Override
@@ -86,9 +95,22 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 
     private void updateSummary(Preference preference, Object newValue) {
         if (preference instanceof EditTextPreference) {
-            preference.setSummary((String)newValue);
+            preference.setSummary((String) newValue);
         } else if (preference instanceof MultiSelectListPreference) {
-            preference.setSummary(String.valueOf(newValue));
+            MultiSelectListPreference p = (MultiSelectListPreference) preference;
+            if (newValue instanceof Set) {
+                Set<CharSequence> selectedLabels = new LinkedHashSet<>();
+                CharSequence[] valueLabels = p.getEntries();
+                for (Object value : (Set<?>) newValue) {
+                    int valueIndex = p.findIndexOfValue(value.toString());
+                    if (valueIndex >= 0) {
+                        selectedLabels.add(valueLabels[valueIndex]);
+                    }
+                }
+                preference.setSummary(String.valueOf(selectedLabels));
+            } else {
+                preference.setSummary(String.valueOf(newValue));
+            }
         }
     }
 }
