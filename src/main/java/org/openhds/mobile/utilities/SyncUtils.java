@@ -627,7 +627,7 @@ public class SyncUtils {
     /**
      * Detects a database file on external storage and makes it available for installation.
      *
-     * @param ctx
+     * @param ctx the android {@link Context} to use for label and service lookups
      * @throws IOException
      * @throws NoSuchAlgorithmException
      * @throws InterruptedException
