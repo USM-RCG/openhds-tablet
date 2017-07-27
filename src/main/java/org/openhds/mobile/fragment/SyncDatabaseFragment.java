@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.R;
+import org.openhds.mobile.offlinedb.OfflineDbService;
 import org.openhds.mobile.utilities.MessageUtils;
 import org.openhds.mobile.utilities.SyncUtils;
 
@@ -62,6 +64,7 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
             }
         };
         activity.getContentResolver().registerContentObserver(OpenHDS.CONTENT_BASE_URI, false, observer);
+        activity.startService(new Intent(activity, OfflineDbService.class));
     }
 
     @Override

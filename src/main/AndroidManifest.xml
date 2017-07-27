@@ -82,6 +82,9 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter"/>
         </service>
+        <service
+            android:name=".offlinedb.OfflineDbService"
+            android:exported="false"/>
 
     </application>
 
