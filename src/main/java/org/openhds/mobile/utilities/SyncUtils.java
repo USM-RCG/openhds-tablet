@@ -640,8 +640,20 @@ public class SyncUtils {
             if (!offlineFile.delete()) {
                 Log.w(TAG, "failed to remove offline db file after copy");
             }
+
             ctx.getContentResolver().notifyChange(OpenHDS.CONTENT_BASE_URI, null, false);
 
+            Intent intent = new Intent(ctx, SupervisorActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            final NotificationManager manager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+            manager.notify(SYNC_NOTIFICATION_ID, new Notification.Builder(ctx)
+                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setContentTitle(ctx.getString(R.string.sync_database_new_data))
+                    .setContentText(ctx.getString(R.string.sync_database_new_data_instructions))
+                    .setProgress(0, 0, false)
+                    .setContentIntent(pending)
+                    .setOngoing(false)
+                    .getNotification());
         }
     }
 
