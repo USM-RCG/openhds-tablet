@@ -27,6 +27,10 @@ public class ConfigUtils {
         return getDefaultSharedPreferences(context).getStringSet(key, defaultValues);
     }
 
+    public static Boolean getPreferenceBool(Context context, String key, Boolean defaultValue) {
+        return  getDefaultSharedPreferences(context).getBoolean(key, defaultValue);
+    }
+
     public static String getVersion(Context ctx) throws PackageManager.NameNotFoundException {
         return ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
     }

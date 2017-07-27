@@ -352,7 +352,9 @@ public class SyncUtils {
         Account[] accounts = manager.getAccountsByType(ACCOUNT_TYPE);
         if (accounts.length > 0) {
             Log.i(TAG, "sync requested manually");
-            ctx.getContentResolver().requestSync(accounts[0], AUTHORITY, new Bundle());
+            Bundle extras = new Bundle();
+            extras.putBoolean(ctx.getString(R.string.manual_sync_key), true);
+            ctx.getContentResolver().requestSync(accounts[0], AUTHORITY, extras);
         } else {
             Log.w(TAG, "sync request ignored, no account");
         }

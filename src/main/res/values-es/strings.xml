@@ -172,6 +172,10 @@
     <string name="sync_downloading">Descargando archivo</string>
 
     <string name="active_modules">Módulos Activos</string>
+
     <string name="pref_sync_title">Sincronización</string>
+    <string name="auto_sync_enabled">Sincronización automática con el servidor</string>
+    <string name="auto_sync_disabled">Sincronización manual de datos solamente</string>
+    <string name="use_auto_sync">Sincronización automática de la base de datos</string>
 
 </resources>

@@ -187,6 +187,12 @@
 
     <string name="active_modules_key" translatable="false">active_modules_key</string>
     <string name="active_modules">Active Modules</string>
+
     <string name="pref_sync_title">Synchronization</string>
+    <string name="use_auto_sync_key" translatable="false">use_auto_sync</string>
+    <string name="auto_sync_enabled">Automatically sync with server</string>
+    <string name="auto_sync_disabled">Manual data synchronization only</string>
+    <string name="use_auto_sync">Automatic database synchronization</string>
+    <string name="manual_sync_key" translatable="false">manual_sync_key</string>
 
 </resources>

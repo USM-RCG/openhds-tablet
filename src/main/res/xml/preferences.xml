@@ -12,11 +12,20 @@
     <PreferenceScreen android:title="@string/pref_sync_title">
 
         <SwitchPreference
+            android:defaultValue="@bool/auto_sync_default"
+            android:key="@string/use_auto_sync_key"
+            android:summaryOn="@string/auto_sync_enabled"
+            android:summaryOff="@string/auto_sync_disabled"
+            android:title="@string/use_auto_sync"
+            />
+
+        <SwitchPreference
             android:defaultValue="@bool/use_zsync_default"
             android:key="@string/use_zsync_key"
             android:summaryOff="@string/use_zsync_disabled"
             android:summaryOn="@string/use_zsync_enabled"
             android:title="@string/use_zsync"
+            android:dependency="@string/use_auto_sync_key"
             />
 
         <EditTextPreference
@@ -24,6 +33,7 @@
             android:inputType="number"
             android:key="@string/sync_history_retention_key"
             android:title="@string/sync_history_retention"
+            android:dependency="@string/use_auto_sync_key"
             />
 
     </PreferenceScreen>
