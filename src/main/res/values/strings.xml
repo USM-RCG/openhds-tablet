@@ -215,7 +215,7 @@
     <string name="use_auto_sync_key" translatable="false">use_auto_sync</string>
     <string name="auto_sync_enabled">Automatically sync with server</string>
     <string name="auto_sync_disabled">Manual data synchronization only</string>
-    <string name="use_auto_sync">Automatic database synchronization</string>
+    <string name="use_auto_sync">Automatic Database Synchronization</string>
     <string name="manual_sync_key" translatable="false">manual_sync_key</string>
 
 </resources>
