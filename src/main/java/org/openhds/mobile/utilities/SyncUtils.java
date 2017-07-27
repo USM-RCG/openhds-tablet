@@ -39,12 +39,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
+import java.security.DigestOutputStream;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import static android.content.ContentResolver.setIsSyncable;
 import static android.content.ContentResolver.setSyncAutomatically;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.os.Environment.getExternalStorageDirectory;
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static com.github.batkinson.jrsync.zsync.ZSync.sync;
 import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
@@ -259,19 +262,24 @@ public class SyncUtils {
     public static void streamToFile(InputStream in, File f, StreamListener listener) throws IOException, InterruptedException {
         OutputStream out = buffer(new FileOutputStream(f));
         try {
-            byte[] buf = new byte[BUFFER_SIZE];
-            int read;
-            while ((read = in.read(buf)) >= 0) {
-                if (Thread.interrupted()) {
-                    throw new InterruptedException();
-                }
-                out.write(buf, 0, read);
-                if (listener != null) {
-                    listener.streamed(read);
-                }
-            }
+            streamToStream(in, out, listener);
         } finally {
             close(out);
+        }
+    }
+
+    private static void streamToStream(InputStream in, OutputStream out, StreamListener listener)
+            throws IOException, InterruptedException {
+        byte[] buf = new byte[BUFFER_SIZE];
+        int read;
+        while ((read = in.read(buf)) >= 0) {
+            if (Thread.interrupted()) {
+                throw new InterruptedException();
+            }
+            out.write(buf, 0, read);
+            if (listener != null) {
+                listener.streamed(read);
+            }
         }
     }
 
@@ -606,6 +614,63 @@ public class SyncUtils {
         }
     }
 
+    /**
+     * Detects and makes a database file on external storage available for installation.
+     */
+    public static void makeOfflineDbAvailable(Context ctx)
+            throws IOException, NoSuchAlgorithmException, InterruptedException {
+        if (offlineDbExists()) {
+            File offlineFile = getOfflineDbFile(), installableFile = getTempFile(getDatabaseFile(ctx));
+            copyWithFingerprint(ctx.getCacheDir(), offlineFile, installableFile);
+            if (!offlineFile.delete()) {
+                Log.w(TAG, "failed to remove offline db file after copy");
+            }
+            ctx.getContentResolver().notifyChange(OpenHDS.CONTENT_BASE_URI, null, false);
+        }
+    }
+
+    private static void copyWithFingerprint(File tmpDir, File src, File dst)
+            throws IOException, NoSuchAlgorithmException, InterruptedException {
+        File movableFile = File.createTempFile(dst.getName(), null, tmpDir);
+        MessageDigest digest = MessageDigest.getInstance("MD5");
+        DigestOutputStream out = null;
+        FileInputStream in = null;
+        try {
+            out = new DigestOutputStream(new FileOutputStream(movableFile), digest);
+            in = new FileInputStream(src);
+            streamToStream(in, out, null);
+            if (!movableFile.renameTo(dst)) {
+                Log.e(TAG, "failed to move temp file " + movableFile + " to " + dst);
+            }
+        } finally {
+            close(in, out);
+        }
+        store(getFingerprintFile(dst), toHex(digest.digest()));
+    }
+
+    private final static char[] hexArray = "0123456789abcdef".toCharArray();
+
+    private static String toHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+
+    private static boolean offlineDbExists() {
+        return getOfflineDbFile().isFile();
+    }
+
+    private static File getOfflineDbFile() {
+        return new File(getExternalDir(), DATABASE_NAME);
+    }
+
+    private static File getExternalDir() {
+        return new File(getExternalStorageDirectory(), "cims");
+    }
 
     /**
      * Used to create range requests for fetching remote file data.
