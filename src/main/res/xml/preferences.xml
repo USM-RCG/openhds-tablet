@@ -9,20 +9,24 @@
         android:defaultValue="@string/default_openhds_server_url"
         />
 
-    <SwitchPreference
-        android:key="@string/use_zsync_key"
-        android:title="@string/use_zsync"
-        android:summaryOn="@string/use_zsync_enabled"
-        android:summaryOff="@string/use_zsync_disabled"
-        android:defaultValue="@bool/use_zsync_default"
-        />
+    <PreferenceScreen android:title="@string/pref_sync_title">
 
-    <EditTextPreference
-        android:key="@string/sync_history_retention_key"
-        android:title="@string/sync_history_retention"
-        android:inputType="number"
-        android:defaultValue="@string/sync_history_retention_default"
-        />
+        <SwitchPreference
+            android:defaultValue="@bool/use_zsync_default"
+            android:key="@string/use_zsync_key"
+            android:summaryOff="@string/use_zsync_disabled"
+            android:summaryOn="@string/use_zsync_enabled"
+            android:title="@string/use_zsync"
+            />
+
+        <EditTextPreference
+            android:defaultValue="@string/sync_history_retention_default"
+            android:inputType="number"
+            android:key="@string/sync_history_retention_key"
+            android:title="@string/sync_history_retention"
+            />
+
+    </PreferenceScreen>
 
     <SwitchPreference
         android:key="@string/auto_index_on_db_update_key"

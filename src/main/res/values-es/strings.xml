@@ -188,5 +188,6 @@
     <string name="search_type">Tipo de Búsqueda</string>
 
     <string name="active_modules">Módulos Activos</string>
+    <string name="pref_sync_title">Sincronización</string>
 
 </resources>
