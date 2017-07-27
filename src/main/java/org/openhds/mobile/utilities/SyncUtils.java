@@ -268,6 +268,16 @@ public class SyncUtils {
         }
     }
 
+    /**
+     * Streams the contents of the specified {@link InputStream} to {@link OutputStream}. It does *not* close either
+     * streams.
+     *
+     * @param in the stream to read from
+     * @param out the stream to write to
+     * @param listener object to use to notify status
+     * @throws IOException
+     * @throws InterruptedException
+     */
     private static void streamToStream(InputStream in, OutputStream out, StreamListener listener)
             throws IOException, InterruptedException {
         byte[] buf = new byte[BUFFER_SIZE];
@@ -616,7 +626,12 @@ public class SyncUtils {
     }
 
     /**
-     * Detects and makes a database file on external storage available for installation.
+     * Detects a database file on external storage and makes it available for installation.
+     *
+     * @param ctx
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     * @throws InterruptedException
      */
     public static void makeOfflineDbAvailable(Context ctx)
             throws IOException, NoSuchAlgorithmException, InterruptedException {
@@ -627,9 +642,22 @@ public class SyncUtils {
                 Log.w(TAG, "failed to remove offline db file after copy");
             }
             ctx.getContentResolver().notifyChange(OpenHDS.CONTENT_BASE_URI, null, false);
+
         }
     }
 
+    /**
+     * Copies the source file to the destination file along with an accompanying fingerprint (stored along side it). It
+     * copies to a scratch file and moves the final result to reduce the possibility of strange filesystem semantics due
+     * to concurrent copy attempts.
+     *
+     * @param tmpDir the temp directory to use for an intermediary temp file
+     * @param src the file to copy
+     * @param dst the destination to copy to
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     * @throws InterruptedException
+     */
     private static void copyWithFingerprint(File tmpDir, File src, File dst)
             throws IOException, NoSuchAlgorithmException, InterruptedException {
         File movableFile = File.createTempFile(dst.getName(), null, tmpDir);
@@ -651,6 +679,12 @@ public class SyncUtils {
 
     private final static char[] hexArray = "0123456789abcdef".toCharArray();
 
+    /**
+     * Converts the given byte array to its hexadecimal equivalent.
+     *
+     * @param bytes the array to convert
+     * @return the array contents encoded as a base-16 string
+     */
     private static String toHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
@@ -661,14 +695,29 @@ public class SyncUtils {
         return new String(hexChars);
     }
 
+    /**
+     * Determines whether an offline database file exists on external storage (user put it there).
+     *
+     * @return true if an offline db file exists in its well-known location, otherwise false
+     */
     private static boolean offlineDbExists() {
         return getOfflineDbFile().isFile();
     }
 
+    /**
+     * Returns the well-known location for the offline database file.
+     *
+     * @return a {@link File} object indicating the external storage location referenced for offline db files
+     */
     private static File getOfflineDbFile() {
         return new File(getExternalDir(), DATABASE_NAME);
     }
 
+    /**
+     * Returns the dedicated directory for cims-exclusive data on external storage.
+     *
+     * @return a {@link File} indicating where cims-specific (public) files are/can be stored
+     */
     private static File getExternalDir() {
         return new File(getExternalStorageDirectory(), "cims");
     }
