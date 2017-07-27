@@ -97,6 +97,9 @@
             android:name=".search.IndexingService"
             android:exported="false">
         </service>
+        <service
+            android:name=".offlinedb.OfflineDbService"
+            android:exported="false"/>
 
     </application>
 
