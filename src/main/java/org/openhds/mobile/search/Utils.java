@@ -9,7 +9,7 @@ import org.openhds.mobile.R;
 import java.util.HashSet;
 import java.util.Set;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import static org.openhds.mobile.utilities.ConfigUtils.getSharedPrefs;
 
 public class Utils {
 
@@ -61,7 +61,7 @@ public class Utils {
      * @return true if auto-update is enabled, otherwise false
      */
     public static boolean isAutoReindexingEnabled(Context ctx) {
-        SharedPreferences prefs = getDefaultSharedPreferences(ctx);
+        SharedPreferences prefs = getSharedPrefs(ctx);
         return prefs.getBoolean(ctx.getString(R.string.use_search_key), true)
                 && prefs.getBoolean(ctx.getString(R.string.auto_index_on_db_update_key), true);
     }

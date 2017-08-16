@@ -48,12 +48,12 @@ import static android.content.ContentResolver.setSyncAutomatically;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.os.Environment.getExternalStorageDirectory;
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static com.github.batkinson.jrsync.zsync.ZSync.sync;
 import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.openhds.mobile.OpenHDS.AUTHORITY;
 import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
+import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceBool;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
 import static org.openhds.mobile.utilities.HttpUtils.get;
@@ -356,7 +356,7 @@ public class SyncUtils {
      * @return true if zsync optimization is enabled, otherwise false
      */
     public static boolean isZyncEnabled(Context ctx) {
-        return getDefaultSharedPreferences(ctx).getBoolean(ctx.getString(R.string.use_zsync_key), true);
+        return getPreferenceBool(ctx, ctx.getString(R.string.use_zsync_key), true);
     }
 
     /**
