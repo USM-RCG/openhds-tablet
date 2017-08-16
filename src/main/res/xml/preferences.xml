@@ -32,7 +32,6 @@
             android:inputType="number"
             android:key="@string/sync_history_retention_key"
             android:title="@string/sync_history_retention"
-            android:dependency="@string/use_auto_sync_key"
             />
 
     </PreferenceScreen>
