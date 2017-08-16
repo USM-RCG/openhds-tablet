@@ -25,7 +25,6 @@
             android:summaryOff="@string/use_zsync_disabled"
             android:summaryOn="@string/use_zsync_enabled"
             android:title="@string/use_zsync"
-            android:dependency="@string/use_auto_sync_key"
             />
 
         <EditTextPreference
