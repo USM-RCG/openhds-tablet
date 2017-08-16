@@ -183,6 +183,11 @@
     <string name="no_results">No Hay Resultados</string>
     <string name="searching">Buscando…</string>
 
+    <string name="pref_search_title">Búsqueda</string>
+    <string name="use_search_enabled">Búsqueda activada</string>
+    <string name="use_search_disabled">Búsqueda desactivada</string>
+    <string name="use_search">Búsqueda de texto completo</string>
+
     <string name="basic_search">Búsqueda Básica</string>
     <string name="advanced_search">Búsqueda Avanzada</string>
     <string name="search_type">Tipo de Búsqueda</string>

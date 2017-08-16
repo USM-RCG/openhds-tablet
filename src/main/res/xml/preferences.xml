@@ -38,13 +38,26 @@
 
     </PreferenceScreen>
 
-    <SwitchPreference
-        android:key="@string/auto_index_on_db_update_key"
-        android:title="@string/auto_index_on_db_update"
-        android:summaryOn="@string/auto_index_on_db_update_enabled"
-        android:summaryOff="@string/auto_index_on_db_update_disabled"
-        android:defaultValue="@bool/auto_index_on_db_update_default"
-        />
+    <PreferenceScreen android:title="@string/pref_search_title">
+
+        <SwitchPreference
+            android:defaultValue="@bool/use_search_default"
+            android:key="@string/use_search_key"
+            android:summaryOn="@string/use_search_enabled"
+            android:summaryOff="@string/use_search_disabled"
+            android:title="@string/use_search"
+            />
+
+        <SwitchPreference
+            android:defaultValue="@bool/auto_index_on_db_update_default"
+            android:key="@string/auto_index_on_db_update_key"
+            android:summaryOff="@string/auto_index_on_db_update_disabled"
+            android:summaryOn="@string/auto_index_on_db_update_enabled"
+            android:title="@string/auto_index_on_db_update"
+            android:dependency="@string/use_search_key"
+            />
+
+    </PreferenceScreen>
 
     <MultiSelectListPreference
         android:key="@string/active_modules_key"

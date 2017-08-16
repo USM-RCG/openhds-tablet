@@ -199,10 +199,15 @@
     <string name="searching">Searching…</string>
     <string name="no_results">No Results</string>
 
+    <string name="pref_search_title">Search</string>
+    <string name="use_search_key" translatable="false">use_search</string>
+    <string name="use_search_enabled">Search enabled</string>
+    <string name="use_search_disabled">Search disabled</string>
+    <string name="use_search">Full-text search</string>
+
     <string name="basic_search">Basic Search</string>
     <string name="advanced_search">Advanced Search</string>
     <string name="search_type">Search Type</string>
-
     <string-array name="search_types">
         <item>@string/basic_search</item>
         <item>@string/advanced_search</item>
