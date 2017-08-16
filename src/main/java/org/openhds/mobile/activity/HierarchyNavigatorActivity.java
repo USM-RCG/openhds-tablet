@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 
 import org.openhds.mobile.R;
@@ -50,9 +51,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static org.openhds.mobile.model.form.FormInstance.generate;
 import static org.openhds.mobile.model.form.FormInstance.getBinding;
 import static org.openhds.mobile.model.form.FormInstance.lookup;
+import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceBool;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
@@ -206,10 +210,15 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             }
         }
 
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.field_worker_search).getActionView();
-        SearchableInfo searchInfo = searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class));
-        searchView.setSearchableInfo(searchInfo);
+        MenuItem searchMenuItem = menu.findItem(R.id.field_worker_search);
+        boolean searchEnabled = getPreferenceBool(this, getString(R.string.use_search_key), true);
+        if (searchEnabled) {
+            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            SearchableInfo searchInfo = searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class));
+            SearchView searchView = (SearchView) searchMenuItem.getActionView();
+            searchView.setSearchableInfo(searchInfo);
+        }
+        searchMenuItem.setVisible(searchEnabled);
 
         return true;
     }

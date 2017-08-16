@@ -24,6 +24,7 @@ import org.openhds.mobile.utilities.OdkCollectHelper;
 import java.io.IOException;
 import java.util.List;
 
+import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceBool;
 import static org.openhds.mobile.utilities.FormUtils.isFormReviewed;
 import static org.openhds.mobile.utilities.LayoutUtils.makeButton;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
@@ -63,10 +64,11 @@ public class SupervisorActivity extends Activity {
 
         ((RelativeLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
 
-        button = makeButton(this, -1, R.string.rebuild_search_indices, R.string.rebuild_search_indices,
-                buttonClickListener, supervisorButtonLayout);
-
-        ((RelativeLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
+        if (getPreferenceBool(this, getString(R.string.use_search_key), true)) {
+            button = makeButton(this, -1, R.string.rebuild_search_indices, R.string.rebuild_search_indices,
+                    buttonClickListener, supervisorButtonLayout);
+            ((RelativeLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
+        }
 
         if (savedInstanceState == null) {
             LoginUtils.Login<Supervisor> login = getLogin(Supervisor.class);
