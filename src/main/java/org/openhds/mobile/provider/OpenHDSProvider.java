@@ -20,6 +20,8 @@ import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.Log;
 
+import static org.openhds.mobile.search.Utils.isSearchEnabled;
+
 /**
  * ContentProvider for OpenHDS <br />
  * This class is based on the NotPadProvider sample in the Android SDK
@@ -595,11 +597,12 @@ public class OpenHDSProvider extends ContentProvider {
         long rowId = db.insert(table, null, values);
 
         if (rowId > 0) {
+            Context ctx = getContext();
             Uri noteUri = ContentUris.withAppendedId(contentUriBase, rowId);
-            if (reindexType != null && uuid != null) {
-                IndexingService.queueReindex(getContext(), reindexType, uuid);
+            if (reindexType != null && uuid != null && isSearchEnabled(ctx)) {
+                IndexingService.queueReindex(ctx, reindexType, uuid);
             }
-            getContext().getContentResolver().notifyChange(noteUri, null);
+            ctx.getContentResolver().notifyChange(noteUri, null);
             return noteUri;
         }
 
@@ -805,10 +808,11 @@ public class OpenHDSProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
-        if (reindexType != null && uuid != null) {
-            IndexingService.queueReindex(getContext(), reindexType, uuid);
+        Context ctx = getContext();
+        if (reindexType != null && uuid != null && isSearchEnabled(ctx)) {
+            IndexingService.queueReindex(ctx, reindexType, uuid);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        ctx.getContentResolver().notifyChange(uri, null);
 
         return count;
     }

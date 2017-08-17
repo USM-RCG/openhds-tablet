@@ -132,7 +132,7 @@ public class SupervisorActivity extends Activity {
                 checklistFragment.setMode(ChecklistFragment.DELETE_MODE);
             } else if (tag.equals(R.string.approve_forms)) {
                 checklistFragment.setMode(ChecklistFragment.APPROVE_MODE);
-            } else if (tag.equals(R.string.rebuild_search_indices)) {
+            } else if (tag.equals(R.string.rebuild_search_indices) && isSearchEnabled(SupervisorActivity.this)) {
                 IndexingService.queueFullReindex(SupervisorActivity.this);
             }
         }
