@@ -289,6 +289,7 @@ public class SearchableActivity extends ListActivity {
     private void handleSearchResults(List<DataWrapper> results) {
         setListAdapter(new ResultsAdapter(this, results));
         showLoading(false);
+        (advancedSelected? advancedQuery : basicQuery).requestFocus();
     }
 
     private class BoundedSearch extends SearchJob {
