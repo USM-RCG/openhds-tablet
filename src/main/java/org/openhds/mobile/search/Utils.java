@@ -1,7 +1,6 @@
 package org.openhds.mobile.search;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import org.apache.lucene.search.spell.JaroWinklerDistance;
 import org.openhds.mobile.R;
@@ -61,9 +60,17 @@ public class Utils {
      * @return true if auto-update is enabled, otherwise false
      */
     public static boolean isAutoReindexingEnabled(Context ctx) {
-        SharedPreferences prefs = getSharedPrefs(ctx);
-        return prefs.getBoolean(ctx.getString(R.string.use_search_key), true)
-                && prefs.getBoolean(ctx.getString(R.string.auto_index_on_db_update_key), true);
+        return isSearchEnabled(ctx) && getSharedPrefs(ctx).getBoolean(ctx.getString(R.string.auto_index_on_db_update_key), true);
+    }
+
+    /**
+     * Returns whether full-text search is enabled based on user settings.
+     *
+     * @param ctx the app context to use for accessing preferences
+     * @return true is search is enabled, otherwise false
+     */
+    public static boolean isSearchEnabled(Context ctx) {
+        return getSharedPrefs(ctx).getBoolean(ctx.getString(R.string.use_search_key), true);
     }
 
 }

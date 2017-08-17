@@ -25,7 +25,7 @@ import org.openhds.mobile.utilities.ConfigUtils;
 
 import java.util.Set;
 
-import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceBool;
+import static org.openhds.mobile.search.Utils.isSearchEnabled;
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInstances;
@@ -74,7 +74,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
         menu.findItem(R.id.field_worker_home_menu_button).setVisible(false);
 
         MenuItem searchMenuItem = menu.findItem(R.id.field_worker_search);
-        boolean searchEnabled = getPreferenceBool(this, getString(R.string.use_search_key), true);
+        boolean searchEnabled = isSearchEnabled(this);
         if (searchEnabled) {
             SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
             SearchView searchView = (SearchView) menu.findItem(R.id.field_worker_search).getActionView();
