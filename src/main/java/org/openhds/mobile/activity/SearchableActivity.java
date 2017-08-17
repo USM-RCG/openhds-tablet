@@ -98,6 +98,7 @@ public class SearchableActivity extends ListActivity {
 
         SearchOnEnterKeyHandler searchOnEnterKeyHandler = new SearchOnEnterKeyHandler();
         searchButton.setOnClickListener(new SearchOnClickHandler());
+        basicQuery.setOnKeyListener(searchOnEnterKeyHandler);
         advancedQuery.setOnKeyListener(searchOnEnterKeyHandler);
 
         searchQueue = new SearchQueue();
