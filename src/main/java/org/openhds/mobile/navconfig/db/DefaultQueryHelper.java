@@ -2,10 +2,10 @@ package org.openhds.mobile.navconfig.db;
 
 import android.content.ContentResolver;
 
-import org.openhds.mobile.R;
 import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.model.core.LocationHierarchy;
+import org.openhds.mobile.navconfig.BiokoHierarchy;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.gateway.Gateway;
@@ -43,27 +43,6 @@ public class DefaultQueryHelper implements QueryHelper {
         return instance;
     }
 
-    private String getServerLevel(String level) {
-        switch (level) {
-            case REGION:
-                return "Region";
-            case PROVINCE:
-                return "Province";
-            case DISTRICT:
-                return "District";
-            case SUBDISTRICT:
-                return "SubDistrict";
-            case LOCALITY:
-                return "Locality";
-            case MAP_AREA:
-                return "MapArea";
-            case SECTOR:
-                return "Sector";
-            default:
-                return "UNKNOWN_SHOULD_NOT_EXIST";
-        }
-    }
-
     private Gateway<?> getLevelGateway(String level) {
         switch (level) {
             case REGION:
@@ -92,7 +71,7 @@ public class DefaultQueryHelper implements QueryHelper {
             case LOCALITY:
             case MAP_AREA:
             case SECTOR:
-                String serverLevel = getServerLevel(level);
+                String serverLevel = NavigatorConfig.getInstance().getServerLevel(level);
                 LocationHierarchyGateway hierGateway = getLocationHierarchyGateway();
                 return hierGateway.getQueryResultList(resolver, hierGateway.findByLevel(serverLevel), level);
             case HOUSEHOLD:
@@ -134,35 +113,12 @@ public class DefaultQueryHelper implements QueryHelper {
         return gw != null ? gw.getFirstQueryResult(resolver, gw.findById(uuid), level) : null;
     }
 
-    private String getParentLevel(String level) {
-        switch (level) {
-            case PROVINCE:
-                return REGION;
-            case DISTRICT:
-                return PROVINCE;
-            case SUBDISTRICT:
-                return DISTRICT;
-            case LOCALITY:
-                return SUBDISTRICT;
-            case MAP_AREA:
-                return LOCALITY;
-            case SECTOR:
-                return MAP_AREA;
-            case HOUSEHOLD:
-                return SECTOR;
-            case INDIVIDUAL:
-                return HOUSEHOLD;
-            default:
-                return null;
-        }
-    }
-
     @Override
     public DataWrapper getParent(ContentResolver resolver, String level, String uuid) {
         LocationHierarchyGateway hierarchyGateway = getLocationHierarchyGateway();
         LocationGateway locationGateway = getLocationGateway();
         IndividualGateway individualGateway = getIndividualGateway();
-        String parentLevel = getParentLevel(level);
+        String parentLevel = NavigatorConfig.getInstance().getParentLevel(level);
         switch (level) {
             case PROVINCE:
             case DISTRICT:
