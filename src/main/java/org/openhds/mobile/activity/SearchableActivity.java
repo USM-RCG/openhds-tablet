@@ -194,7 +194,6 @@ public class SearchableActivity extends ListActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-
         }
 
         @Override
