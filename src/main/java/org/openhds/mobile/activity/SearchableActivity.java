@@ -37,6 +37,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.WildcardQuery;
 import org.openhds.mobile.R;
+import org.openhds.mobile.navconfig.BiokoHierarchy;
 import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
@@ -365,10 +366,10 @@ public class SearchableActivity extends ListActivity {
             TextView text2 = (TextView) convertView.findViewById(android.R.id.text2);
 
             switch (item.getCategory()) {
-                case "household":
+                case BiokoHierarchy.HOUSEHOLD:
                     icon.setImageResource(R.drawable.location_logo);
                     break;
-                case "individual":
+                case BiokoHierarchy.INDIVIDUAL:
                     icon.setImageResource(R.drawable.individual_logo);
                     break;
                 default:

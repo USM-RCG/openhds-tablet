@@ -16,6 +16,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.R;
+import org.openhds.mobile.navconfig.BiokoHierarchy;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,21 +29,20 @@ import static org.openhds.mobile.utilities.SyncUtils.close;
 
 public class Indexer {
 
-    public static final String INDIVIDUAL_INDEX_QUERY = String.format("select %s, 'individual' as level, %s," +
+    public static final String INDIVIDUAL_INDEX_QUERY = String.format("select %s, '%s' as level, %s," +
                     " ifnull(%s,'') || ' ' || ifnull(%s,'') || ' ' || ifnull(%s,'') as name," +
                     " ifnull(%s,'') || ' ' || ifnull(%s,'') || ' ' || ifnull(%s,'') as phone" +
-                    " from %s", OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID,
-            OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES,
-            OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER,
-            OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER,
-            OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER,
-            OpenHDS.Individuals.TABLE_NAME);
+                    " from %s", OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID, BiokoHierarchy.INDIVIDUAL,
+            OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME,
+            OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES, OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME,
+            OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER, OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER,
+            OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER, OpenHDS.Individuals.TABLE_NAME);
 
     public static final String INDIVIDUAL_UPDATE_QUERY = String.format(INDIVIDUAL_INDEX_QUERY + " where %s = ?",
             OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID);
 
-    public static final String LOCATION_INDEX_QUERY = String.format("select %s, 'household' as level, %s, %s from %s",
-            OpenHDS.Locations.COLUMN_LOCATION_UUID, OpenHDS.Locations.COLUMN_LOCATION_EXTID,
+    public static final String LOCATION_INDEX_QUERY = String.format("select %s, '%s' as level, %s, %s from %s",
+            OpenHDS.Locations.COLUMN_LOCATION_UUID, BiokoHierarchy.HOUSEHOLD, OpenHDS.Locations.COLUMN_LOCATION_EXTID,
             OpenHDS.Locations.COLUMN_LOCATION_NAME, OpenHDS.Locations.TABLE_NAME);
 
     public static final String LOCATION_UPDATE_QUERY = String.format(LOCATION_INDEX_QUERY + " where %s = ?",
