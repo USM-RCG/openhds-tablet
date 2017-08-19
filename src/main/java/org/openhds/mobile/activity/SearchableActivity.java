@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,11 +21,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
@@ -34,6 +39,7 @@ import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.WildcardQuery;
 import org.openhds.mobile.R;
@@ -49,12 +55,15 @@ import org.openhds.mobile.search.SearchQueue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static java.util.Arrays.asList;
 import static org.openhds.mobile.activity.FieldWorkerActivity.ACTIVITY_MODULE_EXTRA;
 import static org.openhds.mobile.activity.HierarchyNavigatorActivity.HIERARCHY_PATH_KEY;
 
@@ -78,6 +87,9 @@ public class SearchableActivity extends ListActivity {
     private EditText advancedQuery;
     private boolean advancedSelected;
     private Button searchButton;
+    private ToggleButton hierarchyToggle;
+    private ToggleButton locationToggle;
+    private ToggleButton individualToggle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +114,18 @@ public class SearchableActivity extends ListActivity {
         basicQuery.setOnKeyListener(searchOnEnterKeyHandler);
         advancedQuery.setOnKeyListener(searchOnEnterKeyHandler);
 
+        hierarchyToggle = (ToggleButton)findViewById(R.id.hierarchy_toggle);
+        setToggleImage(hierarchyToggle, R.drawable.sm_hierarchy_logo);
+        locationToggle = (ToggleButton)findViewById(R.id.location_toggle);
+        setToggleImage(locationToggle, R.drawable.sm_location_logo);
+        individualToggle = (ToggleButton)findViewById(R.id.individual_toggle);
+        setToggleImage(individualToggle, R.drawable.sm_individual_logo);
+        EntityToggleHandler toggleHandler = new EntityToggleHandler();
+        for (ToggleButton tb : asList(hierarchyToggle, locationToggle, individualToggle)) {
+            tb.setChecked(true);
+            tb.setOnCheckedChangeListener(toggleHandler);
+        }
+
         searchQueue = new SearchQueue();
         handler = new Handler();
 
@@ -114,6 +138,30 @@ public class SearchableActivity extends ListActivity {
             basicQuery.setText(origSearch);
             doSearch();
         }
+    }
+
+    private void setToggleImage(ToggleButton button, int drawableId) {
+        ImageSpan imageSpan = new ImageSpan(this, drawableId);
+        SpannableString content = new SpannableString("X");
+        content.setSpan(imageSpan, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        button.setText(content);
+        button.setTextOn(content);
+        button.setTextOff(content);
+    }
+
+    private Set<String> getSelectedLevels() {
+        NavigatorConfig config = NavigatorConfig.getInstance();
+        Set<String> result = new HashSet<>();
+        if (hierarchyToggle.isChecked()) {
+            result.addAll(config.getAdminLevels());
+        }
+        if (locationToggle.isChecked()) {
+            result.add(BiokoHierarchy.HOUSEHOLD);
+        }
+        if (individualToggle.isChecked()) {
+            result.add(BiokoHierarchy.INDIVIDUAL);
+        }
+        return result;
     }
 
     @Override
@@ -140,10 +188,31 @@ public class SearchableActivity extends ListActivity {
 
     private void doSearch() {
         try {
-            executeQuery(parseLuceneQuery(advancedQuery.getText().toString()));
+            executeQuery(addLevelClause(parseLuceneQuery(advancedQuery.getText().toString())));
         } catch (QueryNodeException e) {
             Log.e(TAG, "bad query", e);
             setListAdapter(new ResultsAdapter(this, new ArrayList<DataWrapper>()));
+        }
+    }
+
+    private class EntityToggleHandler implements CompoundButton.OnCheckedChangeListener {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (!isChecked) {
+                ensureOneChecked(buttonView);
+            }
+        }
+
+        private void ensureOneChecked(CompoundButton uncheckedButton) {
+            int checkedCount = 0;
+            for (ToggleButton tb : asList(hierarchyToggle, locationToggle, individualToggle)) {
+                if (tb.isChecked()) {
+                    checkedCount++;
+                }
+            }
+            if (checkedCount <= 0) {
+                uncheckedButton.setChecked(true);
+            }
         }
     }
 
@@ -257,17 +326,31 @@ public class SearchableActivity extends ListActivity {
     }
 
     private Query buildLuceneQuery(String query) {
-        BooleanQuery boolQuery = new BooleanQuery();
+        BooleanQuery result = new BooleanQuery();
         for (String part : query.split("\\s+")) {
             if (ID_PATTERN.matcher(part).matches()) {
-                boolQuery.add(new WildcardQuery(new Term("extId", part + "*")), BooleanClause.Occur.SHOULD);
+                result.add(new WildcardQuery(new Term("extId", part + "*")), BooleanClause.Occur.SHOULD);
             } else if (PHONE_PATTERN.matcher(part).matches()) {
-                boolQuery.add(new FuzzyQuery(new Term("phone", part), 1), BooleanClause.Occur.SHOULD);
+                result.add(new FuzzyQuery(new Term("phone", part), 1), BooleanClause.Occur.SHOULD);
             } else {
-                boolQuery.add(new FuzzyQuery(new Term("name", part), 1), BooleanClause.Occur.SHOULD);
+                result.add(new FuzzyQuery(new Term("name", part), 1), BooleanClause.Occur.SHOULD);
             }
         }
-        return boolQuery;
+        return result;
+    }
+
+    private Query addLevelClause(Query orig) {
+        BooleanQuery result = new BooleanQuery();
+        result.add(orig, BooleanClause.Occur.MUST);
+        Set<String> levels = getSelectedLevels();
+        if (!levels.isEmpty()) {
+            BooleanQuery levelQuery = new BooleanQuery();
+            for (String level : levels) {
+                levelQuery.add(new TermQuery(new Term("level", level)), BooleanClause.Occur.SHOULD);
+            }
+            result.add(levelQuery, BooleanClause.Occur.MUST);
+        }
+        return result;
     }
 
     private Query parseLuceneQuery(String query) throws QueryNodeException {

@@ -33,9 +33,9 @@
             android:id="@+id/basic_query_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/search_button"
+            android:layout_toLeftOf="@+id/hierarchy_toggle"
             android:layout_alignParentTop="true"
-            android:layout_alignBottom="@id/search_button"
+            android:layout_alignBottom="@+id/search_button"
             android:layout_alignParentLeft="true"
             android:hint="@string/search_hint"
             android:maxLines="1"
@@ -45,7 +45,7 @@
             android:id="@+id/advanced_query_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/search_button"
+            android:layout_toLeftOf="@+id/hierarchy_toggle"
             android:layout_alignParentTop="true"
             android:layout_alignBottom="@id/search_button"
             android:layout_alignParentLeft="true"
@@ -53,6 +53,30 @@
             android:maxLines="1"
             android:inputType="textNoSuggestions"
             android:visibility="gone"/>
+
+        <ToggleButton
+            android:id="@+id/hierarchy_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/location_toggle"
+            android:layout_toStartOf="@+id/location_toggle"/>
+
+        <ToggleButton
+            android:id="@+id/location_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/individual_toggle"
+            android:layout_toStartOf="@+id/individual_toggle"/>
+
+        <ToggleButton
+            android:id="@+id/individual_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/search_button"
+            android:layout_toStartOf="@+id/search_button"/>
 
         <Button
             android:id="@+id/search_button"
