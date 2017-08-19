@@ -48,7 +48,7 @@ public class Indexer {
     public static final String LOCATION_UPDATE_QUERY = String.format(LOCATION_INDEX_QUERY + " where %s = ?",
             OpenHDS.Locations.COLUMN_LOCATION_UUID);
 
-    public static final String HIERARCHY_INDEX_QUERY = String.format("select %s, lower(%s) as level, %s, %s from %s",
+    public static final String HIERARCHY_INDEX_QUERY = String.format("select %s, %s as level, %s, %s from %s",
             OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL,
             OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME,
             OpenHDS.HierarchyItems.TABLE_NAME);
@@ -116,14 +116,16 @@ public class Indexer {
 
     private void bulkIndexHierarchy(IndexWriter writer) throws IOException {
         Cursor c = getDatabase().rawQuery(HIERARCHY_INDEX_QUERY, new String[]{});
-        bulkIndex(R.string.indexing_hierarchy_items, new SimpleCursorDocumentSource(c), writer);
+        bulkIndex(R.string.indexing_hierarchy_items,
+                new HierarchyCursorDocumentSource(c, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL), writer);
     }
 
     public void reindexHierarchy(String uuid) throws IOException {
         IndexWriter writer = getWriter(false);
         try {
             Cursor c = getDatabase().rawQuery(HIERARCHY_UPDATE_QUERY, new String[]{uuid});
-            updateIndex(new SimpleCursorDocumentSource(c), writer, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID);
+            updateIndex(new HierarchyCursorDocumentSource(c, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL),
+                    writer, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID);
         } finally {
             writer.commit();
         }

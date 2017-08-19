@@ -18,15 +18,27 @@ class SimpleCursorDocumentSource extends CursorDocumentSource {
         int columns = cursor.getColumnCount();
         Field[] fields = new Field[columns];
         for (int c = 0; c < columns; c++) {
-            boolean isStored = c == UUID_COL_IDX || c == LEVEL_COL_IDX;
-            boolean isIndexed = c != UUID_COL_IDX;
-            String columnName = cursor.getColumnName(c);
-            fields[c] = new Field(columnName, "",
-                    isStored ? Field.Store.YES : Field.Store.NO,
-                    isIndexed ? Field.Index.ANALYZED : Field.Index.NO);
-            document.add(fields[c]);
+            fields[c] = new Field(getFieldName(c), "", getFieldStore(c), getFieldIndex(c));
         }
         return fields;
+    }
+
+    public String getFieldName(int index) {
+        return cursor.getColumnName(index);
+    }
+
+    public Field.Store getFieldStore(int index) {
+        return index == UUID_COL_IDX || index == LEVEL_COL_IDX ? Field.Store.YES : Field.Store.NO;
+    }
+
+    public Field.Index getFieldIndex(int index) {
+        if (index == UUID_COL_IDX) {
+            return Field.Index.NO;
+        } else if (index == LEVEL_COL_IDX) {
+            return Field.Index.NOT_ANALYZED;
+        } else {
+            return Field.Index.ANALYZED;
+        }
     }
 
     @Override

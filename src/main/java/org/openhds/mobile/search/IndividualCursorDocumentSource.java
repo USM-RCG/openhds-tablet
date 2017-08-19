@@ -18,7 +18,7 @@ class IndividualCursorDocumentSource extends SimpleCursorDocumentSource {
 
     @Override
     public String getFieldValue(int index) {
-        String fieldName = fields[index].name();
+        String fieldName = getFieldName(index);
         if (nameColumn.equals(fieldName)) {
             return getNameValue(index);
         } else if (phoneColumn.equals(fieldName)) {
