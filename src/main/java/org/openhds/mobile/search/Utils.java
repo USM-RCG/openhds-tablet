@@ -60,7 +60,7 @@ public class Utils {
      * @return true if auto-update is enabled, otherwise false
      */
     public static boolean isAutoReindexingEnabled(Context ctx) {
-        return isSearchEnabled(ctx) && getSharedPrefs(ctx).getBoolean(ctx.getString(R.string.auto_index_on_db_update_key), true);
+        return isSearchEnabled(ctx) && getSharedPrefs(ctx).getBoolean(ctx.getString(R.string.auto_index_on_db_update_key), false);
     }
 
     /**
@@ -70,7 +70,7 @@ public class Utils {
      * @return true is search is enabled, otherwise false
      */
     public static boolean isSearchEnabled(Context ctx) {
-        return getSharedPrefs(ctx).getBoolean(ctx.getString(R.string.use_search_key), true);
+        return getSharedPrefs(ctx).getBoolean(ctx.getString(R.string.use_search_key), false);
     }
 
 }
