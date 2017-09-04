@@ -115,9 +115,6 @@ public class DefaultQueryHelper implements QueryHelper {
 
     @Override
     public DataWrapper getParent(ContentResolver resolver, String level, String uuid) {
-        LocationHierarchyGateway hierarchyGateway = getLocationHierarchyGateway();
-        LocationGateway locationGateway = getLocationGateway();
-        IndividualGateway individualGateway = getIndividualGateway();
         String parentLevel = NavigatorConfig.getInstance().getParentLevel(level);
         switch (level) {
             case PROVINCE:
@@ -126,12 +123,15 @@ public class DefaultQueryHelper implements QueryHelper {
             case LOCALITY:
             case MAP_AREA:
             case SECTOR:
+                LocationHierarchyGateway hierarchyGateway = getLocationHierarchyGateway();
                 LocationHierarchy lh = hierarchyGateway.getFirst(resolver, hierarchyGateway.findById(uuid));
                 return get(resolver, parentLevel, lh.getParentUuid());
             case HOUSEHOLD:
+                LocationGateway locationGateway = getLocationGateway();
                 Location l = locationGateway.getFirst(resolver, locationGateway.findById(uuid));
                 return get(resolver, parentLevel, l.getHierarchyUuid());
             case INDIVIDUAL:
+                IndividualGateway individualGateway = getIndividualGateway();
                 Individual i = individualGateway.getFirst(resolver, individualGateway.findById(uuid));
                 return get(resolver, parentLevel, i.getCurrentResidenceUuid());
             default:
