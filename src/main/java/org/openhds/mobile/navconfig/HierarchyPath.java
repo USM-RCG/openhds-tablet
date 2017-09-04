@@ -14,21 +14,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Represents a path in the navigation hierarchy that can be stored and retrieved automatically by Android.
  */
 public class HierarchyPath implements Parcelable, Cloneable {
 
-    public static final String PATH_SEPARATOR = "|";
+    private static final String PATH_SEPARATOR = "|";
 
-    LinkedHashMap<String, DataWrapper> path;
+    private static final Pattern LEAF_PATTERN = Pattern.compile("(\\w+):([a-f0-9]+)");
+
+    private LinkedHashMap<String, DataWrapper> path;
 
     public HierarchyPath() {
         path = new LinkedHashMap<>();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Object clone() throws CloneNotSupportedException {
         HierarchyPath copy = (HierarchyPath) super.clone();
         copy.path = (LinkedHashMap) this.path.clone();
@@ -96,24 +101,45 @@ public class HierarchyPath implements Parcelable, Cloneable {
     }
 
     public String toString() {
-        StringBuilder b = new StringBuilder();
-        for (Map.Entry<String, DataWrapper> pathElem : path.entrySet()) {
-            if (b.length() > 0) {
-                b.append(PATH_SEPARATOR);
-            }
-            b.append(pathElem.getValue().getUuid());
+        return toNodeString();
+    }
+
+    private DataWrapper getLeafValue() {
+        DataWrapper leaf = null;
+        for (DataWrapper value : path.values()) {
+            leaf = value;
         }
-        return b.toString();
+        return leaf;
+    }
+
+    private String toNodeString() {
+        if (path.isEmpty()) {
+            return "";
+        } else {
+            DataWrapper leaf = getLeafValue();
+            return String.format("%s:%s", leaf.getCategory(), leaf.getUuid());
+        }
     }
 
     public static HierarchyPath fromString(ContentResolver resolver, String pathStr) {
+        Matcher leafMatcher = LEAF_PATTERN.matcher(pathStr);
+        if (leafMatcher.matches()) {
+            QueryHelper helper = DefaultQueryHelper.getInstance();
+            DataWrapper leafNode = helper.get(resolver, leafMatcher.group(1), leafMatcher.group(2));
+            return fromLeafString(resolver, leafNode);
+        } else {
+            return fromPathString(resolver, pathStr);
+        }
+    }
+
+    private static HierarchyPath fromPathString(ContentResolver resolver, String pathStr) {
+        QueryHelper helper = DefaultQueryHelper.getInstance();
         HierarchyPath path = null;
         List<String> configuredLevels = NavigatorConfig.getInstance().getLevels();
         if (pathStr != null) {
             String[] pathPieces = pathStr.split("[" + PATH_SEPARATOR + "]");
             if (pathPieces.length <= configuredLevels.size()) {
                 path = new HierarchyPath();
-                QueryHelper helper = DefaultQueryHelper.getInstance();
                 for (int i = 0; i < pathPieces.length; i++) {
                     String p = pathPieces[i], level = configuredLevels.get(i);
                     DataWrapper value = helper.get(resolver, level, p);
@@ -129,22 +155,21 @@ public class HierarchyPath implements Parcelable, Cloneable {
         return path;
     }
 
-    public static HierarchyPath fromLeaf(ContentResolver resolver, DataWrapper leafNode) {
+    private static HierarchyPath fromLeafString(ContentResolver resolver, DataWrapper leaf) {
 
         QueryHelper helper = DefaultQueryHelper.getInstance();
 
         // Traverse up the hierarchy using child-parent relationships, tracking the nodes traversed
         Stack<DataWrapper> traversed = new Stack<>();
-        traversed.push(leafNode);
-        while (true) {
-            DataWrapper node = traversed.peek();
-            DataWrapper parent = helper.getParent(resolver, node.getCategory(), node.getUuid());
+        traversed.push(leaf);
+        DataWrapper child = leaf, parent;
+        do {
+            parent = helper.getParent(resolver, child.getCategory(), child.getUuid());
             if (parent != null) {
                 traversed.push(parent);
-            } else {
-                break;
+                child = parent;
             }
-        }
+        } while (parent != null);
 
         // Reconstruct a path from the traversed nodes if it reached the top of the hierarchy
         if (NavigatorConfig.getInstance().getTopLevel().equals(traversed.peek().getCategory())) {
