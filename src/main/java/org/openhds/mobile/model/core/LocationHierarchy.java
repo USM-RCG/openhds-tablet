@@ -12,8 +12,6 @@ public class LocationHierarchy implements Serializable {
     private String level;
     private String uuid;
 
-
-
     public String getUuid() {
         return uuid;
     }
