@@ -122,14 +122,17 @@ public class HierarchyPath implements Parcelable, Cloneable {
     }
 
     public static HierarchyPath fromString(ContentResolver resolver, String pathStr) {
-        Matcher leafMatcher = LEAF_PATTERN.matcher(pathStr);
-        if (leafMatcher.matches()) {
-            QueryHelper helper = DefaultQueryHelper.getInstance();
-            DataWrapper leafNode = helper.get(resolver, leafMatcher.group(1), leafMatcher.group(2));
-            return fromLeafString(resolver, leafNode);
-        } else {
-            return fromPathString(resolver, pathStr);
+        if (pathStr != null) {
+            Matcher leafMatcher = LEAF_PATTERN.matcher(pathStr);
+            if (leafMatcher.matches()) {
+                QueryHelper helper = DefaultQueryHelper.getInstance();
+                DataWrapper leafNode = helper.get(resolver, leafMatcher.group(1), leafMatcher.group(2));
+                return fromLeafString(resolver, leafNode);
+            } else {
+                return fromPathString(resolver, pathStr);
+            }
         }
+        return null;
     }
 
     private static HierarchyPath fromPathString(ContentResolver resolver, String pathStr) {

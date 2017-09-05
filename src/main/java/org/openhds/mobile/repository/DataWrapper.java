@@ -1,8 +1,11 @@
 package org.openhds.mobile.repository;
 
+import android.content.ContentResolver;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import org.openhds.mobile.navconfig.db.DefaultQueryHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,6 +82,19 @@ public class DataWrapper implements Parcelable {
                 + category + " + payload size: " + stringsPayload.size() + "]";
     }
 
+    public String getHierarchyId() {
+        return String.format("%s:%s", category, uuid);
+    }
+
+    public static DataWrapper getByHierarchyId(ContentResolver resolver, String hierId) {
+        String [] parts = hierId.split(":");
+        if (parts.length == 2) {
+            String level = parts[0], uuid = parts[1];
+            return DefaultQueryHelper.getInstance().get(resolver, level, uuid);
+        }
+        return null;
+    }
+
     // for Parcelable
     private DataWrapper(Parcel parcel) {
         category = parcel.readString();
@@ -106,8 +122,6 @@ public class DataWrapper implements Parcelable {
         for (Integer key : moreStringIds) {
             stringIdsPayload.put(key, stringIdsPayloadBundle.getInt(key.toString()));
         }
-
-
     }
 
     // for Parcelable

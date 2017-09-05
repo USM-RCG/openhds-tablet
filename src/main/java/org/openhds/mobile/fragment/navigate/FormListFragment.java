@@ -19,9 +19,9 @@ import android.widget.TextView;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.HierarchyNavigatorActivity;
-import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.adapter.FormInstanceAdapter;
 import org.openhds.mobile.model.form.FormInstance;
+import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
 import org.openhds.mobile.provider.DatabaseAdapter;
@@ -162,19 +162,26 @@ public class FormListFragment extends Fragment {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        final FormInstance selected = getItem(info.position);
-        if (selected != null) {
-            switch (item.getItemId()) {
-                case R.id.find_form:
+        FormInstance selected;
+        switch (item.getItemId()) {
+            case R.id.find_form:
+                selected = getItem(info.position);
+                if (selected != null) {
                     findForm(selected);
-                    return true;
-                case R.id.delete_form:
+                }
+                return true;
+            case R.id.delete_form:
+                selected = getItem(info.position);
+                if (selected != null) {
                     confirmDelete(selected);
-                    return true;
-                case R.id.edit_form:
+                }
+                return true;
+            case R.id.edit_form:
+                selected = getItem(info.position);
+                if (selected != null) {
                     editForm(selected);
-                    return true;
-            }
+                }
+                return true;
         }
         return super.onContextItemSelected(item);
     }

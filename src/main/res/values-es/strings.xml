@@ -199,4 +199,10 @@
     <string name="auto_sync_disabled">Sincronización manual de datos solamente</string>
     <string name="use_auto_sync">Sincronización automática de la base de datos</string>
 
+    <string name="favorites">Favoritos</string>
+    <string name="forget_favorite_label">Olvídate del favorito</string>
+    <string name="save_favorite_label">Recuerda el favorito</string>
+    <string name="saved_favorite">Recuerdo favorito</string>
+    <string name="removed_favorite">Olvidado favorito</string>
+
 </resources>

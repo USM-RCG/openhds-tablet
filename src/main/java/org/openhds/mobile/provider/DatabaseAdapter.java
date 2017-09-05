@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import org.openhds.mobile.model.core.Supervisor;
+import org.openhds.mobile.repository.DataWrapper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +21,7 @@ import static org.openhds.mobile.utilities.SQLUtils.makePlaceholders;
 public class DatabaseAdapter {
 
     private static final String DATABASE_NAME = "entityData";
-    private static final int DATABASE_VERSION = 17;
+    private static final int DATABASE_VERSION = 18;
 
     private static final String SUPERVISOR_TABLE_NAME = "openhds_supervisor";
     private static final String KEY_ID = "_id";
@@ -57,6 +58,10 @@ public class DatabaseAdapter {
 
     private static final String START_TIME_IDX_CREATE = "CREATE INDEX IF NOT EXISTS " + START_TIME_IDX_NAME + " ON "
             + SYNC_HISTORY_TABLE_NAME + "(" + KEY_START_TIME + ")";
+
+    private static final String FAVORITE_TABLE_NAME = "favorite";
+    private static final String FAVORITE_CREATE = "CREATE TABLE IF NOT EXISTS " + FAVORITE_TABLE_NAME + " ("
+            + KEY_HIER_PATH + " TEXT PRIMARY KEY)";
 
     private static DatabaseAdapter instance;
 
@@ -263,6 +268,51 @@ public class DatabaseAdapter {
         return results.toArray(new Number[]{});
     }
 
+    public long addFavorite(DataWrapper item) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_HIER_PATH, item.getHierarchyId());
+            long id = db.insert(FAVORITE_TABLE_NAME, null, cv);
+            db.setTransactionSuccessful();
+            return id;
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public long removeFavorite(DataWrapper item) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            String where = String.format("%s = ?", KEY_HIER_PATH);
+            String [] whereArgs = {item.getHierarchyId()};
+            long id = db.delete(FAVORITE_TABLE_NAME, where, whereArgs);
+            db.setTransactionSuccessful();
+            return id;
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public List<String> getFavoriteIds() {
+        ArrayList<String> results = new ArrayList<>();
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String[] columns = {KEY_HIER_PATH};
+        Cursor cursor = db.query(FAVORITE_TABLE_NAME, columns, null, null, null, null, null);
+        if (cursor != null) {
+            try {
+                while (cursor.moveToNext()) {
+                    results.add(cursor.getString(0));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        return results;
+    }
+
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
         private final String TAG = DatabaseHelper.class.getSimpleName();
@@ -280,7 +330,7 @@ public class DatabaseAdapter {
         @Override
         public void onCreate(SQLiteDatabase db) {
             Log.i(TAG, "creating database");
-            execSQL(db, USER_CREATE, FORM_PATH_CREATE, SYNC_HISTORY_CREATE, START_TIME_IDX_CREATE);
+            execSQL(db, USER_CREATE, FORM_PATH_CREATE, SYNC_HISTORY_CREATE, START_TIME_IDX_CREATE, FAVORITE_CREATE);
         }
 
         @Override
@@ -289,11 +339,17 @@ public class DatabaseAdapter {
             if (oldVersion < 17) {
                 execSQL(db, SYNC_HISTORY_CREATE, START_TIME_IDX_CREATE);
             }
+            if (oldVersion < 18) {
+                execSQL(db, FAVORITE_CREATE);
+            }
         }
 
         @Override
         public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.i(TAG, String.format("downgrading db version %s to %s", oldVersion, newVersion));
+            if (newVersion < 18) {
+                db.execSQL("DROP TABLE IF EXISTS " + FAVORITE_TABLE_NAME);
+            }
             if (newVersion < 17) {
                 db.execSQL("DROP TABLE IF EXISTS " + SYNC_HISTORY_TABLE_NAME);
             }

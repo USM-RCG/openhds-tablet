@@ -96,12 +96,12 @@ public class SearchableActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_results);
 
-        listContainer = findViewById(R.id.listContainer);
+        listContainer = findViewById(R.id.list_container);
         basicQuery = (EditText) listContainer.findViewById(R.id.basic_query_text);
         advancedQuery = (EditText) listContainer.findViewById(R.id.advanced_query_text);
         searchButton = (Button) listContainer.findViewById(R.id.search_button);
         ListView listView = (ListView) listContainer.findViewById(android.R.id.list);
-        progressContainer = findViewById(R.id.progressContainer);
+        progressContainer = findViewById(R.id.progress_container);
 
         basicQuery.addTextChangedListener(new BasicQueryTranslator());
 

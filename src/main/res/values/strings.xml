@@ -223,4 +223,10 @@
     <string name="use_auto_sync">Automatic Database Synchronization</string>
     <string name="manual_sync_key" translatable="false">manual_sync_key</string>
 
+    <string name="favorites">Favorites</string>
+    <string name="forget_favorite_label">Forget favorite</string>
+    <string name="save_favorite_label">Save as favorite</string>
+    <string name="saved_favorite">Favorite saved</string>
+    <string name="removed_favorite">Favorite removed</string>
+
 </resources>
