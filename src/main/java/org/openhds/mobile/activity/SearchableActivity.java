@@ -52,9 +52,11 @@ import org.openhds.mobile.navconfig.db.QueryHelper;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.search.SearchJob;
 import org.openhds.mobile.search.SearchQueue;
+import org.openhds.mobile.utilities.ConfigUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -66,6 +68,7 @@ import static android.view.View.VISIBLE;
 import static java.util.Arrays.asList;
 import static org.openhds.mobile.activity.FieldWorkerActivity.ACTIVITY_MODULE_EXTRA;
 import static org.openhds.mobile.activity.HierarchyNavigatorActivity.HIERARCHY_PATH_KEY;
+import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
 
 public class SearchableActivity extends ListActivity {
 
@@ -304,16 +307,18 @@ public class SearchableActivity extends ListActivity {
                 }
 
                 String moduleToLaunch;
+                Collection<NavigatorModule> activeModules = ConfigUtils.getActiveModules(SearchableActivity.this);
                 if (fromModule != null) {
                     moduleToLaunch = fromModule;
-                } else {
-                    NavigatorModule firstModule = NavigatorConfig.getInstance().getModules().iterator().next();
+                } else if (!activeModules.isEmpty()) {
+                    NavigatorModule firstModule = activeModules.iterator().next();
                     moduleToLaunch = firstModule.getName();
+                } else {
+                    showLongToast(SearchableActivity.this, R.string.no_active_modules);
+                    return;
                 }
 
-                listView.getContext();
-
-                Intent intent = new Intent(listView.getContext(), HierarchyNavigatorActivity.class);
+                Intent intent = new Intent(SearchableActivity.this, HierarchyNavigatorActivity.class);
                 intent.putExtra(ACTIVITY_MODULE_EXTRA, moduleToLaunch);
                 intent.putExtra(HIERARCHY_PATH_KEY, path);
                 startActivity(intent);

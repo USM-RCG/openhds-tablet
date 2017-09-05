@@ -5,7 +5,12 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import org.openhds.mobile.R;
+import org.openhds.mobile.navconfig.NavigatorConfig;
+import org.openhds.mobile.navconfig.NavigatorModule;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 public class ConfigUtils {
@@ -37,6 +42,19 @@ public class ConfigUtils {
 
     public static String getVersion(Context ctx) throws PackageManager.NameNotFoundException {
         return ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
+    }
+
+    public static Collection<NavigatorModule> getActiveModules(Context ctx) {
+        NavigatorConfig cfg = NavigatorConfig.getInstance();
+        List<NavigatorModule> actives = new ArrayList<>();
+        Set<String> activeModuleNames = getMultiSelectPreference(ctx,
+                ctx.getString(R.string.active_modules_key), cfg.getModuleNames());
+        for (NavigatorModule module : cfg.getModules()) {
+            if (activeModuleNames.contains(module.getName())) {
+                actives.add(module);
+            }
+        }
+        return actives;
     }
 
     public static String getAppName(Context context) {

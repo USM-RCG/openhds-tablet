@@ -20,13 +20,14 @@ import android.widget.RelativeLayout;
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 import org.openhds.mobile.navconfig.HierarchyPath;
-import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.repository.DataWrapper;
+import org.openhds.mobile.utilities.ConfigUtils;
 import org.openhds.mobile.utilities.MessageUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static android.view.View.GONE;
@@ -110,11 +111,16 @@ public class FavoritesFragment extends Fragment {
         Context ctx = getActivity();
         HierarchyPath path = HierarchyPath.fromString(ctx.getContentResolver(), selected.getHierarchyId());
         if (path != null) {
-            NavigatorModule firstModule = NavigatorConfig.getInstance().getModules().iterator().next();
-            Intent intent = new Intent(ctx, HierarchyNavigatorActivity.class);
-            intent.putExtra(ACTIVITY_MODULE_EXTRA, firstModule.getName());
-            intent.putExtra(HIERARCHY_PATH_KEY, path);
-            startActivity(intent);
+            Collection<NavigatorModule> activeModules = ConfigUtils.getActiveModules(ctx);
+            if (!activeModules.isEmpty()) {
+                NavigatorModule firstModule = activeModules.iterator().next();
+                Intent intent = new Intent(ctx, HierarchyNavigatorActivity.class);
+                intent.putExtra(ACTIVITY_MODULE_EXTRA, firstModule.getName());
+                intent.putExtra(HIERARCHY_PATH_KEY, path);
+                startActivity(intent);
+            } else {
+                MessageUtils.showShortToast(ctx, R.string.no_active_modules);
+            }
         }
     }
 

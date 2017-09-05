@@ -47,7 +47,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 
 import static org.openhds.mobile.model.form.FormInstance.generate;
@@ -194,12 +193,9 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         menuItemTags = new HashMap<>();
 
         // Configures the menu for switching between inactive modules (ones other than the 'current' one)
-        NavigatorConfig config = NavigatorConfig.getInstance();
-        Set<String> activeModuleNames = ConfigUtils.getMultiSelectPreference(
-                this, getString(R.string.active_modules_key), config.getModuleNames());
-        for (NavigatorModule module : config.getModules()) {
+        for (NavigatorModule module : ConfigUtils.getActiveModules(this)) {
             String moduleName = module.getName();
-            if (activeModuleNames.contains(moduleName) && !moduleName.equals(currentModuleName)) {
+            if (!moduleName.equals(currentModuleName)) {
                 MenuItem menuItem = menu.add(module.getActivityTitle());
                 menuItem.setIcon(R.drawable.data_selector);
                 menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);

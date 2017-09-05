@@ -215,6 +215,7 @@
 
     <string name="active_modules_key" translatable="false">active_modules_key</string>
     <string name="active_modules">Active Modules</string>
+    <string name="no_active_modules">No active module</string>
 
     <string name="pref_sync_title">Synchronization</string>
     <string name="use_auto_sync_key" translatable="false">use_auto_sync</string>

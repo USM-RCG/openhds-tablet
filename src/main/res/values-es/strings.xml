@@ -204,5 +204,6 @@
     <string name="save_favorite_label">Recuerda el favorito</string>
     <string name="saved_favorite">Recuerdo favorito</string>
     <string name="removed_favorite">Olvidado favorito</string>
+    <string name="no_active_modules">No hay módulo activo</string>
 
 </resources>
