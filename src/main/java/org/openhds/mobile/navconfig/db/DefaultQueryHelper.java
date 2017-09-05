@@ -5,7 +5,6 @@ import android.content.ContentResolver;
 import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.model.core.LocationHierarchy;
-import org.openhds.mobile.navconfig.BiokoHierarchy;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.gateway.Gateway;
