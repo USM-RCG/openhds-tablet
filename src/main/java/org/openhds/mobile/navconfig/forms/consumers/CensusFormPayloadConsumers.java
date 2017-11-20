@@ -8,14 +8,11 @@ import org.openhds.mobile.model.core.LocationHierarchy;
 import org.openhds.mobile.model.core.Membership;
 import org.openhds.mobile.model.core.Relationship;
 import org.openhds.mobile.model.core.SocialGroup;
-import org.openhds.mobile.model.update.Visit;
 import org.openhds.mobile.navconfig.ProjectFormFields;
 import org.openhds.mobile.navconfig.ProjectResources;
-import org.openhds.mobile.navconfig.forms.Binding;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.navconfig.forms.adapters.IndividualFormAdapter;
 import org.openhds.mobile.navconfig.forms.adapters.LocationFormAdapter;
-import org.openhds.mobile.navconfig.forms.adapters.VisitFormAdapter;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
@@ -24,10 +21,8 @@ import org.openhds.mobile.repository.gateway.LocationHierarchyGateway;
 import org.openhds.mobile.repository.gateway.MembershipGateway;
 import org.openhds.mobile.repository.gateway.RelationshipGateway;
 import org.openhds.mobile.repository.gateway.SocialGroupGateway;
-import org.openhds.mobile.repository.gateway.VisitGateway;
 import org.openhds.mobile.utilities.IdHelper;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.openhds.mobile.navconfig.BiokoHierarchy.HOUSEHOLD;
@@ -102,27 +97,7 @@ public class CensusFormPayloadConsumers {
         }
     }
 
-    public static class EvaluateLocation extends DefaultConsumer {
-        @Override
-        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
-
-            LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            Location location = locationGateway.getFirst(ctx.getContentResolver(),
-                    locationGateway.findById(ctx.getCurrentSelection().getUuid()));
-
-            location.setLocationEvaluationStatus(formPayload.get(ProjectFormFields.Locations.EVALUATION));
-
-            locationGateway.insertOrUpdate(ctx.getContentResolver(), location);
-
-            return super.consumeFormPayload(formPayload, ctx);
-        }
-    }
-
-    public static class AddMemberOfHousehold extends PregnancyPayloadConsumer {
-
-        public AddMemberOfHousehold(Binding followUp) {
-            super(followUp);
-        }
+    public static class AddMemberOfHousehold extends DefaultConsumer {
 
         @Override
         public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
@@ -157,19 +132,11 @@ public class CensusFormPayloadConsumers {
             Membership membership = new Membership(individual, socialGroup, relationshipType, formPayload.get(ProjectFormFields.Individuals.MEMBERSHIP_UUID));
             membershipGateway.insertOrUpdate(contentResolver, membership);
 
-            if(containsPregnancy(formPayload)){
-                return getPregnancyResult(formPayload);
-            }
-
             return super.consumeFormPayload(formPayload, ctx);
         }
     }
 
-    public static class AddHeadOfHousehold extends PregnancyPayloadConsumer {
-
-        public AddHeadOfHousehold(Binding followUp) {
-            super(followUp);
-        }
+    public static class AddHeadOfHousehold extends DefaultConsumer {
 
         @Override
         public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
@@ -209,9 +176,6 @@ public class CensusFormPayloadConsumers {
             Relationship relationship = new Relationship(individual, individual, relationshipType, startDate, formPayload.get(ProjectFormFields.Individuals.RELATIONSHIP_UUID));
             relationshipGateway.insertOrUpdate(contentResolver, relationship);
 
-            if(containsPregnancy(formPayload)) {
-                return getPregnancyResult(formPayload);
-            }
             return new ConsumerResult(true, null, null);
         }
 
@@ -219,66 +183,6 @@ public class CensusFormPayloadConsumers {
         public void augmentInstancePayload(Map<String, String> formPayload) {
             // head of the household is always "self" to the head of household
             formPayload.put(ProjectFormFields.Individuals.MEMBER_STATUS, "1");
-        }
-
-    }
-
-    public abstract static class PregnancyPayloadConsumer extends DefaultConsumer {
-
-        private Binding followUp;
-
-        public PregnancyPayloadConsumer(Binding followUp) {
-            this.followUp = followUp;
-        }
-
-        protected boolean containsPregnancy(Map<String, String> formPayload) {
-            return "Yes".equals(formPayload.get(ProjectFormFields.Individuals.IS_PREGNANT_FLAG));
-        }
-
-        protected ConsumerResult getPregnancyResult(Map<String, String> payload) {
-            return new ConsumerResult(false, followUp, getPregnancyHints(payload));
-        }
-
-        private Map<String, String> getPregnancyHints(Map<String, String> payload) {
-            Map<String, String> hints = new HashMap<>();
-            hints.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, payload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
-            hints.put(ProjectFormFields.Individuals.INDIVIDUAL_UUID, payload.get(ProjectFormFields.General.ENTITY_UUID));
-            hints.put(ProjectFormFields.Locations.LOCATION_EXTID, payload.get(ProjectFormFields.General.HOUSEHOLD_STATE_FIELD_NAME));
-            return hints;
-        }
-    }
-
-    // Used for Form Launch Sequences
-    public static class ChainedVisitForPregnancyObservation extends DefaultConsumer {
-
-        private Binding followUp;
-
-        public ChainedVisitForPregnancyObservation(Binding followUp) {
-            this.followUp = followUp;
-        }
-
-        @Override
-        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
-
-            Visit visit = VisitFormAdapter.fromForm(formPayload);
-            VisitGateway visitGateway = GatewayRegistry.getVisitGateway();
-            ContentResolver contentResolver = ctx.getContentResolver();
-            visitGateway.insertOrUpdate(contentResolver, visit);
-
-            ctx.startVisit(visit);
-
-            ctx.getConsumerResult().getFollowUpHints().put(ProjectFormFields.General.ENTITY_UUID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_UUID));
-            ctx.getConsumerResult().getFollowUpHints().put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get(ProjectFormFields.Individuals.INDIVIDUAL_EXTID));
-
-            return new ConsumerResult(false, followUp, ctx.getConsumerResult().getFollowUpHints());
-        }
-    }
-
-    public static class ChainedPregnancyObservation extends DefaultConsumer {
-        @Override
-        public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
-            ctx.finishVisit();
-            return super.consumeFormPayload(formPayload, ctx);
         }
     }
 }

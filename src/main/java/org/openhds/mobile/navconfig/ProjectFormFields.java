@@ -11,14 +11,12 @@ public class ProjectFormFields {
 
     public static final class General {
 
-        public static final String PROCESSED_BY_MIRTH = "processedByMirth";
         public static final String COLLECTION_DATE_TIME = "collectionDateTime";
         public static final String FIELD_WORKER_UUID = "fieldWorkerUuid";
         public static final String ENTITY_UUID = "entityUuid";
         public static final String ENTITY_EXTID = "entityExtId";
         public static final String NEEDS_REVIEW = "needsReview";
         public static final String FIELD_WORKER_EXTID = "fieldWorkerExtId";
-
 
         public static final String DISTRIBUTION_DATE_TIME = "distributionDateTime";
 
@@ -63,7 +61,6 @@ public class ProjectFormFields {
         public static final String LOCATION_EXTID = "locationExtId";
         public static final String LOCATION_UUID = "locationUuid";
         public static final String LOCATION_NAME = "locationName";
-        public static final String LOCATION_TYPE = "locationType";
         public static final String COMMUNITY_NAME = "communityName";
         public static final String COMMUNITY_CODE = "communityCode";
         public static final String MAP_AREA_NAME = "mapAreaName";
@@ -81,8 +78,6 @@ public class ProjectFormFields {
         public static final String DESCRIPTION = "description";
         public static final String LONGITUDE = "longitude";
         public static final String LATITUDE = "latitude";
-
-        public static final String EVALUATION = "evaluation";
 
         private static Map<String, String> columnsToFieldNames = new HashMap<>();
 
@@ -106,9 +101,7 @@ public class ProjectFormFields {
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_EVALUATION_STATUS, STATUS);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_LONGITUDE, LONGITUDE);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_LATITUDE, LATITUDE);
-            columnsToFieldNames.put(
-                    OpenHDS.Locations.COLUMN_LOCATION_UUID,
-                    General.ENTITY_UUID);
+            columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_UUID, General.ENTITY_UUID);
         }
 
         public static String getFieldNameFromColumn(String column) {
@@ -122,9 +115,7 @@ public class ProjectFormFields {
 
     public static final class Individuals {
 
-        // for individuals table
         public static final String INDIVIDUAL_EXTID = "individualExtId";
-        public static final String INDIVIDUAL_UUID = "individualUuid";
         public static final String FIRST_NAME = "individualFirstName";
         public static final String LAST_NAME = "individualLastName";
         public static final String OTHER_NAMES = "individualOtherNames";
@@ -142,7 +133,6 @@ public class ProjectFormFields {
         public static final String MOTHER_EXTID = "individualMotherExtId";
         public static final String FATHER_EXTID = "individualFatherExtId";
 
-
         public static final String RELATIONSHIP_TO_HEAD = "individualRelationshipToHeadOfHousehold";
         public static final String HEAD_PREFILLED_FLAG = "headPrefilledFlag";
         public static final String MEMBER_STATUS = "individualMemberStatus";
@@ -152,63 +142,29 @@ public class ProjectFormFields {
         public static final String RELATIONSHIP_UUID = "relationshipUuid";
         public static final String SOCIALGROUP_UUID = "socialgroupUuid";
 
-        public static final String IS_PREGNANT_FLAG = "individualIsPregnantFlag";
-
         private static Map<String, String> columnsToFieldNames = new HashMap<>();
 
         static {
-            columnsToFieldNames.put(
-                    OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID,
-                    INDIVIDUAL_EXTID);
-            columnsToFieldNames.put(
-                    OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME,
-                    FIRST_NAME);
-            columnsToFieldNames.put(
-                    OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME, LAST_NAME);
-            columnsToFieldNames.put(
-                    OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES,
-                    OTHER_NAMES);
-            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_DOB,
-                    DATE_OF_BIRTH);
-            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE,
-                    AGE);
-            columnsToFieldNames.put(
-                    OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE_UNITS, AGE_UNITS);
-            columnsToFieldNames.put(
-                    OpenHDS.Individuals.COLUMN_INDIVIDUAL_GENDER, GENDER);
-            columnsToFieldNames.put(
-                    OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER,
-                    PHONE_NUMBER);
-            columnsToFieldNames.put(
-                    OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER,
-                    OTHER_PHONE_NUMBER);
-            columnsToFieldNames
-                    .put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME,
-                            POINT_OF_CONTACT_NAME);
-            columnsToFieldNames
-                    .put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER,
-                            POINT_OF_CONTACT_PHONE_NUMBER);
-            columnsToFieldNames.put(
-                    OpenHDS.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE,
-                    LANGUAGE_PREFERENCE);
-            columnsToFieldNames.put(
-                    OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_ID, DIP);
-            columnsToFieldNames.put(
-                    OpenHDS.Individuals.COLUMN_INDIVIDUAL_MOTHER, MOTHER_EXTID);
-            columnsToFieldNames.put(
-                    OpenHDS.Individuals.COLUMN_INDIVIDUAL_FATHER, FATHER_EXTID);
-            columnsToFieldNames
-                    .put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID,
-                            HOUSEHOLD_UUID);
-            columnsToFieldNames
-                    .put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS,
-                            MEMBER_STATUS);
-            columnsToFieldNames.put(
-                    OpenHDS.Individuals.COLUMN_INDIVIDUAL_NATIONALITY,
-                    NATIONALITY);
-            columnsToFieldNames.put(
-                    OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID,
-                    General.ENTITY_UUID);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID, INDIVIDUAL_EXTID);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME, FIRST_NAME);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME, LAST_NAME);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES, OTHER_NAMES);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_DOB, DATE_OF_BIRTH);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE, AGE);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE_UNITS, AGE_UNITS);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_GENDER, GENDER);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER, PHONE_NUMBER);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER, OTHER_PHONE_NUMBER);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME, POINT_OF_CONTACT_NAME);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER, POINT_OF_CONTACT_PHONE_NUMBER);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE, LANGUAGE_PREFERENCE);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_ID, DIP);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_MOTHER, MOTHER_EXTID);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_FATHER, FATHER_EXTID);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, HOUSEHOLD_UUID);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS, MEMBER_STATUS);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_NATIONALITY, NATIONALITY);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID, General.ENTITY_UUID);
         }
 
         public static String getFieldNameFromColumn(String column) {
@@ -218,66 +174,6 @@ public class ProjectFormFields {
                 return null;
             }
         }
-    }
-
-    public static final class Visits {
-        public static final String VISIT_EXTID = "visitExtId";
-        public static final String VISIT_UUID = "visitUuid";
-        public static final String VISIT_DATE = "visitDate";
-        public static final String LOCATION_UUID = "locationUuid";
-        public static final String LOCATION_EXTID = "locationExtId";
-        public static final String FIELDWORKER_UUID = "fieldWorkerUuid";
-
-        private static Map<String, String> columnsToFieldNames = new HashMap<>();
-
-        static {
-            columnsToFieldNames.put(
-                    OpenHDS.Visits.COLUMN_VISIT_EXTID,
-                    VISIT_EXTID);
-            columnsToFieldNames.put(
-                    OpenHDS.Visits.COLUMN_VISIT_UUID,
-                    VISIT_UUID);
-            columnsToFieldNames.put(
-                    OpenHDS.Visits.COLUMN_VISIT_DATE,
-                    VISIT_DATE);
-            columnsToFieldNames.put(
-                    OpenHDS.Visits.COLUMN_VISIT_LOCATION_UUID,
-                    LOCATION_UUID);
-            columnsToFieldNames.put(
-                    OpenHDS.Visits.COLUMN_VISIT_FIELDWORKER_UUID,
-                    FIELDWORKER_UUID);
-        }
-
-        public static String getFieldNameFromColumn(String column) {
-            if (columnsToFieldNames.containsKey(column)) {
-                return columnsToFieldNames.get(column);
-            } else {
-                return null;
-            }
-        }
-    }
-
-    public static final class InMigrations {
-        public static final String IN_MIGRATION_TYPE = "migrationType";
-        public static final String IN_MIGRATION_DATE = "migrationDate";
-        public static final String IN_MIGRATION_INTERNAL = "internal_inmigration";
-        public static final String IN_MIGRATION_EXTERNAL = "external_inmigration";
-    }
-
-    public static final class OutMigrations {
-        public static final String OUT_MIGRATION_DATE = "outMigrationDate";
-        public static final String OUT_MIGRATION_NAME_OF_DESITINATION = "outMigrationNameOfDestination";
-        public static final String OUT_MIGRATION_REASON = "outMigrationReason";
-    }
-
-    public static final class PregnancyObservation {
-        public static final String PREGNANCY_OBSERVATION_RECORDED_DATE = "recordedDate";
-    }
-
-    public static final class PregnancyOutcome{
-        public static final String SOCIALGROUP_UUID = "socialgroupUuid";
-        public static final String MOTHER_UUID = "motherUuid";
-        public static final String FATHER_UUID = "fatherUuid";
     }
 
     public static final class BedNet {

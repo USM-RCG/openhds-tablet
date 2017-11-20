@@ -18,16 +18,6 @@ public class CensusFormFilters {
         }
     }
 
-    public static class EvaluateLocation implements FormFilter {
-        @Override
-        public boolean shouldDisplay(LaunchContext ctx) {
-            LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            Location location = locationGateway.getFirst(ctx.getContentResolver(),
-                    locationGateway.findById(ctx.getCurrentSelection().getUuid()));
-            return location.getLocationEvaluationStatus() == null;
-        }
-    }
-
     public static class AddHeadOfHousehold implements FormFilter {
         @Override
         public boolean shouldDisplay(LaunchContext ctx) {

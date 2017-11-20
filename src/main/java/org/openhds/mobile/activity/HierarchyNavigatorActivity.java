@@ -20,12 +20,10 @@ import org.openhds.mobile.fragment.FormSelectionFragment;
 import org.openhds.mobile.fragment.navigate.DetailToggleFragment;
 import org.openhds.mobile.fragment.navigate.FormListFragment;
 import org.openhds.mobile.fragment.navigate.HierarchyButtonFragment;
-import org.openhds.mobile.fragment.navigate.VisitFragment;
 import org.openhds.mobile.fragment.navigate.detail.DefaultDetailFragment;
 import org.openhds.mobile.fragment.navigate.detail.DetailFragment;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.form.FormInstance;
-import org.openhds.mobile.model.update.Visit;
 import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
@@ -59,8 +57,7 @@ import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
 public class HierarchyNavigatorActivity extends Activity implements LaunchContext,
         HierarchyButtonFragment.HierarchyButtonListener, DetailToggleFragment.DetailToggleListener,
-        DataSelectionFragment.DataSelectionListener, FormSelectionFragment.FormSelectionListener,
-        VisitFragment.VisitFinishedListener {
+        DataSelectionFragment.DataSelectionListener, FormSelectionFragment.FormSelectionListener {
 
     private static final String TAG = HierarchyNavigatorActivity.class.getSimpleName();
 
@@ -82,7 +79,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private DetailToggleFragment detailToggleFragment;
     private DetailFragment defaultDetailFragment;
     private DetailFragment detailFragment;
-    private VisitFragment visitFragment;
     private FormListFragment formListFragment;
 
     private NavigatorConfig config;
@@ -93,7 +89,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private Stack<HierarchyPath> pathHistory;
     private List<DataWrapper> currentResults;
 
-    private Visit currentVisit;
     private ConsumerResult consumerResult;
 
     private HashMap<MenuItem, String> menuItemTags;
@@ -125,7 +120,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         hierarchyButtonFragment = (HierarchyButtonFragment) fragmentManager.findFragmentById(R.id.hierarchy_button_fragment);
         detailToggleFragment = (DetailToggleFragment) fragmentManager.findFragmentById(R.id.detail_toggle_fragment);
         formFragment = (FormSelectionFragment) fragmentManager.findFragmentById(R.id.form_selection_fragment);
-        visitFragment = (VisitFragment) fragmentManager.findFragmentById(R.id.visit_fragment);
         formListFragment = (FormListFragment) fragmentManager.findFragmentById(R.id.form_list_fragment);
         defaultDetailFragment = new DefaultDetailFragment();
         valueFragment = new DataSelectionFragment();
@@ -143,7 +137,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         } else {
             hierarchyPath = savedInstanceState.getParcelable(HIERARCHY_PATH_KEY);
             currentResults = savedInstanceState.getParcelableArrayList(CURRENT_RESULTS_KEY);
-            currentVisit = (Visit) savedInstanceState.getSerializable(VISIT_KEY);
             pathHistory = (Stack<HierarchyPath>) savedInstanceState.getSerializable(HISTORY_KEY);
 
             DataSelectionFragment existingValueFragment = (DataSelectionFragment) fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG);
@@ -161,7 +154,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelable(HIERARCHY_PATH_KEY, hierarchyPath);
         savedInstanceState.putParcelableArrayList(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
-        savedInstanceState.putSerializable(VISIT_KEY, getCurrentVisit());
         savedInstanceState.putSerializable(HISTORY_KEY, pathHistory);
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -318,27 +310,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         return getLogin(FieldWorker.class).getAuthenticatedUser();
     }
 
-    public Visit getCurrentVisit() {
-        return currentVisit;
-    }
-
-    public ConsumerResult getConsumerResult() {
-        return consumerResult;
-    }
-
-    public void startVisit(Visit visit) {
-        setCurrentVisit(visit);
-    }
-
-    public void finishVisit() {
-        setCurrentVisit(null);
-    }
-
-    private void setCurrentVisit(Visit currentVisit) {
-        this.currentVisit = currentVisit;
-        update();
-    }
-
     @Override
     public void onFormSelected(Binding binding) {
         launchNewForm(binding, null);
@@ -347,11 +318,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     @Override
     public void onDataSelected(DataWrapper data) {
         stepDown(data);
-    }
-
-    @Override
-    public void onVisitFinished() {
-        finishVisit();
     }
 
     @Override
@@ -452,7 +418,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         updateMiddle();
         updateDetailToggle();
         updateFormLaunchers();
-        updateVisit();
         updateForms();
     }
 
@@ -502,10 +467,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             }
         }
         formFragment.createFormButtons(relevantLaunchers);
-    }
-
-    private void updateVisit() {
-        visitFragment.setEnabled(currentVisit != null);
     }
 
     /**

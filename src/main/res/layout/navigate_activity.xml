@@ -71,11 +71,6 @@
             android:id="@+id/right_column_middle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <fragment
-                android:name="org.openhds.mobile.fragment.navigate.VisitFragment"
-                android:id="@+id/visit_fragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
         </FrameLayout>
 
         <FrameLayout

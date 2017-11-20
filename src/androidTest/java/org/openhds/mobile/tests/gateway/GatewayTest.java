@@ -35,14 +35,14 @@ public abstract class GatewayTest<T> extends ProviderTestCase2<OpenHDSProvider> 
         this.contentResolver = getMockContentResolver();
 
         // make sure we have a fresh database for each test
-        SQLiteOpenHelper databaseHelper = provider.getDatabaseHelper(getContext());
+        SQLiteOpenHelper databaseHelper = OpenHDSProvider.getDatabaseHelper(getContext());
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
         databaseHelper.onUpgrade(db, 0, 0);
     }
 
     @Override
     protected void tearDown() {
-        SQLiteOpenHelper databaseHelper = provider.getDatabaseHelper(getContext());
+        SQLiteOpenHelper databaseHelper = OpenHDSProvider.getDatabaseHelper(getContext());
         databaseHelper.close();
     }
 

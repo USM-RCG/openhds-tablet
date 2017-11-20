@@ -10,7 +10,6 @@ import org.openhds.mobile.repository.gateway.LocationHierarchyGateway;
 import org.openhds.mobile.repository.gateway.MembershipGateway;
 import org.openhds.mobile.repository.gateway.RelationshipGateway;
 import org.openhds.mobile.repository.gateway.SocialGroupGateway;
-import org.openhds.mobile.repository.gateway.VisitGateway;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,10 +73,6 @@ public class GatewayRegistry {
 
     public static SocialGroupGateway getSocialGroupGateway() {
         return lazy(SocialGroupGateway.class);
-    }
-
-    public static VisitGateway getVisitGateway() {
-        return lazy(VisitGateway.class);
     }
 
     @SuppressWarnings("unchecked")

@@ -34,16 +34,9 @@ public class ProjectResources {
 
     public static final class Individual {
 
-		/*
-		 * INDIVIDUAL mapping of Database/Form VALUES to String resources IDs
-		 */
-
         public static final Map<String, Integer> Individual = new HashMap<>();
 
         public static final String RESIDENCY_END_TYPE_NA = "NA";
-        public static final String RESIDENCY_END_TYPE_OMG = "OMG";
-
-        public static final String END_TYPE_DEATH = "DTH";
 
         public static final String AGE_UNITS_YEARS = "Years";
         public static final String AGE_UNITS_MONTHS = "Months";
@@ -103,12 +96,7 @@ public class ProjectResources {
 
     public static final class Location {
 
-		/*
-		 * LOCATION mapping of Database/Form VALUES to String resources IDs
-		 */
-
         public static final Map<String, Integer> Location = new HashMap<>();
-
 
         private static final String STATUS_NEVER_AVAILABLE = "neverAvailable";
         private static final String STATUS_REJECTED_INTERVENTION = "rejectedIntervention";
@@ -130,9 +118,6 @@ public class ProjectResources {
     }
 
     public static final class Relationship {
-		/*
-		 * RELATIONSHIPS mapping of Database/Form VALUES to String resources IDs
-		 */
 
         private static final Map<String, Integer> Relationship = new HashMap<>();
 
@@ -149,28 +134,17 @@ public class ProjectResources {
         public static final String RELATION_TO_HOH_TYPE_NEPHEW_NIECE = "11";
 
         static {
-            Relationship.put(RELATION_TO_HOH_TYPE_HEAD,
-                    R.string.db_val_relation_to_head_type_head);
-            Relationship.put(RELATION_TO_HOH_TYPE_SPOUSE,
-                    R.string.db_val_relation_to_head_type_spouse);
-            Relationship.put(RELATION_TO_HOH_TYPE_SON_DAUGHTER,
-                    R.string.db_val_relation_to_head_type_son_daughter);
-            Relationship.put(RELATION_TO_HOH_TYPE_BROTHER_SISTER,
-                    R.string.db_val_relation_to_head_type_brother_sister);
-            Relationship.put(RELATION_TO_HOH_TYPE_COUSIN,
-                    R.string.db_val_relation_to_head_type_cousin);
-            Relationship.put(RELATION_TO_HOH_TYPE_NEPHEW_NIECE,
-                    R.string.db_val_relation_to_head_type_nephew_niece);
-            Relationship.put(RELATION_TO_HOH_TYPE_PARENT,
-                    R.string.db_val_relation_to_head_type_parent);
-            Relationship.put(RELATION_TO_HOH_TYPE_GRANDCHILD,
-                    R.string.db_val_relation_to_head_type_grandchild);
-            Relationship.put(RELATION_TO_HOH_TYPE_NOT_RELATED,
-                    R.string.db_val_relation_to_head_type_not_related);
-            Relationship.put(RELATION_TO_HOH_TYPE_OTHER_RELATIVE,
-                    R.string.db_val_relation_to_head_type_other_relative);
-            Relationship.put(RELATION_TO_HOH_TYPE_DONT_KNOW,
-                    R.string.db_val_relation_to_head_type_dont_know);
+            Relationship.put(RELATION_TO_HOH_TYPE_HEAD, R.string.db_val_relation_to_head_type_head);
+            Relationship.put(RELATION_TO_HOH_TYPE_SPOUSE, R.string.db_val_relation_to_head_type_spouse);
+            Relationship.put(RELATION_TO_HOH_TYPE_SON_DAUGHTER, R.string.db_val_relation_to_head_type_son_daughter);
+            Relationship.put(RELATION_TO_HOH_TYPE_BROTHER_SISTER, R.string.db_val_relation_to_head_type_brother_sister);
+            Relationship.put(RELATION_TO_HOH_TYPE_COUSIN, R.string.db_val_relation_to_head_type_cousin);
+            Relationship.put(RELATION_TO_HOH_TYPE_NEPHEW_NIECE, R.string.db_val_relation_to_head_type_nephew_niece);
+            Relationship.put(RELATION_TO_HOH_TYPE_PARENT, R.string.db_val_relation_to_head_type_parent);
+            Relationship.put(RELATION_TO_HOH_TYPE_GRANDCHILD, R.string.db_val_relation_to_head_type_grandchild);
+            Relationship.put(RELATION_TO_HOH_TYPE_NOT_RELATED, R.string.db_val_relation_to_head_type_not_related);
+            Relationship.put(RELATION_TO_HOH_TYPE_OTHER_RELATIVE, R.string.db_val_relation_to_head_type_other_relative);
+            Relationship.put(RELATION_TO_HOH_TYPE_DONT_KNOW, R.string.db_val_relation_to_head_type_dont_know);
         }
 
         public static int getRelationshipStringId(String key) {
@@ -180,7 +154,5 @@ public class ProjectResources {
                 return 0;
             }
         }
-
     }
-
 }

@@ -6,7 +6,6 @@ import android.content.Context;
 import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.model.core.FieldWorker;
-import org.openhds.mobile.model.update.Visit;
 import org.openhds.mobile.navconfig.forms.consumers.ConsumerResult;
 import org.openhds.mobile.repository.DataWrapper;
 
@@ -18,21 +17,9 @@ import org.openhds.mobile.repository.DataWrapper;
 public interface LaunchContext {
 
     Context getApplicationContext();
-
     ContentResolver getContentResolver();
-
     FieldWorker getCurrentFieldWorker();
-
     DataWrapper getCurrentSelection();
-
     HierarchyPath getHierarchyPath();
-
-    void startVisit(Visit v);
-
-    Visit getCurrentVisit();
-
-    void finishVisit();
-
-    ConsumerResult getConsumerResult();
 
 }

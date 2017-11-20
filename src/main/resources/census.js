@@ -27,34 +27,17 @@ with (imports) {
            builder: new CensusFormPayloadBuilders.AddLocation(),
            consumer: new CensusFormPayloadConsumers.AddLocation() });
 
-    bind({ form: 'location_evaluation',
-           label: 'locationEvaluationFormLabel',
-           builder: new CensusFormPayloadBuilders.EvaluateLocation(),
-           consumer: new CensusFormPayloadConsumers.EvaluateLocation() });
-
-    bind({ name: 'census_preg_obs',
-           form: 'pregnancy_observation',
-           label: 'pregnancyObservationFormLabel',
-           builder: new UpdateFormPayloadBuilders.RecordPregnancyObservation(),
-           consumer: new CensusFormPayloadConsumers.ChainedPregnancyObservation() });
-
-    bind({ name: 'census_preg_visit',
-           form: 'visit',
-           label: 'visitFormLabel',
-           builder: new UpdateFormPayloadBuilders.StartAVisit(),
-           consumer: new CensusFormPayloadConsumers.ChainedVisitForPregnancyObservation(binds['census_preg_obs']) });
-
     bind({ name: 'household_head',
            form: 'individual',
            label: 'individualFormLabel',
            builder: new CensusFormPayloadBuilders.AddHeadOfHousehold(),
-           consumer: new CensusFormPayloadConsumers.AddHeadOfHousehold(binds['census_preg_visit']) });
+           consumer: new CensusFormPayloadConsumers.AddHeadOfHousehold() });
 
     bind({ name: 'household_member',
            form: 'individual',
            label: 'individualFormLabel',
            builder: new CensusFormPayloadBuilders.AddMemberOfHousehold(),
-           consumer: new CensusFormPayloadConsumers.AddMemberOfHousehold(binds['census_preg_visit']) });
+           consumer: new CensusFormPayloadConsumers.AddMemberOfHousehold() });
 
     function launcher(l) {
         return new Launcher({
@@ -71,9 +54,6 @@ with (imports) {
                        filter: new CensusFormFilters.AddLocation() })
         ],
         household: [
-            launcher({ label: 'census.evaluateLocationLabel',
-                       bind: 'location_evaluation',
-                       filter: new CensusFormFilters.EvaluateLocation() }),
             launcher({ label: 'census.headOfHouseholdLabel',
                        bind: 'household_head',
                        filter: new CensusFormFilters.AddHeadOfHousehold() }),

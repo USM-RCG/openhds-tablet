@@ -2,10 +2,8 @@ package org.openhds.mobile.navconfig.forms.builders;
 
 import android.content.ContentResolver;
 
-import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.model.core.*;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
-import org.openhds.mobile.navconfig.forms.adapters.IndividualFormAdapter;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.navconfig.ProjectFormFields;
 import org.openhds.mobile.repository.GatewayRegistry;
@@ -22,18 +20,9 @@ import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.formatFlo
 
 public class CensusFormPayloadBuilders {
 
-    /**
-     *
-     * Helper methods for FormPayloadBuilders
-     *
-     */
-
     private static void addNewLocationPayload(Map<String, String> formPayload, LaunchContext ctx) {
-
         ContentResolver contentResolver = ctx.getContentResolver();
-
         DataWrapper sectorDataWrapper = ctx.getHierarchyPath().get(SECTOR);
-
         LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
         LocationHierarchy sector = locationHierarchyGateway.getFirst(contentResolver,
                 locationHierarchyGateway.findById(sectorDataWrapper.getUuid()));
@@ -41,12 +30,10 @@ public class CensusFormPayloadBuilders {
                 locationHierarchyGateway.findById(sector.getParentUuid()));
         LocationHierarchy locality = locationHierarchyGateway.getFirst(contentResolver,
                 locationHierarchyGateway.findById(mapArea.getParentUuid()));
-
         LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
         int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(
                 ctx.getApplicationContext(), mapArea.getName(), sector.getName());
         String[] communityNameAndCode = locationGateway.communityForSector(ctx.getApplicationContext(), sector.getUuid());
-
         formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
         formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, formatBuilding(nextBuildingNumber, false));
         formPayload.put(ProjectFormFields.Locations.COMMUNITY_NAME, communityNameAndCode[0]);
@@ -61,25 +48,13 @@ public class CensusFormPayloadBuilders {
     }
 
     private static void addNewIndividualPayload(Map<String, String> formPayload, LaunchContext navigateActivity) {
-
         DataWrapper locationDataWrapper = navigateActivity.getHierarchyPath().get(HOUSEHOLD);
-
         String individualExtId = IdHelper.generateIndividualExtId(navigateActivity.getContentResolver(), locationDataWrapper);
-
         formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, individualExtId);
-
         formPayload.put(ProjectFormFields.Individuals.HOUSEHOLD_UUID, navigateActivity.getCurrentSelection().getUuid());
-
         formPayload.put(ProjectFormFields.General.ENTITY_EXTID, individualExtId);
         formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
-
     }
-
-    /**
-     *
-     * Census Form Payload Builders
-     *
-     */
 
     public static class AddLocation implements FormPayloadBuilder {
         @Override
@@ -92,50 +67,21 @@ public class CensusFormPayloadBuilders {
         }
     }
 
-    public static class EvaluateLocation implements FormPayloadBuilder {
-
-        @Override
-        public Map<String, String> buildPayload(LaunchContext ctx) {
-
-            Map<String,String> formPayload = new HashMap<>();
-
-            PayloadTools.addMinimalFormPayload(formPayload, ctx);
-            PayloadTools.flagForReview(formPayload, false);
-
-            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD).getExtId();
-            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
-
-            formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
-            formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
-            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
-            formPayload.put(ProjectFormFields.General.ENTITY_UUID, locationUuid);
-
-            return formPayload;
-        }
-    }
-
     public static class AddMemberOfHousehold implements FormPayloadBuilder {
-
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {
-
             Map<String,String> formPayload = new HashMap<>();
-
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             PayloadTools.flagForReview(formPayload, false);
             addNewIndividualPayload(formPayload, ctx);
-
             ContentResolver resolver = ctx.getContentResolver();
-
             SocialGroupGateway socialGroupGateway = new SocialGroupGateway();
             SocialGroup socialGroup = socialGroupGateway.getFirst(resolver,
                     socialGroupGateway.findByLocationUuid(ctx.getCurrentSelection().getUuid()));
-
             IndividualGateway individualGateway = new IndividualGateway();
             //HoH is found by searching by extId, since we're currently dependent on the groupHead property of socialgroup
             //Set as the individual's extId
             Individual headOfHousehold = individualGateway.getFirst(resolver, individualGateway.findById(socialGroup.getGroupHeadUuid()));
-
             // set's the member's point of contact info to the HoH
             if(null != headOfHousehold.getPhoneNumber() && !headOfHousehold.getPhoneNumber().isEmpty()) {
                 formPayload.put(ProjectFormFields.Individuals.POINT_OF_CONTACT_NAME, Individual.getFullName(headOfHousehold));
@@ -144,77 +90,28 @@ public class CensusFormPayloadBuilders {
                 formPayload.put(ProjectFormFields.Individuals.POINT_OF_CONTACT_NAME, headOfHousehold.getPointOfContactName());
                 formPayload.put(ProjectFormFields.Individuals.POINT_OF_CONTACT_PHONE_NUMBER, headOfHousehold.getPointOfContactPhoneNumber());
             }
-
             // we need to add the socialgroup, membership, and relationship UUID for when they're created in
             // the consumers. We add them now so they are a part of the form when it is passed up.
             formPayload.put(ProjectFormFields.Individuals.RELATIONSHIP_UUID, IdHelper.generateEntityUuid());
             formPayload.put(ProjectFormFields.Individuals.MEMBERSHIP_UUID, IdHelper.generateEntityUuid());
             formPayload.put(ProjectFormFields.Individuals.SOCIALGROUP_UUID, socialGroup.getUuid());
-
             return formPayload;
         }
-
     }
 
     public static class AddHeadOfHousehold implements FormPayloadBuilder {
-
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {
-
             Map<String,String> formPayload = new HashMap<>();
-
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             PayloadTools.flagForReview(formPayload, false);
             addNewIndividualPayload(formPayload, ctx);
-
             // we need to add the socialgroup, membership, and relationship UUID for when they're created in
             // the consumers. We add them now so they are a part of the form when it is passed up.
             formPayload.put(ProjectFormFields.Individuals.SOCIALGROUP_UUID, IdHelper.generateEntityUuid());
             formPayload.put(ProjectFormFields.Individuals.RELATIONSHIP_UUID, IdHelper.generateEntityUuid());
             formPayload.put(ProjectFormFields.Individuals.MEMBERSHIP_UUID, IdHelper.generateEntityUuid());
-
             formPayload.put(ProjectFormFields.Individuals.HEAD_PREFILLED_FLAG, "true");
-
-            return formPayload;
-        }
-
-    }
-
-    // This is (as of ascii-asteroid 2) not being called/utilized
-    public static class EditIndividual implements FormPayloadBuilder {
-
-        @Override
-        public Map<String, String> buildPayload(LaunchContext ctx) {
-
-            Map<String,String> formPayload = new HashMap<>();
-
-            PayloadTools.addMinimalFormPayload(formPayload, ctx);
-            PayloadTools.flagForReview(formPayload, true);
-
-            // build complete individual form
-            HierarchyPath hierarchyPath = ctx.getHierarchyPath();
-            String individualUuid = hierarchyPath.get(INDIVIDUAL).getUuid();
-            String householdUuid = hierarchyPath.get(HOUSEHOLD).getUuid();
-
-            IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-            ContentResolver contentResolver = ctx.getContentResolver();
-            Individual individual = individualGateway.getFirst(contentResolver, individualGateway.findById(individualUuid));
-
-            formPayload.putAll(IndividualFormAdapter.toForm(individual));
-
-            //TODO: Change the birthday to either a simple date object or find a better way to handle this functionality.
-            String truncatedDate = formPayload.get(ProjectFormFields.Individuals.DATE_OF_BIRTH).substring(0, 10);
-            formPayload.remove(ProjectFormFields.Individuals.DATE_OF_BIRTH);
-            formPayload.put(ProjectFormFields.Individuals.DATE_OF_BIRTH, truncatedDate);
-
-            MembershipGateway membershipGateway = GatewayRegistry.getMembershipGateway();
-            Membership membership = membershipGateway.getFirst(contentResolver,
-                    membershipGateway.findBySocialGroupAndIndividual(householdUuid, individualUuid));
-            if (null != membership) {
-                formPayload.put(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD,
-                        membership.getRelationshipToHead());
-            }
-
             return formPayload;
         }
     }

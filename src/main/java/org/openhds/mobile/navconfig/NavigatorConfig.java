@@ -69,7 +69,6 @@ public class NavigatorConfig {
 
     private void initCoreModules() throws IOException {
         executeConfigScript("/census.js");
-        executeConfigScript("/update.js");
     }
 
     private void executeConfigScript(String resourcePath) throws IOException {

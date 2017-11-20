@@ -153,9 +153,6 @@
     <string name="social_group_ext_id">Household Id</string>
     <string name="social_group_head_ext_id">Head of Household Id</string>
 
-    <!-- UpdateActivity Labels -->
-    <string name="finish_visit">Finish Visit</string>
-
     <string name="unsent_forms">Unsent Forms</string>
     <string name="field_worker_home">Fieldworker Home</string>
     <string name="supervisor_home">Supervisor Home</string>
