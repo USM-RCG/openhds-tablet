@@ -12,15 +12,11 @@ public class BiokoFormPayloadConsumers {
     public static class DistributeBednets extends DefaultConsumer {
         @Override
         public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
-
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
             Location location = locationGateway.getFirst(ctx.getContentResolver(),
                     locationGateway.findById(ctx.getCurrentSelection().getUuid()));
-
             location.setHasReceivedBedNets("true");
-
             locationGateway.insertOrUpdate(ctx.getContentResolver(), location);
-
             return super.consumeFormPayload(formPayload, ctx);
         }
     }
@@ -31,17 +27,13 @@ public class BiokoFormPayloadConsumers {
 
         @Override
         public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
-
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
             Location location = locationGateway.getFirst(ctx.getContentResolver(),
                     locationGateway.findById(ctx.getCurrentSelection().getUuid()));
-
             if (formPayload.containsKey(SPRAY_EVAL_KEY)) {
                 location.setSprayingEvaluation(formPayload.get(SPRAY_EVAL_KEY));
             }
-
             locationGateway.insertOrUpdate(ctx.getContentResolver(), location);
-
             return super.consumeFormPayload(formPayload, ctx);
         }
     }

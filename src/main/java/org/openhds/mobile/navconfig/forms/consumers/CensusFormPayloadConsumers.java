@@ -104,23 +104,19 @@ public class CensusFormPayloadConsumers {
 
             DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD);
 
-            String relationshipType = formPayload
-                    .get(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD);
+            String relationshipType = formPayload.get(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD);
             Individual individual = insertOrUpdateIndividual(formPayload, ctx.getContentResolver());
-            String startDate = formPayload
-                    .get(ProjectFormFields.General.COLLECTION_DATE_TIME);
+            String startDate = formPayload.get(ProjectFormFields.General.COLLECTION_DATE_TIME);
 
             SocialGroupGateway socialGroupGateway = GatewayRegistry.getSocialGroupGateway();
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
             ContentResolver contentResolver = ctx.getContentResolver();
 
             // get head of household by household id
-            SocialGroup socialGroup = socialGroupGateway.getFirst(contentResolver,
-                    socialGroupGateway.findByLocationUuid(selectedLocation.getUuid()));
+            SocialGroup socialGroup = socialGroupGateway.getFirst(contentResolver, socialGroupGateway.findByLocationUuid(selectedLocation.getUuid()));
 
 
-            Individual currentHeadOfHousehold = individualGateway.getFirst(contentResolver,
-                    individualGateway.findById(socialGroup.getGroupHeadUuid()));
+            Individual currentHeadOfHousehold = individualGateway.getFirst(contentResolver, individualGateway.findById(socialGroup.getGroupHeadUuid()));
 
             // INSERT or UPDATE RELATIONSHIP
             RelationshipGateway relationshipGateway = GatewayRegistry.getRelationshipGateway();
@@ -154,8 +150,7 @@ public class CensusFormPayloadConsumers {
             ContentResolver contentResolver = ctx.getContentResolver();
 
             // Update the name of the location
-            Location location = locationGateway.getFirst(contentResolver,
-                    locationGateway.findById(selectedLocation.getUuid()));
+            Location location = locationGateway.getFirst(contentResolver, locationGateway.findById(selectedLocation.getUuid()));
             String locationName = individual.getLastName();
             location.setName(locationName);
             selectedLocation.setName(locationName);
