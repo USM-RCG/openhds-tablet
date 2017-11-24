@@ -90,9 +90,6 @@ public class CensusFormPayloadBuilders {
                 formPayload.put(ProjectFormFields.Individuals.POINT_OF_CONTACT_NAME, headOfHousehold.getPointOfContactName());
                 formPayload.put(ProjectFormFields.Individuals.POINT_OF_CONTACT_PHONE_NUMBER, headOfHousehold.getPointOfContactPhoneNumber());
             }
-            // we need to add the socialgroup, membership, and relationship UUID for when they're created in
-            // the consumers. We add them now so they are a part of the form when it is passed up.
-            formPayload.put(ProjectFormFields.Individuals.RELATIONSHIP_UUID, IdHelper.generateEntityUuid());
             formPayload.put(ProjectFormFields.Individuals.MEMBERSHIP_UUID, IdHelper.generateEntityUuid());
             formPayload.put(ProjectFormFields.Individuals.SOCIALGROUP_UUID, socialGroup.getUuid());
             return formPayload;
@@ -109,7 +106,6 @@ public class CensusFormPayloadBuilders {
             // we need to add the socialgroup, membership, and relationship UUID for when they're created in
             // the consumers. We add them now so they are a part of the form when it is passed up.
             formPayload.put(ProjectFormFields.Individuals.SOCIALGROUP_UUID, IdHelper.generateEntityUuid());
-            formPayload.put(ProjectFormFields.Individuals.RELATIONSHIP_UUID, IdHelper.generateEntityUuid());
             formPayload.put(ProjectFormFields.Individuals.MEMBERSHIP_UUID, IdHelper.generateEntityUuid());
             formPayload.put(ProjectFormFields.Individuals.HEAD_PREFILLED_FLAG, "true");
             return formPayload;

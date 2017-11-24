@@ -112,27 +112,6 @@ public class OpenHDS {
         public static final String COLUMN_HIERARCHY_LEVEL = "level";
     }
 
-    public static final class Relationships implements BaseColumns {
-
-        public static final String TABLE_NAME = "relationships";
-
-        private static final String PATH_NOTE_ID = "/relationships/";
-
-        public static final int ID_PATH_POSITION = 1;
-
-        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(CONTENT_BASE + PATH_NOTE_ID);
-
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openhds.relationship";
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openhds.relationship";
-
-        public static final String COLUMN_RELATIONSHIP_UUID = "uuid";
-
-        public static final String COLUMN_RELATIONSHIP_INDIVIDUAL_A = "individualA";
-        public static final String COLUMN_RELATIONSHIP_INDIVIDUAL_B = "individualB";
-        public static final String COLUMN_RELATIONSHIP_TYPE = "relationshipType";
-        public static final String COLUMN_RELATIONSHIP_STARTDATE = "startDate";
-    }
-
     public static final class FieldWorkers implements BaseColumns {
 
         public static final String TABLE_NAME = "fieldworkers";

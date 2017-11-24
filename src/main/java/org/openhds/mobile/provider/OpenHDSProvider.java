@@ -36,7 +36,6 @@ public class OpenHDSProvider extends ContentProvider {
     private static HashMap<String, String> individualsProjectionMap;
     private static HashMap<String, String> locationsProjectionMap;
     private static HashMap<String, String> hierarchyitemsProjectionMap;
-    private static HashMap<String, String> relationshipsProjectionMap;
     private static HashMap<String, String> fieldworkersProjectionMap;
     private static HashMap<String, String> socialgroupsProjectionMap;
     private static HashMap<String, String> membershipsProjectionMap;
@@ -47,8 +46,6 @@ public class OpenHDSProvider extends ContentProvider {
     private static final int LOCATION_ID = 4;
     private static final int HIERARCHYITEMS = 5;
     private static final int HIERARCHYITEM_ID = 6;
-    private static final int RELATIONSHIPS = 11;
-    private static final int RELATIONSHIP_ID = 12;
     private static final int FIELDWORKERS = 13;
     private static final int FIELDWORKER_ID = 14;
     private static final int SOCIALGROUPS = 15;
@@ -67,8 +64,6 @@ public class OpenHDSProvider extends ContentProvider {
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "locations/#", LOCATION_ID);
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "hierarchyitems", HIERARCHYITEMS);
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "hierarchyitems/#", HIERARCHYITEM_ID);
-        sUriMatcher.addURI(OpenHDS.AUTHORITY, "relationships", RELATIONSHIPS);
-        sUriMatcher.addURI(OpenHDS.AUTHORITY, "relationships/#", RELATIONSHIP_ID);
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "fieldworkers", FIELDWORKERS);
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "fieldworkers/#", FIELDWORKER_ID);
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "socialgroups", SOCIALGROUPS);
@@ -135,14 +130,6 @@ public class OpenHDSProvider extends ContentProvider {
         hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL);
         hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME);
         hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT);
-
-        relationshipsProjectionMap = new HashMap<>();
-        relationshipsProjectionMap.put(OpenHDS.Relationships._ID, OpenHDS.Relationships._ID);
-        relationshipsProjectionMap.put(OpenHDS.Relationships.COLUMN_RELATIONSHIP_UUID, OpenHDS.Relationships.COLUMN_RELATIONSHIP_UUID);
-        relationshipsProjectionMap.put(OpenHDS.Relationships.COLUMN_RELATIONSHIP_INDIVIDUAL_A, OpenHDS.Relationships.COLUMN_RELATIONSHIP_INDIVIDUAL_A);
-        relationshipsProjectionMap.put(OpenHDS.Relationships.COLUMN_RELATIONSHIP_INDIVIDUAL_B, OpenHDS.Relationships.COLUMN_RELATIONSHIP_INDIVIDUAL_B);
-        relationshipsProjectionMap.put(OpenHDS.Relationships.COLUMN_RELATIONSHIP_TYPE, OpenHDS.Relationships.COLUMN_RELATIONSHIP_TYPE);
-        relationshipsProjectionMap.put(OpenHDS.Relationships.COLUMN_RELATIONSHIP_STARTDATE, OpenHDS.Relationships.COLUMN_RELATIONSHIP_STARTDATE);
 
         fieldworkersProjectionMap = new HashMap<>();
         fieldworkersProjectionMap.put(OpenHDS.FieldWorkers._ID, OpenHDS.FieldWorkers._ID);
@@ -252,18 +239,6 @@ public class OpenHDSProvider extends ContentProvider {
                         OpenHDS.HierarchyItems.NOTE_ID_PATH_POSITION));
 
                 break;
-            case RELATIONSHIPS:
-                qb.setTables(OpenHDS.Relationships.TABLE_NAME);
-                qb.setProjectionMap(relationshipsProjectionMap);
-                break;
-            case RELATIONSHIP_ID:
-                qb.setTables(OpenHDS.Relationships.TABLE_NAME);
-                qb.setProjectionMap(relationshipsProjectionMap);
-                qb.appendWhere(OpenHDS.Relationships._ID
-                        + "="
-                        + uri.getPathSegments().get(
-                        OpenHDS.Relationships.ID_PATH_POSITION));
-                break;
             case FIELDWORKERS:
                 qb.setTables(OpenHDS.FieldWorkers.TABLE_NAME);
                 qb.setProjectionMap(fieldworkersProjectionMap);
@@ -341,10 +316,6 @@ public class OpenHDSProvider extends ContentProvider {
                 return OpenHDS.HierarchyItems.CONTENT_TYPE;
             case HIERARCHYITEM_ID:
                 return OpenHDS.HierarchyItems.CONTENT_ITEM_TYPE;
-            case RELATIONSHIPS:
-                return OpenHDS.Relationships.CONTENT_TYPE;
-            case RELATIONSHIP_ID:
-                return OpenHDS.Relationships.CONTENT_ITEM_TYPE;
             case FIELDWORKERS:
                 return OpenHDS.FieldWorkers.CONTENT_TYPE;
             case FIELDWORKER_ID:
@@ -387,10 +358,6 @@ public class OpenHDSProvider extends ContentProvider {
                 contentUriBase = OpenHDS.HierarchyItems.CONTENT_ID_URI_BASE;
                 reindexType = IndexingService.EntityType.HIERARCHY;
                 uuid = initialValues.getAsString(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID);
-                break;
-            case RELATIONSHIPS:
-                table = OpenHDS.Relationships.TABLE_NAME;
-                contentUriBase = OpenHDS.Relationships.CONTENT_ID_URI_BASE;
                 break;
             case FIELDWORKERS:
                 table = OpenHDS.FieldWorkers.TABLE_NAME;
@@ -467,16 +434,6 @@ public class OpenHDSProvider extends ContentProvider {
                 finalWhere = buildFinalWhere(uri,
                         OpenHDS.HierarchyItems.NOTE_ID_PATH_POSITION, where);
                 count = db.delete(OpenHDS.HierarchyItems.TABLE_NAME, finalWhere,
-                        whereArgs);
-                break;
-            case RELATIONSHIPS:
-                count = db.delete(OpenHDS.Relationships.TABLE_NAME, where,
-                        whereArgs);
-                break;
-            case RELATIONSHIP_ID:
-                finalWhere = buildFinalWhere(uri,
-                        OpenHDS.Relationships.ID_PATH_POSITION, where);
-                count = db.delete(OpenHDS.Relationships.TABLE_NAME, finalWhere,
                         whereArgs);
                 break;
             case FIELDWORKERS:
@@ -570,16 +527,6 @@ public class OpenHDSProvider extends ContentProvider {
                 count = db.update(OpenHDS.HierarchyItems.TABLE_NAME, values, finalWhere, whereArgs);
                 reindexType = IndexingService.EntityType.HIERARCHY;
                 uuid = values.getAsString(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID);
-                break;
-            case RELATIONSHIPS:
-                count = db.update(OpenHDS.Relationships.TABLE_NAME, values, where,
-                        whereArgs);
-                break;
-            case RELATIONSHIP_ID:
-                finalWhere = buildFinalWhere(uri,
-                        OpenHDS.Relationships.ID_PATH_POSITION, where);
-                count = db.update(OpenHDS.Relationships.TABLE_NAME, values,
-                        finalWhere, whereArgs);
                 break;
             case FIELDWORKERS:
                 count = db.update(OpenHDS.FieldWorkers.TABLE_NAME, values, where,
@@ -751,30 +698,6 @@ public class OpenHDSProvider extends ContentProvider {
             db.execSQL("CREATE INDEX LOCATIONHIERARCHY_EXTID_INDEX ON " + OpenHDS.HierarchyItems.TABLE_NAME +
                     "("+ OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID + ") ; ");
 
-            db.execSQL("CREATE TABLE " + OpenHDS.Relationships.TABLE_NAME
-                    + " (" + OpenHDS.Relationships._ID
-                    + " INTEGER,"
-                    + OpenHDS.Relationships.COLUMN_RELATIONSHIP_UUID
-                    + " TEXT NOT NULL PRIMARY KEY,"
-                    + OpenHDS.Relationships.COLUMN_RELATIONSHIP_INDIVIDUAL_A
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.Relationships.COLUMN_RELATIONSHIP_INDIVIDUAL_B
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.Relationships.COLUMN_RELATIONSHIP_TYPE
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.Relationships.COLUMN_RELATIONSHIP_STARTDATE
-                    + " TEXT NOT NULL);");
-
-            db.execSQL("CREATE INDEX RELATIONSHIP_INDIVIDUAL_A_INDEX ON " + OpenHDS.Relationships.TABLE_NAME +
-                    "("+ OpenHDS.Relationships.COLUMN_RELATIONSHIP_INDIVIDUAL_A + ") ; ");
-
-            db.execSQL("CREATE INDEX RELATIONSHIP_INDIVIDUAL_B_INDEX ON " + OpenHDS.Relationships.TABLE_NAME +
-                    "("+ OpenHDS.Relationships.COLUMN_RELATIONSHIP_INDIVIDUAL_B + ") ; ");
-
-            db.execSQL("CREATE INDEX RELATIONSHIP_UUID_INDEX ON " + OpenHDS.Relationships.TABLE_NAME +
-                    "("+ OpenHDS.Relationships.COLUMN_RELATIONSHIP_UUID + ") ; ");
-
-
             db.execSQL("CREATE TABLE " + OpenHDS.FieldWorkers.TABLE_NAME + " ("
                     + OpenHDS.FieldWorkers._ID + " INTEGER,"
                     + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_UUID
@@ -855,7 +778,6 @@ public class OpenHDSProvider extends ContentProvider {
             db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.Memberships.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.SocialGroups.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.FieldWorkers.TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.Relationships.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.Individuals.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.HierarchyItems.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.Locations.TABLE_NAME);

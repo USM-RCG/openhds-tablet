@@ -6,7 +6,6 @@ import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.model.core.LocationHierarchy;
 import org.openhds.mobile.model.core.Membership;
-import org.openhds.mobile.model.core.Relationship;
 import org.openhds.mobile.model.core.SocialGroup;
 import org.openhds.mobile.navconfig.ProjectFormFields;
 import org.openhds.mobile.navconfig.ProjectResources;
@@ -19,7 +18,6 @@ import org.openhds.mobile.repository.gateway.IndividualGateway;
 import org.openhds.mobile.repository.gateway.LocationGateway;
 import org.openhds.mobile.repository.gateway.LocationHierarchyGateway;
 import org.openhds.mobile.repository.gateway.MembershipGateway;
-import org.openhds.mobile.repository.gateway.RelationshipGateway;
 import org.openhds.mobile.repository.gateway.SocialGroupGateway;
 import org.openhds.mobile.utilities.IdHelper;
 
@@ -118,11 +116,6 @@ public class CensusFormPayloadConsumers {
 
             Individual currentHeadOfHousehold = individualGateway.getFirst(contentResolver, individualGateway.findById(socialGroup.getGroupHeadUuid()));
 
-            // INSERT or UPDATE RELATIONSHIP
-            RelationshipGateway relationshipGateway = GatewayRegistry.getRelationshipGateway();
-            Relationship relationship = new Relationship(individual, currentHeadOfHousehold, relationshipType, startDate, formPayload.get(ProjectFormFields.Individuals.RELATIONSHIP_UUID));
-            relationshipGateway.insertOrUpdate(contentResolver, relationship);
-
             // INSERT or UPDATE MEMBERSHIP
             MembershipGateway membershipGateway = GatewayRegistry.getMembershipGateway();
             Membership membership = new Membership(individual, socialGroup, relationshipType, formPayload.get(ProjectFormFields.Individuals.MEMBERSHIP_UUID));
@@ -165,11 +158,6 @@ public class CensusFormPayloadConsumers {
             MembershipGateway membershipGateway = GatewayRegistry.getMembershipGateway();
             Membership membership = new Membership(individual, socialGroup, relationshipType, formPayload.get(ProjectFormFields.Individuals.MEMBERSHIP_UUID));
             membershipGateway.insertOrUpdate(contentResolver, membership);
-
-            // Set head of household's relationship to himself.
-            RelationshipGateway relationshipGateway = GatewayRegistry.getRelationshipGateway();
-            Relationship relationship = new Relationship(individual, individual, relationshipType, startDate, formPayload.get(ProjectFormFields.Individuals.RELATIONSHIP_UUID));
-            relationshipGateway.insertOrUpdate(contentResolver, relationship);
 
             return new ConsumerResult(true, null, null);
         }
