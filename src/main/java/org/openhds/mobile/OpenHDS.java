@@ -89,10 +89,6 @@ public class OpenHDS {
         public static final String COLUMN_LOCATION_SUB_DISTRICT_NAME = "subDistrictName";
         public static final String COLUMN_LOCATION_DISTRICT_NAME = "districtName";
         public static final String COLUMN_LOCATION_DESCRIPTION = "description";
-        public static final String COLUMN_LOCATION_EVALUATION_STATUS = "evaluationStatus";
-
-        public static final String COLUMN_LOCATION_HAS_RECIEVED_BEDNETS = "hasRecievedBedNets";
-        public static final String COLUMN_LOCATION_SPRAYING_EVALUATION = "sprayingEvaluation";
     }
 
     public static final class HierarchyItems implements BaseColumns {

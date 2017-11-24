@@ -24,13 +24,11 @@ with (imports) {
 
     bind({ form: 'bed_net',
            label: 'bedNetFormLabel',
-           builder: new BiokoFormPayloadBuilders.DistributeBednets(),
-           consumer: new BiokoFormPayloadConsumers.DistributeBednets() });
+           builder: new BiokoFormPayloadBuilders.DistributeBednets() });
 
     bind({ form: 'spraying',
            label: 'sprayingFormLabel',
-           builder: new BiokoFormPayloadBuilders.SprayHousehold(),
-           consumer: new BiokoFormPayloadConsumers.SprayHousehold() });
+           builder: new BiokoFormPayloadBuilders.SprayHousehold() });
 
     bind({ form: 'super_ojo',
            label: 'superOjoFormLabel',
@@ -50,16 +48,10 @@ with (imports) {
 
     var launchers = {
         household: [
-            launcher({ label: 'bioko.bednetsLabel',
-                       bind: 'bed_net',
-                       filter: new BiokoFormFilters.DistributeBednets() }),
-            launcher({ label: 'bioko.sprayingLabel',
-                       bind: 'spraying',
-                       filter: new BiokoFormFilters.SprayHousehold() }),
-            launcher({ label: 'bioko.superOjoLabel',
-                       bind: 'super_ojo' }),
-            launcher({ label: 'bioko.duplicateLocationLabel',
-                       bind: 'duplicate_location' })
+            launcher({ label: 'bioko.bednetsLabel', bind: 'bed_net' }),
+            launcher({ label: 'bioko.sprayingLabel', bind: 'spraying' }),
+            launcher({ label: 'bioko.superOjoLabel', bind: 'super_ojo' }),
+            launcher({ label: 'bioko.duplicateLocationLabel', bind: 'duplicate_location' })
         ]
     };
 

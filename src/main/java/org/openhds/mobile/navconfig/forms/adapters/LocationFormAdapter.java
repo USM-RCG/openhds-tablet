@@ -27,10 +27,7 @@ public class LocationFormAdapter {
         location.setProvinceName(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_PROVINCE_NAME)));
         location.setSubDistrictName(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_SUB_DISTRICT_NAME)));
         location.setDistrictName(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_DISTRICT_NAME)));
-        location.setHasReceivedBedNets(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_HAS_RECIEVED_BEDNETS)));
-        location.setSprayingEvaluation(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_SPRAYING_EVALUATION)));
         location.setDescription(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_DESCRIPTION)));
-        location.setLocationEvaluationStatus(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_EVALUATION_STATUS)));
         location.setLongitude(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_LONGITUDE)));
         location.setLatitude(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_LATITUDE)));
         return location;

@@ -144,9 +144,6 @@
     <string name="location_building_number_label">Building Number</string>
     <string name="location_floor_number_label">Floor Number</string>
     <string name="location_description_label">Description</string>
-    <string name="location_has_recieved_bednets_label">Has Received Bed Nets</string>
-    <string name="location_spraying_status_label">Spraying Status</string>
-
 
     <!-- Social Group Labels -->
     <string name="social_group_name">Household Name</string>

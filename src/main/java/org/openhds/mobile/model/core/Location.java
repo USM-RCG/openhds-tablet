@@ -24,10 +24,7 @@ public class Location implements Serializable {
     private String provinceName;
     private String subDistrictName;
     private String districtName;
-    private String hasReceivedBedNets;
     private String description;
-    private String locationEvaluationStatus;
-    private String sprayingEvaluation;
 
     public String getUuid() {
         return uuid;
@@ -37,37 +34,12 @@ public class Location implements Serializable {
         this.uuid = uuid;
     }
 
-
-    public String getLocationEvaluationStatus() {
-        return locationEvaluationStatus;
-    }
-
-    public void setLocationEvaluationStatus(String locationEvaluationStatus) {
-        this.locationEvaluationStatus = locationEvaluationStatus;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getHasReceivedBedNets() {
-        return hasReceivedBedNets;
-    }
-
-    public void setHasReceivedBedNets(String hasReceivedBedNets) {
-        this.hasReceivedBedNets = hasReceivedBedNets;
-    }
-
-    public void setSprayingEvaluation(String sprayingEvaluation) {
-        this.sprayingEvaluation = sprayingEvaluation;
-    }
-
-    public String getSprayingEvaluation() {
-        return sprayingEvaluation;
     }
 
     public int getBuildingNumber() {
