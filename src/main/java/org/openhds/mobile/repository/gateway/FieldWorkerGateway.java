@@ -31,33 +31,24 @@ public class FieldWorkerGateway extends Gateway<FieldWorker> {
         @Override
         public FieldWorker fromCursor(Cursor cursor) {
             FieldWorker fieldWorker = new FieldWorker();
-
             fieldWorker.setExtId(extractString(cursor, COLUMN_FIELD_WORKER_EXTID));
             fieldWorker.setIdPrefix(extractString(cursor, COLUMN_FIELD_WORKER_ID_PREFIX));
             fieldWorker.setFirstName(extractString(cursor, COLUMN_FIELD_WORKER_FIRST_NAME));
             fieldWorker.setLastName(extractString(cursor, COLUMN_FIELD_WORKER_LAST_NAME));
             fieldWorker.setPasswordHash(extractString(cursor, COLUMN_FIELD_WORKER_PASSWORD));
             fieldWorker.setUuid(extractString(cursor, COLUMN_FIELD_WORKER_UUID));
-
             return fieldWorker;
         }
 
         @Override
         public ContentValues toContentValues(FieldWorker fieldWorker) {
             ContentValues contentValues = new ContentValues();
-
-            // TODO: this is a temporary hack
-            if (null == fieldWorker.getIdPrefix()) {
-                fieldWorker.setIdPrefix("99");
-            }
-
             contentValues.put(COLUMN_FIELD_WORKER_EXTID, fieldWorker.getExtId());
             contentValues.put(COLUMN_FIELD_WORKER_ID_PREFIX, fieldWorker.getIdPrefix());
             contentValues.put(COLUMN_FIELD_WORKER_FIRST_NAME, fieldWorker.getFirstName());
             contentValues.put(COLUMN_FIELD_WORKER_LAST_NAME, fieldWorker.getLastName());
             contentValues.put(COLUMN_FIELD_WORKER_PASSWORD, fieldWorker.getPasswordHash());
             contentValues.put(COLUMN_FIELD_WORKER_UUID, fieldWorker.getUuid());
-
             return contentValues;
         }
 
