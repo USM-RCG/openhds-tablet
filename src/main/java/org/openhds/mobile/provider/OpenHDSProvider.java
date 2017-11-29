@@ -578,198 +578,143 @@ public class OpenHDSProvider extends ContentProvider {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE "
-                    + OpenHDS.Individuals.TABLE_NAME
-                    + " ("
-                    + OpenHDS.Individuals._ID
-                    + " INTEGER,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID
-                    + " TEXT PRIMARY KEY NOT NULL,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_DOB
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_FATHER
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_GENDER
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_MOTHER
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_END_TYPE
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE_UNITS
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_NATIONALITY
-                    + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_ID
-                    + " TEXT);");
 
-            db.execSQL("CREATE INDEX INDIVIDUAL_UUID_INDEX ON " + OpenHDS.Individuals.TABLE_NAME +
-                    "("+ OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID + ") ; ");
+            db.execSQL("CREATE TABLE " + OpenHDS.Individuals.TABLE_NAME + " ("
+                    + OpenHDS.Individuals._ID + " INTEGER,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID + " TEXT PRIMARY KEY NOT NULL,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_DOB + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_FATHER + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_GENDER + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_MOTHER + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_END_TYPE + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE_UNITS + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_NATIONALITY + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_ID + " TEXT);");
 
-            db.execSQL("CREATE INDEX INDIVIDUAL_EXTID_INDEX ON " + OpenHDS.Individuals.TABLE_NAME +
-                    "("+ OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID + ") ; ");
+            db.execSQL("CREATE INDEX INDIVIDUAL_UUID_INDEX ON " + OpenHDS.Individuals.TABLE_NAME + "("
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID + ") ; ");
 
-            db.execSQL("CREATE INDEX INDIVIDUAL_RESIDENCY_INDEX ON " + OpenHDS.Individuals.TABLE_NAME +
-                    "("+ OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID + ") ; ");
+            db.execSQL("CREATE INDEX INDIVIDUAL_EXTID_INDEX ON " + OpenHDS.Individuals.TABLE_NAME + "("
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID + ") ; ");
+
+            db.execSQL("CREATE INDEX INDIVIDUAL_RESIDENCY_INDEX ON " + OpenHDS.Individuals.TABLE_NAME + "("
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID + ") ; ");
 
 
             db.execSQL("CREATE TABLE " + OpenHDS.Locations.TABLE_NAME + " ("
                     + OpenHDS.Locations._ID + " INTEGER,"
-                    + OpenHDS.Locations.COLUMN_LOCATION_EXTID
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.Locations.COLUMN_LOCATION_UUID
-                    + " TEXT NOT NULL PRIMARY KEY,"
-                    + OpenHDS.Locations.COLUMN_LOCATION_HIERARCHY_UUID
-                    + " TEXT NOT NULL,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_EXTID + " TEXT NOT NULL,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_UUID + " TEXT NOT NULL PRIMARY KEY,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_HIERARCHY_UUID + " TEXT NOT NULL,"
                     + OpenHDS.Locations.COLUMN_LOCATION_HIERARCHY_EXTID + " TEXT,"
                     + OpenHDS.Locations.COLUMN_LOCATION_LATITUDE + " TEXT,"
                     + OpenHDS.Locations.COLUMN_LOCATION_LONGITUDE + " TEXT,"
-                    + OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_NAME
-                    + " TEXT,"
-                    + OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_CODE
-                    + " TEXT,"
-                    + OpenHDS.Locations.COLUMN_LOCATION_LOCALITY_NAME
-                    + " TEXT,"
-                    + OpenHDS.Locations.COLUMN_LOCATION_MAP_AREA_NAME
-                    + " TEXT," + OpenHDS.Locations.COLUMN_LOCATION_SECTOR_NAME
-                    + " INT," + OpenHDS.Locations.COLUMN_LOCATION_BUILDING_NUMBER
-                    + " INT," + OpenHDS.Locations.COLUMN_LOCATION_FLOOR_NUMBER
-                    + " TEXT," + OpenHDS.Locations.COLUMN_LOCATION_REGION_NAME
-                    + " TEXT," + OpenHDS.Locations.COLUMN_LOCATION_PROVINCE_NAME
-                    + " TEXT," + OpenHDS.Locations.COLUMN_LOCATION_SUB_DISTRICT_NAME
-                    + " TEXT," + OpenHDS.Locations.COLUMN_LOCATION_DISTRICT_NAME
-                    + " TEXT," + OpenHDS.Locations.COLUMN_LOCATION_DESCRIPTION
-                    + " TEXT," + OpenHDS.Locations.COLUMN_LOCATION_NAME
-                    + " TEXT NOT NULL);");
+                    + OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_NAME + " TEXT,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_CODE + " TEXT,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_LOCALITY_NAME + " TEXT,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_MAP_AREA_NAME + " TEXT,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_SECTOR_NAME + " INT,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_BUILDING_NUMBER + " INT,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_FLOOR_NUMBER + " TEXT,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_REGION_NAME + " TEXT,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_PROVINCE_NAME + " TEXT,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_SUB_DISTRICT_NAME + " TEXT,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_DISTRICT_NAME + " TEXT,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_DESCRIPTION + " TEXT,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_NAME + " TEXT NOT NULL);");
 
-            db.execSQL("CREATE INDEX LOCATION_EXTID_INDEX ON " + OpenHDS.Locations.TABLE_NAME +
-                    "("+ OpenHDS.Locations.COLUMN_LOCATION_EXTID + ") ; ");
+            db.execSQL("CREATE INDEX LOCATION_EXTID_INDEX ON " + OpenHDS.Locations.TABLE_NAME + "("
+                    + OpenHDS.Locations.COLUMN_LOCATION_EXTID + ") ; ");
 
-            db.execSQL("CREATE INDEX LOCATION_HIERARCHY_UUID_INDEX ON " + OpenHDS.Locations.TABLE_NAME +
-                    "("+ OpenHDS.Locations.COLUMN_LOCATION_HIERARCHY_UUID + ") ; ");
+            db.execSQL("CREATE INDEX LOCATION_HIERARCHY_UUID_INDEX ON " + OpenHDS.Locations.TABLE_NAME + "("
+                    + OpenHDS.Locations.COLUMN_LOCATION_HIERARCHY_UUID + ") ; ");
 
-            db.execSQL("CREATE INDEX LOCATION_UUID_INDEX ON " + OpenHDS.Locations.TABLE_NAME +
-                    "("+ OpenHDS.Locations.COLUMN_LOCATION_UUID + ") ; ");
+            db.execSQL("CREATE INDEX LOCATION_UUID_INDEX ON " + OpenHDS.Locations.TABLE_NAME + "("
+                    + OpenHDS.Locations.COLUMN_LOCATION_UUID + ") ; ");
 
 
-            db.execSQL("CREATE TABLE " + OpenHDS.HierarchyItems.TABLE_NAME
-                    + " (" + OpenHDS.HierarchyItems._ID
-                    + " INTEGER,"
-                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID
-                    + " TEXT NOT NULL PRIMARY KEY,"
-                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT
-                    + " TEXT NOT NULL);");
+            db.execSQL("CREATE TABLE " + OpenHDS.HierarchyItems.TABLE_NAME + " ("
+                    + OpenHDS.HierarchyItems._ID + " INTEGER,"
+                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID + " TEXT NOT NULL PRIMARY KEY,"
+                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID + " TEXT NOT NULL,"
+                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL + " TEXT NOT NULL,"
+                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME + " TEXT NOT NULL,"
+                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT + " TEXT NOT NULL);");
 
-            db.execSQL("CREATE INDEX LOCATIONHIERARCHY_PARENT_INDEX ON " + OpenHDS.HierarchyItems.TABLE_NAME +
-                    "("+ OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT + ") ; ");
+            db.execSQL("CREATE INDEX LOCATIONHIERARCHY_PARENT_INDEX ON " + OpenHDS.HierarchyItems.TABLE_NAME + "("
+                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT + ") ; ");
 
-            db.execSQL("CREATE INDEX LOCATIONHIERARCHY_UUID_INDEX ON " + OpenHDS.HierarchyItems.TABLE_NAME +
-                    "("+ OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID + ") ; ");
+            db.execSQL("CREATE INDEX LOCATIONHIERARCHY_UUID_INDEX ON " + OpenHDS.HierarchyItems.TABLE_NAME + "("
+                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID + ") ; ");
 
-            db.execSQL("CREATE INDEX LOCATIONHIERARCHY_EXTID_INDEX ON " + OpenHDS.HierarchyItems.TABLE_NAME +
-                    "("+ OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID + ") ; ");
+            db.execSQL("CREATE INDEX LOCATIONHIERARCHY_EXTID_INDEX ON " + OpenHDS.HierarchyItems.TABLE_NAME + "("
+                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID + ") ; ");
+
 
             db.execSQL("CREATE TABLE " + OpenHDS.FieldWorkers.TABLE_NAME + " ("
                     + OpenHDS.FieldWorkers._ID + " INTEGER,"
-                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_UUID
-                    + " TEXT PRIMARY KEY NOT NULL,"
-                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_EXTID
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_ID_PREFIX
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_FIRST_NAME
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_LAST_NAME
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_PASSWORD
-                    + " TEXT NOT NULL);");
+                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_UUID + " TEXT PRIMARY KEY NOT NULL,"
+                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_EXTID + " TEXT NOT NULL,"
+                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_ID_PREFIX + " TEXT NOT NULL,"
+                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_FIRST_NAME + " TEXT NOT NULL,"
+                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_LAST_NAME + " TEXT NOT NULL,"
+                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_PASSWORD + " TEXT NOT NULL);");
 
-            db.execSQL("CREATE INDEX FIELDWORKERS_EXTID_INDEX ON " + OpenHDS.FieldWorkers.TABLE_NAME +
-                    "("+ OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_EXTID + ") ; ");
+            db.execSQL("CREATE INDEX FIELDWORKERS_EXTID_INDEX ON " + OpenHDS.FieldWorkers.TABLE_NAME + "("
+                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_EXTID + ") ; ");
 
-            db.execSQL("CREATE INDEX FIELDWORKERS_UUID_INDEX ON " + OpenHDS.FieldWorkers.TABLE_NAME +
-                    "("+ OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_UUID + ") ; ");
+            db.execSQL("CREATE INDEX FIELDWORKERS_UUID_INDEX ON " + OpenHDS.FieldWorkers.TABLE_NAME + "("
+                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_UUID + ") ; ");
 
-            db.execSQL("CREATE INDEX FIELDWORKERS_ID_PREFIX_INDEX ON " + OpenHDS.FieldWorkers.TABLE_NAME +
-                    "("+ OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_ID_PREFIX + ") ; ");
+            db.execSQL("CREATE INDEX FIELDWORKERS_ID_PREFIX_INDEX ON " + OpenHDS.FieldWorkers.TABLE_NAME + "("
+                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_ID_PREFIX + ") ; ");
 
-            db.execSQL("CREATE INDEX FIELDWORKERS_PASSWORD_INDEX ON " + OpenHDS.FieldWorkers.TABLE_NAME +
-                    "("+ OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_PASSWORD + ") ; ");
+            db.execSQL("CREATE INDEX FIELDWORKERS_PASSWORD_INDEX ON " + OpenHDS.FieldWorkers.TABLE_NAME + "("
+                    + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_PASSWORD + ") ; ");
 
-            db.execSQL("CREATE TABLE "
-                    + OpenHDS.SocialGroups.TABLE_NAME
-                    + " ("
-                    + OpenHDS.SocialGroups._ID
-                    + " INTEGER,"
-                    + OpenHDS.SocialGroups.COLUMN_LOCATION_UUID
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_UUID
-                    + " TEXT NOT NULL PRIMARY KEY,"
-                    + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_HEAD_INDIVIDUAL_UUID
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_NAME
-                    + " TEXT NOT NULL);");
+            db.execSQL("CREATE TABLE " + OpenHDS.SocialGroups.TABLE_NAME + " ("
+                    + OpenHDS.SocialGroups._ID + " INTEGER,"
+                    + OpenHDS.SocialGroups.COLUMN_LOCATION_UUID + " TEXT NOT NULL,"
+                    + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_UUID + " TEXT NOT NULL PRIMARY KEY,"
+                    + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_HEAD_INDIVIDUAL_UUID + " TEXT NOT NULL,"
+                    + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_NAME + " TEXT NOT NULL);");
 
-            db.execSQL("CREATE INDEX SOCIALGROUP_HEAD_INDEX ON " + OpenHDS.SocialGroups.TABLE_NAME +
-                    "("+ OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_HEAD_INDIVIDUAL_UUID + ") ; ");
+            db.execSQL("CREATE INDEX SOCIALGROUP_HEAD_INDEX ON " + OpenHDS.SocialGroups.TABLE_NAME + "("
+                    + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_HEAD_INDIVIDUAL_UUID + ") ; ");
 
-            db.execSQL("CREATE INDEX SOCIALGROUP_LOCATION_INDEX ON " + OpenHDS.SocialGroups.TABLE_NAME +
-                    "("+ OpenHDS.SocialGroups.COLUMN_LOCATION_UUID + ") ; ");
+            db.execSQL("CREATE INDEX SOCIALGROUP_LOCATION_INDEX ON " + OpenHDS.SocialGroups.TABLE_NAME + "("
+                    + OpenHDS.SocialGroups.COLUMN_LOCATION_UUID + ") ; ");
 
-            db.execSQL("CREATE INDEX SOCIALGROUP_UUID_INDEX ON " + OpenHDS.SocialGroups.TABLE_NAME +
-                    "("+ OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_UUID + ") ; ");
+            db.execSQL("CREATE INDEX SOCIALGROUP_UUID_INDEX ON " + OpenHDS.SocialGroups.TABLE_NAME + "("
+                    + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_UUID + ") ; ");
 
-            db.execSQL("CREATE TABLE "
-                    + OpenHDS.Memberships.TABLE_NAME
-                    + " ("
-                    + OpenHDS.Memberships._ID
-                    + " INTEGER,"
-                    + OpenHDS.Memberships.COLUMN_MEMBERSHIP_UUID
-                    + " TEXT NOT NULL PRIMARY KEY,"
-                    + OpenHDS.Memberships.COLUMN_INDIVIDUAL_UUID
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.Memberships.COLUMN_SOCIAL_GROUP_UUID
-                    + " TEXT NOT NULL,"
-                    + OpenHDS.Memberships.COLUMN_MEMBERSHIP_RELATIONSHIP_TO_HEAD
-                    + " TEXT NOT NULL);");
+            db.execSQL("CREATE TABLE " + OpenHDS.Memberships.TABLE_NAME + " ("
+                    + OpenHDS.Memberships._ID + " INTEGER,"
+                    + OpenHDS.Memberships.COLUMN_MEMBERSHIP_UUID + " TEXT NOT NULL PRIMARY KEY,"
+                    + OpenHDS.Memberships.COLUMN_INDIVIDUAL_UUID + " TEXT NOT NULL,"
+                    + OpenHDS.Memberships.COLUMN_SOCIAL_GROUP_UUID + " TEXT NOT NULL,"
+                    + OpenHDS.Memberships.COLUMN_MEMBERSHIP_RELATIONSHIP_TO_HEAD + " TEXT NOT NULL);");
 
-            db.execSQL("CREATE INDEX MEMBERSHIP_INDIVIDUAL_INDEX ON " + OpenHDS.Memberships.TABLE_NAME +
-                    "("+ OpenHDS.Memberships.COLUMN_INDIVIDUAL_UUID + ") ; ");
+            db.execSQL("CREATE INDEX MEMBERSHIP_INDIVIDUAL_INDEX ON " + OpenHDS.Memberships.TABLE_NAME + "("
+                    + OpenHDS.Memberships.COLUMN_INDIVIDUAL_UUID + ") ; ");
 
-            db.execSQL("CREATE INDEX MEMBERSHIP_SOCIALGROUP_INDEX ON " + OpenHDS.Memberships.TABLE_NAME +
-                    "("+ OpenHDS.Memberships.COLUMN_SOCIAL_GROUP_UUID + ") ; ");
+            db.execSQL("CREATE INDEX MEMBERSHIP_SOCIALGROUP_INDEX ON " + OpenHDS.Memberships.TABLE_NAME + "("
+                    + OpenHDS.Memberships.COLUMN_SOCIAL_GROUP_UUID + ") ; ");
 
-            db.execSQL("CREATE INDEX MEMBERSHIP_UUID_INDEX ON " + OpenHDS.Memberships.TABLE_NAME +
-                    "("+ OpenHDS.Memberships.COLUMN_MEMBERSHIP_UUID + ") ; ");
+            db.execSQL("CREATE INDEX MEMBERSHIP_UUID_INDEX ON " + OpenHDS.Memberships.TABLE_NAME + "("
+                    + OpenHDS.Memberships.COLUMN_MEMBERSHIP_UUID + ") ; ");
         }
 
         @Override
