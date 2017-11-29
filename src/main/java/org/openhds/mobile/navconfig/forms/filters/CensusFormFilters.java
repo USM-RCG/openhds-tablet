@@ -1,9 +1,7 @@
 package org.openhds.mobile.navconfig.forms.filters;
 
-import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.repository.GatewayRegistry;
-import org.openhds.mobile.repository.gateway.LocationGateway;
 import org.openhds.mobile.repository.gateway.SocialGroupGateway;
 
 import static org.openhds.mobile.navconfig.BiokoHierarchy.HOUSEHOLD;

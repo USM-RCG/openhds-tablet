@@ -20,14 +20,9 @@ public class RepositoryUtils {
     private static final String OFFSET = "OFFSET";
     private static final String WHERE_PLACEHOLDER = "?";
     private static final String WHERE_ALL = "1";
-    private static final String[] COUNT_COLUMN = new String[] {"COUNT(*) AS count"};
 
     public static Uri insert(ContentResolver contentResolver, Uri tableUri, ContentValues contentValues) {
         return contentResolver.insert(tableUri, contentValues);
-    }
-
-    public static int bulkInsert(ContentResolver contentResolver, Uri tableUri, ContentValues[] allContentValues) {
-        return contentResolver.bulkInsert(tableUri, allContentValues);
     }
 
     public static int update(ContentResolver contentResolver, Uri tableUri, ContentValues contentValues,
@@ -47,7 +42,6 @@ public class RepositoryUtils {
 
     public static Cursor query(ContentResolver contentResolver, Uri tableUri, String whereStatement,
                                String[] columnValues, String columnOrderBy) {
-
         return contentResolver.query(tableUri, null, whereStatement, columnValues, columnOrderBy);
     }
 
@@ -57,23 +51,6 @@ public class RepositoryUtils {
         final String rangeStatement = buildRangeStatement(start, maxResults);
         final String orderByPlusRange = columnOrderBy + " " + rangeStatement;
         return contentResolver.query(tableUri, null, whereStatement, columnValues, orderByPlusRange);
-    }
-
-    public static int countRecords(ContentResolver contentResolver, Uri tableUri) {
-        int count = 0;
-        Cursor cursor = contentResolver.query(tableUri, COUNT_COLUMN, null, null, null);
-        if (cursor.moveToFirst()) {
-            count = cursor.getInt(0);
-        }
-        cursor.close();
-        return count;
-    }
-
-    public static int delete(ContentResolver contentResolver, Uri tableUri, String columnName, String columnValue) {
-        final String[] columnNames = {columnName};
-        final String[] columnValues = {columnValue};
-        final String whereStatement = buildWhereStatement(columnNames, EQUALS);
-        return contentResolver.delete(tableUri, whereStatement, columnValues);
     }
 
     public static String buildWhereStatement(String[] columnNames, String operator) {

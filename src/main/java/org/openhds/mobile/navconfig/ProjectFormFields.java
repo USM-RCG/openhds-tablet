@@ -74,7 +74,6 @@ public class ProjectFormFields {
         public static final String SUB_DISTRICT_NAME = "subDistrictName";
         public static final String DISTRICT_NAME = "districtName";
 
-        public static final String STATUS = "status";
         public static final String DESCRIPTION = "description";
         public static final String LONGITUDE = "longitude";
         public static final String LATITUDE = "latitude";
@@ -138,7 +137,6 @@ public class ProjectFormFields {
 
         public static final String HOUSEHOLD_UUID = "householdUuid";
         public static final String MEMBERSHIP_UUID = "membershipUuid";
-        public static final String RELATIONSHIP_UUID = "relationshipUuid";
         public static final String SOCIALGROUP_UUID = "socialgroupUuid";
 
         private static Map<String, String> columnsToFieldNames = new HashMap<>();
