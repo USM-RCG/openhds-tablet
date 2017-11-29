@@ -10,6 +10,7 @@ import static org.openhds.mobile.repository.RepositoryUtils.EQUALS;
  * Represent a database query to be performed.  Might be saved and performed in pieces by an Iterator.
  */
 public class Query {
+
     private final Uri tableUri;
     private final String[] columnNames;
     private final String[] columnValues;

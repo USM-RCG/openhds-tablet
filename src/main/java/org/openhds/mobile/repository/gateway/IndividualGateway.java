@@ -39,7 +39,6 @@ import static org.openhds.mobile.model.core.Individual.getFullName;
 import static org.openhds.mobile.repository.RepositoryUtils.extractString;
 
 
-
 /**
  * Convert Individuals to and from database.  Individual-specific queries.
  */

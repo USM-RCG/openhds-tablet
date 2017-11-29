@@ -11,6 +11,7 @@ import android.net.Uri;
  * BSH
  */
 public class RepositoryUtils {
+
     public static final String EQUALS = "=";
     public static final String LIKE = "LIKE";
     public static final String LIKE_WILD_CARD = "%";

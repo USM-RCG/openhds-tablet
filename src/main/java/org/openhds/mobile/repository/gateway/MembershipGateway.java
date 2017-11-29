@@ -32,13 +32,10 @@ public class MembershipGateway extends Gateway<Membership> {
     @Override
     public boolean insertOrUpdate(ContentResolver contentResolver, Membership membership) {
         ContentValues contentValues = converter.toContentValues(membership);
-
-        
         String socialGroupId = membership.getSocialGroupUuid();
         String individualId = membership.getIndividualUuid();
         Membership existingMembership = getFirst(contentResolver,
                 findBySocialGroupAndIndividual(socialGroupId, individualId));
-
         if (null == existingMembership) {
             return null != insert(contentResolver, tableUri, contentValues);
         } else {
@@ -64,24 +61,20 @@ public class MembershipGateway extends Gateway<Membership> {
         @Override
         public Membership fromCursor(Cursor cursor) {
             Membership membership = new Membership();
-
             membership.setUuid(extractString(cursor, COLUMN_MEMBERSHIP_UUID));
             membership.setIndividualUuid(extractString(cursor, COLUMN_INDIVIDUAL_UUID));
             membership.setSocialGroupUuid(extractString(cursor, COLUMN_SOCIAL_GROUP_UUID));
             membership.setRelationshipToHead(extractString(cursor, COLUMN_MEMBERSHIP_RELATIONSHIP_TO_HEAD));
-
             return membership;
         }
 
         @Override
         public ContentValues toContentValues(Membership membership) {
             ContentValues contentValues = new ContentValues();
-
             contentValues.put(COLUMN_MEMBERSHIP_UUID, membership.getUuid());
             contentValues.put(COLUMN_INDIVIDUAL_UUID, membership.getIndividualUuid());
             contentValues.put(COLUMN_SOCIAL_GROUP_UUID, membership.getSocialGroupUuid());
             contentValues.put(COLUMN_MEMBERSHIP_RELATIONSHIP_TO_HEAD, membership.getRelationshipToHead());
-
             return contentValues;
         }
 

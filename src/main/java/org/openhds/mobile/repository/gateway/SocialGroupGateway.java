@@ -32,24 +32,20 @@ public class SocialGroupGateway extends Gateway<SocialGroup> {
         @Override
         public SocialGroup fromCursor(Cursor cursor) {
             SocialGroup socialGroup = new SocialGroup();
-
             socialGroup.setUuid(extractString(cursor, COLUMN_SOCIAL_GROUP_UUID));
             socialGroup.setLocationUuid(extractString(cursor, COLUMN_LOCATION_UUID));
             socialGroup.setGroupHeadUuid(extractString(cursor, COLUMN_SOCIAL_GROUP_HEAD_INDIVIDUAL_UUID));
             socialGroup.setGroupName(extractString(cursor, COLUMN_SOCIAL_GROUP_NAME));
-
             return socialGroup;
         }
 
         @Override
         public ContentValues toContentValues(SocialGroup socialGroup) {
             ContentValues contentValues = new ContentValues();
-
             contentValues.put(COLUMN_SOCIAL_GROUP_UUID, socialGroup.getUuid());
             contentValues.put(COLUMN_LOCATION_UUID, socialGroup.getLocationUuid());
             contentValues.put(COLUMN_SOCIAL_GROUP_HEAD_INDIVIDUAL_UUID, socialGroup.getGroupHeadUuid());
             contentValues.put(COLUMN_SOCIAL_GROUP_NAME, socialGroup.getGroupName());
-
             return contentValues;
         }
 
@@ -61,11 +57,9 @@ public class SocialGroupGateway extends Gateway<SocialGroup> {
         @Override
         public DataWrapper toDataWrapper(ContentResolver contentResolver, SocialGroup socialGroup, String level) {
             DataWrapper dataWrapper = new DataWrapper();
-
             dataWrapper.setUuid(socialGroup.getUuid());
             dataWrapper.setName(socialGroup.getGroupName());
             dataWrapper.setCategory(level);
-
             return dataWrapper;
         }
     }
