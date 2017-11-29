@@ -39,10 +39,4 @@ public class Query {
         final String whereStatement = RepositoryUtils.buildWhereStatement(columnNames, operator);
         return RepositoryUtils.query(contentResolver, tableUri, whereStatement, columnValues, columnOrderBy);
     }
-
-    public Cursor selectRange(ContentResolver contentResolver, int start, int maxResults) {
-        final String whereStatement = RepositoryUtils.buildWhereStatement(columnNames, operator);
-        return RepositoryUtils.queryRange(contentResolver, tableUri, whereStatement, columnValues,
-                columnOrderBy, start, maxResults);
-    }
 }

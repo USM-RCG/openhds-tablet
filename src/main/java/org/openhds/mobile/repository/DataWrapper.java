@@ -25,7 +25,6 @@ import java.util.Map;
  */
 public class DataWrapper implements Parcelable {
 
-
     private String uuid;
     private String category;
     private String extId;

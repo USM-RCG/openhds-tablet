@@ -17,8 +17,6 @@ public class RepositoryUtils {
     public static final String LIKE_WILD_CARD = "%";
 
     private static final String AND = "AND";
-    private static final String LIMIT = "LIMIT";
-    private static final String OFFSET = "OFFSET";
     private static final String WHERE_PLACEHOLDER = "?";
     private static final String WHERE_ALL = "1";
 
@@ -46,14 +44,6 @@ public class RepositoryUtils {
         return contentResolver.query(tableUri, null, whereStatement, columnValues, columnOrderBy);
     }
 
-    public static Cursor queryRange(ContentResolver contentResolver, Uri tableUri, String whereStatement,
-                                    String[] columnValues, String columnOrderBy, int start, int maxResults) {
-
-        final String rangeStatement = buildRangeStatement(start, maxResults);
-        final String orderByPlusRange = columnOrderBy + " " + rangeStatement;
-        return contentResolver.query(tableUri, null, whereStatement, columnValues, orderByPlusRange);
-    }
-
     public static String buildWhereStatement(String[] columnNames, String operator) {
         if (null == columnNames || 0 == columnNames.length) {
             return WHERE_ALL;
@@ -76,17 +66,6 @@ public class RepositoryUtils {
 
     private static String buildWhereClause(String columnName, String operator) {
         return columnName + " " + operator + " " + WHERE_PLACEHOLDER;
-    }
-
-    /*
-     * This is a poor way to do scrolling. It will be slower the deeper you get into results and
-     * it will consume far more power than it should. The right way to do this is to compare keys
-     * on an indexed field.
-     *
-     * For details, see: http://www.sqlite.org/cvstrac/wiki?p=ScrollingCursor
-     */
-    public static String buildRangeStatement(int start, int maxResults) {
-        return LIMIT + " " + maxResults + " " + OFFSET + " " + start;
     }
 
     public static String extractString(Cursor cursor, String columnName) {
