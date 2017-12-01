@@ -158,15 +158,14 @@ public class FavoritesFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             DataWrapper dataWrapper = getItem(position);
+            if (convertView == null) {
+                convertView = makeTextWithPayload(getActivity(), null, null, null,
+                        null, null, R.drawable.data_selector, null, null, false);
+            }
 
             if (dataWrapper != null) {
-                if (convertView == null) {
-                    convertView = makeTextWithPayload(getActivity(), dataWrapper.getName(), dataWrapper.getExtId(), dataWrapper.getName(),
-                            null, null, R.drawable.data_selector, dataWrapper.getStringsPayload(), dataWrapper.getStringIdsPayload(), false);
-                } else {
-                    configureTextWithPayload(getActivity(), (RelativeLayout) convertView, dataWrapper.getName(), dataWrapper.getExtId(),
-                            dataWrapper.getStringsPayload(), dataWrapper.getStringIdsPayload(), false);
-                }
+                configureTextWithPayload(getActivity(), (RelativeLayout) convertView, dataWrapper.getName(), dataWrapper.getExtId(),
+                        dataWrapper.getStringsPayload(), dataWrapper.getStringIdsPayload(), false);
             }
 
             return convertView;
