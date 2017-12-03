@@ -29,7 +29,7 @@
     <string name="individual_label">Individual</string>
 
     <!-- Server URLs and Paths -->
-    <string name="default_openhds_server_url" translatable="false">https://cims-bioko.org/openhds</string>
+    <string name="default_openhds_server_url" translatable="false">https://cims-bioko.org</string>
     <string name="supervisor_login_url" translatable="false">/api/rest/rounds</string>
     <string name="sync_database_path" translatable="false">/api/rest/mobiledb/cached</string>
     <string name="no_server_url">No server URL has been set</string>
