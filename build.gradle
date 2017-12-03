@@ -35,8 +35,8 @@ android {
         applicationId 'org.openhds.mobile'
         minSdkVersion 15
         targetSdkVersion 19
-        versionCode 36
-        versionName '2.9.1'
+        versionCode 37
+        versionName '2.9.2'
     }
 
     compileOptions {
