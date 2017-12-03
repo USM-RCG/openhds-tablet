@@ -191,12 +191,18 @@ public class FavoritesFragment extends Fragment {
             Context ctx = getActivity();
             ContentResolver resolver = ctx.getContentResolver();
             DatabaseAdapter db = DatabaseAdapter.getInstance(ctx);
-            List<String> ids = db.getFavoriteIds();
-            List<DataWrapper> hydrated = new ArrayList<>(ids.size());
-            for (int i = 0; !isCancelled() && i < ids.size(); i++) {
-                hydrated.add(DataWrapper.getByHierarchyId(resolver, ids.get(i)));
+            List<String> favoriteIds = db.getFavoriteIds();
+            List<DataWrapper> hydratedFavorites = new ArrayList<>(favoriteIds.size());
+            for (int i = 0; !isCancelled() && i < favoriteIds.size(); i++) {
+                String itemId = favoriteIds.get(i);
+                DataWrapper item = DataWrapper.getByHierarchyId(resolver, itemId);
+                if (item != null) {
+                    hydratedFavorites.add(item);
+                } else {
+                    db.removeFavorite(itemId);
+                }
             }
-            return hydrated;
+            return hydratedFavorites;
         }
 
         @Override

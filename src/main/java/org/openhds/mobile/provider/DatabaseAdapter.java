@@ -296,6 +296,20 @@ public class DatabaseAdapter {
         }
     }
 
+    public long removeFavorite(String hierarchyId) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            String where = String.format("%s = ?", KEY_HIER_PATH);
+            String[] whereArgs = {hierarchyId};
+            long id = db.delete(FAVORITE_TABLE_NAME, where, whereArgs);
+            db.setTransactionSuccessful();
+            return id;
+        } finally {
+            db.endTransaction();
+        }
+    }
+
     public List<String> getFavoriteIds() {
         ArrayList<String> results = new ArrayList<>();
         SQLiteDatabase db = helper.getReadableDatabase();
