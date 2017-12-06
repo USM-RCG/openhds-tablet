@@ -691,14 +691,8 @@ public class OpenHDSProvider extends ContentProvider {
                     + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_HEAD_INDIVIDUAL_UUID + " TEXT NOT NULL,"
                     + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_NAME + " TEXT NOT NULL);");
 
-            db.execSQL("CREATE INDEX SOCIALGROUP_HEAD_INDEX ON " + OpenHDS.SocialGroups.TABLE_NAME + "("
-                    + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_HEAD_INDIVIDUAL_UUID + ") ; ");
-
             db.execSQL("CREATE INDEX SOCIALGROUP_LOCATION_INDEX ON " + OpenHDS.SocialGroups.TABLE_NAME + "("
                     + OpenHDS.SocialGroups.COLUMN_LOCATION_UUID + ") ; ");
-
-            db.execSQL("CREATE INDEX SOCIALGROUP_UUID_INDEX ON " + OpenHDS.SocialGroups.TABLE_NAME + "("
-                    + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_UUID + ") ; ");
 
             db.execSQL("CREATE TABLE " + OpenHDS.Memberships.TABLE_NAME + " ("
                     + OpenHDS.Memberships._ID + " INTEGER,"
@@ -709,12 +703,6 @@ public class OpenHDSProvider extends ContentProvider {
 
             db.execSQL("CREATE INDEX MEMBERSHIP_INDIVIDUAL_INDEX ON " + OpenHDS.Memberships.TABLE_NAME + "("
                     + OpenHDS.Memberships.COLUMN_INDIVIDUAL_UUID + ") ; ");
-
-            db.execSQL("CREATE INDEX MEMBERSHIP_SOCIALGROUP_INDEX ON " + OpenHDS.Memberships.TABLE_NAME + "("
-                    + OpenHDS.Memberships.COLUMN_SOCIAL_GROUP_UUID + ") ; ");
-
-            db.execSQL("CREATE INDEX MEMBERSHIP_UUID_INDEX ON " + OpenHDS.Memberships.TABLE_NAME + "("
-                    + OpenHDS.Memberships.COLUMN_MEMBERSHIP_UUID + ") ; ");
         }
 
         @Override
