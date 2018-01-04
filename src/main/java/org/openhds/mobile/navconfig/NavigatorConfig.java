@@ -64,6 +64,7 @@ public class NavigatorConfig {
 
     private void initExtendedModules() throws IOException {
         executeConfigScript("/spraying.js");
+        executeConfigScript("/gisops.js");
     }
 
     private void initCoreModules() throws IOException {
