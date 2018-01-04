@@ -136,8 +136,6 @@ public class ProjectFormFields {
         public static final String MEMBER_STATUS = "individualMemberStatus";
 
         public static final String HOUSEHOLD_UUID = "householdUuid";
-        public static final String MEMBERSHIP_UUID = "membershipUuid";
-        public static final String SOCIALGROUP_UUID = "socialgroupUuid";
 
         private static Map<String, String> columnsToFieldNames = new HashMap<>();
 

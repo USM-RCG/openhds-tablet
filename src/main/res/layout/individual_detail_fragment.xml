@@ -37,13 +37,6 @@
                 android:background="@drawable/detail_fragment"
                 android:layout_marginBottom="5dp"/>
 
-        <LinearLayout
-                android:id="@+id/individual_detail_frag_membership_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/detail_fragment"/>
-q
     </LinearLayout>
 
 </ScrollView>

@@ -15,4 +15,8 @@ public class StringUtils {
         }
         return b.toString();
     }
+
+    public static boolean isEmpty(String value) {
+        return value == null || value.isEmpty();
+    }
 }

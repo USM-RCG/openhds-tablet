@@ -6,7 +6,6 @@ import org.openhds.mobile.R;
 import static org.openhds.mobile.repository.GatewayRegistry.getFieldWorkerGateway;
 import static org.openhds.mobile.repository.GatewayRegistry.getIndividualGateway;
 import static org.openhds.mobile.repository.GatewayRegistry.getLocationGateway;
-import static org.openhds.mobile.repository.GatewayRegistry.getSocialGroupGateway;
 
 /**
  * Utility methods for working with Gateways, SearchFragment
@@ -53,14 +52,4 @@ public class SearchUtils {
         plugin.getColumnsAndLabels().put(OpenHDS.Locations.COLUMN_LOCATION_FLOOR_NUMBER, R.string.location_floor_number_label);
         return plugin;
     }
-
-    // Search for a social group based on name and id.
-    public static EntityFieldSearch getSocialGroupModule(String fieldName) {
-        EntityFieldSearch plugin = new EntityFieldSearch(getSocialGroupGateway(), R.string.search_social_group_label, fieldName);
-        plugin.getColumnsAndLabels().put(OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_NAME, R.string.social_group_name);
-        plugin.getColumnsAndLabels().put(OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_UUID, R.string.social_group_ext_id);
-        plugin.getColumnsAndLabels().put(OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_HEAD_INDIVIDUAL_UUID, R.string.social_group_head_ext_id);
-        return plugin;
-    }
-
 }

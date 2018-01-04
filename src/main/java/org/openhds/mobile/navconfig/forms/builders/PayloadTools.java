@@ -20,9 +20,9 @@ public class PayloadTools {
         }
     }
 
-    public static void addMinimalFormPayload(Map<String, String> formPayload, LaunchContext navigateActivity) {
+    public static void addMinimalFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
-        HierarchyPath hierarchyPath = navigateActivity.getHierarchyPath();
+        HierarchyPath hierarchyPath = ctx.getHierarchyPath();
 
         //TODO: Add all the hierarchy Uuids as well?
         // Add all the extIds from the HierarchyPath
@@ -32,7 +32,7 @@ public class PayloadTools {
         }
 
         // add the FieldWorker's extId
-        FieldWorker fieldWorker = navigateActivity.getCurrentFieldWorker();
+        FieldWorker fieldWorker = ctx.getCurrentFieldWorker();
         formPayload.put(ProjectFormFields.General.FIELD_WORKER_EXTID, fieldWorker.getExtId());
         formPayload.put(ProjectFormFields.General.FIELD_WORKER_UUID, fieldWorker.getUuid());
 

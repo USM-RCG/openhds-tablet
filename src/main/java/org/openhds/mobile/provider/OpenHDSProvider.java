@@ -37,8 +37,6 @@ public class OpenHDSProvider extends ContentProvider {
     private static HashMap<String, String> locationsProjectionMap;
     private static HashMap<String, String> hierarchyitemsProjectionMap;
     private static HashMap<String, String> fieldworkersProjectionMap;
-    private static HashMap<String, String> socialgroupsProjectionMap;
-    private static HashMap<String, String> membershipsProjectionMap;
 
     private static final int INDIVIDUALS = 1;
     private static final int INDIVIDUAL_ID = 2;
@@ -48,29 +46,21 @@ public class OpenHDSProvider extends ContentProvider {
     private static final int HIERARCHYITEM_ID = 6;
     private static final int FIELDWORKERS = 13;
     private static final int FIELDWORKER_ID = 14;
-    private static final int SOCIALGROUPS = 15;
-    private static final int SOCIALGROUP_ID = 16;
-    private static final int MEMBERSHIPS = 17;
-    private static final int MEMBERSHIPS_ID = 18;
 
     private static final UriMatcher sUriMatcher;
 
     static {
+
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "individuals", INDIVIDUALS);
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "individuals/#", INDIVIDUAL_ID);
-
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "locations", LOCATIONS);
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "locations/#", LOCATION_ID);
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "hierarchyitems", HIERARCHYITEMS);
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "hierarchyitems/#", HIERARCHYITEM_ID);
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "fieldworkers", FIELDWORKERS);
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "fieldworkers/#", FIELDWORKER_ID);
-        sUriMatcher.addURI(OpenHDS.AUTHORITY, "socialgroups", SOCIALGROUPS);
-        sUriMatcher.addURI(OpenHDS.AUTHORITY, "socialgroups/#", SOCIALGROUP_ID);
-        sUriMatcher.addURI(OpenHDS.AUTHORITY, "memberships", MEMBERSHIPS);
-        sUriMatcher.addURI(OpenHDS.AUTHORITY, "memberships/#", MEMBERSHIPS_ID);
-
 
         individualsProjectionMap = new HashMap<>();
 
@@ -139,20 +129,6 @@ public class OpenHDSProvider extends ContentProvider {
         fieldworkersProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_FIRST_NAME, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_FIRST_NAME);
         fieldworkersProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_LAST_NAME, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_LAST_NAME);
         fieldworkersProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_PASSWORD, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_PASSWORD);
-
-        socialgroupsProjectionMap = new HashMap<>();
-        socialgroupsProjectionMap.put(OpenHDS.SocialGroups._ID, OpenHDS.SocialGroups._ID);
-        socialgroupsProjectionMap.put(OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_UUID, OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_UUID);
-        socialgroupsProjectionMap.put(OpenHDS.SocialGroups.COLUMN_LOCATION_UUID, OpenHDS.SocialGroups.COLUMN_LOCATION_UUID);
-        socialgroupsProjectionMap.put(OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_HEAD_INDIVIDUAL_UUID, OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_HEAD_INDIVIDUAL_UUID);
-        socialgroupsProjectionMap.put(OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_NAME, OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_NAME);
-
-        membershipsProjectionMap = new HashMap<>();
-        membershipsProjectionMap.put(OpenHDS.Memberships._ID, OpenHDS.Memberships._ID);
-        membershipsProjectionMap.put(OpenHDS.Memberships.COLUMN_INDIVIDUAL_UUID, OpenHDS.Memberships.COLUMN_INDIVIDUAL_UUID);
-        membershipsProjectionMap.put(OpenHDS.Memberships.COLUMN_MEMBERSHIP_UUID, OpenHDS.Memberships.COLUMN_MEMBERSHIP_UUID);
-        membershipsProjectionMap.put(OpenHDS.Memberships.COLUMN_SOCIAL_GROUP_UUID, OpenHDS.Memberships.COLUMN_SOCIAL_GROUP_UUID);
-        membershipsProjectionMap.put(OpenHDS.Memberships.COLUMN_MEMBERSHIP_RELATIONSHIP_TO_HEAD, OpenHDS.Memberships.COLUMN_MEMBERSHIP_RELATIONSHIP_TO_HEAD);
     }
 
     private static DatabaseHelper dbHelper;
@@ -251,30 +227,6 @@ public class OpenHDSProvider extends ContentProvider {
                         + uri.getPathSegments().get(
                         OpenHDS.FieldWorkers.ID_PATH_POSITION));
                 break;
-            case SOCIALGROUPS:
-                qb.setTables(OpenHDS.SocialGroups.TABLE_NAME);
-                qb.setProjectionMap(socialgroupsProjectionMap);
-                break;
-            case SOCIALGROUP_ID:
-                qb.setTables(OpenHDS.SocialGroups.TABLE_NAME);
-                qb.setProjectionMap(socialgroupsProjectionMap);
-                qb.appendWhere(OpenHDS.SocialGroups._ID
-                        + "="
-                        + uri.getPathSegments().get(
-                        OpenHDS.SocialGroups.ID_PATH_POSITION));
-                break;
-            case MEMBERSHIPS:
-                qb.setTables(OpenHDS.Memberships.TABLE_NAME);
-                qb.setProjectionMap(membershipsProjectionMap);
-                break;
-            case MEMBERSHIPS_ID:
-                qb.setTables(OpenHDS.Memberships.TABLE_NAME);
-                qb.setProjectionMap(membershipsProjectionMap);
-                qb.appendWhere(OpenHDS.Memberships._ID
-                        + "="
-                        + uri.getPathSegments().get(
-                        OpenHDS.Memberships.ID_PATH_POSITION));
-                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -320,14 +272,6 @@ public class OpenHDSProvider extends ContentProvider {
                 return OpenHDS.FieldWorkers.CONTENT_TYPE;
             case FIELDWORKER_ID:
                 return OpenHDS.FieldWorkers.CONTENT_ITEM_TYPE;
-            case SOCIALGROUPS:
-                return OpenHDS.SocialGroups.CONTENT_TYPE;
-            case SOCIALGROUP_ID:
-                return OpenHDS.SocialGroups.CONTENT_ITEM_TYPE;
-            case MEMBERSHIPS:
-                return OpenHDS.Memberships.CONTENT_TYPE;
-            case MEMBERSHIPS_ID:
-                return OpenHDS.Memberships.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -362,14 +306,6 @@ public class OpenHDSProvider extends ContentProvider {
             case FIELDWORKERS:
                 table = OpenHDS.FieldWorkers.TABLE_NAME;
                 contentUriBase = OpenHDS.FieldWorkers.CONTENT_ID_URI_BASE;
-                break;
-            case SOCIALGROUPS:
-                table = OpenHDS.SocialGroups.TABLE_NAME;
-                contentUriBase = OpenHDS.SocialGroups.CONTENT_ID_URI_BASE;
-                break;
-            case MEMBERSHIPS:
-                table = OpenHDS.Memberships.TABLE_NAME;
-                contentUriBase = OpenHDS.Memberships.CONTENT_ID_URI_BASE;
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -446,25 +382,6 @@ public class OpenHDSProvider extends ContentProvider {
                 count = db.delete(OpenHDS.FieldWorkers.TABLE_NAME, finalWhere,
                         whereArgs);
                 break;
-            case SOCIALGROUPS:
-                count = db
-                        .delete(OpenHDS.SocialGroups.TABLE_NAME, where, whereArgs);
-                break;
-            case SOCIALGROUP_ID:
-                finalWhere = buildFinalWhere(uri,
-                        OpenHDS.SocialGroups.ID_PATH_POSITION, where);
-                count = db.delete(OpenHDS.SocialGroups.TABLE_NAME, finalWhere,
-                        whereArgs);
-                break;
-            case MEMBERSHIPS:
-                count = db.delete(OpenHDS.Memberships.TABLE_NAME, where, whereArgs);
-                break;
-            case MEMBERSHIPS_ID:
-                finalWhere = buildFinalWhere(uri,
-                        OpenHDS.Memberships.ID_PATH_POSITION, where);
-                count = db.delete(OpenHDS.Memberships.TABLE_NAME, finalWhere,
-                        whereArgs);
-                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -536,26 +453,6 @@ public class OpenHDSProvider extends ContentProvider {
                 finalWhere = buildFinalWhere(uri,
                         OpenHDS.FieldWorkers.ID_PATH_POSITION, where);
                 count = db.update(OpenHDS.FieldWorkers.TABLE_NAME, values,
-                        finalWhere, whereArgs);
-                break;
-            case SOCIALGROUPS:
-                count = db.update(OpenHDS.SocialGroups.TABLE_NAME, values, where,
-                        whereArgs);
-                break;
-            case SOCIALGROUP_ID:
-                finalWhere = buildFinalWhere(uri,
-                        OpenHDS.SocialGroups.ID_PATH_POSITION, where);
-                count = db.update(OpenHDS.SocialGroups.TABLE_NAME, values,
-                        finalWhere, whereArgs);
-                break;
-            case MEMBERSHIPS:
-                count = db.update(OpenHDS.Memberships.TABLE_NAME, values, where,
-                        whereArgs);
-                break;
-            case MEMBERSHIPS_ID:
-                finalWhere = buildFinalWhere(uri,
-                        OpenHDS.Memberships.ID_PATH_POSITION, where);
-                count = db.update(OpenHDS.Memberships.TABLE_NAME, values,
                         finalWhere, whereArgs);
                 break;
             default:
@@ -683,33 +580,11 @@ public class OpenHDSProvider extends ContentProvider {
 
             db.execSQL("CREATE INDEX FIELDWORKERS_PASSWORD_INDEX ON " + OpenHDS.FieldWorkers.TABLE_NAME + "("
                     + OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_PASSWORD + ") ; ");
-
-            db.execSQL("CREATE TABLE " + OpenHDS.SocialGroups.TABLE_NAME + " ("
-                    + OpenHDS.SocialGroups._ID + " INTEGER,"
-                    + OpenHDS.SocialGroups.COLUMN_LOCATION_UUID + " TEXT NOT NULL,"
-                    + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_UUID + " TEXT NOT NULL PRIMARY KEY,"
-                    + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_HEAD_INDIVIDUAL_UUID + " TEXT NOT NULL,"
-                    + OpenHDS.SocialGroups.COLUMN_SOCIAL_GROUP_NAME + " TEXT NOT NULL);");
-
-            db.execSQL("CREATE INDEX SOCIALGROUP_LOCATION_INDEX ON " + OpenHDS.SocialGroups.TABLE_NAME + "("
-                    + OpenHDS.SocialGroups.COLUMN_LOCATION_UUID + ") ; ");
-
-            db.execSQL("CREATE TABLE " + OpenHDS.Memberships.TABLE_NAME + " ("
-                    + OpenHDS.Memberships._ID + " INTEGER,"
-                    + OpenHDS.Memberships.COLUMN_MEMBERSHIP_UUID + " TEXT NOT NULL PRIMARY KEY,"
-                    + OpenHDS.Memberships.COLUMN_INDIVIDUAL_UUID + " TEXT NOT NULL,"
-                    + OpenHDS.Memberships.COLUMN_SOCIAL_GROUP_UUID + " TEXT NOT NULL,"
-                    + OpenHDS.Memberships.COLUMN_MEMBERSHIP_RELATIONSHIP_TO_HEAD + " TEXT NOT NULL);");
-
-            db.execSQL("CREATE INDEX MEMBERSHIP_INDIVIDUAL_INDEX ON " + OpenHDS.Memberships.TABLE_NAME + "("
-                    + OpenHDS.Memberships.COLUMN_INDIVIDUAL_UUID + ") ; ");
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", wiping data");
-            db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.Memberships.TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.SocialGroups.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.FieldWorkers.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.Individuals.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.HierarchyItems.TABLE_NAME);

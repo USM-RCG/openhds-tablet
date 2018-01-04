@@ -10,14 +10,10 @@ import android.widget.TextView;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.model.core.Individual;
-import org.openhds.mobile.model.core.Membership;
 import org.openhds.mobile.navconfig.ProjectResources;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
-import org.openhds.mobile.repository.gateway.MembershipGateway;
-
-import java.util.List;
 
 import static org.openhds.mobile.utilities.LayoutUtils.makeLargeTextWithValueAndLabel;
 
@@ -38,11 +34,9 @@ public class IndividualDetailFragment extends DetailFragment {
     @Override
     public void setUpDetails(DataWrapper data) {
         Individual individual = getIndividual(data.getUuid());
-        List<Membership> memberships = getMemberships(individual.getExtId());
         setBannerText(individual.getExtId());
         rebuildPersonalDetails(individual);
         rebuildContactDetails(individual);
-        rebuildMembershipDetails(memberships);
     }
 
     private void setBannerText(String text) {
@@ -72,19 +66,6 @@ public class IndividualDetailFragment extends DetailFragment {
         addTextView(container, R.string.individual_point_of_contact_phone_number_label, individual.getPointOfContactPhoneNumber());
     }
 
-    private void rebuildMembershipDetails(List<Membership> memberships) {
-        LinearLayout container = (LinearLayout) detailContainer.findViewById(R.id.individual_detail_frag_membership_info);
-        container.removeAllViews();
-        if (!memberships.isEmpty()) {
-            for (Membership membership : memberships) {
-                addTextView(container, R.string.individual_relationship_to_head_label,
-                        getString(ProjectResources.Relationship.getRelationshipStringId(membership.getRelationshipToHead())));
-            }
-        } else {
-            container.setVisibility(View.GONE);
-        }
-    }
-
     private void addTextView(LinearLayout layout, int label, String value) {
         layout.addView(makeLargeTextWithValueAndLabel(getActivity(), label, value, LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
     }
@@ -92,10 +73,5 @@ public class IndividualDetailFragment extends DetailFragment {
     private Individual getIndividual(String uuid) {
         IndividualGateway gateway = GatewayRegistry.getIndividualGateway();
         return gateway.getFirst(getActivity().getContentResolver(), gateway.findById(uuid));
-    }
-
-    private List<Membership> getMemberships(String individualExtId) {
-        MembershipGateway gateway = GatewayRegistry.getMembershipGateway();
-        return gateway.getList(getActivity().getContentResolver(), gateway.findByIndividual(individualExtId));
     }
 }

@@ -6,11 +6,8 @@ import android.database.Cursor;
 import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.R;
 import org.openhds.mobile.model.core.Individual;
-import org.openhds.mobile.model.core.Membership;
-import org.openhds.mobile.navconfig.ProjectResources;
 import org.openhds.mobile.repository.Converter;
 import org.openhds.mobile.repository.DataWrapper;
-import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.Query;
 
 import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID;
@@ -57,6 +54,7 @@ public class IndividualGateway extends Gateway<Individual> {
 
         @Override
         public Individual fromCursor(Cursor cursor) {
+
             Individual individual = new Individual();
 
             individual.setUuid(extractString(cursor, COLUMN_INDIVIDUAL_UUID));
@@ -80,7 +78,6 @@ public class IndividualGateway extends Gateway<Individual> {
             individual.setPointOfContactPhoneNumber(extractString(cursor, COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER));
             individual.setLanguagePreference(extractString(cursor, COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE));
             individual.setNationality(extractString(cursor, COLUMN_INDIVIDUAL_NATIONALITY));
-
 
             return individual;
         }
@@ -122,28 +119,17 @@ public class IndividualGateway extends Gateway<Individual> {
 
         @Override
         public DataWrapper toDataWrapper(ContentResolver contentResolver, Individual individual, String level) {
+
             DataWrapper dataWrapper = new DataWrapper();
             dataWrapper.setUuid(individual.getUuid());
             dataWrapper.setExtId(individual.getExtId());
             dataWrapper.setName(getFullName(individual));
             dataWrapper.setCategory(level);
 
-            // for Bioko
-            // add individual details to payload
+            // for Bioko add individual details to payload
             dataWrapper.getStringsPayload().put(R.string.individual_other_names_label, individual.getOtherNames());
             dataWrapper.getStringsPayload().put(R.string.individual_age_label, getAgeWithUnits(individual));
             dataWrapper.getStringsPayload().put(R.string.individual_language_preference_label, individual.getLanguagePreference());
-
-
-            // for Bioko
-            // add household membership details to payload
-            MembershipGateway membershipGateway = GatewayRegistry.getMembershipGateway();
-            Membership membership = membershipGateway.getFirst(contentResolver,
-                    membershipGateway.findBySocialGroupAndIndividual(individual.getCurrentResidenceUuid(), individual.getUuid()));
-            if (null != membership) {
-                int relationshipId =  ProjectResources.Relationship.getRelationshipStringId(membership.getRelationshipToHead());
-                dataWrapper.getStringIdsPayload().put(R.string.individual_relationship_to_head_label, relationshipId);
-            }
 
             return dataWrapper;
         }

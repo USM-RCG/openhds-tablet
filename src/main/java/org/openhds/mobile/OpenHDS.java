@@ -134,45 +134,4 @@ public class OpenHDS {
         public static final String COLUMN_FIELD_WORKER_LAST_NAME = "lastName";
     }
 
-    public static final class SocialGroups implements BaseColumns {
-
-        public static final String TABLE_NAME = "socialgroups";
-
-        private static final String PATH_NOTE_ID = "/socialgroups/";
-
-        public static final int ID_PATH_POSITION = 1;
-
-        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(CONTENT_BASE + PATH_NOTE_ID);
-
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openhds.socialgroups";
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openhds.socialgroups";
-
-        public static final String COLUMN_SOCIAL_GROUP_UUID = "uuid";
-
-        public static final String COLUMN_LOCATION_UUID = "location_uuid";
-
-        public static final String COLUMN_SOCIAL_GROUP_NAME = "groupName";
-        public static final String COLUMN_SOCIAL_GROUP_HEAD_INDIVIDUAL_UUID = "groupHead_uuid";
-    }
-
-    public static final class Memberships implements BaseColumns {
-
-        public static final String TABLE_NAME = "memberships";
-
-        private static final String PATH_NOTE_ID = "/memberships/";
-
-        public static final int ID_PATH_POSITION = 2;
-
-        public static final Uri CONTENT_ID_URI_BASE = Uri.parse(CONTENT_BASE + PATH_NOTE_ID);
-
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openhds.memberships";
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openhds.memberships";
-
-        public static final String COLUMN_MEMBERSHIP_UUID = "uuid";
-
-        public static final String COLUMN_SOCIAL_GROUP_UUID = "socialGroup_uuid";
-        public static final String COLUMN_INDIVIDUAL_UUID = "individual_uuid";
-        public static final String COLUMN_MEMBERSHIP_RELATIONSHIP_TO_HEAD = "relationshipToHead";
-    }
-
 }

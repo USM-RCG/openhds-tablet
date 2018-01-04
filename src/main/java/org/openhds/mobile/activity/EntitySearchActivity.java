@@ -29,7 +29,6 @@ import java.util.List;
 import static org.openhds.mobile.repository.search.SearchUtils.getFieldWorkerModule;
 import static org.openhds.mobile.repository.search.SearchUtils.getIndividualModule;
 import static org.openhds.mobile.repository.search.SearchUtils.getLocationModule;
-import static org.openhds.mobile.repository.search.SearchUtils.getSocialGroupModule;
 import static org.openhds.mobile.utilities.LayoutUtils.configureTextWithValueAndLabel;
 import static org.openhds.mobile.utilities.LayoutUtils.makeLargeTextWithValueAndLabel;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
@@ -139,8 +138,6 @@ public class EntitySearchActivity extends Activity implements DataSelectionFragm
                     return getFieldWorkerModule(UUID);
                 case LOCATION:
                     return getLocationModule(UUID);
-                case SOCIAL_GROUP:
-                    return getSocialGroupModule(UUID);
             }
         } catch (IllegalArgumentException e) {
             Log.e(TAG, "invalid search entity " + entityStr);
