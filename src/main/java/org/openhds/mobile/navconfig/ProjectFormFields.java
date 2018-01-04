@@ -194,4 +194,8 @@ public class ProjectFormFields {
     public static final class CreateSector {
         public static final String MAP_UUID = "mapUuid";
     }
+
+    public static final class Fingerprints {
+        public static final String INDIVIDUAL_UUID = "individualUuid";
+    }
 }

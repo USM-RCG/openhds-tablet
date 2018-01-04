@@ -39,6 +39,10 @@ with (imports) {
            builder: new CensusFormPayloadBuilders.AddMemberOfHousehold(),
            consumer: new CensusFormPayloadConsumers.AddMemberOfHousehold() });
 
+    bind({ form: 'fingerprints',
+           label: 'fingerprintsFormLabel',
+           builder: new CensusFormPayloadBuilders.Fingerprints() });
+
     function launcher(l) {
         return new Launcher({
             getLabel: function() { return config.getString(l.label); },
@@ -60,6 +64,10 @@ with (imports) {
             launcher({ label: 'census.householdMemberLabel',
                        bind: 'household_member',
                        filter: InvertedFilter.invert(new CensusFormFilters.AddHeadOfHousehold()) })
+        ],
+        individual: [
+            launcher({ label: 'census.fingerprintsLabel',
+                       bind: 'fingerprints' })
         ]
     };
 

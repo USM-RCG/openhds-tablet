@@ -123,4 +123,17 @@ public class CensusFormPayloadBuilders {
             return formPayload;
         }
     }
+
+    @UsedByJSConfig
+    public static class Fingerprints implements FormPayloadBuilder {
+        @Override
+        public Map<String, String> buildPayload(LaunchContext ctx) {
+            Map<String,String> formPayload = new HashMap<>();
+            PayloadTools.addMinimalFormPayload(formPayload, ctx);
+            PayloadTools.flagForReview(formPayload, false);
+            DataWrapper individual = ctx.getHierarchyPath().get(INDIVIDUAL);
+            formPayload.put(ProjectFormFields.Fingerprints.INDIVIDUAL_UUID, individual.getUuid());
+            return formPayload;
+        }
+    }
 }
