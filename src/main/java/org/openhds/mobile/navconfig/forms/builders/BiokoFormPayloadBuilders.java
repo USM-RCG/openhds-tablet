@@ -169,4 +169,30 @@ public class BiokoFormPayloadBuilders {
             return formPayload;
         }
     }
+
+    @UsedByJSConfig
+    public static class CreateMap implements FormPayloadBuilder {
+        @Override
+        public Map<String, String> buildPayload(LaunchContext ctx) {
+            Map<String,String> formPayload = new HashMap<>();
+            PayloadTools.addMinimalFormPayload(formPayload, ctx);
+            PayloadTools.flagForReview(formPayload, false);
+            DataWrapper locality = ctx.getHierarchyPath().get(LOCALITY);
+            formPayload.put(ProjectFormFields.CreateMap.LOCALITY_UUID, locality.getUuid());
+            return formPayload;
+        }
+    }
+
+    @UsedByJSConfig
+    public static class CreateSector implements FormPayloadBuilder {
+        @Override
+        public Map<String, String> buildPayload(LaunchContext ctx) {
+            Map<String,String> formPayload = new HashMap<>();
+            PayloadTools.addMinimalFormPayload(formPayload, ctx);
+            PayloadTools.flagForReview(formPayload, false);
+            DataWrapper map = ctx.getHierarchyPath().get(MAP_AREA);
+            formPayload.put(ProjectFormFields.CreateSector.MAP_UUID, map.getUuid());
+            return formPayload;
+        }
+    }
 }

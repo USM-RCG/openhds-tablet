@@ -186,4 +186,12 @@ public class ProjectFormFields {
     public static final class SuperOjo {
         public static final String OJO_DATE = "ojo_date";
     }
+
+    public static final class CreateMap {
+        public static final String LOCALITY_UUID = "localityUuid";
+    }
+
+    public static final class CreateSector {
+        public static final String MAP_UUID = "mapUuid";
+    }
 }

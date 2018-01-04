@@ -26,6 +26,14 @@ with (imports) {
            label: 'duplicateLocationFormLabel',
            builder: new BiokoFormPayloadBuilders.DuplicateLocation() });
 
+    bind({ form: 'create_map',
+           label: 'createMapFormLabel',
+           builder: new BiokoFormPayloadBuilders.CreateMap() });
+
+    bind({ form: 'create_sector',
+           label: 'createSectorFormLabel',
+           builder: new BiokoFormPayloadBuilders.CreateSector() });
+
     function launcher(l) {
         return new Launcher({
             getLabel: function() { return config.getString(l.label); },
@@ -35,6 +43,12 @@ with (imports) {
     }
 
     var launchers = {
+        locality: [
+            launcher({ label: 'gisops.createMapLabel', bind: 'create_map' })
+        ],
+        mapArea: [
+            launcher({ label: 'gisops.createSectorLabel', bind: 'create_sector' })
+        ],
         household: [
             launcher({ label: 'gisops.duplicateLocationLabel', bind: 'duplicate_location' })
         ]
