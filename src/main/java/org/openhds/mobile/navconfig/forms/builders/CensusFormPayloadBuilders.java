@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 
 import org.openhds.mobile.model.core.*;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
+import org.openhds.mobile.navconfig.forms.UsedByJSConfig;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.navconfig.ProjectFormFields;
 import org.openhds.mobile.repository.GatewayRegistry;
@@ -18,7 +19,6 @@ import java.util.Map;
 import static org.openhds.mobile.navconfig.BiokoHierarchy.*;
 import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.formatBuilding;
 import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.formatFloor;
-
 
 public class CensusFormPayloadBuilders {
 
@@ -59,6 +59,7 @@ public class CensusFormPayloadBuilders {
         formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
     }
 
+    @UsedByJSConfig
     public static class AddLocation implements FormPayloadBuilder {
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {
@@ -70,6 +71,7 @@ public class CensusFormPayloadBuilders {
         }
     }
 
+    @UsedByJSConfig
     public static class AddMemberOfHousehold implements FormPayloadBuilder {
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {
@@ -109,6 +111,7 @@ public class CensusFormPayloadBuilders {
         }
     }
 
+    @UsedByJSConfig
     public static class AddHeadOfHousehold implements FormPayloadBuilder {
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {

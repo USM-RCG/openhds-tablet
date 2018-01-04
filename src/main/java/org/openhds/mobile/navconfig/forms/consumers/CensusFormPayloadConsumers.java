@@ -8,6 +8,7 @@ import org.openhds.mobile.model.core.LocationHierarchy;
 import org.openhds.mobile.navconfig.ProjectFormFields;
 import org.openhds.mobile.navconfig.ProjectResources;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
+import org.openhds.mobile.navconfig.forms.UsedByJSConfig;
 import org.openhds.mobile.navconfig.forms.adapters.IndividualFormAdapter;
 import org.openhds.mobile.navconfig.forms.adapters.LocationFormAdapter;
 import org.openhds.mobile.repository.DataWrapper;
@@ -75,6 +76,7 @@ public class CensusFormPayloadConsumers {
         return individual;
     }
 
+    @UsedByJSConfig
     public static class AddLocation implements FormPayloadConsumer {
 
         @Override
@@ -91,6 +93,7 @@ public class CensusFormPayloadConsumers {
         }
     }
 
+    @UsedByJSConfig
     public static class AddMemberOfHousehold extends DefaultConsumer {
 
         @Override
@@ -100,6 +103,7 @@ public class CensusFormPayloadConsumers {
         }
     }
 
+    @UsedByJSConfig
     public static class AddHeadOfHousehold extends DefaultConsumer {
 
         @Override

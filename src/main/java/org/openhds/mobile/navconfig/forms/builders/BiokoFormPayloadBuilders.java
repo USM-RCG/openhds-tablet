@@ -7,6 +7,7 @@ import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.navconfig.ProjectFormFields;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
+import org.openhds.mobile.navconfig.forms.UsedByJSConfig;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
@@ -25,6 +26,7 @@ import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.formatTim
 
 public class BiokoFormPayloadBuilders {
 
+    @UsedByJSConfig
     public static class DistributeBednets implements FormPayloadBuilder {
 
         @Override
@@ -75,6 +77,7 @@ public class BiokoFormPayloadBuilders {
 
     }
 
+    @UsedByJSConfig
     public static class SprayHousehold implements FormPayloadBuilder {
 
         @Override
@@ -101,6 +104,7 @@ public class BiokoFormPayloadBuilders {
         }
     }
 
+    @UsedByJSConfig
     public static class SuperOjo implements FormPayloadBuilder {
 
         @Override
@@ -127,6 +131,7 @@ public class BiokoFormPayloadBuilders {
         }
     }
 
+    @UsedByJSConfig
     public static class DuplicateLocation implements FormPayloadBuilder {
 
         @Override
@@ -166,6 +171,7 @@ public class BiokoFormPayloadBuilders {
         }
     }
 
+    @UsedByJSConfig
     public static class MalariaIndicatorSurvey implements FormPayloadBuilder {
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {
