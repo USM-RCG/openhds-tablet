@@ -181,7 +181,6 @@ public class ProjectFormFields {
     public static final class SprayHousehold {
         public static final String SUPERVISOR_EXT_ID = "supervisorExtId";
         public static final String SURVEY_DATE = "surveyDate";
-
     }
 
     public static final class SuperOjo {
