@@ -68,7 +68,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     public static final String HIERARCHY_PATH_KEY = "hierarchyPathKeys";
     private static final String CURRENT_RESULTS_KEY = "currentResults";
-    private static final String VISIT_KEY = "visitKey";
     private static final String HISTORY_KEY = "navHistory";
 
     private static final String ROOT_LEVEL = "root";
