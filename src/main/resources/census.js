@@ -18,7 +18,7 @@ with (imports) {
             getForm: function() { return b.form; },
             getLabel: function() { return config.getString(b.label); },
             getBuilder: function() { return b.builder; },
-            getConsumer: function() { return b.consumer; },
+            getConsumer: function() { return b.consumer || new DefaultConsumer(); },
         });
     }
 
