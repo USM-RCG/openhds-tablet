@@ -1,6 +1,7 @@
 package org.openhds.mobile.activity;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.openhds.mobile.search.Utils.isSearchEnabled;
-import static org.openhds.mobile.utilities.FormUtils.isFormReviewed;
+import static org.openhds.mobile.utilities.FormUtils.requiresApproval;
 import static org.openhds.mobile.utilities.LayoutUtils.makeButton;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.LoginUtils.launchLogin;
@@ -108,11 +109,12 @@ public class SupervisorActivity extends Activity {
     }
 
     public void sendApprovedForms() {
-        List<FormInstance> allFormInstances = OdkCollectHelper.getAllUnsentFormInstances(this.getContentResolver());
+        ContentResolver resolver = getContentResolver();
+        List<FormInstance> allFormInstances = OdkCollectHelper.getAllUnsentFormInstances(resolver);
         for (FormInstance instance : allFormInstances) {
             try {
-                if (!isFormReviewed(instance.getFilePath())) {
-                    OdkCollectHelper.setStatusIncomplete(this.getContentResolver(), Uri.parse(instance.getUriString()));
+                if (requiresApproval(instance)) {
+                    OdkCollectHelper.setStatusIncomplete(resolver, Uri.parse(instance.getUriString()));
                 }
             } catch (IOException e) {
                 Log.e(TAG, "failure sending approved forms, form: " + instance.getFilePath(), e);

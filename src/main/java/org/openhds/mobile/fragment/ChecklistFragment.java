@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.openhds.mobile.utilities.FormUtils.getFormElement;
 import static org.openhds.mobile.utilities.FormUtils.updateFormElement;
 import static org.openhds.mobile.utilities.OdkCollectHelper.deleteFormInstances;
 
@@ -162,7 +161,7 @@ public class ChecklistFragment extends Fragment {
 
         for (FormInstance instance : formInstances) {
             try {
-                String needsReview = getFormElement(ProjectFormFields.General.NEEDS_REVIEW, instance.getFilePath());
+                String needsReview = instance.load().get(ProjectFormFields.General.NEEDS_REVIEW);
                 if (ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(needsReview)) {
                     needApproval.add(instance);
                 }
@@ -193,9 +192,9 @@ public class ChecklistFragment extends Fragment {
 
     private List<FormInstance> approveForms(List<FormInstance> forms) {
         List<FormInstance> approved = new ArrayList<>();
-        for (FormInstance instance: forms) {
+        for (FormInstance instance : forms) {
             try {
-                String needsReview = getFormElement(ProjectFormFields.General.NEEDS_REVIEW, instance.getFilePath());
+                String needsReview = instance.load().get(ProjectFormFields.General.NEEDS_REVIEW);
                 if (ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(needsReview)) {
                     approveForm(instance);
                     approved.add(instance);
