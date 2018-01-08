@@ -13,11 +13,8 @@ import java.util.Map;
 public class PayloadTools {
 
     public static void flagForReview(Map<String, String> formPayload, boolean shouldReview) {
-        if (shouldReview) {
-            formPayload.put(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NEEDS_REVIEW);
-        } else {
-            formPayload.put(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NO_REVIEW_NEEDED);
-        }
+        formPayload.put(ProjectFormFields.General.NEEDS_REVIEW,
+                shouldReview ? ProjectResources.General.FORM_NEEDS_REVIEW : ProjectResources.General.FORM_NO_REVIEW_NEEDED);
     }
 
     public static void addMinimalFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
