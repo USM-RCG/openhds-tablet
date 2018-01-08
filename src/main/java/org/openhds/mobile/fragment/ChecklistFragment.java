@@ -207,8 +207,7 @@ public class ChecklistFragment extends Fragment {
     }
 
     private void approveForm(FormInstance instance) throws IOException {
-        updateFormElement(ProjectFormFields.General.NEEDS_REVIEW,
-                ProjectResources.General.FORM_NO_REVIEW_NEEDED, instance.getFilePath());
+        updateFormElement(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NO_REVIEW_NEEDED, instance.getFilePath());
         OdkCollectHelper.setStatusComplete(getActivity().getContentResolver(), Uri.parse(instance.getUriString()));
     }
 
