@@ -34,7 +34,6 @@ public class BiokoFormPayloadBuilders {
             Map<String, String> formPayload = new HashMap<>();
 
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
-            PayloadTools.flagForReview(formPayload, false);
 
             //rename the current datetime to be the bednet's distribution datetime
             String distributionDateTime = formPayload.get(ProjectFormFields.General.COLLECTION_DATE_TIME);
@@ -85,7 +84,6 @@ public class BiokoFormPayloadBuilders {
             Map<String, String> formPayload = new HashMap<>();
 
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
-            PayloadTools.flagForReview(formPayload, false);
 
             FieldWorker fieldWorker = ctx.getCurrentFieldWorker();
             formPayload.put(ProjectFormFields.SprayHousehold.SUPERVISOR_EXT_ID, fieldWorker.getExtId());
@@ -112,7 +110,6 @@ public class BiokoFormPayloadBuilders {
             Map<String, String> formPayload = new HashMap<>();
 
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
-            PayloadTools.flagForReview(formPayload, false);
 
             FieldWorker fieldWorker = ctx.getCurrentFieldWorker();
             formPayload.put(ProjectFormFields.SprayHousehold.SUPERVISOR_EXT_ID, fieldWorker.getExtId());
@@ -141,7 +138,6 @@ public class BiokoFormPayloadBuilders {
             ContentResolver contentResolver = ctx.getContentResolver();
 
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
-            PayloadTools.flagForReview(formPayload, false);
 
             DataWrapper mapArea = ctx.getHierarchyPath().get(MAP_AREA);
             DataWrapper sector = ctx.getHierarchyPath().get(SECTOR);
@@ -176,7 +172,6 @@ public class BiokoFormPayloadBuilders {
         public Map<String, String> buildPayload(LaunchContext ctx) {
             Map<String,String> formPayload = new HashMap<>();
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
-            PayloadTools.flagForReview(formPayload, false);
             DataWrapper locality = ctx.getHierarchyPath().get(LOCALITY);
             formPayload.put(ProjectFormFields.CreateMap.LOCALITY_UUID, locality.getUuid());
             return formPayload;
@@ -189,7 +184,6 @@ public class BiokoFormPayloadBuilders {
         public Map<String, String> buildPayload(LaunchContext ctx) {
             Map<String,String> formPayload = new HashMap<>();
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
-            PayloadTools.flagForReview(formPayload, false);
             DataWrapper map = ctx.getHierarchyPath().get(MAP_AREA);
             formPayload.put(ProjectFormFields.CreateSector.MAP_UUID, map.getUuid());
             return formPayload;
