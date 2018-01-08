@@ -27,6 +27,10 @@ with (imports) {
            builder: new CensusFormPayloadBuilders.AddLocation(),
            consumer: new CensusFormPayloadConsumers.AddLocation() });
 
+    bind({ form: 'location_evaluation',
+           label: 'locationEvaluationFormLabel',
+           builder: new CensusFormPayloadBuilders.LocationEvaluation() });
+
     bind({ name: 'household_head',
            form: 'individual',
            label: 'individualFormLabel',
@@ -58,6 +62,8 @@ with (imports) {
                        filter: new CensusFormFilters.AddLocation() })
         ],
         household: [
+            launcher({ label: 'census.locationEvaluationLabel',
+                       bind: 'location_evaluation' }),
             launcher({ label: 'census.headOfHouseholdLabel',
                        bind: 'household_head',
                        filter: new CensusFormFilters.AddHeadOfHousehold() }),

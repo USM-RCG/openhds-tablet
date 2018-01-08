@@ -71,6 +71,19 @@ public class CensusFormPayloadBuilders {
     }
 
     @UsedByJSConfig
+    public static class LocationEvaluation implements FormPayloadBuilder {
+        @Override
+        public Map<String, String> buildPayload(LaunchContext ctx) {
+            Map<String,String> formPayload = new HashMap<>();
+            PayloadTools.addMinimalFormPayload(formPayload, ctx);
+            DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
+            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
+            formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
+            return formPayload;
+        }
+    }
+
+    @UsedByJSConfig
     public static class AddMemberOfHousehold implements FormPayloadBuilder {
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {
