@@ -42,7 +42,6 @@ import static android.os.Environment.getExternalStorageDirectory;
 import static org.openhds.mobile.model.form.FormInstance.BINDING_ATTR;
 import static org.openhds.mobile.model.form.FormInstance.BINDING_MAP_KEY;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInstances;
-import static org.openhds.mobile.utilities.OdkCollectHelper.getBlankInstance;
 import static org.openhds.mobile.utilities.OdkCollectHelper.moveInstance;
 import static org.openhds.mobile.utilities.OdkCollectHelper.registerInstance;
 
