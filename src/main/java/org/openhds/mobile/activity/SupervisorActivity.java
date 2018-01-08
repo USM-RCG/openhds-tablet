@@ -25,8 +25,8 @@ import org.openhds.mobile.utilities.OdkCollectHelper;
 import java.io.IOException;
 import java.util.List;
 
+import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.requiresApproval;
 import static org.openhds.mobile.search.Utils.isSearchEnabled;
-import static org.openhds.mobile.utilities.FormUtils.requiresApproval;
 import static org.openhds.mobile.utilities.LayoutUtils.makeButton;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.LoginUtils.launchLogin;
@@ -113,7 +113,7 @@ public class SupervisorActivity extends Activity {
         List<FormInstance> allFormInstances = OdkCollectHelper.getAllUnsentFormInstances(resolver);
         for (FormInstance instance : allFormInstances) {
             try {
-                if (requiresApproval(instance)) {
+                if (requiresApproval(instance.load())) {
                     OdkCollectHelper.setStatusIncomplete(resolver, Uri.parse(instance.getUriString()));
                 }
             } catch (IOException e) {

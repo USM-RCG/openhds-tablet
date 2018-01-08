@@ -21,8 +21,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.openhds.mobile.model.form.FormInstance.getBinding;
-import static org.openhds.mobile.navconfig.ProjectFormFields.General.NEEDS_REVIEW;
-import static org.openhds.mobile.navconfig.ProjectResources.General.FORM_NEEDS_REVIEW;
+import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.requiresApproval;
 
 public class LayoutUtils {
 
@@ -217,9 +216,7 @@ public class LayoutUtils {
 
             Map<String, String> data = instance.load();
 
-            boolean needsReview = FORM_NEEDS_REVIEW.equalsIgnoreCase(data.get(NEEDS_REVIEW));
-
-            if (needsReview) {
+            if (requiresApproval(data)) {
                 view.setBackgroundResource(R.drawable.form_list_yellow);
             } else if (instance.isComplete()) {
                 view.setBackgroundResource(R.drawable.form_list);

@@ -22,6 +22,7 @@ import java.util.Map;
 
 import static org.openhds.mobile.navconfig.BiokoHierarchy.HOUSEHOLD;
 import static org.openhds.mobile.navconfig.BiokoHierarchy.SECTOR;
+import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.flagForReview;
 
 public class CensusFormPayloadConsumers {
 
@@ -58,7 +59,7 @@ public class CensusFormPayloadConsumers {
             payload.put(ProjectFormFields.Locations.HIERARCHY_UUID, sectorByComputedExtId.getUuid());
             payload.put(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID, sectorByComputedExtId.getParentUuid());
             payload.put(ProjectFormFields.Locations.HIERARCHY_EXTID, sectorByComputedExtId.getExtId());
-            payload.put(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NEEDS_REVIEW);
+            flagForReview(payload);
         }
     }
 

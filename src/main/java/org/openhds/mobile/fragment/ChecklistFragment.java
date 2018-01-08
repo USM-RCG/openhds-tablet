@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.requiresApproval;
 import static org.openhds.mobile.utilities.FormUtils.updateFormElement;
 import static org.openhds.mobile.utilities.OdkCollectHelper.deleteFormInstances;
 
@@ -158,18 +159,15 @@ public class ChecklistFragment extends Fragment {
     private ChecklistAdapter setupApproveAdapter() {
         List<FormInstance> formInstances = OdkCollectHelper.getAllUnsentFormInstances(getActivity().getContentResolver());
         List<FormInstance> needApproval = new ArrayList<>();
-
         for (FormInstance instance : formInstances) {
             try {
-                String needsReview = instance.load().get(ProjectFormFields.General.NEEDS_REVIEW);
-                if (ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(needsReview)) {
+                if (requiresApproval(instance.load())) {
                     needApproval.add(instance);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "failure during approval setup: " + e.getMessage());
             }
         }
-
         return new ChecklistAdapter(getActivity(), R.id.form_instance_check_item_orange, needApproval);
     }
 
@@ -194,8 +192,7 @@ public class ChecklistFragment extends Fragment {
         List<FormInstance> approved = new ArrayList<>();
         for (FormInstance instance : forms) {
             try {
-                String needsReview = instance.load().get(ProjectFormFields.General.NEEDS_REVIEW);
-                if (ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(needsReview)) {
+                if (requiresApproval(instance.load())) {
                     approveForm(instance);
                     approved.add(instance);
                 }

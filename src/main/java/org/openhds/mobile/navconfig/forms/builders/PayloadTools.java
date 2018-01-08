@@ -6,15 +6,46 @@ import org.openhds.mobile.navconfig.ProjectFormFields;
 import org.openhds.mobile.navconfig.ProjectResources;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
 public class PayloadTools {
 
+    /**
+     * Convenience method for updating a form payload to require review before upload.
+     * @param formPayload the payload to mark as requiring review
+     * @see PayloadTools#flagForReview(Map, boolean)
+     */
+    public static void flagForReview(Map<String, String> formPayload) {
+        flagForReview(formPayload, true);
+    }
+
+    /**
+     * Set the review attribute of a form payload.
+     * @param formPayload the payload to update
+     * @param shouldReview true for requiring review, false for no review required
+     */
     public static void flagForReview(Map<String, String> formPayload, boolean shouldReview) {
         formPayload.put(ProjectFormFields.General.NEEDS_REVIEW,
                 shouldReview ? ProjectResources.General.FORM_NEEDS_REVIEW : ProjectResources.General.FORM_NO_REVIEW_NEEDED);
+    }
+
+    /**
+     * A convenience method: determines whether the form at the specified path contains a special value denoting that
+     * the form requires approval by a supervisor.
+     *
+     * The sentinel value denoting this was inverted when it was first implemented: needsReview = 1
+     * indicates the form *does not* need approval, while any other value (or lack of a value) means
+     * the form *does* need approval. However, it now defaults to approval only when the value matches.
+     *
+     * @param formPayload payload loaded from a form instance
+     * @return true if the form contains an element named 'needsReview' with text value of '0git ll', false otherwise
+     * @throws IOException
+     */
+    public static boolean requiresApproval(Map<String, String> formPayload) throws IOException {
+        return ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(formPayload.get(ProjectFormFields.General.NEEDS_REVIEW));
     }
 
     public static void addMinimalFormPayload(Map<String, String> formPayload, LaunchContext ctx) {

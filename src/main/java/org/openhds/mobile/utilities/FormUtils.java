@@ -298,23 +298,6 @@ public class FormUtils {
     }
 
     /**
-     * A convenience method: determines whether the form at the specified path contains a special value denoting that
-     * the form requires approval by a supervisor.
-     *
-     * The sentinel value denoting this was inverted when it was first implemented: needsReview = 1
-     * indicates the form *does not* need approval, while any other value (or lack of a value) means
-     * the form *does* need approval. However, it now defaults to approval only when the value matches.
-     *
-     * @param instance object representing the form to inspect
-     * @return true if the form contains an element named 'needsReview' with text value of '0git ll', false otherwise
-     * @throws IOException
-     */
-    public static boolean requiresApproval(FormInstance instance) throws IOException {
-        return ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(
-                instance.load().get(ProjectFormFields.General.NEEDS_REVIEW));
-    }
-
-    /**
      * Generates and registers a new XML form with the specified values and registers it with ODK.
      *
      * @param resolver
