@@ -127,7 +127,7 @@ public class CensusFormPayloadConsumers {
         @Override
         public void augmentInstancePayload(Map<String, String> formPayload) {
             // head of the household is always "self" to the head of household
-            formPayload.put(ProjectFormFields.Individuals.MEMBER_STATUS, "1");
+            formPayload.put(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD, "1");
         }
     }
 }
