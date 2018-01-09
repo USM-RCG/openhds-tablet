@@ -37,16 +37,11 @@ public class OpenHDS {
         public static final String COLUMN_INDIVIDUAL_LAST_NAME = "lastName";
         public static final String COLUMN_INDIVIDUAL_DOB = "dob";
         public static final String COLUMN_INDIVIDUAL_GENDER = "gender";
-        public static final String COLUMN_INDIVIDUAL_MOTHER = "mother";
-        public static final String COLUMN_INDIVIDUAL_FATHER = "father";
         public static final String COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID = "currentResidence";
-        public static final String COLUMN_INDIVIDUAL_RESIDENCE_END_TYPE = "endType";
 
         // extensions for bioko project
         public static final String COLUMN_INDIVIDUAL_OTHER_ID = "otherId";
         public static final String COLUMN_INDIVIDUAL_OTHER_NAMES = "otherNames";
-        public static final String COLUMN_INDIVIDUAL_AGE = "age";
-        public static final String COLUMN_INDIVIDUAL_AGE_UNITS = "ageUnits";
         public static final String COLUMN_INDIVIDUAL_PHONE_NUMBER = "phoneNumber";
         public static final String COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER = "otherPhoneNumber";
         public static final String COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME = "pointOfContactName";

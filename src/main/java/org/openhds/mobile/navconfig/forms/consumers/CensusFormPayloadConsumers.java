@@ -6,7 +6,6 @@ import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.model.core.Location;
 import org.openhds.mobile.model.core.LocationHierarchy;
 import org.openhds.mobile.navconfig.ProjectFormFields;
-import org.openhds.mobile.navconfig.ProjectResources;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.navconfig.forms.UsedByJSConfig;
 import org.openhds.mobile.navconfig.forms.adapters.IndividualFormAdapter;
@@ -71,7 +70,6 @@ public class CensusFormPayloadConsumers {
 
     private static Individual insertOrUpdateIndividual(Map<String, String> formPayLoad, ContentResolver contentResolver) {
         Individual individual = IndividualFormAdapter.fromForm(formPayLoad);
-        individual.setEndType(ProjectResources.Individual.RESIDENCY_END_TYPE_NA);
         IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
         individualGateway.insertOrUpdate(contentResolver, individual);
         return individual;

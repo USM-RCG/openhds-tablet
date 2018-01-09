@@ -29,7 +29,7 @@ import static org.openhds.mobile.search.Utils.isSearchEnabled;
 public class OpenHDSProvider extends ContentProvider {
 
     public static final String DATABASE_NAME = "openhds.db";
-    public static final int DATABASE_VERSION = 13;
+    public static final int DATABASE_VERSION = 14;
 
     private static final String TAG = "OpenHDSProvider";
 
@@ -69,19 +69,14 @@ public class OpenHDSProvider extends ContentProvider {
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID);
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_DOB, OpenHDS.Individuals.COLUMN_INDIVIDUAL_DOB);
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_FATHER, OpenHDS.Individuals.COLUMN_INDIVIDUAL_FATHER);
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME);
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_GENDER, OpenHDS.Individuals.COLUMN_INDIVIDUAL_GENDER);
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_MOTHER, OpenHDS.Individuals.COLUMN_INDIVIDUAL_MOTHER);
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_END_TYPE, OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_END_TYPE);
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_FULL_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME + " || ' ' || " + OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME + " as " + OpenHDS.Individuals.COLUMN_INDIVIDUAL_FULL_NAME);
 
         // extensions for bioko project
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES, OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE, OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE_UNITS, OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE_UNITS);
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER, OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER);
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER, OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER);
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME);
@@ -481,16 +476,11 @@ public class OpenHDSProvider extends ContentProvider {
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID + " TEXT PRIMARY KEY NOT NULL,"
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_DOB + " TEXT,"
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_FATHER + " TEXT,"
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME + " TEXT,"
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_GENDER + " TEXT,"
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_MOTHER + " TEXT,"
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_END_TYPE + " TEXT,"
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE_UNITS + " TEXT,"
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER + " TEXT,"
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER + " TEXT,"
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME + " TEXT,"

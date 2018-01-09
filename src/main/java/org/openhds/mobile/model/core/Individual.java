@@ -9,18 +9,12 @@ public class Individual implements Serializable {
     private String uuid;
 	private String extId;
 	private String firstName;
-	private String middleName;
 	private String lastName;
 	private String gender;
 	private String dob;
-	private String mother;
-	private String father;
 	private String currentResidence;
-	private String endType;
 	private String otherId;
 	private String otherNames;
-	private String age;
-	private String ageUnits;
 	private String phoneNumber;
 	private String otherPhoneNumber;
 	private String pointOfContactName;
@@ -28,7 +22,6 @@ public class Individual implements Serializable {
 	private String languagePreference;
 	private String memberStatus;
     private String nationality;
-
 
     public String getUuid() {
         return uuid;
@@ -86,14 +79,6 @@ public class Individual implements Serializable {
 		this.firstName = firstName;
 	}
 
-	public String getMiddleName() {
-		return middleName;
-	}
-
-	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
-	}
-
 	public String getLastName() {
 		return lastName;
 	}
@@ -118,36 +103,12 @@ public class Individual implements Serializable {
 		this.dob = dob;
 	}
 
-	public String getMother() {
-		return mother;
-	}
-
-	public void setMother(String mother) {
-		this.mother = mother;
-	}
-
-	public String getFather() {
-		return father;
-	}
-
-	public void setFather(String father) {
-		this.father = father;
-	}
-
 	public String getCurrentResidenceUuid() {
 		return currentResidence;
 	}
 
 	public void setCurrentResidenceUuid(String currentResidence) {
 		this.currentResidence = currentResidence;
-	}
-
-	public String getEndType() {
-		return endType;
-	}
-
-	public void setEndType(String endType) {
-		this.endType = endType;
 	}
 
 	public String getOtherId() {
@@ -164,22 +125,6 @@ public class Individual implements Serializable {
 
 	public void setOtherNames(String otherNames) {
 		this.otherNames = otherNames;
-	}
-
-	public String getAge() {
-		return age;
-	}
-
-	public void setAge(String age) {
-		this.age = age;
-	}
-
-	public String getAgeUnits() {
-		return ageUnits;
-	}
-
-	public void setAgeUnits(String ageUnits) {
-		this.ageUnits = ageUnits;
 	}
 
 	public String getPhoneNumber() {
@@ -209,12 +154,5 @@ public class Individual implements Serializable {
 	public static String getFullName(Individual individual) {
 		return individual.getFirstName() + " "
 				+ individual.getLastName();
-	}
-
-	public static String getAgeWithUnits(Individual individual) {
-
-        String ageString = (null == individual.age || individual.age.equals("null")) ? "n/a" : individual.age;
-        String unitsString = (null == individual.ageUnits || individual.ageUnits.equals("null")) ? "n/a" : individual.ageUnits;
-		return ageString + " " + "(" + unitsString + ")";
 	}
 }

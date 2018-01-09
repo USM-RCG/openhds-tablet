@@ -118,8 +118,6 @@ public class ProjectFormFields {
         public static final String LAST_NAME = "individualLastName";
         public static final String OTHER_NAMES = "individualOtherNames";
         public static final String DATE_OF_BIRTH = "individualDateOfBirth";
-        public static final String AGE = "individualAge";
-        public static final String AGE_UNITS = "individualAgeUnits";
         public static final String GENDER = "individualGender";
         public static final String PHONE_NUMBER = "individualPhoneNumber";
         public static final String OTHER_PHONE_NUMBER = "individualOtherPhoneNumber";
@@ -128,8 +126,6 @@ public class ProjectFormFields {
         public static final String NATIONALITY = "individualNationality";
         public static final String LANGUAGE_PREFERENCE = "individualLanguagePreference";
         public static final String DIP = "individualDip";
-        public static final String MOTHER_EXTID = "individualMotherExtId";
-        public static final String FATHER_EXTID = "individualFatherExtId";
 
         public static final String RELATIONSHIP_TO_HEAD = "individualRelationshipToHeadOfHousehold";
         public static final String HEAD_PREFILLED_FLAG = "headPrefilledFlag";
@@ -145,8 +141,6 @@ public class ProjectFormFields {
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME, LAST_NAME);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES, OTHER_NAMES);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_DOB, DATE_OF_BIRTH);
-            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE, AGE);
-            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_AGE_UNITS, AGE_UNITS);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_GENDER, GENDER);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER, PHONE_NUMBER);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER, OTHER_PHONE_NUMBER);
@@ -154,8 +148,6 @@ public class ProjectFormFields {
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER, POINT_OF_CONTACT_PHONE_NUMBER);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE, LANGUAGE_PREFERENCE);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_ID, DIP);
-            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_MOTHER, MOTHER_EXTID);
-            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_FATHER, FATHER_EXTID);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, HOUSEHOLD_UUID);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS, MEMBER_STATUS);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_NATIONALITY, NATIONALITY);

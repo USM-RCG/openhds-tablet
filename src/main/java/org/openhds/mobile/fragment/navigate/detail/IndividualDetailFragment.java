@@ -52,7 +52,6 @@ public class IndividualDetailFragment extends DetailFragment {
         addTextView(container, R.string.gender_lbl, getString(ProjectResources.Individual.getIndividualStringId(individual.getGender())));
         addTextView(container, R.string.individual_language_preference_label, getString(ProjectResources.Individual.getIndividualStringId(individual.getLanguagePreference())));
         addTextView(container, R.string.individual_nationality_label, getString(ProjectResources.Individual.getIndividualStringId(individual.getNationality())));
-        addTextView(container, R.string.individual_age_label, Individual.getAgeWithUnits(individual));
         addTextView(container, R.string.individual_date_of_birth_label, individual.getDob());
         addTextView(container, R.string.uuid, individual.getUuid());
     }
