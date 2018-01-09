@@ -49,6 +49,7 @@ public class OpenHDS {
         public static final String COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE = "languagePreference";
         public static final String COLUMN_INDIVIDUAL_STATUS = "status";
         public static final String COLUMN_INDIVIDUAL_NATIONALITY = "nationality";
+        public static final String COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD = "relationshipToHead";
     }
 
     public static final class Locations implements BaseColumns {

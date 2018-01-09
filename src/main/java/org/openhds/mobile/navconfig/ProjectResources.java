@@ -71,17 +71,14 @@ public class ProjectResources {
             Individual.put(NATIONALITY_ASIAN, R.string.db_val_nationality_asian);
             Individual.put(NATIONALITY_OTHER_NON_AFRICAN_COUNTRY, R.string.db_val_nationality_other_non_african_country);
             Individual.put(NATIONALITY_OTHER, R.string.db_val_nationality_other);
-            Individual.put(NOT_APPLICABLE, R.string.db_val_age_not_applicable);
+            Individual.put(NOT_APPLICABLE, R.string.not_available);
         }
 
         public static int getIndividualStringId(String key) {
-            if (null == key) {
-                return Individual.get(NOT_APPLICABLE);
-            }
-            if (Individual.containsKey(key)) {
+            if (key != null && Individual.containsKey(key)) {
                 return Individual.get(key);
             } else {
-                return Individual.get(NOT_APPLICABLE);
+                return 0;
             }
         }
     }
@@ -101,7 +98,7 @@ public class ProjectResources {
         }
 
         public static int getLocationStringId(String key) {
-            if (Location.containsKey(key)) {
+            if (key != null && Location.containsKey(key)) {
                 return Location.get(key);
             } else {
                 return 0;
@@ -140,7 +137,7 @@ public class ProjectResources {
         }
 
         public static int getRelationshipStringId(String key) {
-            if (Relationship.containsKey(key)) {
+            if (key != null && Relationship.containsKey(key)) {
                 return Relationship.get(key);
             } else {
                 return 0;

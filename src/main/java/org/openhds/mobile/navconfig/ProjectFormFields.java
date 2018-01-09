@@ -152,6 +152,7 @@ public class ProjectFormFields {
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS, STATUS);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_NATIONALITY, NATIONALITY);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID, General.ENTITY_UUID);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD, RELATIONSHIP_TO_HEAD);
         }
 
         public static String getFieldNameFromColumn(String column) {

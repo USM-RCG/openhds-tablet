@@ -24,6 +24,7 @@ import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHO
 import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER;
 import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME;
 import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER;
+import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD;
 import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID;
 import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS;
 import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID;
@@ -66,6 +67,7 @@ public class IndividualGateway extends Gateway<Individual> {
             individual.setPointOfContactPhoneNumber(extractString(cursor, COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER));
             individual.setLanguagePreference(extractString(cursor, COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE));
             individual.setNationality(extractString(cursor, COLUMN_INDIVIDUAL_NATIONALITY));
+            individual.setRelationshipToHead(extractString(cursor, COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD));
             return individual;
         }
 
@@ -88,6 +90,7 @@ public class IndividualGateway extends Gateway<Individual> {
             contentValues.put(COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER, individual.getPointOfContactPhoneNumber());
             contentValues.put(COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE, individual.getLanguagePreference());
             contentValues.put(COLUMN_INDIVIDUAL_NATIONALITY, individual.getNationality());
+            contentValues.put(COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD, individual.getRelationshipToHead());
             return contentValues;
         }
 

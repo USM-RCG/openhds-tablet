@@ -13,6 +13,7 @@ public class Individual implements Serializable {
 	private String gender;
 	private String dob;
 	private String currentResidence;
+	private String relationshipToHead;
 	private String otherId;
 	private String otherNames;
 	private String phoneNumber;
@@ -154,5 +155,13 @@ public class Individual implements Serializable {
 	public static String getFullName(Individual individual) {
 		return individual.getFirstName() + " "
 				+ individual.getLastName();
+	}
+
+	public String getRelationshipToHead() {
+		return relationshipToHead;
+	}
+
+	public void setRelationshipToHead(String relationshipToHead) {
+		this.relationshipToHead = relationshipToHead;
 	}
 }
