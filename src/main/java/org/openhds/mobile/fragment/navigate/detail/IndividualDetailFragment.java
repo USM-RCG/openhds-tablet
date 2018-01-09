@@ -54,6 +54,7 @@ public class IndividualDetailFragment extends DetailFragment {
         addTextView(container, R.string.individual_nationality_label, getString(ProjectResources.Individual.getIndividualStringId(individual.getNationality())));
         addTextView(container, R.string.individual_date_of_birth_label, individual.getDob());
         addTextView(container, R.string.uuid, individual.getUuid());
+        addTextView(container, R.string.individual_status_label, getString(ProjectResources.Individual.getIndividualStringId(individual.getStatus())));
     }
 
     private void rebuildContactDetails(Individual individual) {

@@ -25,7 +25,7 @@ public class IndividualFormAdapter {
         individual.setPointOfContactName(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME)));
         individual.setPointOfContactPhoneNumber(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER)));
         individual.setLanguagePreference(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE)));
-        individual.setMemberStatus(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_STATUS)));
+        individual.setStatus(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_STATUS)));
         individual.setNationality(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_NATIONALITY)));
         return individual;
     }

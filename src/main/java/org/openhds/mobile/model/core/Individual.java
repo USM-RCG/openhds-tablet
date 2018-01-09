@@ -20,7 +20,7 @@ public class Individual implements Serializable {
 	private String pointOfContactName;
 	private String pointOfContactPhoneNumber;
 	private String languagePreference;
-	private String memberStatus;
+	private String status;
     private String nationality;
 
     public String getUuid() {
@@ -39,12 +39,12 @@ public class Individual implements Serializable {
         this.nationality = nationality;
     }
 
-    public String getMemberStatus() {
-		return memberStatus;
+    public String getStatus() {
+		return status;
 	}
 
-	public void setMemberStatus(String memberStatus) {
-		this.memberStatus = memberStatus;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getPointOfContactName() {

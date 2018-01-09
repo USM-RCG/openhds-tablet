@@ -84,18 +84,13 @@ public class IndividualGatewayTest extends GatewayTest<Individual> {
         individual.setLastName(name);
         individual.setDob("2000-01-01 00:00:00");
         individual.setGender("M");
-        individual.setMother("MOTHER");
-        individual.setFather("FATHER");
         individual.setCurrentResidenceUuid("LOCATION");
-        individual.setEndType("N/A");
         individual.setOtherId("OTHER");
         individual.setOtherNames(name);
-        individual.setAge("50");
-        individual.setAgeUnits("YEARS");
         individual.setPhoneNumber("1234567890");
         individual.setOtherPhoneNumber("0987654321");
         individual.setPointOfContactName("CONTACT");
-        individual.setMemberStatus("PERMANENT");
+        individual.setStatus("PERMANENT");
         individual.setPointOfContactPhoneNumber("111111111");
         individual.setLanguagePreference("ENGLISH");
 

@@ -47,7 +47,7 @@ public class OpenHDS {
         public static final String COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME = "pointOfContactName";
         public static final String COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER = "pointOfContactPhoneNumber";
         public static final String COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE = "languagePreference";
-        public static final String COLUMN_INDIVIDUAL_STATUS = "memberStatus";
+        public static final String COLUMN_INDIVIDUAL_STATUS = "status";
         public static final String COLUMN_INDIVIDUAL_NATIONALITY = "nationality";
     }
 

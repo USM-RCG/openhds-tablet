@@ -62,7 +62,7 @@ public class IndividualGateway extends Gateway<Individual> {
             individual.setPhoneNumber(extractString(cursor, COLUMN_INDIVIDUAL_PHONE_NUMBER));
             individual.setOtherPhoneNumber(extractString(cursor, COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER));
             individual.setPointOfContactName(extractString(cursor, COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME));
-            individual.setMemberStatus(extractString(cursor, COLUMN_INDIVIDUAL_STATUS));
+            individual.setStatus(extractString(cursor, COLUMN_INDIVIDUAL_STATUS));
             individual.setPointOfContactPhoneNumber(extractString(cursor, COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER));
             individual.setLanguagePreference(extractString(cursor, COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE));
             individual.setNationality(extractString(cursor, COLUMN_INDIVIDUAL_NATIONALITY));
@@ -84,7 +84,7 @@ public class IndividualGateway extends Gateway<Individual> {
             contentValues.put(COLUMN_INDIVIDUAL_PHONE_NUMBER, individual.getPhoneNumber());
             contentValues.put(COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER, individual.getOtherPhoneNumber());
             contentValues.put(COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME, individual.getPointOfContactName());
-            contentValues.put(COLUMN_INDIVIDUAL_STATUS, individual.getMemberStatus());
+            contentValues.put(COLUMN_INDIVIDUAL_STATUS, individual.getStatus());
             contentValues.put(COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER, individual.getPointOfContactPhoneNumber());
             contentValues.put(COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE, individual.getLanguagePreference());
             contentValues.put(COLUMN_INDIVIDUAL_NATIONALITY, individual.getNationality());

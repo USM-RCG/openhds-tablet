@@ -29,17 +29,11 @@ public class ProjectResources {
                 return 0;
             }
         }
-
     }
 
     public static final class Individual {
 
         public static final Map<String, Integer> Individual = new HashMap<>();
-
-        public static final String RESIDENCY_END_TYPE_NA = "NA";
-
-        public static final String AGE_UNITS_YEARS = "Years";
-        public static final String AGE_UNITS_MONTHS = "Months";
 
         public static final String GENDER_MALE = "Male";
         public static final String GENDER_FEMALE = "Female";
@@ -60,9 +54,8 @@ public class ProjectResources {
 
         private static final String STATUS_PERMANENT = "Permanent";
         private static final String STATUS_VISITOR = "Visitor";
+
         static {
-            Individual.put(AGE_UNITS_YEARS, R.string.db_val_age_units_years);
-            Individual.put(AGE_UNITS_MONTHS, R.string.db_val_age_units_months);
             Individual.put(GENDER_MALE, R.string.db_val_gender_male);
             Individual.put(GENDER_FEMALE, R.string.db_val_gender_female);
             Individual.put(LANGUAGE_PREF_SPANISH,R.string.db_val_language_pref_spanish);
@@ -79,7 +72,6 @@ public class ProjectResources {
             Individual.put(NATIONALITY_OTHER_NON_AFRICAN_COUNTRY, R.string.db_val_nationality_other_non_african_country);
             Individual.put(NATIONALITY_OTHER, R.string.db_val_nationality_other);
             Individual.put(NOT_APPLICABLE, R.string.db_val_age_not_applicable);
-
         }
 
         public static int getIndividualStringId(String key) {

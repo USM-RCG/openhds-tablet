@@ -127,6 +127,7 @@
     <string name="individual_point_of_contact_phone_number_label">Point of Contact Phone Number</string>
     <string name="individual_language_preference_label">Language Preference</string>
     <string name="individual_nationality_label">Nationality</string>
+    <string name="individual_status_label">Status</string>
 
     <!-- Fieldworker Labels -->
     <string name="field_worker_first_name_label">First Name</string>

@@ -203,5 +203,6 @@
     <string name="saved_favorite">Recuerdo favorito</string>
     <string name="removed_favorite">Olvidado favorito</string>
     <string name="no_active_modules">No hay módulo activo</string>
+    <string name="individual_status_label">Estado</string>
 
 </resources>
