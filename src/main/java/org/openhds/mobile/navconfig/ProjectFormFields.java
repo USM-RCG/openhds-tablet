@@ -129,7 +129,7 @@ public class ProjectFormFields {
 
         public static final String RELATIONSHIP_TO_HEAD = "individualRelationshipToHeadOfHousehold";
         public static final String HEAD_PREFILLED_FLAG = "headPrefilledFlag";
-        public static final String MEMBER_STATUS = "individualMemberStatus";
+        public static final String STATUS = "individualMemberStatus";
 
         public static final String HOUSEHOLD_UUID = "householdUuid";
 
@@ -149,7 +149,7 @@ public class ProjectFormFields {
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE, LANGUAGE_PREFERENCE);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_ID, DIP);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, HOUSEHOLD_UUID);
-            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS, MEMBER_STATUS);
+            columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS, STATUS);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_NATIONALITY, NATIONALITY);
             columnsToFieldNames.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID, General.ENTITY_UUID);
         }
