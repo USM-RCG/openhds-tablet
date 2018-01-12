@@ -162,26 +162,28 @@ public class HierarchyPath implements Parcelable, Cloneable {
 
         QueryHelper helper = DefaultQueryHelper.getInstance();
 
-        // Traverse up the hierarchy using child-parent relationships, tracking the nodes traversed
-        Stack<DataWrapper> traversed = new Stack<>();
-        traversed.push(leaf);
-        DataWrapper child = leaf, parent;
-        do {
-            parent = helper.getParent(resolver, child.getCategory(), child.getUuid());
-            if (parent != null) {
-                traversed.push(parent);
-                child = parent;
-            }
-        } while (parent != null);
+        if (leaf != null) {
+            // Traverse up the hierarchy using child-parent relationships, tracking the nodes traversed
+            Stack<DataWrapper> traversed = new Stack<>();
+            traversed.push(leaf);
+            DataWrapper child = leaf, parent;
+            do {
+                parent = helper.getParent(resolver, child.getCategory(), child.getUuid());
+                if (parent != null) {
+                    traversed.push(parent);
+                    child = parent;
+                }
+            } while (parent != null);
 
-        // Reconstruct a path from the traversed nodes if it reached the top of the hierarchy
-        if (NavigatorConfig.getInstance().getTopLevel().equals(traversed.peek().getCategory())) {
-            HierarchyPath path = new HierarchyPath();
-            while (!traversed.empty()) {
-                DataWrapper node = traversed.pop();
-                path.down(node.getCategory(), node);
+            // Reconstruct a path from the traversed nodes if it reached the top of the hierarchy
+            if (NavigatorConfig.getInstance().getTopLevel().equals(traversed.peek().getCategory())) {
+                HierarchyPath path = new HierarchyPath();
+                while (!traversed.empty()) {
+                    DataWrapper node = traversed.pop();
+                    path.down(node.getCategory(), node);
+                }
+                return path;
             }
-            return path;
         }
 
         return null;
