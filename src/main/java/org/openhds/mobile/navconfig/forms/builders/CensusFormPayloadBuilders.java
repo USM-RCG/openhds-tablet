@@ -35,12 +35,9 @@ public class CensusFormPayloadBuilders {
         LocationHierarchy locality = locationHierarchyGateway.getFirst(contentResolver, locationHierarchyGateway.findById(mapArea.getParentUuid()));
 
         int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(ctx.getApplicationContext(), mapArea.getName(), sector.getName());
-        String[] communityNameAndCode = locationGateway.communityForSector(ctx.getApplicationContext(), sector.getUuid());
 
         formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
         formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, formatBuilding(nextBuildingNumber, false));
-        formPayload.put(ProjectFormFields.Locations.COMMUNITY_NAME, communityNameAndCode[0]);
-        formPayload.put(ProjectFormFields.Locations.COMMUNITY_CODE, communityNameAndCode[1]);
         formPayload.put(ProjectFormFields.Locations.HIERARCHY_EXTID, sector.getExtId());
         formPayload.put(ProjectFormFields.Locations.HIERARCHY_UUID, sector.getUuid());
         formPayload.put(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID, sector.getParentUuid());

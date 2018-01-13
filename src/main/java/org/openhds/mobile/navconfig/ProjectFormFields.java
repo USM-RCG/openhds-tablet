@@ -85,8 +85,6 @@ public class ProjectFormFields {
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_HIERARCHY_EXTID, HIERARCHY_EXTID);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_EXTID, LOCATION_EXTID);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_NAME, LOCATION_NAME);
-            columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_NAME, COMMUNITY_NAME);
-            columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_CODE, COMMUNITY_CODE);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_MAP_AREA_NAME, MAP_AREA_NAME);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_LOCALITY_NAME, LOCALITY_NAME);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_SECTOR_NAME, SECTOR_NAME);

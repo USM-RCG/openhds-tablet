@@ -96,8 +96,6 @@ public class OpenHDSProvider extends ContentProvider {
         locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_LATITUDE, OpenHDS.Locations.COLUMN_LOCATION_LATITUDE);
         locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_LONGITUDE, OpenHDS.Locations.COLUMN_LOCATION_LONGITUDE);
         locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_NAME, OpenHDS.Locations.COLUMN_LOCATION_NAME);
-        locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_NAME, OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_NAME);
-        locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_CODE, OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_CODE);
         locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_LOCALITY_NAME, OpenHDS.Locations.COLUMN_LOCATION_LOCALITY_NAME);
         locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_MAP_AREA_NAME, OpenHDS.Locations.COLUMN_LOCATION_MAP_AREA_NAME);
         locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_SECTOR_NAME, OpenHDS.Locations.COLUMN_LOCATION_SECTOR_NAME);
@@ -512,8 +510,6 @@ public class OpenHDSProvider extends ContentProvider {
                     + OpenHDS.Locations.COLUMN_LOCATION_HIERARCHY_EXTID + " TEXT,"
                     + OpenHDS.Locations.COLUMN_LOCATION_LATITUDE + " TEXT,"
                     + OpenHDS.Locations.COLUMN_LOCATION_LONGITUDE + " TEXT,"
-                    + OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_NAME + " TEXT,"
-                    + OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_CODE + " TEXT,"
                     + OpenHDS.Locations.COLUMN_LOCATION_LOCALITY_NAME + " TEXT,"
                     + OpenHDS.Locations.COLUMN_LOCATION_MAP_AREA_NAME + " TEXT,"
                     + OpenHDS.Locations.COLUMN_LOCATION_SECTOR_NAME + " INT,"

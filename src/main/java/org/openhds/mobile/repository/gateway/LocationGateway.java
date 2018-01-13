@@ -16,8 +16,6 @@ import org.openhds.mobile.repository.Query;
 
 import static org.openhds.mobile.OpenHDS.Locations.COLUMN_LOCATION_ATTRS;
 import static org.openhds.mobile.OpenHDS.Locations.COLUMN_LOCATION_BUILDING_NUMBER;
-import static org.openhds.mobile.OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_CODE;
-import static org.openhds.mobile.OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_NAME;
 import static org.openhds.mobile.OpenHDS.Locations.COLUMN_LOCATION_DESCRIPTION;
 import static org.openhds.mobile.OpenHDS.Locations.COLUMN_LOCATION_EXTID;
 import static org.openhds.mobile.OpenHDS.Locations.COLUMN_LOCATION_FLOOR_NUMBER;
@@ -73,33 +71,6 @@ public class LocationGateway extends Gateway<Location> {
         }
     }
 
-    /**
-     * Looks up the community name and code for a given sector hierarchy node. Using the sector node here is important
-     * since multiple sector nodes can exist when a sector spans multiple localities. By using the node id, we ensure
-     * we lookup the community for the specific sector portion.
-     *
-     * @param ctx used to lookup database for direct query
-     * @param sectorUuid the uuid for the sector node
-     * @return a string array containing the community name and code, in that order, for the sector node
-     */
-    public String[] communityForSector(Context ctx, String sectorUuid) {
-        SQLiteDatabase db = OpenHDSProvider.getDatabaseHelper(ctx).getReadableDatabase();
-        String query = String.format("select %s, %s from %s where %s = ? limit 1",
-                COLUMN_LOCATION_COMMUNITY_NAME, COLUMN_LOCATION_COMMUNITY_CODE, TABLE_NAME, COLUMN_LOCATION_HIERARCHY_UUID);
-        String[] args = {sectorUuid};
-        Cursor c = db.rawQuery(query, args);
-        String [] nameAndCode = { "", "" };
-        try {
-            if (c.moveToFirst()) {
-                nameAndCode[0] = c.getString(0);
-                nameAndCode[1] = c.getString(1);
-            }
-        } finally {
-            c.close();
-        }
-        return nameAndCode;
-    }
-
     private static class LocationConverter implements Converter<Location> {
 
         @Override
@@ -115,8 +86,6 @@ public class LocationGateway extends Gateway<Location> {
             location.setSectorName(extractString(cursor, COLUMN_LOCATION_SECTOR_NAME));
             location.setMapAreaName(extractString(cursor, COLUMN_LOCATION_MAP_AREA_NAME));
             location.setLocalityName(extractString(cursor, COLUMN_LOCATION_LOCALITY_NAME));
-            location.setCommunityName(extractString(cursor, COLUMN_LOCATION_COMMUNITY_NAME));
-            location.setCommunityCode(extractString(cursor, COLUMN_LOCATION_COMMUNITY_CODE));
             location.setBuildingNumber(extractInt(cursor, COLUMN_LOCATION_BUILDING_NUMBER));
             location.setFloorNumber(extractInt(cursor, COLUMN_LOCATION_FLOOR_NUMBER));
             location.setDescription(extractString(cursor, COLUMN_LOCATION_DESCRIPTION));
@@ -139,8 +108,6 @@ public class LocationGateway extends Gateway<Location> {
             contentValues.put(COLUMN_LOCATION_SECTOR_NAME, location.getSectorName());
             contentValues.put(COLUMN_LOCATION_MAP_AREA_NAME, location.getMapAreaName());
             contentValues.put(COLUMN_LOCATION_LOCALITY_NAME, location.getLocalityName());
-            contentValues.put(COLUMN_LOCATION_COMMUNITY_NAME, location.getCommunityName());
-            contentValues.put(COLUMN_LOCATION_COMMUNITY_CODE, location.getCommunityCode());
             contentValues.put(COLUMN_LOCATION_BUILDING_NUMBER, location.getBuildingNumber());
             contentValues.put(COLUMN_LOCATION_FLOOR_NUMBER, location.getFloorNumber());
             contentValues.put(COLUMN_LOCATION_DESCRIPTION, location.getDescription());

@@ -1,10 +1,14 @@
 package org.openhds.mobile.navconfig.forms.builders;
 
 import android.content.ContentResolver;
+import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.model.core.Location;
+import org.openhds.mobile.model.core.LocationHierarchy;
 import org.openhds.mobile.navconfig.ProjectFormFields;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.navconfig.forms.UsedByJSConfig;
@@ -12,6 +16,7 @@ import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
 import org.openhds.mobile.repository.gateway.LocationGateway;
+import org.openhds.mobile.repository.gateway.LocationHierarchyGateway;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -24,6 +29,8 @@ import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.formatFlo
 import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.formatTime;
 
 public class BiokoFormPayloadBuilders {
+
+    private static final String TAG = BiokoFormPayloadBuilders.class.getSimpleName();
 
     @UsedByJSConfig
     public static class DistributeBednets implements FormPayloadBuilder {
@@ -48,7 +55,7 @@ public class BiokoFormPayloadBuilders {
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, locationUuid);
 
             //pre-fill a netCode in YY-CCC form
-            String netCode = generateNetCode(ctx, locationUuid);
+            String netCode = generateNetCode(ctx);
             formPayload.put(ProjectFormFields.BedNet.BED_NET_CODE, netCode);
 
             //pre-fill the householdSize for this particular household
@@ -61,12 +68,23 @@ public class BiokoFormPayloadBuilders {
             return formPayload;
         }
 
-        public String generateNetCode(LaunchContext ctx, String locationUuid) {
+        private String generateNetCode(LaunchContext ctx) {
 
-            LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            Location location = locationGateway.getFirst(ctx.getContentResolver(), locationGateway.findById(locationUuid));
+            DataWrapper localityStub = ctx.getHierarchyPath().get(LOCALITY);
+            LocationHierarchyGateway hierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
+            LocationHierarchy locality = hierarchyGateway.getFirst(ctx.getContentResolver(), hierarchyGateway.findById(localityStub.getUuid()));
 
-            String communityCode = location.getCommunityCode();
+            String communityCode = "?";
+
+            if (locality.getAttrs() != null) {
+                try {
+                    JSONObject attrs = new JSONObject(locality.getAttrs());
+                    communityCode = attrs.getString("code");
+                } catch (JSONException e) {
+                    Log.w(TAG, "no community code for locality " + localityStub.getUuid());
+                }
+            }
+
             String yearPrefix = Integer.toString (Calendar.getInstance().get(Calendar.YEAR));
             yearPrefix = yearPrefix.substring(2);
 

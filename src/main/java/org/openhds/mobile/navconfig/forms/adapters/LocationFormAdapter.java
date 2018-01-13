@@ -16,8 +16,6 @@ public class LocationFormAdapter {
         location.setName(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_NAME)));
         location.setHierarchyUuid(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_HIERARCHY_UUID)));
         location.setHierarchyExtId(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_HIERARCHY_EXTID)));
-        location.setCommunityName(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_COMMUNITY_NAME)));
-        location.setCommunityCode(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_COMMUNITY_CODE)));
         location.setLocalityName(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_LOCALITY_NAME)));
         location.setSectorName(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_SECTOR_NAME)));
         location.setMapAreaName(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_MAP_AREA_NAME)));
