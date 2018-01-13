@@ -23,6 +23,7 @@ public class Individual implements Serializable {
 	private String languagePreference;
 	private String status;
     private String nationality;
+    private String attrs;
 
     public String getUuid() {
         return uuid;
@@ -163,5 +164,13 @@ public class Individual implements Serializable {
 
 	public void setRelationshipToHead(String relationshipToHead) {
 		this.relationshipToHead = relationshipToHead;
+	}
+
+	public String getAttrs() {
+		return attrs;
+	}
+
+	public void setAttrs(String attrs) {
+		this.attrs = attrs;
 	}
 }

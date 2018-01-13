@@ -38,6 +38,7 @@ public class OpenHDS {
         public static final String COLUMN_INDIVIDUAL_DOB = "dob";
         public static final String COLUMN_INDIVIDUAL_GENDER = "gender";
         public static final String COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID = "currentResidence";
+        public static final String COLUMN_INDIVIDUAL_ATTRS = "attrs";
 
         // extensions for bioko project
         public static final String COLUMN_INDIVIDUAL_OTHER_ID = "otherId";
@@ -85,6 +86,7 @@ public class OpenHDS {
         public static final String COLUMN_LOCATION_SUB_DISTRICT_NAME = "subDistrictName";
         public static final String COLUMN_LOCATION_DISTRICT_NAME = "districtName";
         public static final String COLUMN_LOCATION_DESCRIPTION = "description";
+        public static final String COLUMN_LOCATION_ATTRS = "attrs";
     }
 
     public static final class HierarchyItems implements BaseColumns {
@@ -106,6 +108,7 @@ public class OpenHDS {
         public static final String COLUMN_HIERARCHY_NAME = "name";
         public static final String COLUMN_HIERARCHY_PARENT = "parent";
         public static final String COLUMN_HIERARCHY_LEVEL = "level";
+        public static final String COLUMN_HIERARCHY_ATTRS = "attrs";
     }
 
     public static final class FieldWorkers implements BaseColumns {

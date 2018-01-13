@@ -11,6 +11,7 @@ import org.openhds.mobile.repository.Converter;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.Query;
 
+import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_ATTRS;
 import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_DOB;
 import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID;
 import static org.openhds.mobile.OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME;
@@ -68,6 +69,7 @@ public class IndividualGateway extends Gateway<Individual> {
             individual.setLanguagePreference(extractString(cursor, COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE));
             individual.setNationality(extractString(cursor, COLUMN_INDIVIDUAL_NATIONALITY));
             individual.setRelationshipToHead(extractString(cursor, COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD));
+            individual.setAttrs(extractString(cursor, COLUMN_INDIVIDUAL_ATTRS));
             return individual;
         }
 
@@ -91,6 +93,7 @@ public class IndividualGateway extends Gateway<Individual> {
             contentValues.put(COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE, individual.getLanguagePreference());
             contentValues.put(COLUMN_INDIVIDUAL_NATIONALITY, individual.getNationality());
             contentValues.put(COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD, individual.getRelationshipToHead());
+            contentValues.put(COLUMN_INDIVIDUAL_ATTRS, individual.getAttrs());
             return contentValues;
         }
 

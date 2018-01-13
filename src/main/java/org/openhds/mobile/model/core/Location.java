@@ -25,6 +25,7 @@ public class Location implements Serializable {
     private String subDistrictName;
     private String districtName;
     private String description;
+    private String attrs;
 
     public String getUuid() {
         return uuid;
@@ -177,4 +178,12 @@ public class Location implements Serializable {
 	public void setMapAreaName(String mapAreaName) {
 		this.mapAreaName = mapAreaName;
 	}
+
+    public String getAttrs() {
+        return attrs;
+    }
+
+    public void setAttrs(String attrs) {
+        this.attrs = attrs;
+    }
 }

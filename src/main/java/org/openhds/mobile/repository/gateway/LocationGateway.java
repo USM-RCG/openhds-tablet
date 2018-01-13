@@ -14,6 +14,7 @@ import org.openhds.mobile.repository.Converter;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.Query;
 
+import static org.openhds.mobile.OpenHDS.Locations.COLUMN_LOCATION_ATTRS;
 import static org.openhds.mobile.OpenHDS.Locations.COLUMN_LOCATION_BUILDING_NUMBER;
 import static org.openhds.mobile.OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_CODE;
 import static org.openhds.mobile.OpenHDS.Locations.COLUMN_LOCATION_COMMUNITY_NAME;
@@ -121,6 +122,7 @@ public class LocationGateway extends Gateway<Location> {
             location.setDescription(extractString(cursor, COLUMN_LOCATION_DESCRIPTION));
             location.setLongitude(extractString(cursor, COLUMN_LOCATION_LONGITUDE));
             location.setLatitude(extractString(cursor, COLUMN_LOCATION_LATITUDE));
+            location.setAttrs(extractString(cursor, COLUMN_LOCATION_ATTRS));
             return location;
         }
 
@@ -144,6 +146,7 @@ public class LocationGateway extends Gateway<Location> {
             contentValues.put(COLUMN_LOCATION_DESCRIPTION, location.getDescription());
             contentValues.put(COLUMN_LOCATION_LONGITUDE, location.getLongitude());
             contentValues.put(COLUMN_LOCATION_LATITUDE, location.getLatitude());
+            contentValues.put(COLUMN_LOCATION_ATTRS, location.getAttrs());
             return contentValues;
         }
 

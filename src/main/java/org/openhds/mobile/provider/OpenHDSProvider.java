@@ -74,6 +74,7 @@ public class OpenHDSProvider extends ContentProvider {
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME);
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID);
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_FULL_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME + " || ' ' || " + OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME + " as " + OpenHDS.Individuals.COLUMN_INDIVIDUAL_FULL_NAME);
+        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_ATTRS, OpenHDS.Individuals.COLUMN_INDIVIDUAL_ATTRS);
 
         // extensions for bioko project
         individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES, OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES);
@@ -107,6 +108,7 @@ public class OpenHDSProvider extends ContentProvider {
         locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_SUB_DISTRICT_NAME, OpenHDS.Locations.COLUMN_LOCATION_SUB_DISTRICT_NAME);
         locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_DISTRICT_NAME, OpenHDS.Locations.COLUMN_LOCATION_DISTRICT_NAME);
         locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_DESCRIPTION, OpenHDS.Locations.COLUMN_LOCATION_DESCRIPTION);
+        locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_ATTRS, OpenHDS.Locations.COLUMN_LOCATION_ATTRS);
 
         hierarchyitemsProjectionMap = new HashMap<>();
         hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems._ID, OpenHDS.HierarchyItems._ID);
@@ -115,6 +117,7 @@ public class OpenHDSProvider extends ContentProvider {
         hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL);
         hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME);
         hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT);
+        hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_ATTRS, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_ATTRS);
 
         fieldworkersProjectionMap = new HashMap<>();
         fieldworkersProjectionMap.put(OpenHDS.FieldWorkers._ID, OpenHDS.FieldWorkers._ID);
@@ -488,7 +491,8 @@ public class OpenHDSProvider extends ContentProvider {
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE + " TEXT,"
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS + " TEXT,"
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_NATIONALITY + " TEXT,"
-                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_ID + " TEXT);");
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_ID + " TEXT,"
+                    + OpenHDS.Individuals.COLUMN_INDIVIDUAL_ATTRS + " TEXT);");
 
             db.execSQL("CREATE INDEX INDIVIDUAL_UUID_INDEX ON " + OpenHDS.Individuals.TABLE_NAME + "("
                     + OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID + ") ; ");
@@ -520,7 +524,8 @@ public class OpenHDSProvider extends ContentProvider {
                     + OpenHDS.Locations.COLUMN_LOCATION_SUB_DISTRICT_NAME + " TEXT,"
                     + OpenHDS.Locations.COLUMN_LOCATION_DISTRICT_NAME + " TEXT,"
                     + OpenHDS.Locations.COLUMN_LOCATION_DESCRIPTION + " TEXT,"
-                    + OpenHDS.Locations.COLUMN_LOCATION_NAME + " TEXT NOT NULL);");
+                    + OpenHDS.Locations.COLUMN_LOCATION_NAME + " TEXT NOT NULL,"
+                    + OpenHDS.Locations.COLUMN_LOCATION_ATTRS + " TEXT);");
 
             db.execSQL("CREATE INDEX LOCATION_EXTID_INDEX ON " + OpenHDS.Locations.TABLE_NAME + "("
                     + OpenHDS.Locations.COLUMN_LOCATION_EXTID + ") ; ");
@@ -538,7 +543,8 @@ public class OpenHDSProvider extends ContentProvider {
                     + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID + " TEXT NOT NULL,"
                     + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL + " TEXT NOT NULL,"
                     + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME + " TEXT NOT NULL,"
-                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT + " TEXT NOT NULL);");
+                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT + " TEXT NOT NULL,"
+                    + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_ATTRS + " TEXT);");
 
             db.execSQL("CREATE INDEX LOCATIONHIERARCHY_PARENT_INDEX ON " + OpenHDS.HierarchyItems.TABLE_NAME + "("
                     + OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT + ") ; ");

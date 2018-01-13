@@ -12,7 +12,6 @@ import org.openhds.mobile.repository.Query;
 import static org.openhds.mobile.OpenHDS.HierarchyItems.*;
 import static org.openhds.mobile.repository.RepositoryUtils.extractString;
 
-
 /**
  * Convert LocationHierarchy items to and from database.  LocationHierarchy-specific queries.
  */
@@ -45,6 +44,7 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
             locationHierarchy.setName(extractString(cursor, COLUMN_HIERARCHY_NAME));
             locationHierarchy.setLevel(extractString(cursor, COLUMN_HIERARCHY_LEVEL));
             locationHierarchy.setParentUuid(extractString(cursor, COLUMN_HIERARCHY_PARENT));
+            locationHierarchy.setAttrs(extractString(cursor, COLUMN_HIERARCHY_ATTRS));
 
             return locationHierarchy;
         }
@@ -58,6 +58,7 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
             contentValues.put(COLUMN_HIERARCHY_NAME, locationHierarchy.getName());
             contentValues.put(COLUMN_HIERARCHY_LEVEL, locationHierarchy.getLevel());
             contentValues.put(COLUMN_HIERARCHY_PARENT, locationHierarchy.getParentUuid());
+            contentValues.put(COLUMN_HIERARCHY_ATTRS, locationHierarchy.getAttrs());
 
             return contentValues;
         }

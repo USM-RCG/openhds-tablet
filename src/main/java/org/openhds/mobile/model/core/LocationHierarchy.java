@@ -11,6 +11,7 @@ public class LocationHierarchy implements Serializable {
     private String parentUuid;
     private String level;
     private String uuid;
+    private String attrs;
 
     public String getUuid() {
         return uuid;
@@ -52,4 +53,11 @@ public class LocationHierarchy implements Serializable {
         this.level = level;
     }
 
+    public String getAttrs() {
+        return attrs;
+    }
+
+    public void setAttrs(String attrs) {
+        this.attrs = attrs;
+    }
 }
