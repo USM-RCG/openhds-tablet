@@ -61,18 +61,12 @@ public class ProjectFormFields {
         public static final String LOCATION_EXTID = "locationExtId";
         public static final String LOCATION_UUID = "locationUuid";
         public static final String LOCATION_NAME = "locationName";
-        public static final String COMMUNITY_NAME = "communityName";
-        public static final String COMMUNITY_CODE = "communityCode";
         public static final String MAP_AREA_NAME = "mapAreaName";
         public static final String LOCALITY_NAME = "localityName";
         public static final String SECTOR_NAME = "sectorName";
 
         public static final String BUILDING_NUMBER = "locationBuildingNumber";
         public static final String FLOOR_NUMBER = "locationFloorNumber";
-        public static final String REGION_NAME = "regionName";
-        public static final String PROVINCE_NAME = "provinceName";
-        public static final String SUB_DISTRICT_NAME = "subDistrictName";
-        public static final String DISTRICT_NAME = "districtName";
 
         public static final String DESCRIPTION = "description";
         public static final String LONGITUDE = "longitude";
@@ -82,18 +76,11 @@ public class ProjectFormFields {
 
         static {
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_HIERARCHY_UUID, HIERARCHY_UUID);
-            columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_HIERARCHY_EXTID, HIERARCHY_EXTID);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_EXTID, LOCATION_EXTID);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_NAME, LOCATION_NAME);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_MAP_AREA_NAME, MAP_AREA_NAME);
-            columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_LOCALITY_NAME, LOCALITY_NAME);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_SECTOR_NAME, SECTOR_NAME);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_BUILDING_NUMBER, BUILDING_NUMBER);
-            columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_FLOOR_NUMBER, FLOOR_NUMBER);
-            columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_REGION_NAME, REGION_NAME);
-            columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_PROVINCE_NAME, PROVINCE_NAME);
-            columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_SUB_DISTRICT_NAME, SUB_DISTRICT_NAME);
-            columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_DISTRICT_NAME, DISTRICT_NAME);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_DESCRIPTION, DESCRIPTION);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_LONGITUDE, LONGITUDE);
             columnsToFieldNames.put(OpenHDS.Locations.COLUMN_LOCATION_LATITUDE, LATITUDE);

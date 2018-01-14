@@ -67,22 +67,14 @@ public class OpenHDS {
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openhds.location";
 
         public static final String COLUMN_LOCATION_UUID = "uuid";
-
         public static final String COLUMN_LOCATION_EXTID = "extId";
         public static final String COLUMN_LOCATION_NAME = "name";
         public static final String COLUMN_LOCATION_LATITUDE = "latitude";
         public static final String COLUMN_LOCATION_LONGITUDE = "longitude";
         public static final String COLUMN_LOCATION_HIERARCHY_UUID = "hierarchyUuid";
-        public static final String COLUMN_LOCATION_HIERARCHY_EXTID = "hierarchyExtId";
-        public static final String COLUMN_LOCATION_LOCALITY_NAME = "localityName";
         public static final String COLUMN_LOCATION_MAP_AREA_NAME = "mapAreaName";
         public static final String COLUMN_LOCATION_SECTOR_NAME = "sectorName";
         public static final String COLUMN_LOCATION_BUILDING_NUMBER = "buildingNumber";
-        public static final String COLUMN_LOCATION_FLOOR_NUMBER = "floorNumber";
-        public static final String COLUMN_LOCATION_REGION_NAME = "regionName";
-        public static final String COLUMN_LOCATION_PROVINCE_NAME = "provinceName";
-        public static final String COLUMN_LOCATION_SUB_DISTRICT_NAME = "subDistrictName";
-        public static final String COLUMN_LOCATION_DISTRICT_NAME = "districtName";
         public static final String COLUMN_LOCATION_DESCRIPTION = "description";
         public static final String COLUMN_LOCATION_ATTRS = "attrs";
     }

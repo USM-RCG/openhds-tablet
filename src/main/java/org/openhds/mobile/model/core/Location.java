@@ -12,16 +12,9 @@ public class Location implements Serializable {
 	private String latitude;
 	private String longitude;
 	private String hierarchyUuid;
-    private String hierarchyExtId;
-    private String localityName;
     private String mapAreaName;
     private String sectorName;
     private int buildingNumber;
-    private int floorNumber;
-    private String regionName;
-    private String provinceName;
-    private String subDistrictName;
-    private String districtName;
     private String description;
     private String attrs;
 
@@ -47,46 +40,6 @@ public class Location implements Serializable {
 
     public void setBuildingNumber(int buildingNumber) {
         this.buildingNumber = buildingNumber;
-    }
-
-    public int getFloorNumber() {
-        return floorNumber;
-    }
-
-    public void setFloorNumber(int floorNumber) {
-        this.floorNumber = floorNumber;
-    }
-
-    public String getRegionName() {
-        return regionName;
-    }
-
-    public void setRegionName(String regionName) {
-        this.regionName = regionName;
-    }
-
-    public String getProvinceName() {
-        return provinceName;
-    }
-
-    public void setProvinceName(String provinceName) {
-        this.provinceName = provinceName;
-    }
-
-    public String getSubDistrictName() {
-        return subDistrictName;
-    }
-
-    public void setSubDistrictName(String subDistrictName) {
-        this.subDistrictName = subDistrictName;
-    }
-
-    public String getDistrictName() {
-        return districtName;
-    }
-
-    public void setDistrictName(String districtName) {
-        this.districtName = districtName;
     }
 
     public String getExtId() {
@@ -128,22 +81,6 @@ public class Location implements Serializable {
 	public void setHierarchyUuid(String hierarchyUuid) {
 		this.hierarchyUuid = hierarchyUuid;
 	}
-
-    public String getHierarchyExtId() {
-        return hierarchyExtId;
-    }
-
-    public void setHierarchyExtId(String hierarchyExtId) {
-        this.hierarchyExtId = hierarchyExtId;
-    }
-
-    public String getLocalityName() {
-        return localityName;
-    }
-
-    public void setLocalityName(String localityName) {
-        this.localityName = localityName;
-    }
 
     public String getSectorName() {
         return sectorName;
