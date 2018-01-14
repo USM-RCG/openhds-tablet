@@ -33,10 +33,10 @@ public class OpenHDSProvider extends ContentProvider {
 
     private static final String TAG = "OpenHDSProvider";
 
-    private static HashMap<String, String> individualsProjectionMap;
-    private static HashMap<String, String> locationsProjectionMap;
-    private static HashMap<String, String> hierarchyitemsProjectionMap;
-    private static HashMap<String, String> fieldworkersProjectionMap;
+    private static HashMap<String, String> individualProjectionMap;
+    private static HashMap<String, String> locationProjectionMap;
+    private static HashMap<String, String> hierarchyProjectionMap;
+    private static HashMap<String, String> fieldworkerProjectionMap;
 
     private static final int INDIVIDUALS = 1;
     private static final int INDIVIDUAL_ID = 2;
@@ -62,62 +62,62 @@ public class OpenHDSProvider extends ContentProvider {
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "fieldworkers", FIELDWORKERS);
         sUriMatcher.addURI(OpenHDS.AUTHORITY, "fieldworkers/#", FIELDWORKER_ID);
 
-        individualsProjectionMap = new HashMap<>();
+        individualProjectionMap = new HashMap<>();
 
         // general individual columns
-        individualsProjectionMap.put(OpenHDS.Individuals._ID, OpenHDS.Individuals._ID);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_DOB, OpenHDS.Individuals.COLUMN_INDIVIDUAL_DOB);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_GENDER, OpenHDS.Individuals.COLUMN_INDIVIDUAL_GENDER);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_FULL_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME + " || ' ' || " + OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME + " as " + OpenHDS.Individuals.COLUMN_INDIVIDUAL_FULL_NAME);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_ATTRS, OpenHDS.Individuals.COLUMN_INDIVIDUAL_ATTRS);
+        individualProjectionMap.put(OpenHDS.Individuals._ID, OpenHDS.Individuals._ID);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_UUID);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_DOB, OpenHDS.Individuals.COLUMN_INDIVIDUAL_DOB);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_EXTID);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_GENDER, OpenHDS.Individuals.COLUMN_INDIVIDUAL_GENDER);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_FULL_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME + " || ' ' || " + OpenHDS.Individuals.COLUMN_INDIVIDUAL_LAST_NAME + " as " + OpenHDS.Individuals.COLUMN_INDIVIDUAL_FULL_NAME);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_ATTRS, OpenHDS.Individuals.COLUMN_INDIVIDUAL_ATTRS);
 
         // extensions for bioko project
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES, OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER, OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER, OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER, OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE, OpenHDS.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS, OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_NATIONALITY, OpenHDS.Individuals.COLUMN_INDIVIDUAL_NATIONALITY);
-        individualsProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_ID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_ID);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES, OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER, OpenHDS.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER, OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME, OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER, OpenHDS.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE, OpenHDS.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS, OpenHDS.Individuals.COLUMN_INDIVIDUAL_STATUS);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_NATIONALITY, OpenHDS.Individuals.COLUMN_INDIVIDUAL_NATIONALITY);
+        individualProjectionMap.put(OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_ID, OpenHDS.Individuals.COLUMN_INDIVIDUAL_OTHER_ID);
 
-        locationsProjectionMap = new HashMap<>();
-        locationsProjectionMap.put(OpenHDS.Locations._ID, OpenHDS.Locations._ID);
-        locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_EXTID, OpenHDS.Locations.COLUMN_LOCATION_EXTID);
-        locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_UUID, OpenHDS.Locations.COLUMN_LOCATION_UUID);
-        locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_HIERARCHY_UUID, OpenHDS.Locations.COLUMN_LOCATION_HIERARCHY_UUID);
-        locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_LATITUDE, OpenHDS.Locations.COLUMN_LOCATION_LATITUDE);
-        locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_LONGITUDE, OpenHDS.Locations.COLUMN_LOCATION_LONGITUDE);
-        locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_NAME, OpenHDS.Locations.COLUMN_LOCATION_NAME);
-        locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_MAP_AREA_NAME, OpenHDS.Locations.COLUMN_LOCATION_MAP_AREA_NAME);
-        locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_SECTOR_NAME, OpenHDS.Locations.COLUMN_LOCATION_SECTOR_NAME);
-        locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_BUILDING_NUMBER, OpenHDS.Locations.COLUMN_LOCATION_BUILDING_NUMBER);
-        locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_DESCRIPTION, OpenHDS.Locations.COLUMN_LOCATION_DESCRIPTION);
-        locationsProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_ATTRS, OpenHDS.Locations.COLUMN_LOCATION_ATTRS);
+        locationProjectionMap = new HashMap<>();
+        locationProjectionMap.put(OpenHDS.Locations._ID, OpenHDS.Locations._ID);
+        locationProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_EXTID, OpenHDS.Locations.COLUMN_LOCATION_EXTID);
+        locationProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_UUID, OpenHDS.Locations.COLUMN_LOCATION_UUID);
+        locationProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_HIERARCHY_UUID, OpenHDS.Locations.COLUMN_LOCATION_HIERARCHY_UUID);
+        locationProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_LATITUDE, OpenHDS.Locations.COLUMN_LOCATION_LATITUDE);
+        locationProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_LONGITUDE, OpenHDS.Locations.COLUMN_LOCATION_LONGITUDE);
+        locationProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_NAME, OpenHDS.Locations.COLUMN_LOCATION_NAME);
+        locationProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_MAP_AREA_NAME, OpenHDS.Locations.COLUMN_LOCATION_MAP_AREA_NAME);
+        locationProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_SECTOR_NAME, OpenHDS.Locations.COLUMN_LOCATION_SECTOR_NAME);
+        locationProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_BUILDING_NUMBER, OpenHDS.Locations.COLUMN_LOCATION_BUILDING_NUMBER);
+        locationProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_DESCRIPTION, OpenHDS.Locations.COLUMN_LOCATION_DESCRIPTION);
+        locationProjectionMap.put(OpenHDS.Locations.COLUMN_LOCATION_ATTRS, OpenHDS.Locations.COLUMN_LOCATION_ATTRS);
 
-        hierarchyitemsProjectionMap = new HashMap<>();
-        hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems._ID, OpenHDS.HierarchyItems._ID);
-        hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID);
-        hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID);
-        hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL);
-        hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME);
-        hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT);
-        hierarchyitemsProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_ATTRS, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_ATTRS);
+        hierarchyProjectionMap = new HashMap<>();
+        hierarchyProjectionMap.put(OpenHDS.HierarchyItems._ID, OpenHDS.HierarchyItems._ID);
+        hierarchyProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_EXTID);
+        hierarchyProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_UUID);
+        hierarchyProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_LEVEL);
+        hierarchyProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_NAME);
+        hierarchyProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_PARENT);
+        hierarchyProjectionMap.put(OpenHDS.HierarchyItems.COLUMN_HIERARCHY_ATTRS, OpenHDS.HierarchyItems.COLUMN_HIERARCHY_ATTRS);
 
-        fieldworkersProjectionMap = new HashMap<>();
-        fieldworkersProjectionMap.put(OpenHDS.FieldWorkers._ID, OpenHDS.FieldWorkers._ID);
-        fieldworkersProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_EXTID, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_EXTID);
-        fieldworkersProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_UUID, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_UUID);
-        fieldworkersProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_ID_PREFIX, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_ID_PREFIX);
-        fieldworkersProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_FIRST_NAME, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_FIRST_NAME);
-        fieldworkersProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_LAST_NAME, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_LAST_NAME);
-        fieldworkersProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_PASSWORD, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_PASSWORD);
+        fieldworkerProjectionMap = new HashMap<>();
+        fieldworkerProjectionMap.put(OpenHDS.FieldWorkers._ID, OpenHDS.FieldWorkers._ID);
+        fieldworkerProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_EXTID, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_EXTID);
+        fieldworkerProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_UUID, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_UUID);
+        fieldworkerProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_ID_PREFIX, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_ID_PREFIX);
+        fieldworkerProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_FIRST_NAME, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_FIRST_NAME);
+        fieldworkerProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_LAST_NAME, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_LAST_NAME);
+        fieldworkerProjectionMap.put(OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_PASSWORD, OpenHDS.FieldWorkers.COLUMN_FIELD_WORKER_PASSWORD);
     }
 
     private static DatabaseHelper dbHelper;
@@ -169,11 +169,11 @@ public class OpenHDSProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case INDIVIDUALS:
                 qb.setTables(OpenHDS.Individuals.TABLE_NAME);
-                qb.setProjectionMap(individualsProjectionMap);
+                qb.setProjectionMap(individualProjectionMap);
                 break;
             case INDIVIDUAL_ID:
                 qb.setTables(OpenHDS.Individuals.TABLE_NAME);
-                qb.setProjectionMap(individualsProjectionMap);
+                qb.setProjectionMap(individualProjectionMap);
                 qb.appendWhere(OpenHDS.Individuals._ID
                         + "="
                         + uri.getPathSegments().get(
@@ -181,11 +181,11 @@ public class OpenHDSProvider extends ContentProvider {
                 break;
             case LOCATIONS:
                 qb.setTables(OpenHDS.Locations.TABLE_NAME);
-                qb.setProjectionMap(locationsProjectionMap);
+                qb.setProjectionMap(locationProjectionMap);
                 break;
             case LOCATION_ID:
                 qb.setTables(OpenHDS.Locations.TABLE_NAME);
-                qb.setProjectionMap(locationsProjectionMap);
+                qb.setProjectionMap(locationProjectionMap);
                 qb.appendWhere(OpenHDS.Locations._ID
                         + "="
                         + uri.getPathSegments().get(
@@ -193,11 +193,11 @@ public class OpenHDSProvider extends ContentProvider {
                 break;
             case HIERARCHYITEMS:
                 qb.setTables(OpenHDS.HierarchyItems.TABLE_NAME);
-                qb.setProjectionMap(hierarchyitemsProjectionMap);
+                qb.setProjectionMap(hierarchyProjectionMap);
                 break;
             case HIERARCHYITEM_ID:
                 qb.setTables(OpenHDS.HierarchyItems.TABLE_NAME);
-                qb.setProjectionMap(hierarchyitemsProjectionMap);
+                qb.setProjectionMap(hierarchyProjectionMap);
                 qb.appendWhere(OpenHDS.HierarchyItems._ID
                         + "="
                         + uri.getPathSegments().get(
@@ -206,11 +206,11 @@ public class OpenHDSProvider extends ContentProvider {
                 break;
             case FIELDWORKERS:
                 qb.setTables(OpenHDS.FieldWorkers.TABLE_NAME);
-                qb.setProjectionMap(fieldworkersProjectionMap);
+                qb.setProjectionMap(fieldworkerProjectionMap);
                 break;
             case FIELDWORKER_ID:
                 qb.setTables(OpenHDS.FieldWorkers.TABLE_NAME);
-                qb.setProjectionMap(fieldworkersProjectionMap);
+                qb.setProjectionMap(fieldworkerProjectionMap);
                 qb.appendWhere(OpenHDS.FieldWorkers._ID
                         + "="
                         + uri.getPathSegments().get(
