@@ -32,7 +32,6 @@ public class CensusFormPayloadBuilders {
 
         LocationHierarchy sector = locationHierarchyGateway.getFirst(contentResolver, locationHierarchyGateway.findById(sectorDataWrapper.getUuid()));
         LocationHierarchy mapArea = locationHierarchyGateway.getFirst(contentResolver, locationHierarchyGateway.findById(sector.getParentUuid()));
-        LocationHierarchy locality = locationHierarchyGateway.getFirst(contentResolver, locationHierarchyGateway.findById(mapArea.getParentUuid()));
 
         int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(ctx.getApplicationContext(), mapArea.getName(), sector.getName());
 
