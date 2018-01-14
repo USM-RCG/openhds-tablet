@@ -22,14 +22,13 @@ with (imports) {
         });
     }
 
-    bind({ form: 'location',
-           label: 'locationFormLabel',
-           builder: new CensusFormPayloadBuilders.AddLocation(),
-           consumer: new CensusFormPayloadConsumers.AddLocation() });
-
     bind({ form: 'location_evaluation',
            label: 'locationEvaluationFormLabel',
            builder: new CensusFormPayloadBuilders.LocationEvaluation() });
+
+    bind({ form: 'bed_net',
+           label: 'bedNetFormLabel',
+           builder: new BiokoFormPayloadBuilders.DistributeBednets() });
 
     bind({ name: 'household_head',
            form: 'individual',
@@ -56,11 +55,6 @@ with (imports) {
     }
 
     var launchers = {
-        sector: [
-            launcher({ label: 'census.locationLabel',
-                       bind: 'location',
-                       filter: new CensusFormFilters.AddLocation() })
-        ],
         household: [
             launcher({ label: 'census.locationEvaluationLabel',
                        bind: 'location_evaluation' }),
@@ -69,7 +63,8 @@ with (imports) {
                        filter: new CensusFormFilters.AddHeadOfHousehold() }),
             launcher({ label: 'census.householdMemberLabel',
                        bind: 'household_member',
-                       filter: InvertedFilter.invert(new CensusFormFilters.AddHeadOfHousehold()) })
+                       filter: InvertedFilter.invert(new CensusFormFilters.AddHeadOfHousehold()) }),
+            launcher({ label: 'census.bednetsLabel', bind: 'bed_net' })
         ],
         individual: [
             launcher({ label: 'census.fingerprintsLabel',

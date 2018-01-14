@@ -22,10 +22,6 @@ with (imports) {
         });
     }
 
-    bind({ form: 'duplicate_location',
-           label: 'duplicateLocationFormLabel',
-           builder: new BiokoFormPayloadBuilders.DuplicateLocation() });
-
     bind({ form: 'create_map',
            label: 'createMapFormLabel',
            builder: new BiokoFormPayloadBuilders.CreateMap() });
@@ -33,6 +29,15 @@ with (imports) {
     bind({ form: 'create_sector',
            label: 'createSectorFormLabel',
            builder: new BiokoFormPayloadBuilders.CreateSector() });
+
+    bind({ form: 'location',
+           label: 'locationFormLabel',
+           builder: new CensusFormPayloadBuilders.AddLocation(),
+           consumer: new CensusFormPayloadConsumers.AddLocation() });
+
+    bind({ form: 'duplicate_location',
+           label: 'duplicateLocationFormLabel',
+           builder: new BiokoFormPayloadBuilders.DuplicateLocation() });
 
     function launcher(l) {
         return new Launcher({
@@ -48,6 +53,10 @@ with (imports) {
         ],
         mapArea: [
             launcher({ label: 'gisops.createSectorLabel', bind: 'create_sector' })
+        ],
+        sector: [
+            launcher({ label: 'gisops.locationLabel', bind: 'location',
+                       filter: new CensusFormFilters.AddLocation() })
         ],
         household: [
             launcher({ label: 'gisops.duplicateLocationLabel', bind: 'duplicate_location' })

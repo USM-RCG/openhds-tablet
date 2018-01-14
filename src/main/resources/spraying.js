@@ -22,10 +22,6 @@ with (imports) {
         });
     }
 
-    bind({ form: 'bed_net',
-           label: 'bedNetFormLabel',
-           builder: new BiokoFormPayloadBuilders.DistributeBednets() });
-
     bind({ form: 'spraying',
            label: 'sprayingFormLabel',
            builder: new BiokoFormPayloadBuilders.SprayHousehold() });
@@ -44,9 +40,8 @@ with (imports) {
 
     var launchers = {
         household: [
-            launcher({ label: 'bioko.bednetsLabel', bind: 'bed_net' }),
-            launcher({ label: 'bioko.sprayingLabel', bind: 'spraying' }),
-            launcher({ label: 'bioko.superOjoLabel', bind: 'super_ojo' }),
+            launcher({ label: 'spraying.sprayingLabel', bind: 'spraying' }),
+            launcher({ label: 'spraying.superOjoLabel', bind: 'super_ojo' }),
         ]
     };
 
@@ -56,9 +51,9 @@ with (imports) {
 
     var module = new NavigatorModule({
         getName: function() { return 'spraying'; },
-        getActivityTitle: function() { return config.getString('bioko.activityTitle'); },
-        getLaunchLabel: function() { return config.getString('bioko.launchTitle'); },
-        getLaunchDescription: function() { return config.getString('bioko.launchDescription'); },
+        getActivityTitle: function() { return config.getString('spraying.activityTitle'); },
+        getLaunchLabel: function() { return config.getString('spraying.launchTitle'); },
+        getLaunchDescription: function() { return config.getString('spraying.launchDescription'); },
         getBindings: function() { return binds; },
         getLaunchers: function(level) { return launchers[level] || []; },
         getDetailFragment: function(level) { return details[level] || null; }
