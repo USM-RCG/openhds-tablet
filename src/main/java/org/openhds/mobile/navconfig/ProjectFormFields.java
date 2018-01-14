@@ -62,7 +62,6 @@ public class ProjectFormFields {
         public static final String LOCATION_UUID = "locationUuid";
         public static final String LOCATION_NAME = "locationName";
         public static final String MAP_AREA_NAME = "mapAreaName";
-        public static final String LOCALITY_NAME = "localityName";
         public static final String SECTOR_NAME = "sectorName";
 
         public static final String BUILDING_NUMBER = "locationBuildingNumber";

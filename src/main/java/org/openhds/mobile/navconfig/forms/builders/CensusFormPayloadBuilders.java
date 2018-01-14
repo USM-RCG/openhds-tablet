@@ -43,7 +43,6 @@ public class CensusFormPayloadBuilders {
         formPayload.put(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID, sector.getParentUuid());
         formPayload.put(ProjectFormFields.Locations.SECTOR_NAME, sector.getName());
         formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, formatFloor(1, false));
-        formPayload.put(ProjectFormFields.Locations.LOCALITY_NAME, locality.getName());
         formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, mapArea.getName());
     }
 
