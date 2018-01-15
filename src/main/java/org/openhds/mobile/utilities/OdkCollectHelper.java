@@ -26,7 +26,8 @@ public class OdkCollectHelper {
             InstanceProviderAPI.InstanceColumns._ID,
             InstanceProviderAPI.InstanceColumns.JR_FORM_ID,
             InstanceProviderAPI.InstanceColumns.DISPLAY_NAME,
-            InstanceProviderAPI.InstanceColumns.STATUS};
+            InstanceProviderAPI.InstanceColumns.STATUS,
+            InstanceProviderAPI.InstanceColumns.CAN_EDIT_WHEN_COMPLETE};
 
     public static List<FormInstance> getAllUnsentFormInstances(ContentResolver resolver) {
 
@@ -56,6 +57,8 @@ public class OdkCollectHelper {
         formInstance.setFormName(cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_FORM_ID)));
         formInstance.setFileName(cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME)));
         formInstance.setStatus(cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS)));
+        formInstance.setCanEditWhenComplete(Boolean.parseBoolean(
+                        cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.CAN_EDIT_WHEN_COMPLETE))));
         return formInstance;
     }
 
@@ -230,5 +233,4 @@ public class OdkCollectHelper {
         cv.put(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, path);
         resolver.update(uri, cv, null, null);
     }
-
 }

@@ -98,9 +98,13 @@ public class FormListFragment extends Fragment {
     }
 
     private void editForm(FormInstance selected) {
-        Uri uri = Uri.parse(selected.getUriString());
-        showShortToast(getActivity(), R.string.launching_odk_collect);
-        startActivityForResult(editIntent(uri), 0);
+        if (selected.canEdit()) {
+            Uri uri = Uri.parse(selected.getUriString());
+            showShortToast(getActivity(), R.string.launching_odk_collect);
+            startActivityForResult(editIntent(uri), 0);
+        } else {
+            showShortToast(getActivity(), R.string.form_not_editable);
+        }
     }
 
     private void removeForm(FormInstance selected) {

@@ -203,4 +203,6 @@
     <string name="no_active_modules">No hay módulo activo</string>
     <string name="individual_status_label">Estado</string>
 
+    <string name="form_not_editable">Formulario no editable después de la finalización. Puede ser encriptado.</string>
+
 </resources>

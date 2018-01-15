@@ -32,6 +32,7 @@ public class FormInstance implements Serializable {
     private String uriString;
     private String formVersion;
     private String status;
+    private boolean canEditWhenComplete;
 
     public String getFormVersion() {
         return formVersion;
@@ -91,6 +92,18 @@ public class FormInstance implements Serializable {
 
     public boolean isIncomplete() {
         return InstanceProviderAPI.STATUS_INCOMPLETE.equals(status);
+    }
+
+    public boolean isCanEditWhenComplete() {
+        return canEditWhenComplete;
+    }
+
+    public void setCanEditWhenComplete(boolean canEditWhenComplete) {
+        this.canEditWhenComplete = canEditWhenComplete;
+    }
+
+    public boolean canEdit() {
+        return !(isSubmitted() || (isComplete() && !canEditWhenComplete));
     }
 
     /**
