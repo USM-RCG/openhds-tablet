@@ -219,7 +219,11 @@ public class LayoutUtils {
             if (requiresApproval(data)) {
                 view.setBackgroundResource(R.drawable.form_list_yellow);
             } else if (instance.isComplete()) {
-                view.setBackgroundResource(R.drawable.form_list);
+                if (instance.canEdit()) {
+                    view.setBackgroundResource(R.drawable.form_list);
+                } else {
+                    view.setBackgroundResource(R.drawable.form_list_locked);
+                }
             } else {
                 view.setBackgroundResource(R.drawable.form_list_gray);
             }
