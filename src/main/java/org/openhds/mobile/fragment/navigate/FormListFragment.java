@@ -162,10 +162,14 @@ public class FormListFragment extends Fragment {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        Activity activity = getActivity();
         if (v.getId() == R.id.form_list) {
-            activity.getMenuInflater().inflate(R.menu.formlist_menu, menu);
-            menu.findItem(R.id.find_form).setVisible(isFindEnabled);
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            FormInstance selected = getItem(info.position);
+            if (selected != null) {
+                getActivity().getMenuInflater().inflate(R.menu.formlist_menu, menu);
+                menu.findItem(R.id.edit_form).setVisible(selected.canEdit());
+                menu.findItem(R.id.find_form).setVisible(isFindEnabled);
+            }
         }
     }
 
