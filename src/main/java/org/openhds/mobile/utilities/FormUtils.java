@@ -16,8 +16,6 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.openhds.mobile.model.form.FormInstance;
-import org.openhds.mobile.navconfig.ProjectFormFields;
-import org.openhds.mobile.navconfig.ProjectResources;
 import org.openhds.mobile.navconfig.forms.Binding;
 import org.openhds.mobile.provider.DatabaseAdapter;
 
