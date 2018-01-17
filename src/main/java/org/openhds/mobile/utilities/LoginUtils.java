@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 import static org.openhds.mobile.activity.LoginActivity.FIELD_WORKER_IDX;
 import static org.openhds.mobile.activity.LoginActivity.SELECTED_LOGIN_KEY;
 import static org.openhds.mobile.activity.LoginActivity.SUPERVISOR_IDX;
@@ -55,7 +55,7 @@ public class LoginUtils {
     }
 
     public static void launchLogin(Activity ctx, boolean showSupervisor) {
-        ctx.startActivity(new Intent(ctx, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP)
+        ctx.startActivity(new Intent(ctx, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TASK)
                 .putExtra(SELECTED_LOGIN_KEY, showSupervisor ? SUPERVISOR_IDX : FIELD_WORKER_IDX));
     }
 }
