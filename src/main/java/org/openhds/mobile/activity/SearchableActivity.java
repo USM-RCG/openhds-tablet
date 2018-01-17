@@ -78,6 +78,7 @@ public class SearchableActivity extends ListActivity {
 
     private static final String ADVANCED_SET_KEY = "advanced_set";
     private static final String ALLOW_TOGGLE_KEY = "allow_toggle";
+    private static final String ENABLED_LEVELS_KEY = "levels";
 
     private static final Pattern ID_PATTERN = Pattern.compile("(?i)m\\d+(s\\d+(e\\d+(p\\d+)?)?)?");
     private static final Pattern PHONE_PATTERN = Pattern.compile("\\d{7,}");
@@ -97,6 +98,8 @@ public class SearchableActivity extends ListActivity {
     private ToggleButton locationToggle;
     private ToggleButton individualToggle;
 
+    private Set<String> enabledLevels;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +116,17 @@ public class SearchableActivity extends ListActivity {
 
         final Intent intent = getIntent();
 
-        boolean allowToggle = "true".equals(intent.getStringExtra(ALLOW_TOGGLE_KEY));
+        NavigatorConfig config = NavigatorConfig.getInstance();
+
+        boolean androidSearch = Intent.ACTION_SEARCH.equals(intent.getAction());
+        boolean allowToggle = androidSearch || "true".equals(intent.getStringExtra(ALLOW_TOGGLE_KEY));
+        String enabledLevelsRaw = intent.getStringExtra(ENABLED_LEVELS_KEY);
+        enabledLevels = new HashSet<>();
+        if (enabledLevelsRaw == null) {
+            enabledLevels.addAll(config.getLevels());
+        } else {
+            enabledLevels.addAll(asList(enabledLevelsRaw.split("[|]")));
+        }
 
         String moduleName = intent.getStringExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA);
         listView.setOnItemClickListener(new ItemClickListener(listView, moduleName));
@@ -129,12 +142,26 @@ public class SearchableActivity extends ListActivity {
         setToggleImage(locationToggle, R.drawable.sm_location_logo);
         individualToggle = (ToggleButton)findViewById(R.id.individual_toggle);
         setToggleImage(individualToggle, R.drawable.sm_individual_logo);
+
         EntityToggleHandler toggleHandler = new EntityToggleHandler();
         for (ToggleButton tb : asList(hierarchyToggle, locationToggle, individualToggle)) {
-            tb.setChecked(true);
             tb.setOnCheckedChangeListener(toggleHandler);
-            tb.setEnabled(allowToggle);
         }
+
+        Set<String> enabledAdminLevels = new HashSet<>();
+        enabledAdminLevels.addAll(enabledLevels);
+        enabledAdminLevels.retainAll(config.getAdminLevels());
+        boolean adminLevelsEnabled = !enabledAdminLevels.isEmpty();
+        hierarchyToggle.setChecked(adminLevelsEnabled);
+        hierarchyToggle.setEnabled(allowToggle && adminLevelsEnabled);
+
+        boolean householdLevelEnabled = enabledLevels.contains(BiokoHierarchy.HOUSEHOLD);
+        locationToggle.setChecked(householdLevelEnabled);
+        locationToggle.setEnabled(allowToggle && householdLevelEnabled);
+
+        boolean individualLevelEnabled = enabledLevels.contains(BiokoHierarchy.INDIVIDUAL);
+        individualToggle.setChecked(individualLevelEnabled);
+        individualToggle.setEnabled(allowToggle && individualLevelEnabled);
 
         searchQueue = new SearchQueue();
         handler = new Handler();
@@ -143,12 +170,10 @@ public class SearchableActivity extends ListActivity {
             advancedSelected = savedInstanceState.getBoolean(ADVANCED_SET_KEY);
         }
 
-        switch (intent.getAction()) {
-            case Intent.ACTION_SEARCH:
-                String origSearch = intent.getStringExtra(SearchManager.QUERY).toLowerCase();
-                basicQuery.setText(origSearch);
-                doSearch();
-                break;
+        if (androidSearch) {
+            String origSearch = intent.getStringExtra(SearchManager.QUERY).toLowerCase();
+            basicQuery.setText(origSearch);
+            doSearch();
         }
     }
 
@@ -162,10 +187,11 @@ public class SearchableActivity extends ListActivity {
     }
 
     private Set<String> getSelectedLevels() {
-        NavigatorConfig config = NavigatorConfig.getInstance();
+
         Set<String> result = new HashSet<>();
+
         if (hierarchyToggle.isChecked()) {
-            result.addAll(config.getAdminLevels());
+            result.addAll(NavigatorConfig.getInstance().getAdminLevels());
         }
         if (locationToggle.isChecked()) {
             result.add(BiokoHierarchy.HOUSEHOLD);
@@ -173,6 +199,9 @@ public class SearchableActivity extends ListActivity {
         if (individualToggle.isChecked()) {
             result.add(BiokoHierarchy.INDIVIDUAL);
         }
+
+        result.retainAll(enabledLevels);
+
         return result;
     }
 
