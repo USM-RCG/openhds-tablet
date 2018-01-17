@@ -77,6 +77,7 @@ public class SearchableActivity extends ListActivity {
     private static final String ACTION_ENTITY_LOOKUP = "com.github.cimsbioko.ENTITY_LOOKUP";
 
     private static final String ADVANCED_SET_KEY = "advanced_set";
+    private static final String ALLOW_TOGGLE_KEY = "allow_toggle";
 
     private static final Pattern ID_PATTERN = Pattern.compile("(?i)m\\d+(s\\d+(e\\d+(p\\d+)?)?)?");
     private static final Pattern PHONE_PATTERN = Pattern.compile("\\d{7,}");
@@ -111,6 +112,9 @@ public class SearchableActivity extends ListActivity {
         basicQuery.addTextChangedListener(new BasicQueryTranslator());
 
         final Intent intent = getIntent();
+
+        boolean allowToggle = "true".equals(intent.getStringExtra(ALLOW_TOGGLE_KEY));
+
         String moduleName = intent.getStringExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA);
         listView.setOnItemClickListener(new ItemClickListener(listView, moduleName));
 
@@ -129,6 +133,7 @@ public class SearchableActivity extends ListActivity {
         for (ToggleButton tb : asList(hierarchyToggle, locationToggle, individualToggle)) {
             tb.setChecked(true);
             tb.setOnCheckedChangeListener(toggleHandler);
+            tb.setEnabled(allowToggle);
         }
 
         searchQueue = new SearchQueue();
