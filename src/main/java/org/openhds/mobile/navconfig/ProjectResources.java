@@ -11,8 +11,8 @@ public class ProjectResources {
 
         public static final Map<String, Integer> General = new HashMap<>();
 
-        public static final String FORM_NEEDS_REVIEW = "0";
-        public static final String FORM_NO_REVIEW_NEEDED = "1";
+        public static final String FORM_NEEDS_REVIEW = "1";
+        public static final String FORM_NO_REVIEW_NEEDED = "0";
 
         public static final String TRUE = "true";
         public static final String FALSE = "false";
