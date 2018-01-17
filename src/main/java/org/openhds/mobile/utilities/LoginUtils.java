@@ -39,9 +39,10 @@ public class LoginUtils {
         }
 
         public void logout(Activity ctx, boolean launchLoginActivity) {
+            boolean showSupervisorLogin = authenticatedUser instanceof Supervisor;
             authenticatedUser = null;
             if (launchLoginActivity) {
-                launchLogin(ctx, authenticatedUser instanceof Supervisor);
+                launchLogin(ctx, showSupervisorLogin);
             }
         }
 
