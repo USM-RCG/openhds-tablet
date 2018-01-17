@@ -74,6 +74,8 @@ public class SearchableActivity extends ListActivity {
 
     private static final String TAG = SearchableActivity.class.getSimpleName();
 
+    private static final String ACTION_ENTITY_LOOKUP = "com.github.cimsbioko.ENTITY_LOOKUP";
+
     private static final String ADVANCED_SET_KEY = "advanced_set";
 
     private static final Pattern ID_PATTERN = Pattern.compile("(?i)m\\d+(s\\d+(e\\d+(p\\d+)?)?)?");
@@ -136,10 +138,12 @@ public class SearchableActivity extends ListActivity {
             advancedSelected = savedInstanceState.getBoolean(ADVANCED_SET_KEY);
         }
 
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String origSearch = intent.getStringExtra(SearchManager.QUERY).toLowerCase();
-            basicQuery.setText(origSearch);
-            doSearch();
+        switch (intent.getAction()) {
+            case Intent.ACTION_SEARCH:
+                String origSearch = intent.getStringExtra(SearchManager.QUERY).toLowerCase();
+                basicQuery.setText(origSearch);
+                doSearch();
+                break;
         }
     }
 
@@ -291,8 +295,33 @@ public class SearchableActivity extends ListActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            DataWrapper clickedItem = (DataWrapper) listView.getItemAtPosition(position);
+            DataWrapper selected = (DataWrapper) listView.getItemAtPosition(position);
 
+            switch (getIntent().getAction()) {
+                case Intent.ACTION_SEARCH:
+                    viewInHierarchy(selected);
+                    break;
+                case ACTION_ENTITY_LOOKUP:
+                    finishWithResult(selected);
+                    break;
+            }
+        }
+
+        private void finishWithResult(DataWrapper selected) {
+            if (selected != null) {
+                Intent result = new Intent();
+                result.putExtra("value", selected.getUuid());
+                result.putExtra("name", selected.getName());
+                result.putExtra("uuid", selected.getUuid());
+                result.putExtra("category", selected.getCategory());
+                result.putExtra("extId", selected.getExtId());
+                result.putExtra("hierarchyId", selected.getHierarchyId());
+                setResult(RESULT_OK, result);
+            }
+            finish();
+        }
+
+        private void viewInHierarchy(DataWrapper clickedItem) {
             Stack<DataWrapper> revPath = new Stack<>();
             revPath.push(clickedItem);
             for (DataWrapper item = getParent(clickedItem); item != null; item = getParent(item)) {

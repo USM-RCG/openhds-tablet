@@ -69,9 +69,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.LoginActivity" />
         </activity>
-        <activity android:name=".activity.SearchableActivity" >
+        <activity android:name=".activity.SearchableActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.github.cimsbioko.ENTITY_LOOKUP" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
         </activity>
