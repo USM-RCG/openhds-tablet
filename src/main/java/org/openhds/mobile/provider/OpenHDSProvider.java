@@ -8,6 +8,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
@@ -562,12 +563,11 @@ public class OpenHDSProvider extends ContentProvider {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", wiping data");
-            db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.FieldWorkers.TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.Individuals.TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.HierarchyItems.TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + OpenHDS.Locations.TABLE_NAME);
-            onCreate(db);
+            if (oldVersion < 14) {
+                throw new SQLiteException("Can't upgrade database from version " + oldVersion + " to " + newVersion);
+            } else {
+                Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
+            }
         }
     }
 }
