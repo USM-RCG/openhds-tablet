@@ -501,6 +501,8 @@ public class SyncUtils {
                                 }
                             };
                             streamToFile(responseBody, dbTempFile, totalSize == -1? null : progressListener);
+                        } else {
+                            Log.w(TAG, "unexpected content type " + responseType);
                         }
 
                         store(fingerprintFile, fingerprint);  // install fingerprint after downloaded finishes
