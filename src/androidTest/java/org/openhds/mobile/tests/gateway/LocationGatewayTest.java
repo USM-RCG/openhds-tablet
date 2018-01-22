@@ -23,7 +23,6 @@ public class LocationGatewayTest extends GatewayTest<Location> {
         location.setLongitude("1234.5678");
         location.setLatitude("9876.5432");
         location.setHierarchyUuid("HIERARCHY");
-        location.setHierarchyExtId("HIERARCHY");
 
         return location;
     }
