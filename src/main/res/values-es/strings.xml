@@ -191,9 +191,13 @@
     <string name="active_modules">Módulos Activos</string>
 
     <string name="pref_sync_title">Sincronización</string>
-    <string name="auto_sync_enabled">Sincronización automática con el servidor</string>
+    <string name="auto_sync_enabled">Sincronización automática</string>
     <string name="auto_sync_disabled">Sincronización manual de datos solamente</string>
     <string name="use_auto_sync">Sincronización automática de la base de datos</string>
+
+    <string name="use_sidecar">Sincronización de red local</string>
+    <string name="use_sidecar_enabled">Sincronización con sidecar</string>
+    <string name="use_sidecar_disabled">Sincronización con servidor remoto</string>
 
     <string name="favorites">Favoritos</string>
     <string name="forget_favorite_label">Olvídate del favorito</string>

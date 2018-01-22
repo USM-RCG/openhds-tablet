@@ -396,10 +396,11 @@ public class SyncUtils {
      * directly. Subsequent downloads use zsync to download only differences from the local content.
      *
      * @param ctx      app context to use for locating resources like files, etc.
+     * @param endpoint url of the remote http endpoint to sync with
      * @param username username to use for http auth
      * @param password password to use for http auth
      */
-    public static void downloadUpdate(final Context ctx, String username, String password) {
+    public static void downloadUpdate(final Context ctx, URL endpoint, String username, String password) {
 
         File dbFile = getDatabaseFile(ctx), dbTempFile = getTempFile(dbFile);
 
@@ -425,8 +426,7 @@ public class SyncUtils {
 
             long startTime = System.currentTimeMillis();
 
-            String creds = encodeBasicCreds(username, password);
-            URL endpoint = getSyncEndpoint(ctx);
+            String creds = username != null? encodeBasicCreds(username, password) : null;
             HttpURLConnection httpConn = get(endpoint, accept, creds, existingFingerprint);
             int httpResult = httpConn.getResponseCode();
 

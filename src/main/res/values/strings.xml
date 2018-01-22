@@ -214,10 +214,15 @@
 
     <string name="pref_sync_title">Synchronization</string>
     <string name="use_auto_sync_key" translatable="false">use_auto_sync</string>
-    <string name="auto_sync_enabled">Automatically sync with server</string>
+    <string name="auto_sync_enabled">Automatically sync</string>
     <string name="auto_sync_disabled">Manual data synchronization only</string>
     <string name="use_auto_sync">Automatic Database Synchronization</string>
     <string name="manual_sync_key" translatable="false">manual_sync_key</string>
+
+    <string name="use_sidecar_key" translatable="false">use_sidecar</string>
+    <string name="use_sidecar">Local Network Sync</string>
+    <string name="use_sidecar_enabled">Sync with sidecar</string>
+    <string name="use_sidecar_disabled">Sync with remote server</string>
 
     <string name="favorites">Favorites</string>
     <string name="forget_favorite_label">Forget favorite</string>
@@ -226,5 +231,4 @@
     <string name="removed_favorite">Favorite removed</string>
 
     <string name="form_not_editable">Form not editable after finalization. It may be encrypted.</string>
-
 </resources>

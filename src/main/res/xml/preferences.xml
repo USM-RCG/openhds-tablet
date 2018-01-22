@@ -20,6 +20,14 @@
             />
 
         <SwitchPreference
+            android:defaultValue="@bool/use_sidecar_default"
+            android:key="@string/use_sidecar_key"
+            android:summaryOn="@string/use_sidecar_enabled"
+            android:summaryOff="@string/use_sidecar_disabled"
+            android:title="@string/use_sidecar" />
+
+
+        <SwitchPreference
             android:defaultValue="@bool/use_zsync_default"
             android:key="@string/use_zsync_key"
             android:summaryOff="@string/use_zsync_disabled"
