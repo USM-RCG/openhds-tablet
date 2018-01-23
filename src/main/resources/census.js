@@ -22,6 +22,12 @@ with (imports) {
         });
     }
 
+    bind({ name: 'household',
+           form: 'location',
+           label: 'householdFormLabel',
+           builder: new CensusFormPayloadBuilders.AddLocation(),
+           consumer: new CensusFormPayloadConsumers.AddLocation() });
+
     bind({ form: 'location_evaluation',
            label: 'locationEvaluationFormLabel',
            builder: new CensusFormPayloadBuilders.LocationEvaluation() });
@@ -55,6 +61,10 @@ with (imports) {
     }
 
     var launchers = {
+        sector: [
+            launcher({ label: 'census.householdLabel', bind: 'household',
+                       filter: new CensusFormFilters.AddLocation() })
+        ],
         household: [
             launcher({ label: 'census.locationEvaluationLabel',
                        bind: 'location_evaluation' }),
