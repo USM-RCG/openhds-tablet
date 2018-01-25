@@ -402,6 +402,7 @@ public class SearchableActivity extends ListActivity {
                 result.add(new FuzzyQuery(new Term("phone", part), 1), BooleanClause.Occur.SHOULD);
             } else {
                 result.add(new FuzzyQuery(new Term("name", part), 1), BooleanClause.Occur.SHOULD);
+                result.add(new FuzzyQuery(new Term("extId", part), 1), BooleanClause.Occur.SHOULD);
             }
         }
         return result;
