@@ -24,11 +24,13 @@ with (imports) {
 
     bind({ form: 'create_map',
            label: 'createMapFormLabel',
-           builder: new BiokoFormPayloadBuilders.CreateMap() });
+           builder: new BiokoFormPayloadBuilders.CreateMap(),
+           consumer: new BiokoFormPayloadConsumers.CreateMap() });
 
     bind({ form: 'create_sector',
            label: 'createSectorFormLabel',
-           builder: new BiokoFormPayloadBuilders.CreateSector() });
+           builder: new BiokoFormPayloadBuilders.CreateSector(),
+           consumer: new BiokoFormPayloadConsumers.CreateSector() });
 
     bind({ form: 'location',
            label: 'locationFormLabel',

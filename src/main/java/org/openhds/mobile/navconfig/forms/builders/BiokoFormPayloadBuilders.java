@@ -17,6 +17,7 @@ import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
 import org.openhds.mobile.repository.gateway.LocationGateway;
 import org.openhds.mobile.repository.gateway.LocationHierarchyGateway;
+import org.openhds.mobile.utilities.IdHelper;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -192,6 +193,7 @@ public class BiokoFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             DataWrapper locality = ctx.getHierarchyPath().get(LOCALITY);
             formPayload.put(ProjectFormFields.CreateMap.LOCALITY_UUID, locality.getUuid());
+            formPayload.put(ProjectFormFields.CreateMap.MAP_UUID, IdHelper.generateEntityUuid());
             return formPayload;
         }
     }
@@ -204,6 +206,7 @@ public class BiokoFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             DataWrapper map = ctx.getHierarchyPath().get(MAP_AREA);
             formPayload.put(ProjectFormFields.CreateSector.MAP_UUID, map.getUuid());
+            formPayload.put(ProjectFormFields.CreateSector.SECTOR_UUID, IdHelper.generateEntityUuid());
             return formPayload;
         }
     }

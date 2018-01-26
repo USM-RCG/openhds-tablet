@@ -166,10 +166,14 @@ public class ProjectFormFields {
 
     public static final class CreateMap {
         public static final String LOCALITY_UUID = "localityUuid";
+        public static final String MAP_UUID = "mapUuid";
+        public static final String MAP_NAME = "mapName";
     }
 
     public static final class CreateSector {
         public static final String MAP_UUID = "mapUuid";
+        public static final String SECTOR_UUID = "sectorUuid";
+        public static final String SECTOR_NAME = "sectorName";
     }
 
     public static final class Fingerprints {
