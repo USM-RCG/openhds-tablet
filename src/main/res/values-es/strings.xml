@@ -21,7 +21,7 @@
     <string name="locality_label">Localidad</string>
     <string name="map_area_label">Área de Mapa</string>
     <string name="sector_label">Sector</string>
-    <string name="household_label">Hogar</string>
+    <string name="household_label">Domicilio</string>
     <string name="individual_label">Individuo</string>
 
     <!-- Search Labels-->
@@ -167,9 +167,9 @@
     <string name="sync_downloading">Descargando archivo</string>
 
     <string name="search_label">Buscar</string>
-    <string name="search_hint">Buscar una ubicación o individuo</string>
+    <string name="search_hint">Buscar un domicilio o individuo</string>
     <string name="updating_index">Índice de búsqueda de actualización</string>
-    <string name="indexing_locations">Actualización de las ubicaciones</string>
+    <string name="indexing_locations">Actualización de los domicilios</string>
     <string name="indexing_hierarchy_items">Actualización de elementos de jerarquía</string>
     <string name="indexing_individuals">Actualización de los individuos</string>
     <string name="auto_index_on_db_update">Base de datos automático de indización de búsqueda</string>
