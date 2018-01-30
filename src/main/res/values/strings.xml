@@ -76,16 +76,6 @@
     <string name="db_val_location_status_rejected_intervention">Rejected Intervention</string>
     <string name="db_val_location_status_uninhabited">Uninhabited</string>
 
-
-    <!-- Search Labels-->
-    <string name="search_database_label">Search</string>
-    <string name="search_done_label">Done</string>
-    <string name="search_results_label">Results</string>
-    <string name="search_individual_label">Find an Individual</string>
-    <string name="search_location_label">Find a Location</string>
-    <string name="search_social_group_label">Find a Household</string>
-    <string name="search_field_worker_label">Find a Fieldworker</string>
-
     <!-- Sync Labels-->
     <string name="sync_database_updated_never">Never</string>
     <string name="sync_database_updated">Database updated</string>
@@ -145,11 +135,6 @@
     <string name="location_building_number_label">Building Number</string>
     <string name="location_floor_number_label">Floor Number</string>
     <string name="location_description_label">Description</string>
-
-    <!-- Social Group Labels -->
-    <string name="social_group_name">Household Name</string>
-    <string name="social_group_ext_id">Household Id</string>
-    <string name="social_group_head_ext_id">Head of Household Id</string>
 
     <string name="unsent_forms">Unsent Forms</string>
     <string name="field_worker_home">Fieldworker Home</string>
