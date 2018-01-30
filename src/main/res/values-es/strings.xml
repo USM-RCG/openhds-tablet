@@ -13,7 +13,7 @@
     <string name="malformed_url">URL malformada</string>
     <string name="malformed_url_msg">El valor introducido no es una URL válida.</string>
     <string name="supervisor_bad_credentials">Credenciales inválidas</string>
-    <string name="sync_database_description">Sincroniza los datos del censo con el servidor</string>
+    <string name="sync_database_description">Sincroniza los datos con el servidor</string>
     <string name="field_worker_bad_credentials">Credenciales inválidas</string>
     <string name="region_label">Región</string>
     <string name="province_label">Provincia</string>
