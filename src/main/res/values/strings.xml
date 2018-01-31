@@ -216,4 +216,10 @@
     <string name="removed_favorite">Favorite removed</string>
 
     <string name="form_not_editable">Form not editable after finalization. It may be encrypted.</string>
+
+    <string name="wifi_sync_key" translatable="false">wifi_sync</string>
+    <string name="wifi_sync">Sync on Wi-Fi</string>
+    <string name="wifi_sync_enabled">Sync on Wi-Fi only</string>
+    <string name="wifi_sync_disabled">Sync on any network</string>
+
 </resources>

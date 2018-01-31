@@ -194,4 +194,8 @@
 
     <string name="form_not_editable">Formulario no editable después de la finalización. Puede ser encriptado.</string>
 
+    <string name="wifi_sync_enabled">Sincroniza solo con Wi-Fi</string>
+    <string name="wifi_sync_disabled">Sincroniza sobre cualquier red</string>
+    <string name="wifi_sync">Sincronizar en Wi-Fi</string>
+
 </resources>

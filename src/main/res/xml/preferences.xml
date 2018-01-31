@@ -20,6 +20,14 @@
             />
 
         <SwitchPreference
+            android:defaultValue="@bool/wifi_sync_default"
+            android:key="@string/wifi_sync_key"
+            android:summaryOn="@string/wifi_sync_enabled"
+            android:summaryOff="@string/wifi_sync_disabled"
+            android:title="@string/wifi_sync"
+            />
+
+        <SwitchPreference
             android:defaultValue="@bool/use_sidecar_default"
             android:key="@string/use_sidecar_key"
             android:summaryOn="@string/use_sidecar_enabled"

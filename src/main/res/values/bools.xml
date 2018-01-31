@@ -4,4 +4,5 @@
     <bool name="use_sidecar_default">false</bool>
     <bool name="use_zsync_default">true</bool>
     <bool name="use_search_default">true</bool>
+    <bool name="wifi_sync_default">true</bool>
 </resources>
