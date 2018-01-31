@@ -53,7 +53,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         if (autoSyncEnabled || manualSyncRequested) {
             try {
-                if (sidecarEnabled) {
+                if (wifiOnlyEnabled && sidecarEnabled) {
                     NsdServiceInfo info = Sidecar.discover((NsdManager) ctx.getSystemService(Context.NSD_SERVICE), 30);
                     URL endpoint = new URL("http", info.getHost().getHostName(), info.getPort(), ctx.getString(R.string.sync_database_path));
                     Log.i(TAG, "local sync " + endpoint);

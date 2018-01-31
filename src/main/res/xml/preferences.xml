@@ -32,8 +32,8 @@
             android:key="@string/use_sidecar_key"
             android:summaryOn="@string/use_sidecar_enabled"
             android:summaryOff="@string/use_sidecar_disabled"
-            android:title="@string/use_sidecar" />
-
+            android:title="@string/use_sidecar"
+            android:dependency="@string/wifi_sync_key"/>
 
         <SwitchPreference
             android:defaultValue="@bool/use_zsync_default"
