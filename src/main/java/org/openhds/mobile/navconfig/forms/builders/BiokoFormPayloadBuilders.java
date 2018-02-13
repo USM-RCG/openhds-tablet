@@ -1,14 +1,11 @@
 package org.openhds.mobile.navconfig.forms.builders;
 
 import android.content.ContentResolver;
-import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.model.core.Individual;
 import org.openhds.mobile.model.core.Location;
-import org.openhds.mobile.model.core.LocationHierarchy;
+import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.navconfig.ProjectFormFields;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.navconfig.forms.UsedByJSConfig;
@@ -16,10 +13,11 @@ import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.GatewayRegistry;
 import org.openhds.mobile.repository.gateway.IndividualGateway;
 import org.openhds.mobile.repository.gateway.LocationGateway;
-import org.openhds.mobile.repository.gateway.LocationHierarchyGateway;
 import org.openhds.mobile.utilities.IdHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,19 +45,18 @@ public class BiokoFormPayloadBuilders {
             String distributionDateTime = formPayload.get(ProjectFormFields.General.COLLECTION_DATE_TIME);
             formPayload.put(ProjectFormFields.General.DISTRIBUTION_DATE_TIME, distributionDateTime);
 
-            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD).getExtId();
-            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
+            DataWrapper location = ctx.getHierarchyPath().get(HOUSEHOLD);
+            String locationExtId = location.getExtId();
+            String locationUuid = location.getUuid();
 
             formPayload.put(ProjectFormFields.BedNet.LOCATION_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.BedNet.LOCATION_UUID, locationUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, locationUuid);
 
-            //pre-fill a netCode in YY-CCC form
-            String netCode = generateNetCode(ctx);
-            formPayload.put(ProjectFormFields.BedNet.BED_NET_CODE, netCode);
+            formPayload.put(ProjectFormFields.BedNet.BED_NET_CODE, generateNetCode(ctx));
 
-            //pre-fill the householdSize for this particular household
+            // pre-fill the householdSize for this particular household
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
             ContentResolver contentResolver = ctx.getContentResolver();
             List<Individual> individuals = individualGateway.getList(contentResolver, individualGateway.findByResidency(locationUuid));
@@ -70,28 +67,14 @@ public class BiokoFormPayloadBuilders {
         }
 
         private String generateNetCode(LaunchContext ctx) {
-
-            DataWrapper localityStub = ctx.getHierarchyPath().get(LOCALITY);
-            LocationHierarchyGateway hierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
-            LocationHierarchy locality = hierarchyGateway.getFirst(ctx.getContentResolver(), hierarchyGateway.findById(localityStub.getUuid()));
-
-            String communityCode = "?";
-
-            if (locality.getAttrs() != null) {
-                try {
-                    JSONObject attrs = new JSONObject(locality.getAttrs());
-                    communityCode = attrs.getString("code");
-                } catch (JSONException e) {
-                    Log.w(TAG, "no community code for locality " + localityStub.getUuid());
-                }
-            }
-
-            String yearPrefix = Integer.toString (Calendar.getInstance().get(Calendar.YEAR));
-            yearPrefix = yearPrefix.substring(2);
-
-            return yearPrefix + "-" + communityCode;
+            HierarchyPath hierPath = ctx.getHierarchyPath();
+            LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
+            ContentResolver contentResolver = ctx.getContentResolver();
+            Location household = locationGateway.getFirst(contentResolver, locationGateway.findById(hierPath.get(HOUSEHOLD).getUuid()));
+            String map = hierPath.get(MAP_AREA).getName(), sector = hierPath.get(SECTOR).getName();
+            String year = new SimpleDateFormat("yy").format(new Date());
+            return String.format("%s/%s%sE%03d", year, map, sector, household.getBuildingNumber());
         }
-
     }
 
     @UsedByJSConfig
