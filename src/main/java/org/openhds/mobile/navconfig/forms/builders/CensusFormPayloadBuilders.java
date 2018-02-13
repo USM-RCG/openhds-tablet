@@ -69,11 +69,14 @@ public class CensusFormPayloadBuilders {
     public static class LocationEvaluation implements FormPayloadBuilder {
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {
-            Map<String,String> formPayload = new HashMap<>();
+            Map<String, String> formPayload = new HashMap<>();
+            ContentResolver contentResolver = ctx.getContentResolver();
+            LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
+            Location household = locationGateway.getFirst(contentResolver, locationGateway.findById(ctx.getHierarchyPath().get(HOUSEHOLD).getUuid()));
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
-            DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
+            formPayload.put(ProjectFormFields.Locations.DESCRIPTION, household.getDescription());
             return formPayload;
         }
     }
