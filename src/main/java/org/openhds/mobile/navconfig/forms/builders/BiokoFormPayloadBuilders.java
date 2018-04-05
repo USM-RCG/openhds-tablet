@@ -193,4 +193,20 @@ public class BiokoFormPayloadBuilders {
             return formPayload;
         }
     }
+
+    @UsedByJSConfig
+    public static class BedNetFollowUp implements FormPayloadBuilder {
+        @Override
+        public Map<String, String> buildPayload(LaunchContext ctx) {
+            Map<String,String> formPayload = new HashMap<>();
+            PayloadTools.addMinimalFormPayload(formPayload, ctx);
+            DataWrapper map = ctx.getHierarchyPath().get(MAP_AREA);
+            formPayload.put(ProjectFormFields.CreateSector.MAP_UUID, map.getUuid());
+            formPayload.put(ProjectFormFields.CreateSector.SECTOR_UUID, IdHelper.generateEntityUuid());
+            DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
+            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
+            formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
+            return formPayload;
+        }
+    }
 }
