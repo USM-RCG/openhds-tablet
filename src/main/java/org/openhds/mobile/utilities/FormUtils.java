@@ -10,6 +10,7 @@ import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
+import org.jdom2.Namespace;
 import org.jdom2.filter.ElementFilter;
 import org.jdom2.filter.Filter;
 import org.jdom2.input.SAXBuilder;
@@ -52,6 +53,9 @@ public class FormUtils {
     private static final String TAG = FormUtils.class.getSimpleName();
 
     public static final String FILE_EXTENSION = ".xml";
+    public static final String HEAD = "head";
+    public static final String MODEL = "model";
+    public static final String INSTANCE = "instance";
 
     /**
      * Loads the specified XML file into a jdom2 {@link Document} object.
@@ -205,24 +209,33 @@ public class FormUtils {
      * @throws IOException
      */
     private static Document genInstanceDoc(File templateForm, Map<String, String> data) throws IOException, JDOMException {
-        Document template = domFromFile(templateForm), completed = new Document();
-        Element templateRoot = template.getRootElement();
-        for (Element templateData : descendants(templateRoot, new ElementFilter("data", templateRoot.getNamespace("")))) {
-            Element newRoot = templateData.detach();
-            // add the binding name as a root-level attribute, if present
-            if (data.containsKey(BINDING_MAP_KEY)) {
-                newRoot.setAttribute(BINDING_ATTR, data.get(BINDING_MAP_KEY));
-            }
-            completed.setRootElement(newRoot);
-            // fill out the template form elements with supplied data values
-            for (Element dataElement : descendants(templateData)) {
-                String elementName = dataElement.getName();
-                if (data.containsKey(elementName) && data.get(elementName) != null) {
-                    dataElement.setText(data.get(elementName));
-                }
+
+        Namespace xformsNs = Namespace.getNamespace("http://www.w3.org/2002/xforms"),
+                xhtmlNs = Namespace.getNamespace("http://www.w3.org/1999/xhtml");
+
+        Element instance = domFromFile(templateForm)
+                .getRootElement()
+                .getChild(HEAD, xhtmlNs)
+                .getChild(MODEL, xformsNs)
+                .getChild(INSTANCE, xformsNs)
+                .getChildren()
+                .get(0)
+                .detach();
+
+        // add the binding name as a root-level attribute, if present
+        if (data.containsKey(BINDING_MAP_KEY)) {
+            instance.setAttribute(BINDING_ATTR, data.get(BINDING_MAP_KEY));
+        }
+
+        // fill out the form instance elements with supplied values
+        for (Element dataElement : descendants(instance)) {
+            String elementName = dataElement.getName();
+            if (data.containsKey(elementName) && data.get(elementName) != null) {
+                dataElement.setText(data.get(elementName));
             }
         }
-        return completed;
+
+        return new Document(instance);
     }
 
     /**
