@@ -41,7 +41,7 @@ public class BiokoFormPayloadBuilders {
 
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
 
-            //rename the current datetime to be the bednet's distribution datetime
+            // Re-use the collection time to be the bednet's distribution datetime
             String distributionDateTime = formPayload.get(ProjectFormFields.General.COLLECTION_DATE_TIME);
             formPayload.put(ProjectFormFields.General.DISTRIBUTION_DATE_TIME, distributionDateTime);
 
