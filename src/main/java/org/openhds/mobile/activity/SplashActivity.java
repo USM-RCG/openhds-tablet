@@ -13,8 +13,6 @@ import org.openhds.mobile.provider.FormsProviderAPI;
 
 import java.util.List;
 
-import static org.openhds.mobile.utilities.FormUtils.migrateTo23Storage;
-
 /**
  * This activity simply forwards to the actual opening activity for the application, showing an image by its style
  * instead of inflating a layout or setting any view. This ensures the image is available immediately, and the
@@ -68,7 +66,6 @@ public class SplashActivity extends Activity {
     }
 
     private void startApp() {
-        migrateTo23Storage(this);
         launchLogin();
     }
 
