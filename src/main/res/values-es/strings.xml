@@ -7,7 +7,7 @@
     <string name="gender_lbl">Género</string>
     <string name="login_username">Nombre de Usuario</string>
     <string name="login_password">Contraseña</string>
-    <string name="fieldworker_login">Informacion del Encuestador </string>
+    <string name="fieldworker_login">Informacion del Encuestador</string>
     <string name="supervisor_login">Informacion del Supervisor</string>
     <string name="preferences">Preferencias</string>
     <string name="malformed_url">URL malformada</string>
