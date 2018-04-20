@@ -48,16 +48,17 @@ public class PayloadTools {
         return ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(formPayload.get(ProjectFormFields.General.NEEDS_REVIEW));
     }
 
+    /**
+     * Populates the provided map with the default payload values for the given launch context.
+     * Previously, this added much more values, but now only populates the "minimal" payload
+     * consisting of: fieldworker uuid and extid, and the date/time the form was launched.
+     *
+     * @param formPayload the payload to populate
+     * @param ctx the launch context from which the form was launched
+     */
     public static void addMinimalFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
         HierarchyPath hierarchyPath = ctx.getHierarchyPath();
-
-        //TODO: Add all the hierarchy Uuids as well?
-        // Add all the extIds from the HierarchyPath
-        for (String level : hierarchyPath.getLevels()) {
-            String fieldName = ProjectFormFields.General.getExtIdFieldForLevel(level);
-            formPayload.put(fieldName, hierarchyPath.get(level).getExtId());
-        }
 
         // add the FieldWorker's extId
         FieldWorker fieldWorker = ctx.getCurrentFieldWorker();

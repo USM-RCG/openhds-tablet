@@ -50,6 +50,7 @@ public class CensusFormPayloadBuilders {
         String individualExtId = IdHelper.generateIndividualExtId(navigateActivity.getContentResolver(), locationDataWrapper);
         formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, individualExtId);
         formPayload.put(ProjectFormFields.Individuals.HOUSEHOLD_UUID, navigateActivity.getCurrentSelection().getUuid());
+        formPayload.put(ProjectFormFields.Individuals.HOUSEHOLD_EXTID, navigateActivity.getCurrentSelection().getExtId());
         formPayload.put(ProjectFormFields.General.ENTITY_EXTID, individualExtId);
         formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
     }

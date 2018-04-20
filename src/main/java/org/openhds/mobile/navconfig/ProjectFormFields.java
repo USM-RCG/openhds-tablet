@@ -116,6 +116,7 @@ public class ProjectFormFields {
         public static final String STATUS = "individualMemberStatus";
 
         public static final String HOUSEHOLD_UUID = "householdUuid";
+        public static final String HOUSEHOLD_EXTID = General.HOUSEHOLD_STATE_FIELD_NAME;
 
         private static Map<String, String> columnsToFieldNames = new HashMap<>();
 
