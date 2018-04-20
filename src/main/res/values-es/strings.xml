@@ -197,5 +197,6 @@
     <string name="wifi_sync_enabled">Sincroniza solo con Wi-Fi</string>
     <string name="wifi_sync_disabled">Sincroniza sobre cualquier red</string>
     <string name="wifi_sync">Sincronizar en Wi-Fi</string>
+    <string name="field_worker_none_exist">No hay encuestadores, sincronícense.</string>
 
 </resources>

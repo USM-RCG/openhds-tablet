@@ -80,22 +80,32 @@ public class FieldWorkerLoginFragment extends Fragment implements OnClickListene
         String username = getTextString(usernameEditText);
 
         FieldWorkerGateway fieldWorkerGateway = GatewayRegistry.getFieldWorkerGateway();
+
         ContentResolver contentResolver = getActivity().getContentResolver();
         FieldWorker fieldWorker = fieldWorkerGateway.getFirst(contentResolver, fieldWorkerGateway.findByExtId(username));
 
         Activity activity = getActivity();
         LoginUtils.Login login = getLogin(FieldWorker.class);
-        if (fieldWorker != null && BCrypt.checkpw(password, fieldWorker.getPasswordHash())) {
-            login.setAuthenticatedUser(fieldWorker);
-            if (activity.isTaskRoot()) {
-                launchPortalActivity();
+        if (fieldWorker != null) {
+            if (BCrypt.checkpw(password, fieldWorker.getPasswordHash())) {
+                login.setAuthenticatedUser(fieldWorker);
+                if (activity.isTaskRoot()) {
+                    launchPortalActivity();
+                } else {
+                    activity.finish();
+                }
+                return;
             } else {
-                activity.finish();
+                showLongToast(getActivity(), R.string.field_worker_bad_credentials);
             }
         } else {
-            login.logout(getActivity(), false);
-            showLongToast(getActivity(), R.string.field_worker_bad_credentials);
+            if (fieldWorkerGateway.getFirst(contentResolver, fieldWorkerGateway.findAll()) != null) {
+                showLongToast(getActivity(), R.string.field_worker_bad_credentials);
+            } else {
+                showLongToast(getActivity(), R.string.field_worker_none_exist);
+            }
         }
+        login.logout(getActivity(), false);
     }
 
     private void launchPortalActivity() {

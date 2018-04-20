@@ -221,5 +221,6 @@
     <string name="wifi_sync">Sync on Wi-Fi</string>
     <string name="wifi_sync_enabled">Sync on Wi-Fi only</string>
     <string name="wifi_sync_disabled">Sync on any network</string>
+    <string name="field_worker_none_exist">No fieldworkers, please sync.</string>
 
 </resources>
