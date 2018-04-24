@@ -3,7 +3,8 @@ package org.openhds.mobile.navconfig;
 import android.util.Log;
 
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.LazilyLoadedCtor;
+import org.mozilla.javascript.ScriptableObject;
 import org.openhds.mobile.navconfig.forms.Binding;
 
 import java.io.IOException;
@@ -79,7 +80,11 @@ public class NavigatorConfig {
             Context ctx = Context.enter();
             ctx.setOptimizationLevel(-1);
             try {
-                Scriptable scope = ctx.initStandardObjects();
+                ScriptableObject scope = ctx.initSafeStandardObjects();
+                new LazilyLoadedCtor(scope,
+                        "JavaImporter", "org.mozilla.javascript.ImporterTopLevel", false);
+                new LazilyLoadedCtor(scope,
+                        "org", "org.mozilla.javascript.NativeJavaTopPackage", false);
                 scope.put("config", scope, this);
                 Log.i(TAG, "executing config script " + resourcePath);
                 ctx.evaluateReader(scope, scriptReader, resourcePath, 1, null);
