@@ -14,7 +14,6 @@ public class RepositoryUtils {
 
     public static final String EQUALS = "=";
     public static final String LIKE = "LIKE";
-    public static final String LIKE_WILD_CARD = "%";
 
     private static final String AND = "AND";
     private static final String WHERE_PLACEHOLDER = "?";
