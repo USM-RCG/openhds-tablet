@@ -234,23 +234,19 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
         return true;
     }
 
-    private void launchNewForm(Binding binding, Map<String, String> followUpFormHints) {
+    private void launchNewForm(Binding binding) {
         if (binding != null) {
             try {
                 showShortToast(this, R.string.launching_odk_collect);
-                startActivityForResult(editIntent(generate(getContentResolver(), binding, buildDataWithHints(binding, followUpFormHints))), ODK_ACTIVITY_REQUEST_CODE);
+                startActivityForResult(editIntent(generate(getContentResolver(), binding, buildPayload(binding))), ODK_ACTIVITY_REQUEST_CODE);
             } catch (Exception e) {
                 showShortToast(this, "failed to launch form: " + e.getMessage());
             }
         }
     }
 
-    private Map<String, String> buildDataWithHints(Binding binding, Map<String, String> followUpHints) {
-        Map<String, String> formData = binding.getBuilder().buildPayload(this);
-        if (followUpHints != null) {
-            formData.putAll(followUpHints);
-        }
-        return formData;
+    private Map<String, String> buildPayload(Binding binding) {
+        return binding.getBuilder().buildPayload(this);
     }
 
     @Override
@@ -288,9 +284,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
                         showShortToast(this, "Update failed: " + ue.getMessage());
                     }
                 }
-                if (consumerResult.hasFollowUp()) {
-                    launchNewForm(consumerResult.getFollowUp(), consumerResult.getFollowUpHints());
-                }
             }
         } catch (IOException e) {
             showShortToast(this, "Read failed: " + e.getMessage());
@@ -311,7 +304,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
     @Override
     public void onFormSelected(Binding binding) {
-        launchNewForm(binding, null);
+        launchNewForm(binding);
     }
 
     @Override

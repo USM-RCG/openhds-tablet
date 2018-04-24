@@ -83,7 +83,7 @@ public class CensusFormPayloadConsumers {
             ContentResolver contentResolver = ctx.getContentResolver();
             ensureLocationSectorExists(formPayload, contentResolver);
             insertOrUpdateLocation(formPayload, contentResolver);
-            return new ConsumerResult(true, null, null);
+            return new ConsumerResult(true);
         }
 
         @Override
@@ -121,7 +121,7 @@ public class CensusFormPayloadConsumers {
             selectedLocation.setName(locationName);
             locationGateway.insertOrUpdate(contentResolver, location);
 
-            return new ConsumerResult(true, null, null);
+            return new ConsumerResult(true);
         }
 
         @Override

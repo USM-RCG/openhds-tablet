@@ -37,7 +37,7 @@ public class BiokoFormPayloadConsumers {
 
             hierGateway.insertOrUpdate(resolver, map);
 
-            return new ConsumerResult(false, null, null);
+            return new ConsumerResult(false);
         }
     }
 
@@ -65,7 +65,7 @@ public class BiokoFormPayloadConsumers {
 
             hierGateway.insertOrUpdate(resolver, sector);
 
-            return new ConsumerResult(false, null, null);
+            return new ConsumerResult(false);
         }
     }
 }

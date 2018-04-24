@@ -14,7 +14,7 @@ public class DefaultConsumer implements FormPayloadConsumer {
 
     @Override
     public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
-        return new ConsumerResult(false, null, null);
+        return new ConsumerResult(false);
     }
 
     @Override
