@@ -32,7 +32,6 @@ import org.openhds.mobile.navconfig.db.QueryHelper;
 import org.openhds.mobile.navconfig.forms.Binding;
 import org.openhds.mobile.navconfig.forms.LaunchContext;
 import org.openhds.mobile.navconfig.forms.Launcher;
-import org.openhds.mobile.navconfig.forms.consumers.ConsumerResult;
 import org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.repository.DataWrapper;
@@ -87,8 +86,6 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private HierarchyPath hierarchyPath;
     private Stack<HierarchyPath> pathHistory;
     private List<DataWrapper> currentResults;
-
-    private ConsumerResult consumerResult;
 
     private HashMap<MenuItem, String> menuItemTags;
     private QueryHelper queryHelper;
@@ -275,8 +272,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
             Binding binding = getBinding(formData);
             if (instance.isComplete() && binding != null) {
                 FormPayloadConsumer consumer = binding.getConsumer();
-                consumerResult = consumer.consumeFormPayload(formData, this);
-                if (consumerResult.hasInstanceUpdates()) {
+                if (consumer.consumeFormPayload(formData, this).hasInstanceUpdates()) {
                     consumer.augmentInstancePayload(formData);
                     try {
                         instance.store(formData);
