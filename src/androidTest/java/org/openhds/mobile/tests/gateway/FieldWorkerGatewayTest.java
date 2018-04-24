@@ -6,11 +6,8 @@ import org.openhds.mobile.repository.gateway.FieldWorkerGateway;
 
 public class FieldWorkerGatewayTest extends GatewayTest<FieldWorker> {
 
-    private FieldWorkerGateway fieldWorkerGateway;
-
     public FieldWorkerGatewayTest() {
         super(new FieldWorkerGateway());
-        this.fieldWorkerGateway = (FieldWorkerGateway) this.gateway;
     }
 
     @Override

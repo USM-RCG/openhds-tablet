@@ -9,8 +9,6 @@ import org.openhds.mobile.provider.OpenHDSProvider;
 import org.openhds.mobile.repository.DataWrapper;
 import org.openhds.mobile.repository.gateway.Gateway;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public abstract class GatewayTest<T> extends ProviderTestCase2<OpenHDSProvider> {
