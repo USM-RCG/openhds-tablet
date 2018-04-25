@@ -57,15 +57,9 @@ public class PayloadTools {
      * @param ctx the launch context from which the form was launched
      */
     public static void addMinimalFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
-
-        HierarchyPath hierarchyPath = ctx.getHierarchyPath();
-
-        // add the FieldWorker's extId
         FieldWorker fieldWorker = ctx.getCurrentFieldWorker();
         formPayload.put(ProjectFormFields.General.FIELD_WORKER_EXTID, fieldWorker.getExtId());
         formPayload.put(ProjectFormFields.General.FIELD_WORKER_UUID, fieldWorker.getUuid());
-
-        // add collected DateTime
         formPayload.put(ProjectFormFields.General.COLLECTION_DATE_TIME, formatTime(Calendar.getInstance()));
     }
 
