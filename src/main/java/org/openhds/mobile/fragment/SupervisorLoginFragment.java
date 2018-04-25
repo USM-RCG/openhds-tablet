@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.apache.http.HttpStatus;
 import org.openhds.mobile.R;
 import org.openhds.mobile.activity.SupervisorActivity;
 import org.openhds.mobile.model.core.Supervisor;
@@ -22,6 +21,7 @@ import org.openhds.mobile.task.http.HttpTask;
 import org.openhds.mobile.task.http.HttpTaskRequest;
 import org.openhds.mobile.task.http.HttpTaskResponse;
 
+import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
@@ -91,7 +91,7 @@ public class SupervisorLoginFragment extends Fragment implements OnClickListener
         public void handleHttpTaskResponse(HttpTaskResponse httpTaskResponse) {
             if (httpTaskResponse.isSuccess()) {
                 onSuccess();
-            } else if (HttpStatus.SC_FORBIDDEN == httpTaskResponse.getHttpStatus()) {
+            } else if (HTTP_FORBIDDEN == httpTaskResponse.getHttpStatus()) {
                 onFailure(true);
             } else {
                 authDisconnected();

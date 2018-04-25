@@ -1,7 +1,6 @@
 package org.openhds.mobile.task.http;
 
 import android.os.AsyncTask;
-import org.apache.http.HttpStatus;
 import org.openhds.mobile.utilities.HttpUtils;
 
 import java.io.BufferedInputStream;
@@ -11,6 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
 
+import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
+import static java.net.HttpURLConnection.HTTP_NOT_MODIFIED;
+import static java.net.HttpURLConnection.HTTP_OK;
 import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
 import static org.openhds.mobile.utilities.SyncUtils.streamToFile;
 
@@ -66,7 +68,7 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
             return new HttpTaskResponse(false, MESSAGE_BAD_URL, 0, null);
         }
 
-        if (HttpStatus.SC_OK == statusCode) {
+        if (HTTP_OK == statusCode) {
             File saveFile = req.getFile();
             if (saveFile != null) {
                 try {
@@ -79,11 +81,11 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
             return new HttpTaskResponse(true, MESSAGE_SUCCESS, statusCode, responseStream, eTag, contentType);
         }
 
-        if (HttpStatus.SC_NOT_MODIFIED == statusCode) {
+        if (HTTP_NOT_MODIFIED == statusCode) {
             return new HttpTaskResponse(false, MESSAGE_NOT_MODIFIED, statusCode, responseStream);
         }
 
-        if (statusCode < HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+        if (statusCode < HTTP_INTERNAL_ERROR) {
             return new HttpTaskResponse(false, MESSAGE_CLIENT_ERROR, statusCode, responseStream);
         }
 

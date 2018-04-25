@@ -49,8 +49,8 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.os.Environment.getExternalStorageDirectory;
 import static com.github.batkinson.jrsync.zsync.ZSync.sync;
-import static org.apache.http.HttpStatus.SC_NOT_MODIFIED;
-import static org.apache.http.HttpStatus.SC_OK;
+import static java.net.HttpURLConnection.HTTP_NOT_MODIFIED;
+import static java.net.HttpURLConnection.HTTP_OK;
 import static org.openhds.mobile.OpenHDS.AUTHORITY;
 import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceBool;
@@ -438,10 +438,10 @@ public class SyncUtils {
                     .setOngoing(true);
 
             switch (httpResult) {
-                case SC_NOT_MODIFIED:
+                case HTTP_NOT_MODIFIED:
                     Log.i(TAG, "no update found");
                     break;
-                case SC_OK:
+                case HTTP_OK:
                     try {
                         manager.cancel(SYNC_NOTIFICATION_ID);
                         File fingerprintFile = getFingerprintFile(dbTempFile);
