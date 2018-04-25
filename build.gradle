@@ -30,12 +30,12 @@ dependencies {
 
 android {
 
-    compileSdkVersion 19
+    compileSdkVersion 27
 
     defaultConfig {
         applicationId 'org.openhds.mobile'
         minSdkVersion 16
-        targetSdkVersion 19
+        targetSdkVersion 27
         versionCode 42
         versionName '3.4'
     }
