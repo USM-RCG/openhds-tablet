@@ -45,7 +45,7 @@ public class FieldWorkerActivity extends AppCompatActivity implements OnClickLis
         setTitle(getText(R.string.field_worker_home));
 
         // fill the middle column with a button for each available activity
-        LinearLayout activitiesLayout = (LinearLayout) findViewById(R.id.portal_middle_column);
+        LinearLayout activitiesLayout = findViewById(R.id.portal_middle_column);
         for (NavigatorModule module : ConfigUtils.getActiveModules(this)) {
             RelativeLayout layout = makeTextWithPayload(this, module.getLaunchLabel(), module.getLaunchDescription(),
                     module.getName(), this, activitiesLayout, R.drawable.data_selector, null, null, true);

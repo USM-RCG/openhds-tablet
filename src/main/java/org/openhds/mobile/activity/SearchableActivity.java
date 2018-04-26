@@ -106,10 +106,10 @@ public class SearchableActivity extends ListActivity {
         setContentView(R.layout.search_results);
 
         listContainer = findViewById(R.id.list_container);
-        basicQuery = (EditText) listContainer.findViewById(R.id.basic_query_text);
-        advancedQuery = (EditText) listContainer.findViewById(R.id.advanced_query_text);
-        searchButton = (Button) listContainer.findViewById(R.id.search_button);
-        ListView listView = (ListView) listContainer.findViewById(android.R.id.list);
+        basicQuery = listContainer.findViewById(R.id.basic_query_text);
+        advancedQuery = listContainer.findViewById(R.id.advanced_query_text);
+        searchButton = listContainer.findViewById(R.id.search_button);
+        ListView listView = listContainer.findViewById(android.R.id.list);
         progressContainer = findViewById(R.id.progress_container);
 
         basicQuery.addTextChangedListener(new BasicQueryTranslator());
@@ -136,11 +136,11 @@ public class SearchableActivity extends ListActivity {
         basicQuery.setOnKeyListener(searchOnEnterKeyHandler);
         advancedQuery.setOnKeyListener(searchOnEnterKeyHandler);
 
-        hierarchyToggle = (ToggleButton)findViewById(R.id.hierarchy_toggle);
+        hierarchyToggle = findViewById(R.id.hierarchy_toggle);
         setToggleImage(hierarchyToggle, R.drawable.sm_hierarchy_logo);
-        locationToggle = (ToggleButton)findViewById(R.id.location_toggle);
+        locationToggle = findViewById(R.id.location_toggle);
         setToggleImage(locationToggle, R.drawable.sm_location_logo);
-        individualToggle = (ToggleButton)findViewById(R.id.individual_toggle);
+        individualToggle = findViewById(R.id.individual_toggle);
         setToggleImage(individualToggle, R.drawable.sm_individual_logo);
 
         EntityToggleHandler toggleHandler = new EntityToggleHandler();
@@ -512,9 +512,9 @@ public class SearchableActivity extends ListActivity {
 
             DataWrapper item = getItem(position);
 
-            ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
-            TextView text1 = (TextView) convertView.findViewById(android.R.id.text1);
-            TextView text2 = (TextView) convertView.findViewById(android.R.id.text2);
+            ImageView icon = convertView.findViewById(R.id.icon);
+            TextView text1 = convertView.findViewById(android.R.id.text1);
+            TextView text2 = convertView.findViewById(android.R.id.text2);
 
             switch (item.getCategory()) {
                 case BiokoHierarchy.HOUSEHOLD:

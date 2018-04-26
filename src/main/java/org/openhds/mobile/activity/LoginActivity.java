@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         fragments.put(getString(R.string.fieldworker_login), new FieldWorkerLoginFragment());
         fragments.put(getString(R.string.supervisor_login), new SupervisorLoginFragment());
 
-        pager = (ViewPager) findViewById(R.id.pager);
+        pager = findViewById(R.id.pager);
         pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
 
         actionBar = getSupportActionBar();

@@ -46,7 +46,7 @@ public class SupervisorActivity extends AppCompatActivity {
         setTitle(R.string.supervisor_home);
         setContentView(R.layout.supervisor_main);
 
-        LinearLayout supervisorButtonLayout = (LinearLayout) findViewById(R.id.supervisor_activity_options);
+        LinearLayout supervisorButtonLayout = findViewById(R.id.supervisor_activity_options);
         ButtonClickListener buttonClickListener = new ButtonClickListener();
 
         makeButton(this, -1, R.string.send_forms, R.string.send_forms,
