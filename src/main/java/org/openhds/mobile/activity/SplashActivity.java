@@ -1,12 +1,12 @@
 package org.openhds.mobile.activity;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.provider.FormsProviderAPI;
@@ -18,7 +18,7 @@ import java.util.List;
  * instead of inflating a layout or setting any view. This ensures the image is available immediately, and the
  * actual opening activity is available as soon as it is ready.
  */
-public class SplashActivity extends Activity {
+public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

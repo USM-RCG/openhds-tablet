@@ -1,10 +1,10 @@
 package org.openhds.mobile.activity;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +33,7 @@ import static org.openhds.mobile.utilities.LoginUtils.launchLogin;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 import static org.openhds.mobile.utilities.SyncUtils.installAccount;
 
-public class SupervisorActivity extends Activity {
+public class SupervisorActivity extends AppCompatActivity {
 
     private static final String TAG = SupervisorActivity.class.getSimpleName();
 
@@ -79,7 +79,7 @@ public class SupervisorActivity extends Activity {
             }
         }
 
-        checklistFragment = (ChecklistFragment) getFragmentManager().findFragmentById(R.id.supervisor_checklist_fragment);
+        checklistFragment = (ChecklistFragment) getSupportFragmentManager().findFragmentById(R.id.supervisor_checklist_fragment);
     }
 
     @Override
@@ -98,13 +98,13 @@ public class SupervisorActivity extends Activity {
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout_menu_button:
                 getLogin(Supervisor.class).logout(this, true);
                 return true;
             default:
-                return super.onMenuItemSelected(featureId, item);
+                return super.onOptionsItemSelected(item);
         }
     }
 

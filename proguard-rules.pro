@@ -1,6 +1,9 @@
 
 -dontobfuscate
 
+# not kept apparently because of custom namespace in res xml?
+-keep class android.support.v7.widget.SearchView { *; }
+
 # androidplot accesses resources dynamically
 -keep class org.openhds.mobile.R$* { *; }
 

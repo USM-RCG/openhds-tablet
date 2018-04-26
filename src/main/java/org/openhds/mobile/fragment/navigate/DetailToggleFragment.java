@@ -4,11 +4,10 @@ import static org.openhds.mobile.utilities.LayoutUtils.configureTextWithPayload;
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 
 import org.openhds.mobile.R;
-import org.openhds.mobile.activity.HierarchyNavigatorActivity;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;

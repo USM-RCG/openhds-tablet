@@ -1,10 +1,10 @@
 package org.openhds.mobile.activity;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
+import android.support.v7.app.AlertDialog;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.navconfig.NavigatorConfig;

@@ -1,6 +1,6 @@
 package org.openhds.mobile.fragment.navigate.detail;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 
 import org.openhds.mobile.repository.DataWrapper;
 

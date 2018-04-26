@@ -1,12 +1,14 @@
 package org.openhds.mobile.activity;
 
-import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,7 +16,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.navigate.FormListFragment;
@@ -27,7 +28,7 @@ import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.OdkCollectHelper.getAllUnsentFormInstances;
 
-public class FieldWorkerActivity extends Activity implements OnClickListener {
+public class FieldWorkerActivity extends AppCompatActivity implements OnClickListener {
 
     public static final String ACTIVITY_MODULE_EXTRA = "ACTIVITY_MODULE_EXTRA";
 
@@ -53,7 +54,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
             params.setMargins(0, 0, 0, MODULE_SPACING);
         }
 
-        formListFragment = (FormListFragment) getFragmentManager().findFragmentById(R.id.portal_form_list);
+        formListFragment = (FormListFragment) getSupportFragmentManager().findFragmentById(R.id.portal_form_list);
         formListFragment.setHeaderText(R.string.unsent_forms);
         formListFragment.setFindEnabled(true);
     }
@@ -69,7 +70,7 @@ public class FieldWorkerActivity extends Activity implements OnClickListener {
         boolean searchEnabled = isSearchEnabled(this);
         if (searchEnabled) {
             SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-            SearchView searchView = (SearchView) menu.findItem(R.id.field_worker_search).getActionView();
+            SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.field_worker_search));
             SearchableInfo searchInfo = searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class));
             searchView.setSearchableInfo(searchInfo);
         }

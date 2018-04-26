@@ -1,18 +1,18 @@
 package org.openhds.mobile.activity;
 
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.SearchView;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.DataSelectionFragment;
@@ -54,7 +54,7 @@ import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 
-public class HierarchyNavigatorActivity extends Activity implements LaunchContext,
+public class HierarchyNavigatorActivity extends AppCompatActivity implements LaunchContext,
         HierarchyButtonFragment.HierarchyButtonListener, DetailToggleFragment.DetailToggleListener,
         DataSelectionFragment.DataSelectionListener, FormSelectionFragment.FormSelectionListener {
 
@@ -111,7 +111,7 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
 
         hierarchyPath = new HierarchyPath();
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
         hierarchyButtonFragment = (HierarchyButtonFragment) fragmentManager.findFragmentById(R.id.hierarchy_button_fragment);
         detailToggleFragment = (DetailToggleFragment) fragmentManager.findFragmentById(R.id.detail_toggle_fragment);
@@ -322,10 +322,10 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private void showValueFragment() {
         // there is only 1 value fragment that can be added
         if (!valueFragment.isAdded()) {
-            getFragmentManager()
+            getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG).commit();
-            getFragmentManager().executePendingTransactions();
+            getSupportFragmentManager().executePendingTransactions();
         }
         valueFragment.populateData(currentResults);
     }
@@ -333,11 +333,11 @@ public class HierarchyNavigatorActivity extends Activity implements LaunchContex
     private void showDetailFragment() {
         DetailFragment fragment = getDetailForCurrentLevel();
         detailFragment = fragment == null ? defaultDetailFragment : fragment;
-        getFragmentManager()
+        getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.middle_column, detailFragment, DETAIL_FRAGMENT_TAG)
                 .commit();
-        getFragmentManager().executePendingTransactions();
+        getSupportFragmentManager().executePendingTransactions();
         detailFragment.setUpDetails(getCurrentSelection());
     }
 
