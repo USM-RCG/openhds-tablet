@@ -22,6 +22,8 @@ dependencies {
     implementation 'org.mindrot:jbcrypt:0.3m'
     implementation 'org.mozilla:rhino:1.7.7.1'
     implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:preference-v7:27.1.1'
+    implementation 'com.android.support:preference-v14:27.1.1'
     implementation 'com.androidplot:androidplot-core:0.9.8'
     implementation 'org.apache.lucene:lucene-core:4.7.2'
     implementation 'org.apache.lucene:lucene-queryparser:4.7.2'
