@@ -90,6 +90,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
     private HashMap<MenuItem, String> menuItemTags;
     private QueryHelper queryHelper;
 
+    private boolean updateAfterResult = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +144,15 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
             if (existingDetailFragment != null) {
                 detailFragment = existingDetailFragment;
             }
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (updateAfterResult) {
+            update();
+            updateAfterResult = false;
         }
     }
 
@@ -252,7 +262,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
             switch (requestCode) {
                 case ODK_ACTIVITY_REQUEST_CODE:
                     handleFormResult(data);
-                    update();
+                    updateAfterResult = true;
                     break;
             }
         }
