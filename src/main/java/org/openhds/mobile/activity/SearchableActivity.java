@@ -105,6 +105,7 @@ public class SearchableActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_results);
+        setTitle(R.string.search_label);
 
         listContainer = findViewById(R.id.list_container);
         basicQuery = listContainer.findViewById(R.id.basic_query_text);
