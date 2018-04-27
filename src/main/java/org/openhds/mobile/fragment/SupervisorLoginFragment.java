@@ -1,8 +1,12 @@
 package org.openhds.mobile.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,13 +25,14 @@ import org.openhds.mobile.task.http.HttpTask;
 import org.openhds.mobile.task.http.HttpTaskRequest;
 import org.openhds.mobile.task.http.HttpTaskResponse;
 
-import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
 import static org.openhds.mobile.utilities.ConfigUtils.getResourceString;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
 import static org.openhds.mobile.utilities.UrlUtils.buildServerUrl;
 
 public class SupervisorLoginFragment extends Fragment implements OnClickListener, OnKeyListener {
+
+    private static String TAG = SupervisorLoginFragment.class.getSimpleName();
 
     private EditText usernameText;
     private EditText passwordText;
@@ -75,9 +80,36 @@ public class SupervisorLoginFragment extends Fragment implements OnClickListener
     }
 
     private void authenticateSupervisor() {
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        if (isConnected) {
+            authConnected();
+        } else {
+            authDisconnected();
+        }
+    }
+
+    private void authConnected() {
+        Log.i(TAG, "attempting connected auth: " + getUrl() + " user=" + getUsername());
         HttpTaskRequest httpTaskRequest = new HttpTaskRequest(getUrl(), null, getUsername(), getPassword());
         HttpTask httpTask = new HttpTask(new AuthenticateListener());
         httpTask.execute(httpTaskRequest);
+    }
+
+    private void authDisconnected() {
+        Log.i(TAG, "attempting disconnected auth: user=" + getUsername());
+        Supervisor user = databaseAdapter.findSupervisorByUsername(getUsername());
+        if (user != null && user.getPassword().equals(getPassword())) {
+            launchOnSuccess(user);
+        } else {
+            onFailure(false);
+        }
+    }
+
+    private void launchOnSuccess(Supervisor user) {
+        setAuthenticatedUser(user);
+        launchSupervisorActivity();
     }
 
     private String getUrl() {
@@ -85,16 +117,44 @@ public class SupervisorLoginFragment extends Fragment implements OnClickListener
         return buildServerUrl(getActivity(), path);
     }
 
-    private class AuthenticateListener implements HttpTask.HttpTaskResponseHandler {
+    private void logoutAuthenticatedUser() {
+        getLogin(Supervisor.class).logout(getActivity(), false);
+    }
 
+    private void launchSupervisorActivity() {
+        startActivity(new Intent(getActivity(), SupervisorActivity.class));
+    }
+
+    private void deleteSupervisor(String username) {
+        Supervisor user = new Supervisor();
+        user.setName(username);
+        databaseAdapter.deleteSupervisor(user);
+    }
+
+    private void addSupervisor(Supervisor user) {
+        databaseAdapter.addSupervisor(user);
+    }
+
+    private void setAuthenticatedUser(Supervisor user) {
+        getLogin(Supervisor.class).setAuthenticatedUser(user);
+    }
+
+    private void onFailure(boolean connected) {
+        Log.i(TAG, "auth failed for " + getUsername());
+        logoutAuthenticatedUser();
+        if (connected) {
+            deleteSupervisor(getUsername());
+        }
+        showLongToast(getActivity(), R.string.supervisor_bad_credentials);
+    }
+
+    private class AuthenticateListener implements HttpTask.HttpTaskResponseHandler {
         @Override
         public void handleHttpTaskResponse(HttpTaskResponse httpTaskResponse) {
             if (httpTaskResponse.isSuccess()) {
                 onSuccess();
-            } else if (HTTP_FORBIDDEN == httpTaskResponse.getHttpStatus()) {
-                onFailure(true);
             } else {
-                authDisconnected();
+                onFailure(true);
             }
         }
 
@@ -104,49 +164,7 @@ public class SupervisorLoginFragment extends Fragment implements OnClickListener
             user.setName(getUsername());
             user.setPassword(getPassword());
             addSupervisor(user);
-            setAuthenticatedUser(user);
-            launchSupervisorActivity();
+            launchOnSuccess(user);
         }
-
-        private void onFailure(boolean connected) {
-            logoutAuthenticatedUser();
-            if (connected) {
-                deleteSupervisor(getUsername());
-            }
-            showLongToast(getActivity(), R.string.supervisor_bad_credentials);
-        }
-
-        private void authDisconnected() {
-            Supervisor user = databaseAdapter.findSupervisorByUsername(getUsername());
-            if (user != null && user.getPassword().equals(getPassword())) {
-                setAuthenticatedUser(user);
-                launchSupervisorActivity();
-            } else {
-                onFailure(false);
-            }
-        }
-
-        private void deleteSupervisor(String username) {
-            Supervisor user = new Supervisor();
-            user.setName(username);
-            databaseAdapter.deleteSupervisor(user);
-        }
-
-        private void addSupervisor(Supervisor user) {
-            databaseAdapter.addSupervisor(user);
-        }
-
-        private void setAuthenticatedUser(Supervisor user) {
-            getLogin(Supervisor.class).setAuthenticatedUser(user);
-        }
-
-        private void logoutAuthenticatedUser() {
-            getLogin(Supervisor.class).logout(getActivity(), false);
-        }
-
-        private void launchSupervisorActivity() {
-            startActivity(new Intent(getActivity(), SupervisorActivity.class));
-        }
-
     }
 }
