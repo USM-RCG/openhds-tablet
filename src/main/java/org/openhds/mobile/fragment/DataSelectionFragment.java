@@ -1,6 +1,5 @@
 package org.openhds.mobile.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,10 +35,10 @@ public class DataSelectionFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof DataSelectionListener) {
-            this.listener = (DataSelectionListener)activity;
+    public void onAttach(Context ctx) {
+        super.onAttach(ctx);
+        if (ctx instanceof DataSelectionListener) {
+            this.listener = (DataSelectionListener)ctx;
         }
     }
 
