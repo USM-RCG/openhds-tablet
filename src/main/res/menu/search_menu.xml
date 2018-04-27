@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/search_type"
-          android:title="@string/search_type"
-          android:showAsAction="ifRoom"
-          android:actionLayout="@layout/search_type_spinner"  />
+        android:title="@string/search_type"
+        app:actionLayout="@layout/search_type_spinner"
+        app:showAsAction="always" />
 </menu>

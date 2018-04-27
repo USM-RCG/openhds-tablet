@@ -1,11 +1,11 @@
 package org.openhds.mobile.activity;
 
-import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -70,7 +70,7 @@ import static org.openhds.mobile.activity.FieldWorkerActivity.ACTIVITY_MODULE_EX
 import static org.openhds.mobile.activity.HierarchyNavigatorActivity.HIERARCHY_PATH_KEY;
 import static org.openhds.mobile.utilities.MessageUtils.showLongToast;
 
-public class SearchableActivity extends ListActivity {
+public class SearchableActivity extends AppCompatActivity {
 
     private static final String TAG = SearchableActivity.class.getSimpleName();
 
@@ -90,6 +90,7 @@ public class SearchableActivity extends ListActivity {
     private Handler handler;
 
     private View listContainer, progressContainer;
+    private ListView listView;
     private EditText basicQuery;
     private EditText advancedQuery;
     private boolean advancedSelected;
@@ -109,7 +110,7 @@ public class SearchableActivity extends ListActivity {
         basicQuery = listContainer.findViewById(R.id.basic_query_text);
         advancedQuery = listContainer.findViewById(R.id.advanced_query_text);
         searchButton = listContainer.findViewById(R.id.search_button);
-        ListView listView = listContainer.findViewById(android.R.id.list);
+        listView = listContainer.findViewById(android.R.id.list);
         progressContainer = findViewById(R.id.progress_container);
 
         basicQuery.addTextChangedListener(new BasicQueryTranslator());
@@ -232,7 +233,7 @@ public class SearchableActivity extends ListActivity {
             executeQuery(addLevelClause(parseLuceneQuery(advancedQuery.getText().toString())));
         } catch (QueryNodeException e) {
             Log.e(TAG, "bad query", e);
-            setListAdapter(new ResultsAdapter(this, new ArrayList<DataWrapper>()));
+            listView.setAdapter(new ResultsAdapter(this, new ArrayList<DataWrapper>()));
         }
     }
 
@@ -439,7 +440,7 @@ public class SearchableActivity extends ListActivity {
     }
 
     private void handleSearchResults(List<DataWrapper> results) {
-        setListAdapter(new ResultsAdapter(this, results));
+        listView.setAdapter(new ResultsAdapter(this, results));
         showLoading(false);
         (advancedSelected? advancedQuery : basicQuery).requestFocus();
     }
