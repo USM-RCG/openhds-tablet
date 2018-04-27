@@ -27,6 +27,7 @@ public class HttpUtils {
      * Constructs an {@link HttpURLConnection} with the given request headers.
      */
     public static HttpURLConnection get(URL url, Map<String, String> headers) throws IOException {
+        HttpURLConnection.setFollowRedirects(false);
         HttpURLConnection c = (HttpURLConnection)url.openConnection();
         for (Map.Entry<String, String> h : headers.entrySet()) {
             c.addRequestProperty(h.getKey(), h.getValue());
