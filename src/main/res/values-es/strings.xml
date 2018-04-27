@@ -198,5 +198,9 @@
     <string name="wifi_sync_disabled">Sincroniza sobre cualquier red</string>
     <string name="wifi_sync">Sincronizar en Wi-Fi</string>
     <string name="field_worker_none_exist">No hay encuestadores, sincronícense.</string>
+    <string name="server_connect_error">Error al conectar con el servidor</string>
+    <string name="http_client_error">Solicitud fallida debido a un error del cliente</string>
+    <string name="http_server_error">Solicitud fallida debido a un error del servidor</string>
+    <string name="unknown_error">Error desconocido</string>
 
 </resources>

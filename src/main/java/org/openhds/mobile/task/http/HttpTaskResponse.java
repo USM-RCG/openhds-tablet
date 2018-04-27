@@ -2,34 +2,30 @@ package org.openhds.mobile.task.http;
 
 import java.io.InputStream;
 
-/**
- * Status and input stream from an HTTP request.
- *
- * Response status code and response body input stream
- * returned from an HttpTask.
- *
- * BSH
- */
 public class HttpTaskResponse {
 
     private final boolean isSuccess;
-    private final String message;
     private final int httpStatus;
+    private final HttpTask.Result result;
     private final InputStream inputStream;
     private final String eTag;
     private final String contentType;
 
-    public HttpTaskResponse(boolean isSuccess, String message, int httpStatus, InputStream inputStream) {
-        this(isSuccess, message, httpStatus, inputStream, null);
+    HttpTaskResponse(boolean isSuccess, HttpTask.Result result, int httpStatus) {
+        this(isSuccess, result, httpStatus, null, null);
     }
 
-    public HttpTaskResponse(boolean isSuccess, String message, int httpStatus, InputStream inputStream, String eTag) {
-        this(isSuccess, message, httpStatus, inputStream, eTag, null);
+    HttpTaskResponse(boolean isSuccess, HttpTask.Result result, int httpStatus, InputStream inputStream) {
+        this(isSuccess, result, httpStatus, inputStream, null);
     }
 
-    public HttpTaskResponse(boolean isSuccess, String message, int httpStatus, InputStream inputStream, String eTag, String contentType) {
+    HttpTaskResponse(boolean isSuccess, HttpTask.Result result, int httpStatus, InputStream inputStream, String eTag) {
+        this(isSuccess, result, httpStatus, inputStream, eTag, null);
+    }
+
+    HttpTaskResponse(boolean isSuccess, HttpTask.Result result, int httpStatus, InputStream inputStream, String eTag, String contentType) {
         this.isSuccess = isSuccess;
-        this.message = message;
+        this.result = result;
         this.httpStatus = httpStatus;
         this.inputStream = inputStream;
         this.eTag = eTag;
@@ -40,8 +36,8 @@ public class HttpTaskResponse {
         return isSuccess;
     }
 
-    public String getMessage() {
-        return message;
+    public HttpTask.Result getResult() {
+        return result;
     }
 
     public int getHttpStatus() {

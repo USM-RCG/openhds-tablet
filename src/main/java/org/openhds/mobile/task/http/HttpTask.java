@@ -1,6 +1,7 @@
 package org.openhds.mobile.task.http;
 
 import android.os.AsyncTask;
+
 import org.openhds.mobile.utilities.HttpUtils;
 
 import java.io.BufferedInputStream;
@@ -10,28 +11,32 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
 
+import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_NOT_MODIFIED;
 import static java.net.HttpURLConnection.HTTP_OK;
+import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
 import static org.openhds.mobile.utilities.SyncUtils.streamToFile;
 
 /**
  * Carry out an HttpTaskRequest.
- *
+ * <p>
  * Make an HTTP GET request with credentials, return response status and body.
- *
+ * <p>
  * BSH
  */
 public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse> {
 
-    public static final String MESSAGE_SUCCESS = "Request successful";
-    public static final String MESSAGE_NOT_MODIFIED = "Content not modified";
-    public static final String MESSAGE_NO_REQUEST = "No request given";
-    public static final String MESSAGE_CLIENT_ERROR = "Client error";
-    public static final String MESSAGE_BAD_URL = "Bad URL";
-    public static final String MESSAGE_SERVER_ERROR = "Server error";
-    public static final String MESSAGE_SAVE_ERROR = "Save failed";
+    public enum Result {
+        CONNECT_FAILURE,
+        STREAM_FAILURE,
+        SUCCESS,
+        UNMODIFIED,
+        AUTH_ERROR,
+        CLIENT_ERROR,
+        SERVER_ERROR
+    }
 
     private HttpTaskResponseHandler httpTaskResponseHandler;
 
@@ -48,48 +53,51 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
     protected HttpTaskResponse doInBackground(HttpTaskRequest... httpTaskRequests) {
 
         if (httpTaskRequests == null || httpTaskRequests.length == 0) {
-            return new HttpTaskResponse(false, MESSAGE_NO_REQUEST, 0, null);
+            return null;
         }
 
         final HttpTaskRequest req = httpTaskRequests[0];
 
-        InputStream responseStream;
-        int statusCode;
-        String contentType, eTag;
+        InputStream responseStream = null;
+        int statusCode = 0;
+        HttpURLConnection conn;
         try {
             URL url = new URL(req.getUrl());
             String auth = encodeBasicCreds(req.getUserName(), req.getPassword());
-            HttpURLConnection conn = HttpUtils.get(url, req.getAccept(), auth, req.getETag());
-            responseStream = conn.getInputStream();
+            conn = HttpUtils.get(url, req.getAccept(), auth, req.getETag());
             statusCode = conn.getResponseCode();
-            eTag = conn.getHeaderField("ETag");
-            contentType = conn.getContentType();
         } catch (Exception e) {
-            return new HttpTaskResponse(false, MESSAGE_BAD_URL, 0, null);
+            return new HttpTaskResponse(false, Result.CONNECT_FAILURE, statusCode, null);
         }
 
         if (HTTP_OK == statusCode) {
+            String eTag = conn.getHeaderField("ETag"), contentType = conn.getContentType();
             File saveFile = req.getFile();
             if (saveFile != null) {
                 try {
+                    responseStream = conn.getInputStream();
                     streamToFile(responseStream, saveFile);
                     responseStream = new BufferedInputStream(new FileInputStream(saveFile));
                 } catch (InterruptedException | IOException e) {
-                    return new HttpTaskResponse(false, MESSAGE_SAVE_ERROR, statusCode, responseStream, eTag, contentType);
+                    return new HttpTaskResponse(false, Result.STREAM_FAILURE, statusCode, responseStream, eTag, contentType);
                 }
             }
-            return new HttpTaskResponse(true, MESSAGE_SUCCESS, statusCode, responseStream, eTag, contentType);
+            return new HttpTaskResponse(true, Result.SUCCESS, statusCode, responseStream, eTag, contentType);
         }
 
         if (HTTP_NOT_MODIFIED == statusCode) {
-            return new HttpTaskResponse(false, MESSAGE_NOT_MODIFIED, statusCode, responseStream);
+            return new HttpTaskResponse(false, Result.UNMODIFIED, statusCode);
         }
 
         if (statusCode < HTTP_INTERNAL_ERROR) {
-            return new HttpTaskResponse(false, MESSAGE_CLIENT_ERROR, statusCode, responseStream);
+            if (statusCode == HTTP_UNAUTHORIZED || statusCode == HTTP_FORBIDDEN) {
+                return new HttpTaskResponse(false, Result.AUTH_ERROR, statusCode);
+            } else {
+                return new HttpTaskResponse(false, Result.CLIENT_ERROR, statusCode);
+            }
         }
 
-        return new HttpTaskResponse(false, MESSAGE_SERVER_ERROR, statusCode, responseStream);
+        return new HttpTaskResponse(false, Result.SERVER_ERROR, statusCode);
     }
 
     // Forward the Http response to the handler.

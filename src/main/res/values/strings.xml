@@ -222,5 +222,9 @@
     <string name="wifi_sync_enabled">Sync on Wi-Fi only</string>
     <string name="wifi_sync_disabled">Sync on any network</string>
     <string name="field_worker_none_exist">No fieldworkers, please sync.</string>
+    <string name="server_connect_error">Failed to connect to server</string>
+    <string name="http_client_error">Request failed due to client error</string>
+    <string name="http_server_error">Request failed due to server error</string>
+    <string name="unknown_error">Unknown error</string>
 
 </resources>

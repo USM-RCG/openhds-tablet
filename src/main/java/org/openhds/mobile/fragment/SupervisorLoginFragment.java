@@ -103,7 +103,7 @@ public class SupervisorLoginFragment extends Fragment implements OnClickListener
         if (user != null && user.getPassword().equals(getPassword())) {
             launchOnSuccess(user);
         } else {
-            onFailure(false);
+            onDisconnectedFailure();
         }
     }
 
@@ -139,14 +139,37 @@ public class SupervisorLoginFragment extends Fragment implements OnClickListener
         getLogin(Supervisor.class).setAuthenticatedUser(user);
     }
 
-    private void onFailure(boolean connected) {
-        Log.i(TAG, "auth failed for " + getUsername());
-        logoutAuthenticatedUser();
-        if (connected) {
-            deleteSupervisor(getUsername());
-        }
-        showLongToast(getActivity(), R.string.supervisor_bad_credentials);
+    private void onConnectedFailure(HttpTask.Result result) {
+        Log.i(TAG, "connected auth failed for " + getUsername());
+        deleteSupervisor(getUsername());
+        onFailure(getErrorMessage(result));
     }
+
+    private int getErrorMessage(HttpTask.Result result) {
+        switch (result) {
+            case AUTH_ERROR:
+                return R.string.supervisor_bad_credentials;
+            case CONNECT_FAILURE:
+                return R.string.server_connect_error;
+            case CLIENT_ERROR:
+                return R.string.http_client_error;
+            case SERVER_ERROR:
+                return R.string.http_server_error;
+            default:
+                return R.string.unknown_error;
+        }
+    }
+
+    private void onDisconnectedFailure() {
+        Log.i(TAG, "disconnected auth failed for " + getUsername());
+        onFailure(R.string.supervisor_bad_credentials);
+    }
+
+    private void onFailure(int msgId) {
+        logoutAuthenticatedUser();
+        showLongToast(getActivity(), msgId);
+    }
+
 
     private class AuthenticateListener implements HttpTask.HttpTaskResponseHandler {
         @Override
@@ -154,7 +177,7 @@ public class SupervisorLoginFragment extends Fragment implements OnClickListener
             if (httpTaskResponse.isSuccess()) {
                 onSuccess();
             } else {
-                onFailure(true);
+                onConnectedFailure(httpTaskResponse.getResult());
             }
         }
 
