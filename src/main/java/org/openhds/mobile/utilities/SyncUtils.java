@@ -2,12 +2,13 @@ package org.openhds.mobile.utilities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.github.batkinson.jrsync.Metadata;
@@ -57,6 +58,8 @@ import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceBool;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
 import static org.openhds.mobile.utilities.HttpUtils.get;
+import static org.openhds.mobile.utilities.NotificationUtils.getNotificationColor;
+import static org.openhds.mobile.utilities.NotificationUtils.getNotificationIcon;
 import static org.openhds.mobile.utilities.StringUtils.join;
 import static org.openhds.mobile.utilities.UrlUtils.buildServerUrl;
 
@@ -430,8 +433,10 @@ public class SyncUtils {
             HttpURLConnection httpConn = get(endpoint, accept, creds, existingFingerprint);
             int httpResult = httpConn.getResponseCode();
 
-            final Notification.Builder builder = new Notification.Builder(ctx)
-                    .setSmallIcon(R.drawable.ic_progress)
+            final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, TAG)
+                    .setSmallIcon(android.R.drawable.stat_sys_download)
+                    .setTicker("")
+                    .setColor(getNotificationColor())
                     .setContentTitle(ctx.getString(R.string.sync_database_new_data))
                     .setContentText(ctx.getString(R.string.sync_database_in_progress))
                     .setProgress(0, 0, true)
@@ -454,7 +459,7 @@ public class SyncUtils {
                             }
                         }
 
-                        manager.notify(SYNC_NOTIFICATION_ID, builder.getNotification());
+                        manager.notify(SYNC_NOTIFICATION_ID, builder.build());
 
                         InputStream responseBody = httpConn.getInputStream();
                         String responseType = httpConn.getContentType().split(";")[0].toLowerCase();
@@ -495,7 +500,7 @@ public class SyncUtils {
                                     if (nextValue != fileProgress) {
                                         builder.setProgress(totalSize, nextValue, false);
                                         builder.setContentText(ctx.getString(R.string.sync_downloading));
-                                        manager.notify(SYNC_NOTIFICATION_ID, builder.getNotification());
+                                        manager.notify(SYNC_NOTIFICATION_ID, builder.build());
                                     }
                                     fileProgress = nextValue;
                                 }
@@ -511,21 +516,21 @@ public class SyncUtils {
                         Intent intent = new Intent(ctx, SupervisorActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                         PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                         manager.notify(SYNC_NOTIFICATION_ID, builder
-                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setSmallIcon(getNotificationIcon())
                                 .setContentText(ctx.getString(R.string.sync_database_new_data_instructions))
                                 .setContentIntent(pending)
                                 .setProgress(0, 0, false)
                                 .setOngoing(false)
-                                .getNotification());
+                                .build());
                     } catch (IOException | NoSuchAlgorithmException e) {
                         Log.e(TAG, "sync io failure", e);
                         db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "error: " + httpResult);
                         manager.notify(SYNC_NOTIFICATION_ID, builder
-                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setSmallIcon(getNotificationIcon())
                                 .setContentText(ctx.getString(R.string.sync_database_failed))
                                 .setProgress(0, 0, false)
                                 .setOngoing(false)
-                                .getNotification());
+                                .build());
                     } catch (InterruptedException e) {
                         Log.e(TAG, "sync thread canceled", e);
                         db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "canceled");
@@ -586,7 +591,7 @@ public class SyncUtils {
      * Performs an incremental sync based on a local existing file.
      */
     private static void incrementalSync(InputStream responseBody, File basis, File target, RangeRequestFactory factory,
-                                        final Notification.Builder builder, final NotificationManager manager,
+                                        final NotificationCompat.Builder builder, final NotificationManager manager,
                                         final Context ctx)
             throws NoSuchAlgorithmException, IOException, InterruptedException {
         Metadata metadata = readMetadata(responseBody);
@@ -600,7 +605,7 @@ public class SyncUtils {
                     percent = percentComplete;
                     builder.setContentText(getStageLabel(ctx, stage));
                     builder.setProgress(100, percentComplete, false);
-                    manager.notify(SYNC_NOTIFICATION_ID, builder.getNotification());
+                    manager.notify(SYNC_NOTIFICATION_ID, builder.build());
                 }
             }
         };
@@ -649,14 +654,14 @@ public class SyncUtils {
             Intent intent = new Intent(ctx, SupervisorActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
             PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             final NotificationManager manager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
-            manager.notify(SYNC_NOTIFICATION_ID, new Notification.Builder(ctx)
-                    .setSmallIcon(R.drawable.ic_launcher)
+            manager.notify(SYNC_NOTIFICATION_ID, new NotificationCompat.Builder(ctx, TAG)
+                    .setSmallIcon(getNotificationIcon())
                     .setContentTitle(ctx.getString(R.string.sync_database_new_data))
                     .setContentText(ctx.getString(R.string.sync_database_new_data_instructions))
                     .setProgress(0, 0, false)
                     .setContentIntent(pending)
                     .setOngoing(false)
-                    .getNotification());
+                    .build());
         }
     }
 

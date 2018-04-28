@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -17,6 +18,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.R;
 import org.openhds.mobile.navconfig.BiokoHierarchy;
+import org.openhds.mobile.utilities.NotificationUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +27,8 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 import static org.apache.lucene.index.IndexWriterConfig.OpenMode.CREATE_OR_APPEND;
 import static org.apache.lucene.util.Version.LUCENE_47;
 import static org.openhds.mobile.provider.OpenHDSProvider.getDatabaseHelper;
+import static org.openhds.mobile.utilities.NotificationUtils.getNotificationColor;
+import static org.openhds.mobile.utilities.NotificationUtils.getNotificationIcon;
 import static org.openhds.mobile.utilities.SyncUtils.close;
 
 public class Indexer {
@@ -164,8 +168,9 @@ public class Indexer {
     private void bulkIndex(int label, DocumentSource source, IndexWriter writer) throws IOException {
 
         NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
-        Notification.Builder notificationBuilder = new Notification.Builder(ctx)
-                .setSmallIcon(R.drawable.ic_progress)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx, TAG)
+                .setSmallIcon(getNotificationIcon())
+                .setColor(getNotificationColor())
                 .setContentTitle(ctx.getString(R.string.updating_index))
                 .setContentText(ctx.getString(label))
                 .setOngoing(true);
@@ -179,7 +184,7 @@ public class Indexer {
                     int percentFinished = (int) ((processed / (float) totalCount) * 100);
                     if (lastNotified != percentFinished) {
                         notificationBuilder.setProgress(totalCount, processed, false);
-                        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.getNotification());
+                        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
                         lastNotified = percentFinished;
                     }
                 } while (source.next());
