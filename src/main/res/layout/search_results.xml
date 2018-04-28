@@ -60,7 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/location_toggle"
-            android:layout_toStartOf="@+id/location_toggle"/>
+            android:layout_toStartOf="@+id/location_toggle"
+            android:textAllCaps="false"/>
 
         <ToggleButton
             android:id="@+id/location_toggle"
@@ -68,7 +69,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/individual_toggle"
-            android:layout_toStartOf="@+id/individual_toggle"/>
+            android:layout_toStartOf="@+id/individual_toggle"
+            android:textAllCaps="false"/>
 
         <ToggleButton
             android:id="@+id/individual_toggle"
@@ -76,7 +78,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/search_button"
-            android:layout_toStartOf="@+id/search_button"/>
+            android:layout_toStartOf="@+id/search_button"
+            android:textAllCaps="false"/>
 
         <Button
             android:id="@+id/search_button"
