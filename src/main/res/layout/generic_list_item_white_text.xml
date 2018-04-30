@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:text="Bob Bobson"
-        android:textAppearance="@android:style/TextAppearance.Large.Inverse" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
 
     <TextView
         android:id="@+id/secondary_text"
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/primary_text"
         android:text="b12345"
-        android:textAppearance="@android:style/TextAppearance.Medium.Inverse" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse" />
 
     <LinearLayout
         android:id="@+id/pay_load_container"

@@ -14,7 +14,7 @@
             android:layout_toRightOf="@+id/view"
             android:background="@drawable/form_selector"
             android:textColor="@color/White"
-            android:textAppearance="@android:style/TextAppearance.Large.Inverse"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"/>
 
     <View
             android:layout_marginBottom="20dp"
@@ -34,7 +34,7 @@
             android:layout_toLeftOf="@+id/view"
             android:background="@drawable/form_selector"
             android:textColor="@color/White"
-            android:textAppearance="@android:style/TextAppearance.Large.Inverse"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"/>
 
     <TextView
             android:id="@+id/checklist_fragment_listview_header"
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="5dp"
-            android:textAppearance="@android:style/TextAppearance.Large.Inverse"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
             android:background="@drawable/form_list_header"/>
 
     <ListView

@@ -14,7 +14,7 @@
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Large" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <EditText
             android:id="@+id/usernameEditText"
@@ -42,7 +42,7 @@
             android:layout_marginTop="5dp"
             android:text="@string/login_btn"
             android:background="@drawable/button"
-            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:layout_gravity="end"/>
 
     </LinearLayout>

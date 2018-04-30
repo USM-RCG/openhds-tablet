@@ -13,7 +13,7 @@
         android:gravity="center"
         android:padding="5dp"
         android:text="@string/favorites"
-        android:textAppearance="@android:style/TextAppearance.Large.Inverse"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"/>
 
     <LinearLayout
         android:id="@+id/progress_container"
