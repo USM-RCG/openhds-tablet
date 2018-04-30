@@ -2,15 +2,15 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
-            <corners android:radius="10dp"/>
-            <padding android:bottom="5dp" android:left="10dp" android:right="10dp" android:top="5dp"/>
+            <corners android:radius="@dimen/form_corner_radius"/>
+            <padding android:bottom="@dimen/form_tb_padding" android:left="@dimen/form_lr_padding" android:right="@dimen/form_lr_padding" android:top="@dimen/form_tb_padding"/>
             <solid android:color="@color/Red"/>
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <corners android:radius="10dp"/>
-            <padding android:bottom="5dp" android:left="10dp" android:right="10dp" android:top="5dp"/>
+            <corners android:radius="@dimen/form_corner_radius"/>
+            <padding android:bottom="@dimen/form_tb_padding" android:left="@dimen/form_lr_padding" android:right="@dimen/form_lr_padding" android:top="@dimen/form_tb_padding"/>
             <solid android:color="@color/LightRed"/>
         </shape>
     </item>

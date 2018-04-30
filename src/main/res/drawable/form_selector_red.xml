@@ -3,18 +3,18 @@
 
     <item android:state_pressed="true">
         <shape>
-            <corners android:radius="20dp"/>
-            <padding android:top="10dp" android:right="10dp" android:bottom="10dp" android:left="10dp"/>
+            <corners android:radius="@dimen/button_corner_radius"/>
+            <padding android:top="@dimen/button_padding" android:right="@dimen/button_padding" android:bottom="@dimen/button_padding" android:left="@dimen/button_padding"/>
             <solid android:color="@color/LightRed"/>
-            <stroke android:width="3dp" android:color="@color/DarkRed"/>
+            <stroke android:width="@dimen/button_border_width" android:color="@color/DarkRed"/>
         </shape>
     </item>
     <item android:state_pressed="false">
         <shape>
-            <corners android:radius="20dp"/>
-            <padding android:top="10dp" android:right="10dp" android:bottom="10dp" android:left="10dp"/>
+            <corners android:radius="@dimen/button_corner_radius"/>
+            <padding android:top="@dimen/button_padding" android:right="@dimen/button_padding" android:bottom="@dimen/button_padding" android:left="@dimen/button_padding"/>
             <solid android:color="@color/Red"/>
-            <stroke android:width="3dp" android:color="@color/DarkRed"/>
+            <stroke android:width="@dimen/button_border_width" android:color="@color/DarkRed"/>
         </shape>
     </item>
 
