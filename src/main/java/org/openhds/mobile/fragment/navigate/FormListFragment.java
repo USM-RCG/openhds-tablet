@@ -23,9 +23,10 @@ import org.openhds.mobile.adapter.FormInstanceAdapter;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.navconfig.NavigatorModule;
+import org.openhds.mobile.navconfig.forms.Binding;
 import org.openhds.mobile.provider.DatabaseAdapter;
-import org.openhds.mobile.utilities.ConfigUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,6 +36,8 @@ import static android.view.View.VISIBLE;
 import static java.util.Arrays.asList;
 import static org.openhds.mobile.activity.FieldWorkerActivity.ACTIVITY_MODULE_EXTRA;
 import static org.openhds.mobile.activity.HierarchyNavigatorActivity.HIERARCHY_PATH_KEY;
+import static org.openhds.mobile.utilities.ConfigUtils.getActiveModuleForBinding;
+import static org.openhds.mobile.utilities.ConfigUtils.getActiveModules;
 import static org.openhds.mobile.utilities.FormUtils.editIntent;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 import static org.openhds.mobile.utilities.OdkCollectHelper.deleteFormInstances;
@@ -116,22 +119,36 @@ public class FormListFragment extends Fragment {
     }
 
     private void findForm(FormInstance selected) {
-        Activity activity = getActivity();
-        String pathStr = DatabaseAdapter.getInstance(activity).findHierarchyForForm(selected.getFilePath());
-        HierarchyPath path = HierarchyPath.fromString(activity.getContentResolver(), pathStr);
+        Context ctx = getActivity();
+        String pathStr = DatabaseAdapter.getInstance(ctx).findHierarchyForForm(selected.getFilePath());
+        HierarchyPath path = HierarchyPath.fromString(ctx.getContentResolver(), pathStr);
         if (path != null) {
-            Collection<NavigatorModule> activeModules = ConfigUtils.getActiveModules(activity);
-            if (!activeModules.isEmpty()) {
-                NavigatorModule firstModule = activeModules.iterator().next();
-                Intent intent = new Intent(activity, HierarchyNavigatorActivity.class);
-                intent.putExtra(ACTIVITY_MODULE_EXTRA, firstModule.getName());
-                intent.putExtra(HIERARCHY_PATH_KEY, path);
-                startActivity(intent);
-            } else {
-                showShortToast(activity, R.string.no_active_modules);
+            try {
+                // lookup the binding for the form
+                Binding binding = FormInstance.getBinding(selected.load());
+
+                // find the module(s) that include the binding, or just include all modules if none
+                Collection<NavigatorModule> modules = getActiveModuleForBinding(ctx, binding);
+                if (modules.isEmpty()) {
+                    modules = getActiveModules(ctx);
+                }
+
+                // Launch the navigator using the first relevant module
+                if (!modules.isEmpty()) {
+                    NavigatorModule firstModule = modules.iterator().next();
+                    Intent intent = new Intent(ctx, HierarchyNavigatorActivity.class);
+                    intent.putExtra(ACTIVITY_MODULE_EXTRA, firstModule.getName());
+                    intent.putExtra(HIERARCHY_PATH_KEY, path);
+                    startActivity(intent);
+                } else {
+                    showShortToast(ctx, R.string.no_active_modules);
+                }
+
+            } catch (IOException e) {
+                showShortToast(ctx, R.string.form_load_failed);
             }
         } else {
-            showShortToast(activity, R.string.form_not_found);
+            showShortToast(ctx, R.string.form_not_found);
         }
     }
 

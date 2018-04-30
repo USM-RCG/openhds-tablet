@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import org.openhds.mobile.R;
 import org.openhds.mobile.navconfig.NavigatorConfig;
 import org.openhds.mobile.navconfig.NavigatorModule;
+import org.openhds.mobile.navconfig.forms.Binding;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,6 +56,16 @@ public class ConfigUtils {
             }
         }
         return actives;
+    }
+
+    public static Collection<NavigatorModule> getActiveModuleForBinding(Context ctx, Binding binding) {
+        List<NavigatorModule> modules = new ArrayList<>();
+        for (NavigatorModule module : getActiveModules(ctx)) {
+            if (module.getBindings().containsKey(binding.getName())) {
+                modules.add(module);
+            }
+        }
+        return modules;
     }
 
     public static String getAppName(Context context) {

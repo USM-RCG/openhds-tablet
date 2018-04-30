@@ -202,5 +202,6 @@
     <string name="http_client_error">Solicitud fallida debido a un error del cliente</string>
     <string name="http_server_error">Solicitud fallida debido a un error del servidor</string>
     <string name="unknown_error">Error desconocido</string>
+    <string name="form_load_failed">Error al cargar formulario</string>
 
 </resources>
