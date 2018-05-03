@@ -1,6 +1,5 @@
 package org.openhds.mobile.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,10 +31,10 @@ public class FormSelectionFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof FormSelectionListener) {
-            listener = (FormSelectionListener)activity;
+    public void onAttach(Context ctx) {
+        super.onAttach(ctx);
+        if (ctx instanceof FormSelectionListener) {
+            listener = (FormSelectionListener)ctx;
         }
     }
 

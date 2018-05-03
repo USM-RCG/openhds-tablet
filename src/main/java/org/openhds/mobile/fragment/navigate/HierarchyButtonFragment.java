@@ -1,6 +1,6 @@
 package org.openhds.mobile.fragment.navigate;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -46,10 +46,10 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 	}
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		if (activity instanceof HierarchyButtonListener) {
-			listener = (HierarchyButtonListener)activity;
+	public void onAttach(Context ctx) {
+		super.onAttach(ctx);
+		if (ctx instanceof HierarchyButtonListener) {
+			listener = (HierarchyButtonListener)ctx;
 		}
 	}
 

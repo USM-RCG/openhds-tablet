@@ -5,7 +5,7 @@ import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 
 import org.openhds.mobile.R;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -29,10 +29,10 @@ public class DetailToggleFragment extends Fragment implements OnClickListener {
 	}
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		if (activity instanceof DetailToggleListener) {
-			listener = (DetailToggleListener)activity;
+	public void onAttach(Context ctx) {
+		super.onAttach(ctx);
+		if (ctx instanceof DetailToggleListener) {
+			listener = (DetailToggleListener)ctx;
 		}
 	}
 

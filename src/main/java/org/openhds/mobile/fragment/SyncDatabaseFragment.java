@@ -1,6 +1,5 @@
 package org.openhds.mobile.fragment;
 
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -57,16 +56,16 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context ctx) {
+        super.onAttach(ctx);
         observer = new ContentObserver(new Handler()) {
             @Override
             public void onChange(boolean selfChange) {
                 updateStatus();
             }
         };
-        activity.getContentResolver().registerContentObserver(OpenHDS.CONTENT_BASE_URI, false, observer);
-        activity.startService(new Intent(activity, OfflineDbService.class));
+        ctx.getContentResolver().registerContentObserver(OpenHDS.CONTENT_BASE_URI, false, observer);
+        ctx.startService(new Intent(ctx, OfflineDbService.class));
     }
 
     @Override
