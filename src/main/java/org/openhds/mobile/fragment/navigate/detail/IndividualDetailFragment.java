@@ -40,12 +40,12 @@ public class IndividualDetailFragment extends DetailFragment {
     }
 
     private void setBannerText(String text) {
-        TextView banner = (TextView) detailContainer.findViewById(R.id.individual_detail_frag_extid);
+        TextView banner = detailContainer.findViewById(R.id.individual_detail_frag_extid);
         banner.setText(text);
     }
 
     private void rebuildPersonalDetails(Individual individual) {
-        LinearLayout container = (LinearLayout) detailContainer.findViewById(R.id.individual_detail_frag_personal_info);
+        LinearLayout container = detailContainer.findViewById(R.id.individual_detail_frag_personal_info);
         container.removeAllViews();
         addTextView(container, R.string.individual_full_name_label, individual.getFirstName() + " " + individual.getLastName());
         addTextView(container, R.string.individual_other_names_label, individual.getOtherNames());
@@ -66,7 +66,7 @@ public class IndividualDetailFragment extends DetailFragment {
     }
 
     private void rebuildContactDetails(Individual individual) {
-        LinearLayout container = (LinearLayout) detailContainer.findViewById(R.id.individual_detail_frag_contact_info);
+        LinearLayout container = detailContainer.findViewById(R.id.individual_detail_frag_contact_info);
         container.removeAllViews();
         addTextView(container, R.string.individual_personal_phone_number_label, individual.getPhoneNumber());
         addTextView(container, R.string.individual_other_phone_number_label, individual.getOtherPhoneNumber());

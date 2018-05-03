@@ -31,7 +31,7 @@ public class SyncHistoryFragment extends Fragment {
 
         View graphView = inflater.inflate(R.layout.sync_history_fragment, container, false);
 
-        plot = (XYPlot) graphView.findViewById(R.id.sync_history_plot);
+        plot = graphView.findViewById(R.id.sync_history_plot);
 
         DatabaseAdapter db = DatabaseAdapter.getInstance(getActivity());
 

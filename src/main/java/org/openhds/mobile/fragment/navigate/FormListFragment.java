@@ -57,8 +57,8 @@ public class FormListFragment extends Fragment {
         Activity activity = getActivity();
         adapter = new FormInstanceAdapter(activity, R.id.form_instance_list_item, new ArrayList<FormInstance>());
         View layout = inflater.inflate(R.layout.form_list_fragment, container, false);
-        headerView = (TextView) layout.findViewById(R.id.form_list_header);
-        listView = (ListView) layout.findViewById(R.id.form_list);
+        headerView = layout.findViewById(R.id.form_list_header);
+        listView = layout.findViewById(R.id.form_list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new ClickListener());
         registerForContextMenu(listView);

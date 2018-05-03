@@ -45,11 +45,11 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.sync_database_fragment, container, false);
-        lastUpdated = (TextView) view.findViewById(R.id.sync_updated_column);
-        fingerprint = (TextView) view.findViewById(R.id.sync_fingerprint_column);
-        checkButton = (Button) view.findViewById(R.id.sync_check_button);
+        lastUpdated = view.findViewById(R.id.sync_updated_column);
+        fingerprint = view.findViewById(R.id.sync_fingerprint_column);
+        checkButton = view.findViewById(R.id.sync_check_button);
         checkButton.setOnClickListener(this);
-        updateButton = (Button) view.findViewById(R.id.sync_update_button);
+        updateButton = view.findViewById(R.id.sync_update_button);
         updateButton.setOnClickListener(this);
         updateStatus();
         return view;

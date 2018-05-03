@@ -51,7 +51,7 @@ public class DataSelectionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.data_selection_fragment, container, false);
-        listView = (ListView) viewGroup.findViewById(R.id.data_fragment_listview);
+        listView = viewGroup.findViewById(R.id.data_fragment_listview);
         listView.setOnItemClickListener(new DataClickListener());
         registerForContextMenu(listView);
         return viewGroup;

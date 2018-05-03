@@ -34,14 +34,14 @@ public class LayoutUtils {
         View view = activity.getLayoutInflater().inflate(R.layout.generic_textview_button, null);
         container.addView(view);
 
-        TextView textView = (TextView) view.findViewById(R.id.generic_button_description);
+        TextView textView = view.findViewById(R.id.generic_button_description);
         if (descriptionId > 0) {
             textView.setText(descriptionId);
         } else {
             textView.setVisibility(View.GONE);
         }
 
-        Button button = (Button) view.findViewById(R.id.generic_button);
+        Button button = view.findViewById(R.id.generic_button);
         button.setText(buttonNameId);
         button.setTag(buttonTag);
         button.setOnClickListener(listener);
@@ -80,9 +80,9 @@ public class LayoutUtils {
                                                 String secondaryText, Map<Integer, String> stringsPayload,
                                                 Map<Integer, Integer> stringsIdsPayload, boolean centerText) {
 
-        TextView primary = (TextView) layout.findViewById(R.id.primary_text);
-        TextView secondary = (TextView) layout.findViewById(R.id.secondary_text);
-        LinearLayout payLoadContainer = (LinearLayout) layout.findViewById(R.id.pay_load_container);
+        TextView primary = layout.findViewById(R.id.primary_text);
+        TextView secondary = layout.findViewById(R.id.secondary_text);
+        LinearLayout payLoadContainer = layout.findViewById(R.id.pay_load_container);
 
         if (primaryText == null) {
             primary.setVisibility(View.GONE);
@@ -174,9 +174,9 @@ public class LayoutUtils {
     public static void configureTextWithValueAndLabel(RelativeLayout layout, int labelId, String valueText,
                                                       int labelColorId, int valueColorId, int missingColorId) {
 
-        TextView labelTextView = (TextView) layout.findViewById(R.id.label_text);
-        TextView delimiterTextView = (TextView) layout.findViewById(R.id.delimiter_text);
-        TextView valueTextView = (TextView) layout.findViewById(R.id.value_text);
+        TextView labelTextView = layout.findViewById(R.id.label_text);
+        TextView delimiterTextView = layout.findViewById(R.id.delimiter_text);
+        TextView valueTextView = layout.findViewById(R.id.value_text);
 
         labelTextView.setText(labelId);
         valueTextView.setText(valueText);
@@ -222,7 +222,7 @@ public class LayoutUtils {
 
             // Set form name based on its embedded binding
             String formTypeName = getBinding(data) != null? getBinding(data).getLabel() : instance.getFormName();
-            TextView formTypeView = (TextView) view.findViewById(R.id.form_instance_list_type);
+            TextView formTypeView = view.findViewById(R.id.form_instance_list_type);
             formTypeView.setText(formTypeName);
 
             // Extract and set values contained within the form instance

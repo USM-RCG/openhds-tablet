@@ -51,7 +51,7 @@ public class FormSelectionFragment extends Fragment {
 
     public void createFormButtons(List<Launcher> values) {
         formListAdapter = new FormSelectionListAdapter(getActivity(), R.layout.generic_list_item_white_text, values);
-        ListView listView = (ListView) getActivity().findViewById(R.id.form_fragment_listview);
+        ListView listView = getActivity().findViewById(R.id.form_fragment_listview);
         listView.setAdapter(formListAdapter);
         listView.setOnItemClickListener(new FormClickListener());
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)listView.getLayoutParams();

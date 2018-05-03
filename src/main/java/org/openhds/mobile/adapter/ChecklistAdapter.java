@@ -57,7 +57,7 @@ public class ChecklistAdapter extends ArrayAdapter<FormInstance> {
         LayoutUtils.configureFormListItem(getContext(), convertView, instance);
 
         // add callback when the form instance info is pressed
-        ViewGroup itemArea = (ViewGroup) convertView.findViewById(R.id.form_instance_item_area);
+        ViewGroup itemArea = convertView.findViewById(R.id.form_instance_item_area);
         itemArea.setTag(instance);
         itemArea.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +70,7 @@ public class ChecklistAdapter extends ArrayAdapter<FormInstance> {
         });
 
         // add callback when the checkbox is checked
-        CheckBox checkBoxView = (CheckBox) convertView.findViewById(R.id.form_instance_check_box);
+        CheckBox checkBoxView = convertView.findViewById(R.id.form_instance_check_box);
         checkBoxView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

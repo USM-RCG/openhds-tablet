@@ -49,7 +49,7 @@ public class FavoritesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View inflated = inflater.inflate(R.layout.favorites_fragment, container, false);
-        list = (ListView) inflated.findViewById(R.id.favorites_list);
+        list = inflated.findViewById(R.id.favorites_list);
         dataAdapter = new FavoriteAdapter(getActivity());
         list.setAdapter(dataAdapter);
         list.setOnItemClickListener(new ClickListener());

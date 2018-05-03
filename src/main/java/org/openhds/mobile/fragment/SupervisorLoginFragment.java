@@ -41,14 +41,14 @@ public class SupervisorLoginFragment extends Fragment implements OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.generic_login_fragment, container, false);
-        TextView title = (TextView) v.findViewById(R.id.titleTextView);
+        TextView title = v.findViewById(R.id.titleTextView);
         title.setText(R.string.supervisor_login);
 
-        usernameText = (EditText) v.findViewById(R.id.usernameEditText);
-        passwordText = (EditText) v.findViewById(R.id.passwordEditText);
+        usernameText = v.findViewById(R.id.usernameEditText);
+        passwordText = v.findViewById(R.id.passwordEditText);
         usernameText.setOnKeyListener(this);
         passwordText.setOnKeyListener(this);
-        Button loginButton = (Button) v.findViewById(R.id.loginButton);
+        Button loginButton = v.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
         databaseAdapter = DatabaseAdapter.getInstance(getActivity());
 

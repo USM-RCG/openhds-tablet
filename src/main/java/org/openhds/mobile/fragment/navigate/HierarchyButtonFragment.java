@@ -63,8 +63,8 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View fragmentLayout = inflater.inflate(R.layout.hierarchy_button_fragment, container, false);
-		scrollView = (ScrollView)fragmentLayout.findViewById(R.id.hierbutton_scroll);
-		ViewGroup buttonLayout = (ViewGroup) fragmentLayout.findViewById(R.id.hierbutton_layout);
+		scrollView = fragmentLayout.findViewById(R.id.hierbutton_scroll);
+		ViewGroup buttonLayout = fragmentLayout.findViewById(R.id.hierbutton_layout);
 
 		levelViews = new HashMap<>();
 

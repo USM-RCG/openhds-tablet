@@ -37,18 +37,18 @@ public class FieldWorkerLoginFragment extends Fragment implements OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.generic_login_fragment, container, false);
-        TextView title = (TextView) v.findViewById(R.id.titleTextView);
+        TextView title = v.findViewById(R.id.titleTextView);
         title.setText(R.string.fieldworker_login);
 
-        usernameEditText = (EditText) v.findViewById(R.id.usernameEditText);
-        passwordEditText = (EditText) v.findViewById(R.id.passwordEditText);
+        usernameEditText = v.findViewById(R.id.usernameEditText);
+        passwordEditText = v.findViewById(R.id.passwordEditText);
         usernameEditText.setOnKeyListener(this);
         passwordEditText.setOnKeyListener(this);
 
         // Field worker user names are all-caps, this locks soft keyboard into caps mode
         usernameEditText.setInputType(TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_CAP_CHARACTERS);
 
-        Button loginButton = (Button) v.findViewById(R.id.loginButton);
+        Button loginButton = v.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
         return v;
     }
