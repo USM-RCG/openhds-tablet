@@ -53,7 +53,7 @@ public class ChecklistFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fragmentLayout = (RelativeLayout) inflater.inflate(R.layout.supervisor_edit_form_fragment_layout, container, false);
-        listView = (ListView) fragmentLayout.findViewById(R.id.checklist_fragment_listview);
+        listView = fragmentLayout.findViewById(R.id.checklist_fragment_listview);
         setupApproveMode();
         deleteConfirmDialog = new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.delete_forms_dialog_warning)
@@ -97,13 +97,13 @@ public class ChecklistFragment extends Fragment {
         listView.setAdapter(adapter);
 
         if (null == headerView) {
-            headerView = (TextView) fragmentLayout.findViewById(R.id.checklist_fragment_listview_header);
+            headerView = fragmentLayout.findViewById(R.id.checklist_fragment_listview_header);
         }
         headerView.setText(R.string.delete_unsent_forms);
         headerView.setBackgroundResource(R.drawable.form_list_header_red);
 
         if (null == primaryListButton) {
-            primaryListButton = (Button) fragmentLayout.findViewById(R.id.checklist_fragment_primary_button);
+            primaryListButton = fragmentLayout.findViewById(R.id.checklist_fragment_primary_button);
             primaryListButton.setOnClickListener(new ButtonListener());
         }
         primaryListButton.setText(R.string.delete_button_label);
@@ -112,7 +112,7 @@ public class ChecklistFragment extends Fragment {
         primaryListButton.setBackgroundResource(R.drawable.form_selector_red);
 
         if (null == secondaryListButton) {
-            secondaryListButton = (Button) fragmentLayout.findViewById(R.id.checklist_fragment_secondary_button);
+            secondaryListButton = fragmentLayout.findViewById(R.id.checklist_fragment_secondary_button);
             secondaryListButton.setOnClickListener(new ButtonListener());
         }
 
@@ -130,13 +130,13 @@ public class ChecklistFragment extends Fragment {
         listView.setAdapter(adapter);
 
         if (null == headerView) {
-            headerView = (TextView) fragmentLayout.findViewById(R.id.checklist_fragment_listview_header);
+            headerView = fragmentLayout.findViewById(R.id.checklist_fragment_listview_header);
         }
         headerView.setText(R.string.approve_unsent_forms);
         headerView.setBackgroundResource(R.drawable.form_list_header);
 
         if (null == primaryListButton) {
-            primaryListButton = (Button) fragmentLayout.findViewById(R.id.checklist_fragment_primary_button);
+            primaryListButton = fragmentLayout.findViewById(R.id.checklist_fragment_primary_button);
             primaryListButton.setOnClickListener(new ButtonListener());
         }
 
@@ -146,7 +146,7 @@ public class ChecklistFragment extends Fragment {
         primaryListButton.setBackgroundResource(R.drawable.form_selector);
 
         if (null == secondaryListButton) {
-            secondaryListButton = (Button) fragmentLayout.findViewById(R.id.checklist_fragment_secondary_button);
+            secondaryListButton = fragmentLayout.findViewById(R.id.checklist_fragment_secondary_button);
             secondaryListButton.setOnClickListener(new ButtonListener());
         }
 
