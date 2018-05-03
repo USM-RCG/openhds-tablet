@@ -23,4 +23,7 @@
     <dimen name="midcol_corner_radius">20dp</dimen>
     <dimen name="midcol_padding">10dp</dimen>
 
+    <dimen name="list_divider_height">5dp</dimen>
+    <dimen name="button_list_divider_height">10dp</dimen>
+
 </resources>

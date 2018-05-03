@@ -6,11 +6,11 @@
               android:orientation="vertical"
               android:tag="portrait" >
 
-
     <LinearLayout
             android:layout_height="0px"
             android:layout_width="match_parent"
-            android:layout_weight="5">
+            android:layout_weight="5"
+        android:baselineAligned="false">
 
         <LinearLayout
                 android:id="@+id/supervisor_activity_options"

@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    >
+    tools:background="@color/Blue">
 
     <TextView
         android:id="@+id/primary_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:text="Bob Bobson"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+        tools:text="Bob Bobson" />
 
     <TextView
         android:id="@+id/secondary_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/primary_text"
-        android:text="b12345"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        tools:text="b12345" />
 
     <LinearLayout
         android:id="@+id/pay_load_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/secondary_text"
-        android:orientation="vertical"
-        >
-    </LinearLayout>
-
+        android:orientation="vertical" />
 
 </RelativeLayout>

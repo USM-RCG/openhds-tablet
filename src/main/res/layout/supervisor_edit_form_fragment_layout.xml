@@ -1,62 +1,54 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent" >
-
-
-    <Button
-            android:layout_marginBottom="20dp"
-            android:id="@+id/checklist_fragment_secondary_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignTop="@+id/checklist_fragment_primary_button"
-            android:layout_toRightOf="@+id/view"
-            android:background="@drawable/form_selector"
-            android:textColor="@color/White"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"/>
-
-    <View
-            android:layout_marginBottom="20dp"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/view"
-            android:layout_width="5dp"
-            android:layout_height="1dp"
-            android:layout_centerHorizontal="true" />
-
-    <Button
-            android:layout_marginBottom="20dp"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/checklist_fragment_primary_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/view"
-            android:background="@drawable/form_selector"
-            android:textColor="@color/White"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"/>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
-            android:id="@+id/checklist_fragment_listview_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
-            android:background="@drawable/form_list_header"/>
+        android:id="@+id/checklist_fragment_listview_header"
+        style="@style/ListHeader"
+        tools:text="Sample Heading" />
 
     <ListView
-            android:id="@+id/checklist_fragment_listview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/checklist_fragment_listview_header"
-            android:dividerHeight="5dp"
-            android:divider="@android:color/transparent"
-            android:listSelector="@android:color/transparent"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_above="@+id/checklist_fragment_primary_button"/>
+        android:id="@+id/checklist_fragment_listview"
+        style="@style/FormList"
+        android:layout_above="@+id/checklist_fragment_primary_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/checklist_fragment_listview_header"
+        android:layout_marginBottom="5dp" />
 
+    <Button
+        android:id="@+id/checklist_fragment_secondary_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/checklist_fragment_primary_button"
+        android:layout_toEndOf="@+id/view"
+        android:layout_toRightOf="@+id/view"
+        android:background="@drawable/form_selector"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+        tools:text="Primary Button" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="5dp"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/checklist_fragment_primary_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/view"
+        android:layout_toStartOf="@+id/view"
+        android:background="@drawable/form_selector"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+        tools:text="Secondary Button" />
 
 </RelativeLayout>

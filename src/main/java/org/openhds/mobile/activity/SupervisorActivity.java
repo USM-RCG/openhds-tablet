@@ -44,7 +44,7 @@ public class SupervisorActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setTitle(R.string.supervisor_home);
-        setContentView(R.layout.supervisor_main);
+        setContentView(R.layout.supervisor_activity);
 
         LinearLayout supervisorButtonLayout = findViewById(R.id.supervisor_activity_options);
         ButtonClickListener buttonClickListener = new ButtonClickListener();

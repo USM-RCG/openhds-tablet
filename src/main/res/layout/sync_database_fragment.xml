@@ -7,7 +7,7 @@
     <TextView
             android:id="@+id/sync_description"
             android:text="@string/sync_database_description"
-            android:padding="5dip"
+            android:padding="5dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -21,13 +21,12 @@
             android:shrinkColumns="1">
 
         <TableRow android:id="@+id/sync_summary_header"
-                  android:background="@color/LighterGray"
-                  android:layout_marginBottom="10dp">
+                  android:background="@color/LighterGray">
 
             <TextView android:id="@+id/sync_updated_column_header"
                     android:text="@string/sync_database_column_updated"
                     android:layout_column="1"
-                    android:padding="5dip"
+                    android:padding="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -35,7 +34,7 @@
             <TextView android:id="@+id/sync_fingerprint_column_header"
                     android:text="@string/sync_database_column_fingerprint"
                     android:layout_column="4"
-                    android:padding="5dip"
+                    android:padding="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -48,7 +47,7 @@
             <TextView android:id="@+id/sync_updated_column"
                       android:text="@string/sync_database_updated_never"
                       android:layout_column="1"
-                      android:padding="5dip"
+                      android:padding="5dp"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -56,7 +55,7 @@
             <TextView android:id="@+id/sync_fingerprint_column"
                       android:text="@string/sync_database_no_fingerprint"
                       android:layout_column="4"
-                      android:padding="5dip"
+                      android:padding="5dp"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_gravity="center_horizontal"
@@ -67,9 +66,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="5dp"
             android:background="@color/LighterGray"
-            android:padding="10dp"
+            android:padding="5dp"
             android:gravity="center">
 
             <Button
@@ -77,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button"
-                android:padding="10dp"
+                android:padding="@dimen/button_padding"
                 android:text="@string/sync_database_button_check"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
@@ -86,12 +84,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button"
-                android:padding="10dp"
+                android:padding="@dimen/button_padding"
                 android:text="@string/sync_database_button_update"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:enabled="false"
-                android:layout_marginStart="15dp"
-                android:layout_marginLeft="15dp"/>
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"/>
 
         </LinearLayout>
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,23 +8,16 @@
 
     <TextView
         android:id="@+id/form_list_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
-        android:background="@drawable/form_list_header"
-        android:padding="5dp"
+        style="@style/ListHeader"
         android:visibility="gone"
-        android:layout_marginBottom="5dp"/>
+        tools:visibility="visible"
+        tools:text="Sample Heading"/>
 
     <ListView
         android:id="@+id/form_list"
-        android:layout_width="match_parent"
+        style="@style/FormList"
         android:layout_height="0dp"
         android:layout_weight="4"
-        android:orientation="vertical"
-        android:listSelector="@android:color/transparent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="5dp"/>
+        android:orientation="vertical" />
 
 </LinearLayout>

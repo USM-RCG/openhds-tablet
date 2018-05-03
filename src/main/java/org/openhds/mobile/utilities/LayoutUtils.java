@@ -194,14 +194,6 @@ public class LayoutUtils {
         }
     }
 
-
-    // Create a new edit text with the given hint (String resource id) and tag.
-    public static EditText makeEditText(Activity activity, int hintId, String tag) {
-        EditText editText = (EditText) activity.getLayoutInflater().inflate(R.layout.generic_edit_text, null);
-        configureEditText(editText, hintId, tag);
-        return editText;
-    }
-
     // Pass new data to an edit text that was created with makeEditText().
     public static void configureEditText(EditText editText, int hintId, String tag) {
         editText.setHint(hintId);

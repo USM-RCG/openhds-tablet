@@ -10,24 +10,18 @@
         android:layout_width="0px"
         android:layout_height="match_parent"
         android:layout_weight="4"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp">
-
+        android:layout_margin="10dp">
         <fragment
             android:name="org.openhds.mobile.fragment.navigate.FavoritesFragment"
             android:id="@+id/favorites_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-
     </FrameLayout>
 
     <LinearLayout
         android:id="@+id/portal_middle_column"
         android:layout_width="0px"
         android:layout_height="match_parent"
-
         android:layout_weight="5"
         android:baselineAligned="false"
         android:gravity="center_horizontal"
@@ -40,17 +34,12 @@
         android:layout_width="0px"
         android:layout_height="match_parent"
         android:layout_weight="4"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp">
-
+        android:layout_margin="10dp">
         <fragment
             android:name="org.openhds.mobile.fragment.navigate.FormListFragment"
             android:id="@+id/portal_form_list"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"/>
-
     </FrameLayout>
 
 </LinearLayout>

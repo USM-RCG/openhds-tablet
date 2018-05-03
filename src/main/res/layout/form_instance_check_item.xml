@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:id="@+id/form_instance_check_item_orange">
+    android:id="@+id/form_instance_check_item_orange"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
     <FrameLayout
-            android:layout_width="0px"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:id="@+id/form_instance_item_area">
-
-        <include layout="@layout/form_instance_list_item"/>
-
+        android:id="@+id/form_instance_item_area"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1">
+        <include layout="@layout/form_instance_list_item" />
     </FrameLayout>
 
     <CheckBox
-            android:id="@+id/form_instance_check_box"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:focusable="false"
-            android:saveEnabled="false"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"/>
+        android:id="@+id/form_instance_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="5dp"
+        android:focusable="false"
+        android:saveEnabled="false" />
 
 </LinearLayout>

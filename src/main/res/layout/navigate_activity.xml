@@ -58,20 +58,18 @@
             android:id="@+id/right_column_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <fragment
                 android:name="org.openhds.mobile.fragment.FormSelectionFragment"
                 android:id="@+id/form_selection_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="left|top"/>
+                android:layout_gravity="start|top"/>
         </FrameLayout>
 
         <FrameLayout
             android:id="@+id/right_column_middle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </FrameLayout>
+            android:layout_height="wrap_content" />
 
         <FrameLayout
             android:id="@+id/right_column_bottom"

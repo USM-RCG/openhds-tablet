@@ -8,4 +8,23 @@
     <style name="SplashTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
+    <style name="FormList">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">@dimen/list_divider_height</item>
+        <item name="android:listSelector">@android:color/transparent</item>
+    </style>
+    <style name="FormButtonList" parent="FormList">
+        <item name="android:dividerHeight">@dimen/button_list_divider_height</item>
+    </style>
+    <style name="ListHeader">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/form_list_header</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/heading_padding</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large.Inverse</item>
+        <item name="android:layout_marginBottom">@dimen/list_divider_height</item>
+    </style>
 </resources>

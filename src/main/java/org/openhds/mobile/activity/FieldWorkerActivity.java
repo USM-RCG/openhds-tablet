@@ -41,7 +41,7 @@ public class FieldWorkerActivity extends AppCompatActivity implements OnClickLis
         super.onCreate(savedInstanceState);
 
         // basic view setup
-        setContentView(R.layout.portal_activity);
+        setContentView(R.layout.fieldworker_activity);
         setTitle(getText(R.string.field_worker_home));
 
         // fill the middle column with a button for each available activity

@@ -1,38 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/form_instance_list_item"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp" >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/form_instance_list_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="@color/RedOrange">
 
     <TextView
-            android:id="@+id/form_instance_list_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="type"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
-            android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
-            android:layout_alignParentEnd="false"/>
+        android:id="@+id/form_instance_list_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        tools:text="Form Type" />
 
     <TextView
-            android:id="@+id/form_instance_list_fieldworker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="fieldworker"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
-            android:layout_alignParentTop="true" android:layout_alignParentRight="true"/>
-    <TextView android:id="@+id/form_instance_list_date" android:layout_width="wrap_content"
-              android:layout_height="wrap_content" android:text="date"
-              android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
-              android:layout_alignParentBottom="false" android:layout_below="@+id/form_instance_list_id"
-              android:layout_alignParentLeft="true"/>
-    <TextView android:id="@+id/form_instance_list_id" android:layout_width="wrap_content"
-              android:layout_height="wrap_content" android:text="Id"
-              android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
-              android:layout_alignParentRight="false" android:layout_alignParentTop="false"
-              android:layout_alignParentLeft="true" android:layout_below="@+id/form_instance_list_type"/>
+        android:id="@+id/form_instance_list_fieldworker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        tools:text="FWID" />
+
+    <TextView
+        android:id="@+id/form_instance_list_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/form_instance_list_id"
+        tools:text="Date/Time" />
+
+    <TextView
+        android:id="@+id/form_instance_list_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="false"
+        android:layout_below="@+id/form_instance_list_type"
+        tools:text="Identifier" />
 
 </RelativeLayout>
