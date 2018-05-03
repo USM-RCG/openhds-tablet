@@ -37,4 +37,22 @@
         <item name="android:background">@drawable/form_selector</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large.Inverse</item>
     </style>
+    <style name="FieldworkerSideColumn">
+        <item name="android:layout_width">0px</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">4</item>
+        <item name="android:layout_margin">10dp</item>
+    </style>
+    <style name="FieldworkerMiddleColumn">
+        <item name="android:layout_width">0px</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">5</item>
+        <item name="android:background">@drawable/gray_middle_column</item>
+    </style>
+    <style name="SupervisorSideColumn" parent="FieldworkerSideColumn">
+        <item name="android:layout_weight">3</item>
+    </style>
+    <style name="SupervisorMiddleColumn" parent="FieldworkerMiddleColumn">
+        <item name="android:layout_weight">3</item>
+    </style>
 </resources>

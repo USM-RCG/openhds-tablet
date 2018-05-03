@@ -8,11 +8,8 @@
     android:tag="landscape">
 
     <LinearLayout
-        android:layout_width="0px"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        style="@style/SupervisorSideColumn"
+        android:orientation="vertical">
         <fragment
             android:id="@+id/supervisor_sync_fragment"
             android:name="org.openhds.mobile.fragment.SyncDatabaseFragment"
@@ -27,20 +24,14 @@
     </LinearLayout>
 
     <LinearLayout
+        style="@style/SupervisorMiddleColumn"
         android:id="@+id/supervisor_activity_options"
-        android:layout_width="0px"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:background="@drawable/gray_middle_column"
         android:baselineAligned="false"
         android:orientation="vertical" />
 
     <FrameLayout
         android:id="@+id/supervisor_edit_form_container"
-        android:layout_width="0px"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:layout_margin="10dp">
+        style="@style/SupervisorSideColumn">
         <fragment
             android:id="@+id/supervisor_checklist_fragment"
             android:name="org.openhds.mobile.fragment.ChecklistFragment"

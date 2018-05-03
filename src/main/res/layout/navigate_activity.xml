@@ -8,11 +8,8 @@
 
     <LinearLayout
         android:id="@+id/left_column"
-        android:layout_width="0px"
-        android:layout_height="match_parent"
-        android:layout_weight="4"
-        android:orientation="vertical"
-        android:layout_margin="10dp" >
+        style="@style/FieldworkerSideColumn"
+        android:orientation="vertical">
 
         <FrameLayout
             android:id="@+id/left_column_top"
@@ -41,18 +38,12 @@
 
     <FrameLayout
         android:id="@+id/middle_column"
-        android:layout_width="0px"
-        android:layout_height="match_parent"
-        android:layout_weight="5"
-        android:background="@drawable/gray_middle_column"/>
+        style="@style/FieldworkerMiddleColumn"/>
 
     <LinearLayout
         android:id="@+id/right_column"
-        android:layout_width="0px"
-        android:layout_height="match_parent"
-        android:layout_weight="4"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        style="@style/FieldworkerSideColumn"
+        android:orientation="vertical">
 
         <FrameLayout
             android:id="@+id/right_column_top"
@@ -65,11 +56,6 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="start|top"/>
         </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/right_column_middle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
         <FrameLayout
             android:id="@+id/right_column_bottom"
