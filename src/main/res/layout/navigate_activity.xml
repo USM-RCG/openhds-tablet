@@ -7,12 +7,10 @@
     android:orientation="horizontal" >
 
     <LinearLayout
-        android:id="@+id/left_column"
         style="@style/FieldworkerSideColumn"
         android:orientation="vertical">
 
         <FrameLayout
-            android:id="@+id/left_column_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <fragment
@@ -23,7 +21,6 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/left_column_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp">
@@ -41,12 +38,10 @@
         style="@style/FieldworkerMiddleColumn"/>
 
     <LinearLayout
-        android:id="@+id/right_column"
         style="@style/FieldworkerSideColumn"
         android:orientation="vertical">
 
         <FrameLayout
-            android:id="@+id/right_column_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <fragment
@@ -58,7 +53,6 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/right_column_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <fragment

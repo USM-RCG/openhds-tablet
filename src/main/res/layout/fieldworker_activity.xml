@@ -6,7 +6,6 @@
     android:orientation="horizontal">
 
     <FrameLayout
-        android:id="@+id/portal_left_column"
         style="@style/FieldworkerSideColumn">
         <fragment
             android:name="org.openhds.mobile.fragment.navigate.FavoritesFragment"
@@ -24,7 +23,6 @@
         />
 
     <FrameLayout
-        android:id="@+id/portal_right_column"
         style="@style/FieldworkerSideColumn">
         <fragment
             android:name="org.openhds.mobile.fragment.navigate.FormListFragment"

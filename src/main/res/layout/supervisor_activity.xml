@@ -30,7 +30,6 @@
         android:orientation="vertical" />
 
     <FrameLayout
-        android:id="@+id/supervisor_edit_form_container"
         style="@style/SupervisorSideColumn">
         <fragment
             android:id="@+id/supervisor_checklist_fragment"
