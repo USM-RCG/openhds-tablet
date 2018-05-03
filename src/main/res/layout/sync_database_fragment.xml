@@ -72,21 +72,13 @@
 
             <Button
                 android:id="@+id/sync_check_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button"
-                android:padding="@dimen/button_padding"
-                android:text="@string/sync_database_button_check"
-                android:textAppearance="?android:attr/textAppearanceLarge"/>
+                style="@style/Button"
+                android:text="@string/sync_database_button_check"/>
 
             <Button
                 android:id="@+id/sync_update_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button"
-                android:padding="@dimen/button_padding"
+                style="@style/Button"
                 android:text="@string/sync_database_button_update"
-                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:enabled="false"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"/>

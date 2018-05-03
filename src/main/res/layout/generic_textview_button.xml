@@ -17,13 +17,10 @@
 
     <Button
         android:id="@+id/generic_button"
+        style="@style/Button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_below="@id/generic_button_description"
         android:gravity="center"
-        android:padding="@dimen/button_padding"
-        android:background="@drawable/button"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         tools:text="Button Text"/>
 
 </RelativeLayout>

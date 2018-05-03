@@ -37,11 +37,8 @@
 
         <Button
             android:id="@+id/loginButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Button"
             android:text="@string/login_btn"
-            android:background="@drawable/button"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:layout_gravity="end"/>
 
     </LinearLayout>
