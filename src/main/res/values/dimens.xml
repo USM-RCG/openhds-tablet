@@ -46,4 +46,6 @@
 
     <dimen name="toggle_fragment_spacing">10dp</dimen>
 
+    <dimen name="port_supervisor_pane_spacing">10dp</dimen>
+
 </resources>
