@@ -32,8 +32,6 @@ public class FieldWorkerActivity extends AppCompatActivity implements OnClickLis
 
     public static final String ACTIVITY_MODULE_EXTRA = "ACTIVITY_MODULE_EXTRA";
 
-    public static final int MODULE_SPACING = 5;
-
     private FormListFragment formListFragment;
 
     @Override
@@ -49,9 +47,8 @@ public class FieldWorkerActivity extends AppCompatActivity implements OnClickLis
         for (NavigatorModule module : ConfigUtils.getActiveModules(this)) {
             RelativeLayout layout = makeTextWithPayload(this, module.getLaunchLabel(), module.getLaunchDescription(),
                     module.getName(), this, activitiesLayout, R.drawable.data_selector, null, null, true);
-            layout.setPadding(10, 10, 10, 10);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-            params.setMargins(0, 0, 0, MODULE_SPACING);
+            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.module_button_spacing));
         }
 
         formListFragment = (FormListFragment) getSupportFragmentManager().findFragmentById(R.id.portal_form_list);

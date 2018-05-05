@@ -6,13 +6,10 @@
 
     <TextView
         android:id="@+id/generic_button_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/ButtonDescription"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="30dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:text="Description Text"/>
 
     <Button

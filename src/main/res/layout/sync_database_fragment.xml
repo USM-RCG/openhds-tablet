@@ -1,87 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
-            android:id="@+id/sync_description"
-            android:text="@string/sync_database_description"
-            android:padding="5dp"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:id="@+id/sync_description"
+        style="@style/SyncDBHeading"
+        android:text="@string/sync_database_description" />
 
     <TableLayout
-            android:id="@+id/sync_summary_table"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:stretchColumns="1"
-            android:shrinkColumns="1">
+        android:id="@+id/sync_summary_table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:shrinkColumns="1"
+        android:stretchColumns="1">
 
-        <TableRow android:id="@+id/sync_summary_header"
-                  android:background="@color/LighterGray">
+        <TableRow
+            android:id="@+id/sync_summary_header"
+            android:background="@color/LighterGray">
 
-            <TextView android:id="@+id/sync_updated_column_header"
-                    android:text="@string/sync_database_column_updated"
-                    android:layout_column="1"
-                    android:padding="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+            <TextView
+                android:id="@+id/sync_updated_column_header"
+                style="@style/SyncDBColumn"
+                android:layout_column="1"
+                android:text="@string/sync_database_column_updated" />
 
-            <TextView android:id="@+id/sync_fingerprint_column_header"
-                    android:text="@string/sync_database_column_fingerprint"
-                    android:layout_column="4"
-                    android:padding="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+            <TextView
+                android:id="@+id/sync_fingerprint_column_header"
+                style="@style/SyncDBColumn"
+                android:layout_column="4"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/sync_database_column_fingerprint" />
 
         </TableRow>
 
         <TableRow>
 
-            <TextView android:id="@+id/sync_updated_column"
-                      android:text="@string/sync_database_updated_never"
-                      android:layout_column="1"
-                      android:padding="5dp"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:textAppearance="?android:attr/textAppearanceLarge" />
+            <TextView
+                android:id="@+id/sync_updated_column"
+                style="@style/SyncDBColumn"
+                android:layout_column="1"
+                android:text="@string/sync_database_updated_never" />
 
-            <TextView android:id="@+id/sync_fingerprint_column"
-                      android:text="@string/sync_database_no_fingerprint"
-                      android:layout_column="4"
-                      android:padding="5dp"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_gravity="center_horizontal"
-                      android:textAppearance="?android:attr/textAppearanceLarge" />
+            <TextView
+                android:id="@+id/sync_fingerprint_column"
+                style="@style/SyncDBColumn"
+                android:layout_column="4"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/sync_database_no_fingerprint" />
         </TableRow>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="@color/LighterGray"
-            android:padding="5dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:padding="@dimen/button_padding">
 
             <Button
                 android:id="@+id/sync_check_button"
                 style="@style/Button"
-                android:text="@string/sync_database_button_check"/>
+                android:text="@string/sync_database_button_check" />
 
             <Button
                 android:id="@+id/sync_update_button"
                 style="@style/Button"
-                android:text="@string/sync_database_button_update"
+                android:layout_marginLeft="@dimen/sync_button_spacing"
+                android:layout_marginStart="@dimen/sync_button_spacing"
                 android:enabled="false"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"/>
+                android:text="@string/sync_database_button_update" />
 
         </LinearLayout>
 

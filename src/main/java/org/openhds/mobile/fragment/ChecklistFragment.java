@@ -52,7 +52,7 @@ public class ChecklistFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fragmentLayout = (RelativeLayout) inflater.inflate(R.layout.supervisor_edit_form_fragment_layout, container, false);
+        fragmentLayout = (RelativeLayout) inflater.inflate(R.layout.checklist_fragment, container, false);
         listView = fragmentLayout.findViewById(R.id.checklist_fragment_listview);
         setupApproveMode();
         deleteConfirmDialog = new AlertDialog.Builder(getActivity())

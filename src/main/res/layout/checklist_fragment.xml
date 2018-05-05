@@ -15,7 +15,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@id/checklist_fragment_listview_header"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginBottom="@dimen/heading_spacing" />
 
     <Button
         android:id="@+id/checklist_fragment_secondary_button"
@@ -30,7 +30,7 @@
 
     <View
         android:id="@+id/view"
-        android:layout_width="5dp"
+        android:layout_width="@dimen/approval_button_spacing"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />

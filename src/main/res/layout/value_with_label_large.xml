@@ -6,29 +6,20 @@
 
     <CheckedTextView
         android:id="@+id/label_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        style="@style/LabelValueLargeLabel"
         tools:text="Label" />
 
     <CheckedTextView
         android:id="@+id/delimiter_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/LabelValueLargeLabel"
         android:layout_toEndOf="@id/label_text"
         android:layout_toRightOf="@id/label_text"
-        android:textSize="16sp"
-        android:textStyle="bold"
         android:text=":" />
 
     <CheckedTextView
         android:id="@+id/value_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/LabelValueLargeValue"
         android:layout_below="@id/label_text"
-        android:textSize="20sp"
-        android:textStyle="normal"
         tools:text="Value" />
 
 </RelativeLayout>

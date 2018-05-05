@@ -12,9 +12,11 @@
 
     <dimen name="heading_corner_radius">@dimen/button_corner_radius</dimen>
     <dimen name="heading_padding">@dimen/button_padding</dimen>
+    <dimen name="heading_spacing">5dp</dimen>
 
     <dimen name="detail_corner_radius">@dimen/button_corner_radius</dimen>
-    <dimen name="detail_padding">@dimen/button_padding</dimen>
+    <dimen name="detail_padding">10dp</dimen>
+    <dimen name="detail_spacing">5dp</dimen>
 
     <dimen name="form_corner_radius">@dimen/button_corner_radius</dimen>
     <dimen name="form_lr_padding">10dp</dimen>
@@ -25,5 +27,23 @@
 
     <dimen name="list_divider_height">5dp</dimen>
     <dimen name="button_list_divider_height">10dp</dimen>
+
+    <dimen name="approval_button_spacing">5dp</dimen>
+
+    <dimen name="progress_caption_spacing">4dp</dimen>
+
+    <dimen name="search_results_spacing">5dp</dimen>
+
+    <dimen name="list_icon_padding">2dp</dimen>
+
+    <dimen name="sync_history_spacing">10dp</dimen>
+
+    <dimen name="module_button_spacing">5dp</dimen>
+
+    <dimen name="sync_button_spacing">10dp</dimen>
+
+    <dimen name="instance_checkbox_padding">5dp</dimen>
+
+    <dimen name="toggle_fragment_spacing">10dp</dimen>
 
 </resources>

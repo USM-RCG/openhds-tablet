@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
         <item name="preferenceTheme">
             @style/PreferenceThemeOverlay.v14.Material
@@ -26,6 +26,12 @@
         <item name="android:padding">@dimen/heading_padding</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large.Inverse</item>
         <item name="android:layout_marginBottom">@dimen/list_divider_height</item>
+    </style>
+    <style name="ButtonDescription">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">30dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
     </style>
     <style name="Button">
         <item name="android:layout_width">wrap_content</item>
@@ -54,5 +60,124 @@
     </style>
     <style name="SupervisorMiddleColumn" parent="FieldworkerMiddleColumn">
         <item name="android:layout_weight">3</item>
+    </style>
+    <style name="FormText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium.Inverse</item>
+    </style>
+    <style name="ListItemPrimary">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large.Inverse</item>
+    </style>
+    <style name="ListItemSecondary" parent="ListItemPrimary">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium.Inverse</item>
+    </style>
+    <style name="LoginHeader">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
+    </style>
+    <style name="LoginText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ems">10</item>
+    </style>
+    <style name="DetailHeading" parent="DetailSection">
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large.Inverse</item>
+    </style>
+    <style name="DetailSection">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/detail_spacing</item>
+        <item name="android:background">@drawable/detail_fragment</item>
+    </style>
+    <style name="ProgressBarContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+    <style name="ProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="ProgressCaption">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:layout_marginTop">@dimen/progress_caption_spacing</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="SearchBox">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_toLeftOf">@+id/hierarchy_toggle</item>
+        <item name="android:layout_toStartOf" tools:targetApi="jelly_bean_mr1">@+id/hierarchy_toggle</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_alignBottom">@+id/search_button</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentStart" tools:targetApi="jelly_bean_mr1">true</item>
+        <item name="android:hint">@string/search_hint</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:inputType">textNoSuggestions</item>
+    </style>
+    <style name="SearchToggle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="SearchResultIcon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentStart" tools:targetApi="jelly_bean_mr1">true</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/search_results_spacing</item>
+        <item name="android:layout_marginRight">@dimen/search_results_spacing</item>
+        <item name="android:padding">@dimen/list_icon_padding</item>
+    </style>
+    <style name="SearchResultSecondaryText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:textAppearance">?attr/textAppearanceListItemSecondary</item>
+    </style>
+    <style name="SearchResultPrimaryText" parent="SearchResultSecondaryText">
+        <item name="android:textAppearance">?attr/textAppearanceListItem</item>
+    </style>
+    <style name="LabelValueLargeLabel" parent="LabelValueLargeValue">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="LabelValueLargeValue">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+    <style name="LabelValueSmallLabel" parent="LabelValueSmallValue">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="LabelValueSmallValue">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+    <style name="SyncDBHeading">
+        <item name="android:padding">5dp</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+    <style name="SyncDBColumn">
+        <item name="android:padding">5dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
     </style>
 </resources>

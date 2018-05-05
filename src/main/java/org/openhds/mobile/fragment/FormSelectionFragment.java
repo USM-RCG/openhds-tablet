@@ -55,7 +55,9 @@ public class FormSelectionFragment extends Fragment {
         listView.setAdapter(formListAdapter);
         listView.setOnItemClickListener(new FormClickListener());
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)listView.getLayoutParams();
-        params.setMargins(0, 0, 0, values.isEmpty()? 0 : 10);  // Add bottom margin only when we have content
+        // Add bottom margin only when we have content
+        int buttonSpacing = getResources().getDimensionPixelSize(R.dimen.button_list_divider_height);
+        params.setMargins(0, 0, 0, values.isEmpty()? 0 : buttonSpacing);
     }
 
     private class FormClickListener implements OnItemClickListener {
@@ -82,7 +84,6 @@ public class FormSelectionFragment extends Fragment {
             if (convertView == null) {
                 convertView = makeTextWithPayload(getActivity(), label, null,
                         label, null, null, R.drawable.form_selector, null, null, true);
-                convertView.setPadding(0, 10, 0, 10); // Make the buttons thicker for easier selection
             }
 
             configureTextWithPayload(getActivity(),

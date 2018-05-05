@@ -7,18 +7,14 @@
 
     <TextView
         android:id="@+id/primary_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/ListItemPrimary"
         android:layout_alignParentTop="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
         tools:text="Bob Bobson" />
 
     <TextView
         android:id="@+id/secondary_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/ListItemSecondary"
         android:layout_below="@id/primary_text"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
         tools:text="b12345" />
 
     <LinearLayout

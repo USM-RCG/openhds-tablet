@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:gravity="center">
 
@@ -12,15 +13,12 @@
 
         <TextView
             android:id="@+id/titleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            style="@style/LoginHeader"
+            tools:text="Sample Login Header"/>
 
         <EditText
             android:id="@+id/usernameEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
+            style="@style/LoginText"
             android:hint="@string/login_username"
             android:nextFocusForward="@+id/passwordEditText">
             <requestFocus />
@@ -28,9 +26,7 @@
 
         <EditText
             android:id="@+id/passwordEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
+            style="@style/LoginText"
             android:hint="@string/login_password"
             android:inputType="textPassword"
             android:nextFocusForward="@+id/loginButton"/>
