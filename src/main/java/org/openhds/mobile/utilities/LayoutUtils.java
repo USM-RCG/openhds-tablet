@@ -28,24 +28,14 @@ public class LayoutUtils {
     private static final String TAG = LayoutUtils.class.getSimpleName();
 
     // Create a new Button with the given description, name, tag, and listener.
-    public static Button makeButton(Activity activity, int descriptionId, int buttonNameId, Object buttonTag,
+    public static Button makeButton(Activity activity, int buttonNameId, Object buttonTag,
                                     OnClickListener listener, ViewGroup container) {
-
         View view = activity.getLayoutInflater().inflate(R.layout.generic_textview_button, null);
         container.addView(view);
-
-        TextView textView = view.findViewById(R.id.generic_button_description);
-        if (descriptionId > 0) {
-            textView.setText(descriptionId);
-        } else {
-            textView.setVisibility(View.GONE);
-        }
-
         Button button = view.findViewById(R.id.generic_button);
         button.setText(buttonNameId);
         button.setTag(buttonTag);
         button.setOnClickListener(listener);
-
         return button;
     }
 

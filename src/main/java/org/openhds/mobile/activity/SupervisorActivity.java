@@ -11,8 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.ChecklistFragment;
@@ -49,26 +49,26 @@ public class SupervisorActivity extends AppCompatActivity {
         LinearLayout supervisorButtonLayout = findViewById(R.id.supervisor_activity_options);
         ButtonClickListener buttonClickListener = new ButtonClickListener();
 
-        makeButton(this, -1, R.string.send_forms, R.string.send_forms,
+        makeButton(this, R.string.send_forms, R.string.send_forms,
                 buttonClickListener, supervisorButtonLayout);
 
         Button button;
         final int BUTTON_SPACING = 10;
 
-        button = makeButton(this, -1, R.string.delete_forms, R.string.delete_forms,
+        button = makeButton(this, R.string.delete_forms, R.string.delete_forms,
                 buttonClickListener, supervisorButtonLayout);
 
-        ((RelativeLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
+        ((FrameLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
 
-        button = makeButton(this, -1, R.string.approve_forms, R.string.approve_forms,
+        button = makeButton(this, R.string.approve_forms, R.string.approve_forms,
                 buttonClickListener, supervisorButtonLayout);
 
-        ((RelativeLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
+        ((FrameLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
 
         if (isSearchEnabled(this)) {
-            button = makeButton(this, -1, R.string.rebuild_search_indices, R.string.rebuild_search_indices,
+            button = makeButton(this, R.string.rebuild_search_indices, R.string.rebuild_search_indices,
                     buttonClickListener, supervisorButtonLayout);
-            ((RelativeLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
+            ((FrameLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
         }
 
         if (savedInstanceState == null) {
