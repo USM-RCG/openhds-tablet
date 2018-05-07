@@ -40,14 +40,15 @@
         android:layout_weight="5"
         android:baselineAligned="false">
 
-        <LinearLayout
-            android:id="@+id/supervisor_activity_options"
-            android:layout_width="0px"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/gray_middle_column"
-            android:baselineAligned="false"
-            android:orientation="vertical" />
+        <FrameLayout
+            style="@style/SupervisorMiddleColumn"
+            android:layout_weight="1">
+            <fragment
+                android:id="@+id/supervisor_action_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:name="org.openhds.mobile.fragment.SupervisorActionFragment"/>
+        </FrameLayout>
 
         <fragment
             android:id="@+id/supervisor_checklist_fragment"

@@ -7,7 +7,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -26,18 +25,6 @@ import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.requiresA
 public class LayoutUtils {
 
     private static final String TAG = LayoutUtils.class.getSimpleName();
-
-    // Create a new Button with the given description, name, tag, and listener.
-    public static Button makeButton(Activity activity, int buttonNameId, Object buttonTag,
-                                    OnClickListener listener, ViewGroup container) {
-        View view = activity.getLayoutInflater().inflate(R.layout.generic_textview_button, null);
-        container.addView(view);
-        Button button = view.findViewById(R.id.generic_button);
-        button.setText(buttonNameId);
-        button.setTag(buttonTag);
-        button.setOnClickListener(listener);
-        return button;
-    }
 
     // Create a new Layout that contains two text views and optionally several "payload" text views beneath.
     public static RelativeLayout makeTextWithPayload(Activity activity, String primaryText, String secondaryText,

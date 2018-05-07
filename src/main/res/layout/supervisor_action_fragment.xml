@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/send_forms"
+        style="@style/SupervisorButton"
+        android:text="@string/send_forms" />
+
+    <Button
+        android:id="@+id/delete_forms"
+        style="@style/SupervisorButton"
+        android:text="@string/delete_forms" />
+
+    <Button
+        android:id="@+id/approve_forms"
+        style="@style/SupervisorButton"
+        android:text="@string/approve_forms" />
+
+    <Button
+        android:id="@+id/rebuild_search_indices"
+        style="@style/SupervisorButton"
+        android:text="@string/rebuild_search_indices"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</LinearLayout>

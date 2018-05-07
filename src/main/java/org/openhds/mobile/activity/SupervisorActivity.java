@@ -4,18 +4,15 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.ChecklistFragment;
+import org.openhds.mobile.fragment.SupervisorActionFragment;
 import org.openhds.mobile.model.core.Supervisor;
 import org.openhds.mobile.model.form.FormInstance;
 import org.openhds.mobile.search.IndexingService;
@@ -26,14 +23,12 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.requiresApproval;
-import static org.openhds.mobile.search.Utils.isSearchEnabled;
-import static org.openhds.mobile.utilities.LayoutUtils.makeButton;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
 import static org.openhds.mobile.utilities.LoginUtils.launchLogin;
 import static org.openhds.mobile.utilities.MessageUtils.showShortToast;
 import static org.openhds.mobile.utilities.SyncUtils.installAccount;
 
-public class SupervisorActivity extends AppCompatActivity {
+public class SupervisorActivity extends AppCompatActivity implements SupervisorActionFragment.ActionListener {
 
     private static final String TAG = SupervisorActivity.class.getSimpleName();
 
@@ -46,31 +41,6 @@ public class SupervisorActivity extends AppCompatActivity {
         setTitle(R.string.supervisor_home);
         setContentView(R.layout.supervisor_activity);
 
-        LinearLayout supervisorButtonLayout = findViewById(R.id.supervisor_activity_options);
-        ButtonClickListener buttonClickListener = new ButtonClickListener();
-
-        makeButton(this, R.string.send_forms, R.string.send_forms,
-                buttonClickListener, supervisorButtonLayout);
-
-        Button button;
-        final int BUTTON_SPACING = 10;
-
-        button = makeButton(this, R.string.delete_forms, R.string.delete_forms,
-                buttonClickListener, supervisorButtonLayout);
-
-        ((FrameLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
-
-        button = makeButton(this, R.string.approve_forms, R.string.approve_forms,
-                buttonClickListener, supervisorButtonLayout);
-
-        ((FrameLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
-
-        if (isSearchEnabled(this)) {
-            button = makeButton(this, R.string.rebuild_search_indices, R.string.rebuild_search_indices,
-                    buttonClickListener, supervisorButtonLayout);
-            ((FrameLayout.LayoutParams) button.getLayoutParams()).setMargins(0, BUTTON_SPACING, 0, 0);
-        }
-
         if (savedInstanceState == null) {
             LoginUtils.Login<Supervisor> login = getLogin(Supervisor.class);
             if (login.hasAuthenticatedUser()) {
@@ -79,7 +49,30 @@ public class SupervisorActivity extends AppCompatActivity {
             }
         }
 
-        checklistFragment = (ChecklistFragment) getSupportFragmentManager().findFragmentById(R.id.supervisor_checklist_fragment);
+        FragmentManager fragMgr = getSupportFragmentManager();
+        checklistFragment = (ChecklistFragment) fragMgr.findFragmentById(R.id.supervisor_checklist_fragment);
+        SupervisorActionFragment actionFragment = (SupervisorActionFragment) fragMgr.findFragmentById(R.id.supervisor_action_fragment);
+        actionFragment.setActionListener(this);
+    }
+
+    @Override
+    public void onSendForms() {
+        sendApprovedForms();
+    }
+
+    @Override
+    public void onDeleteForms() {
+        checklistFragment.setMode(ChecklistFragment.DELETE_MODE);
+    }
+
+    @Override
+    public void onApproveForms() {
+        checklistFragment.setMode(ChecklistFragment.APPROVE_MODE);
+    }
+
+    @Override
+    public void onRebuildIndices() {
+        IndexingService.queueFullReindex(SupervisorActivity.this);
     }
 
     @Override
@@ -122,21 +115,5 @@ public class SupervisorActivity extends AppCompatActivity {
         }
         showShortToast(this, R.string.launching_odk_collect);
         startActivity(new Intent(Intent.ACTION_EDIT));
-    }
-
-    private class ButtonClickListener implements OnClickListener {
-        @Override
-        public void onClick(View v) {
-            Integer tag = (Integer) v.getTag();
-            if (tag.equals(R.string.send_forms)) {
-                sendApprovedForms();
-            } else if (tag.equals(R.string.delete_forms)) {
-                checklistFragment.setMode(ChecklistFragment.DELETE_MODE);
-            } else if (tag.equals(R.string.approve_forms)) {
-                checklistFragment.setMode(ChecklistFragment.APPROVE_MODE);
-            } else if (tag.equals(R.string.rebuild_search_indices) && isSearchEnabled(SupervisorActivity.this)) {
-                IndexingService.queueFullReindex(SupervisorActivity.this);
-            }
-        }
     }
 }

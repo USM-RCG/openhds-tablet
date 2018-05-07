@@ -21,11 +21,14 @@
             android:layout_marginTop="@dimen/sync_history_spacing" />
     </LinearLayout>
 
-    <LinearLayout
-        style="@style/SupervisorMiddleColumn"
-        android:id="@+id/supervisor_activity_options"
-        android:baselineAligned="false"
-        android:orientation="vertical" />
+    <FrameLayout
+        style="@style/SupervisorMiddleColumn">
+        <fragment
+            android:id="@+id/supervisor_action_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="org.openhds.mobile.fragment.SupervisorActionFragment"/>
+    </FrameLayout>
 
     <FrameLayout
         style="@style/SupervisorSideColumn">

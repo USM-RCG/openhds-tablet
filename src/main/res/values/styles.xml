@@ -37,6 +37,10 @@
         <item name="android:background">@drawable/form_selector</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large.Inverse</item>
     </style>
+    <style name="SupervisorButton" parent="Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginBottom">@dimen/supervisor_button_spacing</item>
+    </style>
     <style name="FieldworkerSideColumn">
         <item name="android:layout_width">0px</item>
         <item name="android:layout_height">match_parent</item>
