@@ -7,7 +7,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -169,13 +168,6 @@ public class LayoutUtils {
             delimiterTextView.setTextColor(context.getResources().getColor(labelColorId));
             valueTextView.setTextColor(context.getResources().getColor(valueColorId));
         }
-    }
-
-    // Pass new data to an edit text that was created with makeEditText().
-    public static void configureEditText(EditText editText, int hintId, String tag) {
-        editText.setHint(hintId);
-        editText.setTag(tag);
-        editText.setText(null);
     }
 
     // Set up a form list item based on a given form instance.
