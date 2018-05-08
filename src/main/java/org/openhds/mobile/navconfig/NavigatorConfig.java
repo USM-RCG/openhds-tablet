@@ -6,15 +6,20 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.LazilyLoadedCtor;
 import org.mozilla.javascript.ScriptableObject;
 import org.openhds.mobile.navconfig.forms.Binding;
+import org.openhds.mobile.navconfig.forms.UsedByJSConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,9 +39,12 @@ import static java.util.ResourceBundle.getBundle;
 public class NavigatorConfig {
 
     private static final String TAG = NavigatorConfig.class.getSimpleName();
+    private static final String INIT_SCRIPT_NAME = "init.js";
+    private static final String BUNDLE_NAME = "strings";
 
     private static NavigatorConfig instance;
 
+    private ClassLoader moduleLoader = NavigatorConfig.class.getClassLoader();
     private Map<String, NavigatorModule> modules = emptyMap();
     private Map<String, Binding> bindings = emptyMap();
 
@@ -45,9 +53,14 @@ public class NavigatorConfig {
         init();
     }
 
-    private void init() {
+    public void init() {
         initModules();
         initFormBindings();
+    }
+
+    public void setModules(URL modulesUrl) throws MalformedURLException {
+        ClassLoader defaultLoader = NavigatorConfig.class.getClassLoader();
+        moduleLoader = URLClassLoader.newInstance(new URL[]{modulesUrl}, defaultLoader);
     }
 
     /*
@@ -56,25 +69,15 @@ public class NavigatorConfig {
     private void initModules() {
         modules = new LinkedHashMap<>();
         try {
-            initCoreModules();
-            initExtendedModules();
+            executeScript(INIT_SCRIPT_NAME);
         } catch (IOException e) {
             Log.e(TAG, "failure initializing modules", e);
         }
     }
 
-    private void initExtendedModules() throws IOException {
-        executeConfigScript("/gisops.js");
-        executeConfigScript("/spraying.js");
-        executeConfigScript("/bednetfollowup.js");
-    }
-
-    private void initCoreModules() throws IOException {
-        executeConfigScript("/census.js");
-    }
-
-    private void executeConfigScript(String resourcePath) throws IOException {
-        InputStream scriptStream = NavigatorConfig.class.getResourceAsStream(resourcePath);
+    @UsedByJSConfig
+    public void executeScript(String resourcePath) throws IOException {
+        InputStream scriptStream = moduleLoader.getResourceAsStream(resourcePath);
         if (scriptStream != null) {
             Reader scriptReader = new InputStreamReader(scriptStream);
             Context ctx = Context.enter();
@@ -105,6 +108,7 @@ public class NavigatorConfig {
         }
     }
 
+    @UsedByJSConfig
     public void addModule(NavigatorModule module) {
         modules.put(module.getName(), module);
     }
@@ -141,7 +145,7 @@ public class NavigatorConfig {
      * @return the string, localized for the current {@link java.util.Locale}
      */
     public String getString(String key) {
-        return getBundle("strings").getString(key);
+        return getBundle(BUNDLE_NAME, Locale.getDefault(), moduleLoader).getString(key);
     }
 
     /**
