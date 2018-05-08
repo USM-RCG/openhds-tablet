@@ -59,8 +59,8 @@ public class NavigatorConfig {
     }
 
     public void setModules(URL modulesUrl) throws MalformedURLException {
-        ClassLoader defaultLoader = NavigatorConfig.class.getClassLoader();
-        moduleLoader = URLClassLoader.newInstance(new URL[]{modulesUrl}, defaultLoader);
+        URL [] urls = {modulesUrl};
+        moduleLoader = URLClassLoader.newInstance(urls, NavigatorConfig.class.getClassLoader());
     }
 
     /*
