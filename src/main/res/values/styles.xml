@@ -19,7 +19,7 @@
     <style name="FormButtonList" parent="FormList">
         <item name="android:dividerHeight">@dimen/button_list_divider_height</item>
     </style>
-    <style name="ListHeader">
+    <style name="ListHeader" parent="TextAppearance.AppCompat.Subhead">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/form_list_header</item>
@@ -28,16 +28,11 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large.Inverse</item>
         <item name="android:layout_marginBottom">@dimen/list_divider_height</item>
     </style>
-    <style name="Button">
+    <style name="Button" parent="Widget.AppCompat.Button.Colored">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/button</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
     </style>
-    <style name="ApprovalButton" parent="Button">
-        <item name="android:background">@drawable/form_selector</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large.Inverse</item>
-    </style>
+    <style name="ApprovalButton" parent="Button" />
     <style name="SupervisorButton" parent="Button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginBottom">@dimen/supervisor_button_spacing</item>
