@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/sync_description"
-        style="@style/SyncDBHeading"
+        style="@style/ListHeader"
         android:text="@string/sync_database_description" />
 
     <TableLayout
