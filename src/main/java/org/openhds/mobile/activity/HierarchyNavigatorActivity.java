@@ -195,7 +195,6 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
             String moduleName = module.getName();
             if (!moduleName.equals(currentModuleName)) {
                 MenuItem menuItem = menu.add(module.getActivityTitle());
-                menuItem.setIcon(R.drawable.data_selector);
                 menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                 menuItemTags.put(menuItem, module.getName());
             }
