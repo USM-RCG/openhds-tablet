@@ -1,6 +1,5 @@
 package org.openhds.mobile.search;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.database.Cursor;
@@ -18,7 +17,6 @@ import org.apache.lucene.store.FSDirectory;
 import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.R;
 import org.openhds.mobile.navconfig.BiokoHierarchy;
-import org.openhds.mobile.utilities.NotificationUtils;
 
 import java.io.File;
 import java.io.IOException;

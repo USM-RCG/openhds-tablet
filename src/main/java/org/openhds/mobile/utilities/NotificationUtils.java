@@ -1,7 +1,6 @@
 package org.openhds.mobile.utilities;
 
 import android.graphics.Color;
-import android.os.Build;
 
 import org.openhds.mobile.R;
 
