@@ -168,7 +168,7 @@ public class Indexer {
         NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx, TAG)
                 .setSmallIcon(getNotificationIcon())
-                .setColor(getNotificationColor())
+                .setColor(getNotificationColor(ctx))
                 .setContentTitle(ctx.getString(R.string.updating_index))
                 .setContentText(ctx.getString(label))
                 .setOngoing(true);

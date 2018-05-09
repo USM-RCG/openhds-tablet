@@ -436,7 +436,7 @@ public class SyncUtils {
             final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, TAG)
                     .setSmallIcon(android.R.drawable.stat_sys_download)
                     .setTicker("")
-                    .setColor(getNotificationColor())
+                    .setColor(getNotificationColor(ctx))
                     .setContentTitle(ctx.getString(R.string.sync_database_new_data))
                     .setContentText(ctx.getString(R.string.sync_database_in_progress))
                     .setProgress(0, 0, true)

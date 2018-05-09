@@ -1,6 +1,8 @@
 package org.openhds.mobile.utilities;
 
-import android.graphics.Color;
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 
 import org.openhds.mobile.R;
 
@@ -9,13 +11,11 @@ import static android.os.Build.VERSION_CODES.LOLLIPOP;
 
 public class NotificationUtils {
 
-    private static int NOTIFICATION_COLOR = Color.argb(255, 0, 128, 0);
-
     public static int getNotificationIcon() {
         return (SDK_INT >= LOLLIPOP) ? R.drawable.ic_silhouette : R.drawable.ic_launcher;
     }
 
-    public static int getNotificationColor() {
-        return NOTIFICATION_COLOR;
+    public static int getNotificationColor(Context ctx) {
+        return ContextCompat.getColor(ctx, R.color.Blue);
     }
 }
