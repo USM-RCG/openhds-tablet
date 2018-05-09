@@ -4,6 +4,7 @@
         <item name="preferenceTheme">
             @style/PreferenceThemeOverlay.v14
         </item>
+        <item name="colorAccent">@color/Blue</item>
     </style>
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/background_splash</item>
