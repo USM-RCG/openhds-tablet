@@ -18,11 +18,13 @@
 
         <EditText
             android:id="@+id/basic_query_text"
-            style="@style/SearchBox" />
+            style="@style/SearchBox"
+            android:hint="@string/search_hint" />
 
         <EditText
             android:id="@+id/advanced_query_text"
             style="@style/SearchBox"
+            android:hint="@string/search_hint"
             android:visibility="gone" />
 
         <ToggleButton
