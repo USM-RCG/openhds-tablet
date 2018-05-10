@@ -2,7 +2,6 @@ package org.openhds.mobile.utilities;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.TypedValue;
 
 import org.openhds.mobile.R;
 
