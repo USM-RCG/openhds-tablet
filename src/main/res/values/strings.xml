@@ -140,8 +140,7 @@
     <string name="field_worker_home">Fieldworker Home</string>
     <string name="supervisor_home">Supervisor Home</string>
     <string name="logout">Logout</string>
-    <string name="delete_unsent_forms">Delete Unsent Forms</string>
-    <string name="approve_unsent_forms">Approve Unsent Forms</string>
+    <string name="forms_awaiting_approval">Forms awaiting approval</string>
 
     <string name="supervisor_approve_all"> Approve All </string>
     <string name="supervisor_approve_selected"> Approve Selected </string>

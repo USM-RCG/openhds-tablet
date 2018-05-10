@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="delete_form_btn">Borrar Impreso(s)</string>
+    <string name="delete_form_btn">Borrar Formulario(s)</string>
     <string name="login_btn">Entrar</string>
-    <string name="send_forms">Enviar Impresos</string>
+    <string name="send_forms">Enviar Formularios</string>
     <string name="gender_lbl">Género</string>
     <string name="login_username">Nombre de Usuario</string>
     <string name="login_password">Contraseña</string>
@@ -103,8 +103,7 @@
     <string name="supervisor_home">Supervisor Inicio</string>
     <string name="logout">Terminar Sesión</string>
     <string name="unsent_forms">Formularios no enviado</string>
-    <string name="delete_unsent_forms">Eliminar formularios no enviado</string>
-    <string name="approve_unsent_forms">Aprobar formularios no enviado</string>
+    <string name="forms_awaiting_approval">Formularios en espera de aprobación</string>
     <string name="supervisor_approve_all">Aprobar Todo</string>
     <string name="supervisor_approve_selected">Aprobar Seleccionado</string>
     <string name="sub_district_label">Subdistrito</string>
@@ -114,11 +113,11 @@
     <string name="edit_label">Editar</string>
     <string name="delete_label">Borrar</string>
     <string name="deleted">Borrado</string>
-    <string name="delete_forms_dialog_warning">Eliminación de los impresos puede provocar un comportamiento inesperado. Estás seguro?</string>
+    <string name="delete_forms_dialog_warning">Eliminación de los formularios puede provocar un comportamiento inesperado. Estás seguro?</string>
     <string name="cancel_label">Cancelar</string>
     <string name="delete_dialog_warning_title">¡Aviso!</string>
-    <string name="delete_forms">Eliminar Impresos</string>
-    <string name="approve_forms">Aprobar Impresos</string>
+    <string name="delete_forms">Eliminar Formularios</string>
+    <string name="approve_forms">Aprobar Formularios</string>
     <string name="uuid">UUID</string>
     <string name="db_val_age_not_applicable">n/a</string>
     <string name="individual_first_name_label">Nombre</string>
