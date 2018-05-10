@@ -73,12 +73,12 @@
     <style name="LoginHeader">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
     <style name="LoginText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:ems">10</item>
+        <item name="android:ems">12</item>
     </style>
     <style name="DetailHeading" parent="DetailSection">
         <item name="android:gravity">center</item>

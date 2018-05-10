@@ -1,42 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:gravity="center">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <TextView
+        android:id="@+id/titleTextView"
+        style="@style/LoginHeader"
+        tools:text="Extra-extra long sample login heading" />
 
-        <TextView
-            android:id="@+id/titleTextView"
-            style="@style/LoginHeader"
-            tools:text="Sample Login Header"/>
+    <EditText
+        android:id="@+id/usernameEditText"
+        style="@style/LoginText"
+        android:layout_below="@id/titleTextView"
+        android:hint="@string/login_username"
+        android:nextFocusForward="@+id/passwordEditText"
+        android:inputType="textNoSuggestions">
+        <requestFocus />
+    </EditText>
 
-        <EditText
-            android:id="@+id/usernameEditText"
-            style="@style/LoginText"
-            android:hint="@string/login_username"
-            android:nextFocusForward="@+id/passwordEditText">
-            <requestFocus />
-        </EditText>
+    <EditText
+        android:id="@+id/passwordEditText"
+        style="@style/LoginText"
+        android:layout_below="@id/usernameEditText"
+        android:hint="@string/login_password"
+        android:inputType="textPassword"
+        android:nextFocusForward="@+id/loginButton" />
 
-        <EditText
-            android:id="@+id/passwordEditText"
-            style="@style/LoginText"
-            android:hint="@string/login_password"
-            android:inputType="textPassword"
-            android:nextFocusForward="@+id/loginButton"/>
+    <Button
+        android:id="@+id/loginButton"
+        style="@style/Button"
+        android:layout_alignEnd="@id/passwordEditText"
+        android:layout_alignRight="@id/passwordEditText"
+        android:layout_below="@id/passwordEditText"
+        android:text="@string/login_btn" />
 
-        <Button
-            android:id="@+id/loginButton"
-            style="@style/Button"
-            android:text="@string/login_btn"
-            android:layout_gravity="end"/>
-
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>
