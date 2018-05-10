@@ -7,10 +7,6 @@
         app:showAsAction="ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView" />
     <item
-        android:id="@+id/field_worker_home_menu_button"
-        android:title="@string/field_worker_home"
-        app:showAsAction="ifRoom|withText" />
-    <item
         android:id="@+id/logout_menu_button"
         android:title="@string/logout"
         app:showAsAction="ifRoom|withText" />

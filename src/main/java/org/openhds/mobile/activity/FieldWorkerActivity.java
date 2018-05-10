@@ -61,7 +61,6 @@ public class FieldWorkerActivity extends AppCompatActivity implements OnClickLis
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.fieldworker_menu, menu);
-        menu.findItem(R.id.field_worker_home_menu_button).setVisible(false);
 
         MenuItem searchMenuItem = menu.findItem(R.id.field_worker_search);
         boolean searchEnabled = isSearchEnabled(this);

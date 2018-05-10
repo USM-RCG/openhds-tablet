@@ -220,10 +220,6 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
             case R.id.logout_menu_button:
                 getLogin(FieldWorker.class).logout(this, true);
                 break;
-            case R.id.field_worker_home_menu_button:
-                intent.setClass(this, FieldWorkerActivity.class);
-                startActivity(intent);
-                break;
             default:
                 String menuModule = menuItemTags.get(item);
                 if (menuModule != null) {
