@@ -12,7 +12,7 @@
     <string name="malformed_url">Malformed URL</string>
     <string name="malformed_url_msg">The value entered is not a valid URL.</string>
     <string name="openhds_server_url_key" translatable="false">openhds_server_url</string>
-    <string name="openhds_server_url_title">CIMS Server URL</string>
+    <string name="openhds_server_url_title">Server URL</string>
     <string name="supervisor_bad_credentials">Invalid supervisor credentials</string>
     <string name="send_forms">Send Forms</string>
     <string name="delete_forms">Delete Forms</string>
