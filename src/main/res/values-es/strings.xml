@@ -7,7 +7,9 @@
     <string name="gender_lbl">Género</string>
     <string name="login_username">Nombre de Usuario</string>
     <string name="login_password">Contraseña</string>
-    <string name="fieldworker_login">Informacion del Encuestador</string>
+    <string name="fieldworker">Trabajador de campo</string>
+    <string name="fieldworker_login">Informacion del Trabajador de campo</string>
+    <string name="supervisor">Supervisor</string>
     <string name="supervisor_login">Informacion del Supervisor</string>
     <string name="settings">Ajustes</string>
     <string name="malformed_url">URL malformada</string>
@@ -99,7 +101,7 @@
     <string name="location_description_label">Descripción</string>
 
     <!-- UpdateActivity Labels -->
-    <string name="field_worker_home">Encuestador Inicio</string>
+    <string name="field_worker_home">Trabajador de campo Inicio</string>
     <string name="supervisor_home">Supervisor Inicio</string>
     <string name="logout">Terminar Sesión</string>
     <string name="unsent_forms">Formularios no enviado</string>
@@ -196,7 +198,7 @@
     <string name="wifi_sync_enabled">Sincroniza solo con Wi-Fi</string>
     <string name="wifi_sync_disabled">Sincroniza sobre cualquier red</string>
     <string name="wifi_sync">Sincronizar en Wi-Fi</string>
-    <string name="field_worker_none_exist">No hay encuestadores, sincronícense.</string>
+    <string name="field_worker_none_exist">No hay trabajadores de campo, sincronícense.</string>
     <string name="server_connect_error">Error al conectar con el servidor</string>
     <string name="http_client_error">Solicitud fallida debido a un error del cliente</string>
     <string name="http_server_error">Solicitud fallida debido a un error del servidor</string>

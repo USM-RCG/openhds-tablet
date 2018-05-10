@@ -39,8 +39,8 @@ public class LoginActivity extends AppCompatActivity {
         setTitle(getAppFullName(this));
         setContentView(R.layout.login);
 
-        fragments.put(getString(R.string.fieldworker_login), new FieldWorkerLoginFragment());
-        fragments.put(getString(R.string.supervisor_login), new SupervisorLoginFragment());
+        fragments.put(getString(R.string.fieldworker), new FieldWorkerLoginFragment());
+        fragments.put(getString(R.string.supervisor), new SupervisorLoginFragment());
 
         pager = findViewById(R.id.pager);
         pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
