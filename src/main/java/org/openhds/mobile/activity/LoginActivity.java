@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
             tabIndex++;
         }
 
-        pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
