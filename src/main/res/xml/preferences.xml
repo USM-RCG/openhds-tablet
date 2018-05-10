@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:title="@string/preferences">
+    android:title="@string/settings">
 
     <android.support.v7.preference.EditTextPreference
         android:key="@string/openhds_server_url_key"

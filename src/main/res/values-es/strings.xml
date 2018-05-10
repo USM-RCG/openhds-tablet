@@ -9,7 +9,7 @@
     <string name="login_password">Contraseña</string>
     <string name="fieldworker_login">Informacion del Encuestador</string>
     <string name="supervisor_login">Informacion del Supervisor</string>
-    <string name="preferences">Preferencias</string>
+    <string name="settings">Ajustes</string>
     <string name="malformed_url">URL malformada</string>
     <string name="malformed_url_msg">El valor introducido no es una URL válida.</string>
     <string name="supervisor_bad_credentials">Credenciales inválidas</string>
