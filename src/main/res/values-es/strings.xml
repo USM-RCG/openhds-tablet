@@ -7,9 +7,9 @@
     <string name="login_username">Nombre de Usuario</string>
     <string name="login_password">Contraseña</string>
     <string name="fieldworker">Trabajador de campo</string>
-    <string name="fieldworker_login">Informacion del Trabajador de campo</string>
+    <string name="fieldworker_login">Inicio de sesión de trabajador</string>
     <string name="supervisor">Supervisor</string>
-    <string name="supervisor_login">Informacion del Supervisor</string>
+    <string name="supervisor_login">Inicio de sesión de supervisor</string>
     <string name="settings">Ajustes</string>
     <string name="malformed_url">URL malformada</string>
     <string name="malformed_url_msg">El valor introducido no es una URL válida.</string>
