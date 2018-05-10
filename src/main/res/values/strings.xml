@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name" translatable="false">CIMS</string>
-    <string name="delete_form_btn">Delete Form(s)</string>
     <string name="login_btn">Login</string>
     <string name="gender_lbl">Gender</string>
     <string name="login_username">Username</string>

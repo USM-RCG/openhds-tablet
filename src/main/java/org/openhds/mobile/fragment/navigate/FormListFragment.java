@@ -156,7 +156,7 @@ public class FormListFragment extends Fragment {
         new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.delete_forms_dialog_warning)
                 .setTitle(R.string.delete_dialog_warning_title)
-                .setPositiveButton(R.string.delete_form_btn, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.delete_forms, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         removeForm(selected);

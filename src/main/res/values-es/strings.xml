@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="delete_form_btn">Borrar Formulario(s)</string>
     <string name="login_btn">Entrar</string>
     <string name="send_forms">Enviar Formularios</string>
     <string name="gender_lbl">Género</string>
