@@ -22,9 +22,13 @@ with (imports) {
         });
     }
 
-    bind({ form: 'bed_net_follow_up',
-           label: 'bedNetFollowUpFormLabel',
-           builder: new BiokoFormPayloadBuilders.BedNetFollowUp() });
+    bind({ form: 'ccst_sbcc',
+           label: 'ccstFormLabel',
+           builder: new BiokoFormPayloadBuilders.Sbcc() });
+
+    bind({ form: 'mild_sbcc',
+           label: 'mildFormLabel',
+           builder: new BiokoFormPayloadBuilders.Sbcc() });
 
     function launcher(l) {
         return new Launcher({
@@ -36,7 +40,12 @@ with (imports) {
 
     var launchers = {
         household: [
-            launcher({ label: 'bednetfollowup.followUpLabel', bind: 'bed_net_follow_up' }),
+            launcher({ label: 'sbcc.ccstLabel', bind: 'ccst_sbcc' }),
+            launcher({ label: 'sbcc.mildLabel', bind: 'mild_sbcc' }),
+        ],
+        individual: [
+            launcher({ label: 'sbcc.ccstLabel', bind: 'ccst_sbcc' }),
+            launcher({ label: 'sbcc.mildLabel', bind: 'mild_sbcc' }),
         ]
     };
 
@@ -45,10 +54,10 @@ with (imports) {
     };
 
     var module = new NavigatorModule({
-        getName: function() { return 'bednetfollowup'; },
-        getActivityTitle: function() { return config.getString('bednetfollowup.activityTitle'); },
-        getLaunchLabel: function() { return config.getString('bednetfollowup.launchTitle'); },
-        getLaunchDescription: function() { return config.getString('bednetfollowup.launchDescription'); },
+        getName: function() { return 'sbcc'; },
+        getActivityTitle: function() { return config.getString('sbcc.activityTitle'); },
+        getLaunchLabel: function() { return config.getString('sbcc.launchTitle'); },
+        getLaunchDescription: function() { return config.getString('sbcc.launchDescription'); },
         getBindings: function() { return binds; },
         getLaunchers: function(level) { return launchers[level] || []; },
         getDetailFragment: function(level) { return details[level] || null; }

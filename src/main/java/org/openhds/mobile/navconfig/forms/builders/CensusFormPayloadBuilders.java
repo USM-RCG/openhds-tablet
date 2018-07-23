@@ -140,7 +140,7 @@ public class CensusFormPayloadBuilders {
             Map<String,String> formPayload = new HashMap<>();
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             DataWrapper individual = ctx.getHierarchyPath().get(INDIVIDUAL);
-            formPayload.put(ProjectFormFields.Fingerprints.INDIVIDUAL_UUID, individual.getUuid());
+            formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_UUID, individual.getUuid());
             return formPayload;
         }
     }

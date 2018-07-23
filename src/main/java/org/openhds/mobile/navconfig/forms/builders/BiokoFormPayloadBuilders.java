@@ -29,8 +29,6 @@ import static org.openhds.mobile.navconfig.forms.builders.PayloadTools.formatTim
 
 public class BiokoFormPayloadBuilders {
 
-    private static final String TAG = BiokoFormPayloadBuilders.class.getSimpleName();
-
     @UsedByJSConfig
     public static class DistributeBednets implements FormPayloadBuilder {
 
@@ -195,17 +193,25 @@ public class BiokoFormPayloadBuilders {
     }
 
     @UsedByJSConfig
-    public static class BedNetFollowUp implements FormPayloadBuilder {
+    public static class Sbcc implements FormPayloadBuilder {
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {
+
             Map<String,String> formPayload = new HashMap<>();
+
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
-            DataWrapper map = ctx.getHierarchyPath().get(MAP_AREA);
-            formPayload.put(ProjectFormFields.CreateSector.MAP_UUID, map.getUuid());
-            formPayload.put(ProjectFormFields.CreateSector.SECTOR_UUID, IdHelper.generateEntityUuid());
-            DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
+
+            HierarchyPath path = ctx.getHierarchyPath();
+            DataWrapper household = path.get(HOUSEHOLD), individual = path.get(INDIVIDUAL);
+
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
+
+            if (individual != null) {
+                formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, individual.getExtId());
+                formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_UUID, individual.getUuid());
+            }
+
             return formPayload;
         }
     }
