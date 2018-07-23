@@ -177,4 +177,8 @@ public class ProjectFormFields {
         public static final String SECTOR_UUID = "sectorUuid";
         public static final String SECTOR_NAME = "sectorName";
     }
+
+    public static final class MalariaIndicatorSurvey {
+        public static final String SURVEY_DATE = "survey_date";
+    }
 }
