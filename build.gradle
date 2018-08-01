@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jdom:jdom2:2.0.5'
+    implementation 'org.jdom:jdom2:2.0.6'
     implementation 'org.mindrot:jbcrypt:0.3m'
     implementation 'org.mozilla:rhino:1.7.7.1'
     implementation 'com.android.support:appcompat-v7:27.1.1'
