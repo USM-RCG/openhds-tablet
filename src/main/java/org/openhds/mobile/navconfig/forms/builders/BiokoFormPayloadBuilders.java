@@ -231,4 +231,14 @@ public class BiokoFormPayloadBuilders {
             return formPayload;
         }
     }
+
+    @UsedByJSConfig
+    public static class Minimal implements FormPayloadBuilder {
+        @Override
+        public Map<String, String> buildPayload(LaunchContext ctx) {
+            Map<String,String> formPayload = new HashMap<>();
+            PayloadTools.addMinimalFormPayload(formPayload, ctx);
+            return formPayload;
+        }
+    }
 }
