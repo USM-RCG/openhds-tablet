@@ -20,9 +20,11 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Convenience definitions for NotePadProvider
+ * Taken from ODK Collect v1.16.3, this provides a typed reference to the content provider for
+ * form instances.
  */
 public final class InstanceProviderAPI {
+
 	public static final String AUTHORITY = "org.odk.collect.android.provider.odk.instances";
 
 	// This class cannot be instantiated
