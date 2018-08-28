@@ -37,9 +37,6 @@ public final class InstanceProviderAPI {
 	public static final String STATUS_SUBMITTED = "submitted";
 	public static final String STATUS_SUBMISSION_FAILED = "submissionFailed";
 
-	/**
-	 * Notes table
-	 */
 	public static final class InstanceColumns implements BaseColumns {
 
 		// This class cannot be instantiated
