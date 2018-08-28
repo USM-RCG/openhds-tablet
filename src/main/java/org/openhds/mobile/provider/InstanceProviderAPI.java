@@ -41,6 +41,7 @@ public final class InstanceProviderAPI {
 	 * Notes table
 	 */
 	public static final class InstanceColumns implements BaseColumns {
+
 		// This class cannot be instantiated
 		private InstanceColumns() {
 		}
