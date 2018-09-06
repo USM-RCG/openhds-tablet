@@ -30,6 +30,10 @@ with (imports) {
            label: 'mildFormLabel',
            builder: new BiokoFormPayloadBuilders.Sbcc() });
 
+   bind({ form: 'net_education',
+          label: 'netEducationFormLabel',
+          builder: new BiokoFormPayloadBuilders.Sbcc() });
+
     function launcher(l) {
         return new Launcher({
             getLabel: function() { return config.getString(l.label); },
@@ -42,10 +46,12 @@ with (imports) {
         household: [
             launcher({ label: 'sbcc.ccstLabel', bind: 'ccst_sbcc' }),
             launcher({ label: 'sbcc.mildLabel', bind: 'mild_sbcc' }),
+            launcher({ label: 'netEducationFormLabel', bind: 'net_education' }),
         ],
         individual: [
             launcher({ label: 'sbcc.ccstLabel', bind: 'ccst_sbcc' }),
             launcher({ label: 'sbcc.mildLabel', bind: 'mild_sbcc' }),
+            launcher({ label: 'netEducationFormLabel', bind: 'net_education' }),
         ]
     };
 
