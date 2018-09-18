@@ -181,4 +181,8 @@ public class ProjectFormFields {
     public static final class MalariaIndicatorSurvey {
         public static final String SURVEY_DATE = "survey_date";
     }
+
+    public static final class SecurityCamps {
+        public static final String DISTRICT_UUID = "districtUuid";
+    }
 }
