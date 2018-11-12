@@ -23,6 +23,8 @@ import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.navconfig.NavigatorModule;
 import org.openhds.mobile.utilities.ConfigUtils;
 
+import java.util.Iterator;
+
 import static org.openhds.mobile.search.Utils.isSearchEnabled;
 import static org.openhds.mobile.utilities.LayoutUtils.makeTextWithPayload;
 import static org.openhds.mobile.utilities.LoginUtils.getLogin;
@@ -44,11 +46,15 @@ public class FieldWorkerActivity extends AppCompatActivity implements OnClickLis
 
         // fill the middle column with a button for each available activity
         LinearLayout activitiesLayout = findViewById(R.id.portal_middle_column);
-        for (NavigatorModule module : ConfigUtils.getActiveModules(this)) {
+        Iterator<NavigatorModule> moduleIter = ConfigUtils.getActiveModules(this).iterator();
+        while (moduleIter.hasNext()) {
+            NavigatorModule module = moduleIter.next();
             RelativeLayout layout = makeTextWithPayload(this, module.getLaunchLabel(), module.getLaunchDescription(),
                     module.getName(), this, activitiesLayout, R.drawable.data_selector, null, null, true);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.module_button_spacing));
+            if (moduleIter.hasNext()) {
+                params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.module_button_spacing));
+            }
         }
 
         formListFragment = (FormListFragment) getSupportFragmentManager().findFragmentById(R.id.portal_form_list);
