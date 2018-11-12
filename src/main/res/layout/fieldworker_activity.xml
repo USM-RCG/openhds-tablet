@@ -13,11 +13,14 @@
             android:layout_height="match_parent"/>
     </FrameLayout>
 
-    <LinearLayout
-        android:id="@+id/portal_middle_column"
-        style="@style/FieldworkerMiddleColumn"
-        android:orientation="vertical"
-        />
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/FieldworkerMiddleColumn">
+        <LinearLayout
+            android:id="@+id/portal_middle_column"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
 
     <FrameLayout
         style="@style/FieldworkerSideColumn">
