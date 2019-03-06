@@ -21,6 +21,7 @@ import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class SyncHistoryFragment extends Fragment {
@@ -48,20 +49,39 @@ public class SyncHistoryFragment extends Fragment {
         plot.getLegend().setVisible(false);
         plot.getDomainTitle().setVisible(false);
         plot.setPlotPadding(5, 5, 5, 0);
-        double dayStep = 1;
+
+        double daysToStep = 1;
         if (series.size() > 1) {
-            plot.setDomainLowerBoundary(series.getX(0).longValue() % SECONDS_IN_DAY, BoundaryMode.FIXED);
-            int daySpan = (series.getX(series.size() - 1).intValue() - series.getX(0).intValue()) / SECONDS_IN_DAY;
-            dayStep = Math.max(1.0, Math.ceil(daySpan / MAX_DIVISIONS));
+            final int duration = series.getX(series.size() - 1).intValue() - series.getX(0).intValue();
+            final int daysSpanned = duration / SECONDS_IN_DAY;
+            daysToStep = Math.max(1.0, Math.ceil(daysSpanned / MAX_DIVISIONS));
         }
-        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, SECONDS_IN_DAY * dayStep);
+        final double secondsToStep = daysToStep * SECONDS_IN_DAY;
+        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, secondsToStep);
+
+        if (series.size() > 0) {
+            plot.setDomainLowerBoundary(getMidnightOfDay(series.getX(0).longValue()), BoundaryMode.FIXED);
+            plot.setDomainUpperBoundary(getMidnightOfDay(series.getX(series.size()-1).longValue()) + (long)secondsToStep, BoundaryMode.FIXED);
+        }
 
         XYGraphWidget graph = plot.getGraph();
 
-        graph.getLineLabelStyle(XYGraphWidget.Edge.LEFT).setFormat(new SyncHistoryTimeFormat());
-        graph.getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setRotation(-75);
+        XYGraphWidget.LineLabelStyle bottomStyle = graph.getLineLabelStyle(XYGraphWidget.Edge.BOTTOM);
+        bottomStyle.setFormat(new SyncHistoryTimeFormat());
+        bottomStyle.setRotation(-75);
 
         return graphView;
+    }
+
+    private long getMidnightOfDay(long epochTime) {
+        final int MILLIS_IN_SEC = 1000;
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTimeInMillis(epochTime * MILLIS_IN_SEC);
+        startCal.set(Calendar.HOUR_OF_DAY, 0);
+        startCal.set(Calendar.MINUTE, 0);
+        startCal.set(Calendar.SECOND, 0);
+        startCal.set(Calendar.MILLISECOND, 0);
+        return startCal.getTimeInMillis() / MILLIS_IN_SEC;
     }
 
     private static class SyncHistoryTimeFormat extends Format {
