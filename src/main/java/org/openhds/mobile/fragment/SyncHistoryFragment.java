@@ -6,12 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.StepMode;
 import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
-import com.androidplot.xy.XYStepMode;
 
 import org.openhds.mobile.R;
 import org.openhds.mobile.provider.DatabaseAdapter;
@@ -44,22 +45,21 @@ public class SyncHistoryFragment extends Fragment {
 
         final int SECONDS_IN_DAY = 86400;
         final float MAX_DIVISIONS = 15.0f;
-        plot.getLegendWidget().setVisible(false);
-        plot.getDomainLabelWidget().setVisible(false);
+        plot.getLegend().setVisible(false);
+        plot.getDomainTitle().setVisible(false);
         plot.setPlotPadding(5, 5, 5, 0);
         double dayStep = 1;
         if (series.size() > 1) {
-            plot.setDomainLeftMin(series.getX(0).longValue() % SECONDS_IN_DAY);
+            plot.setDomainLowerBoundary(series.getX(0).longValue() % SECONDS_IN_DAY, BoundaryMode.FIXED);
             int daySpan = (series.getX(series.size() - 1).intValue() - series.getX(0).intValue()) / SECONDS_IN_DAY;
             dayStep = Math.max(1.0, Math.ceil(daySpan / MAX_DIVISIONS));
         }
-        plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, SECONDS_IN_DAY * dayStep);
-        plot.setDomainValueFormat(new SyncHistoryTimeFormat());
+        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, SECONDS_IN_DAY * dayStep);
 
-        XYGraphWidget graph = plot.getGraphWidget();
-        graph.setDomainLabelOrientation(-75);
-        graph.setDomainTickLabelVerticalOffset(5);
-        graph.setDomainTickLabelHorizontalOffset(5);
+        XYGraphWidget graph = plot.getGraph();
+
+        graph.getLineLabelStyle(XYGraphWidget.Edge.LEFT).setFormat(new SyncHistoryTimeFormat());
+        graph.getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setRotation(-75);
 
         return graphView;
     }

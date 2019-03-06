@@ -7,9 +7,9 @@
     <com.androidplot.xy.XYPlot
         android:id="@+id/sync_history_plot"
         style="@style/APDefacto.Light"
-        ap:label="@string/sync_download_times"
+        ap:title="@string/sync_download_times"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        ap:rangeLabel="@string/sync_duration_minutes"/>
+        ap:rangeTitle="@string/sync_duration_minutes"/>
 
 </LinearLayout>
