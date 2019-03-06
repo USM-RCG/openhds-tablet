@@ -258,8 +258,8 @@ public class DatabaseAdapter {
         if (cursor != null) {
             try {
                 while (cursor.moveToNext()) {
-                    results.add(cursor.getFloat(0));
-                    results.add(cursor.getFloat(1));
+                    results.add(cursor.getFloat(0)); // start time (seconds since unix epoch)
+                    results.add(cursor.getFloat(1)); // sync duration (minutes)
                 }
             } finally {
                 cursor.close();
