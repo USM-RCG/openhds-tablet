@@ -26,14 +26,12 @@ import java.util.Date;
 
 public class SyncHistoryFragment extends Fragment {
 
-    private XYPlot plot;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View graphView = inflater.inflate(R.layout.sync_history_fragment, container, false);
 
-        plot = graphView.findViewById(R.id.sync_history_plot);
+        XYPlot plot = graphView.findViewById(R.id.sync_history_plot);
 
         DatabaseAdapter db = DatabaseAdapter.getInstance(getActivity());
 
