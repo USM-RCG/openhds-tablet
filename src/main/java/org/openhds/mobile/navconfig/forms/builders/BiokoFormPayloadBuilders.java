@@ -78,26 +78,13 @@ public class BiokoFormPayloadBuilders {
 
     @UsedByJSConfig
     public static class SprayHousehold implements FormPayloadBuilder {
-
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {
-
             Map<String, String> formPayload = new HashMap<>();
-
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
-
-            FieldWorker fieldWorker = ctx.getCurrentFieldWorker();
-            formPayload.put(ProjectFormFields.SprayHousehold.SUPERVISOR_EXT_ID, fieldWorker.getExtId());
-            formPayload.put(ProjectFormFields.SprayHousehold.SURVEY_DATE, formatTime(Calendar.getInstance()));
-
-
-            String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD).getExtId();
-            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
-            formPayload.put(ProjectFormFields.BedNet.LOCATION_EXTID, locationExtId);
-            formPayload.put(ProjectFormFields.BedNet.LOCATION_UUID, locationUuid);
-            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
-            formPayload.put(ProjectFormFields.General.ENTITY_UUID, locationUuid);
-
+            DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
+            formPayload.put(ProjectFormFields.BedNet.LOCATION_EXTID, household.getExtId());
+            formPayload.put(ProjectFormFields.BedNet.LOCATION_UUID, household.getUuid());
             return formPayload;
         }
     }

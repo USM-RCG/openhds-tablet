@@ -2,6 +2,7 @@
 
 ['census.js',
  'gisops.js',
+ 'advspray.js',
  'spraying.js',
  'sbcc.js',
  'netreg.js',

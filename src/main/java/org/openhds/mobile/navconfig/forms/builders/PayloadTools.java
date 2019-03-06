@@ -1,6 +1,5 @@
 package org.openhds.mobile.navconfig.forms.builders;
 
-import org.openhds.mobile.navconfig.HierarchyPath;
 import org.openhds.mobile.model.core.FieldWorker;
 import org.openhds.mobile.navconfig.ProjectFormFields;
 import org.openhds.mobile.navconfig.ProjectResources;

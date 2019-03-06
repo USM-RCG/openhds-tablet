@@ -22,13 +22,9 @@ with (imports) {
         });
     }
 
-    bind({ form: 'irs_sp1_r26',
-           label: 'sprayingFormLabel',
+    bind({ form: 'irs_iec_r26',
+           label: 'advSprayFormLabel',
            builder: new BiokoFormPayloadBuilders.SprayHousehold() });
-
-    bind({ form: 'super_ojo',
-           label: 'superOjoFormLabel',
-           builder: new BiokoFormPayloadBuilders.SuperOjo() });
 
     function launcher(l) {
         return new Launcher({
@@ -40,8 +36,7 @@ with (imports) {
 
     var launchers = {
         household: [
-            launcher({ label: 'spraying.sprayingLabel', bind: 'irs_sp1_r26' }),
-            launcher({ label: 'spraying.superOjoLabel', bind: 'super_ojo' }),
+            launcher({ label: 'advspray.advSprayLabel', bind: 'irs_iec_r26' }),
         ]
     };
 
@@ -50,10 +45,10 @@ with (imports) {
     };
 
     var module = new NavigatorModule({
-        getName: function() { return 'spraying'; },
-        getActivityTitle: function() { return config.getString('spraying.activityTitle'); },
-        getLaunchLabel: function() { return config.getString('spraying.launchTitle'); },
-        getLaunchDescription: function() { return config.getString('spraying.launchDescription'); },
+        getName: function() { return 'advspray'; },
+        getActivityTitle: function() { return config.getString('advspray.activityTitle'); },
+        getLaunchLabel: function() { return config.getString('advspray.launchTitle'); },
+        getLaunchDescription: function() { return config.getString('advspray.launchDescription'); },
         getBindings: function() { return binds; },
         getLaunchers: function(level) { return launchers[level] || []; },
         getDetailFragment: function(level) { return details[level] || null; }
