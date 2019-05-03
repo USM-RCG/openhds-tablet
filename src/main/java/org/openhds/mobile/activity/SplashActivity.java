@@ -43,13 +43,13 @@ public class SplashActivity extends AppCompatActivity {
         return ContextCompat.checkSelfPermission(
                 this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(
-                        this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
+                this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
     }
 
     private void askForPermissions() {
         if (needsPermissions()) {
             String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            ActivityCompat.requestPermissions(this, permissions,  STORAGE_PERMISSION_REQUEST);
+            ActivityCompat.requestPermissions(this, permissions, STORAGE_PERMISSION_REQUEST);
         }
     }
 
