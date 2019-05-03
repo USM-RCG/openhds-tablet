@@ -58,8 +58,7 @@ import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceBool;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
 import static org.openhds.mobile.utilities.HttpUtils.get;
-import static org.openhds.mobile.utilities.NotificationUtils.getNotificationColor;
-import static org.openhds.mobile.utilities.NotificationUtils.getNotificationIcon;
+import static org.openhds.mobile.utilities.NotificationUtils.*;
 import static org.openhds.mobile.utilities.StringUtils.join;
 import static org.openhds.mobile.utilities.UrlUtils.buildServerUrl;
 
@@ -433,7 +432,7 @@ public class SyncUtils {
             HttpURLConnection httpConn = get(endpoint, accept, creds, existingFingerprint);
             int httpResult = httpConn.getResponseCode();
 
-            final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, TAG)
+            final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)
                     .setSmallIcon(android.R.drawable.stat_sys_download)
                     .setTicker("")
                     .setColor(getNotificationColor(ctx))
@@ -654,7 +653,7 @@ public class SyncUtils {
             Intent intent = new Intent(ctx, SupervisorActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
             PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             final NotificationManager manager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
-            manager.notify(SYNC_NOTIFICATION_ID, new NotificationCompat.Builder(ctx, TAG)
+            manager.notify(SYNC_NOTIFICATION_ID, new NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)
                     .setSmallIcon(getNotificationIcon())
                     .setContentTitle(ctx.getString(R.string.sync_database_new_data))
                     .setContentText(ctx.getString(R.string.sync_database_new_data_instructions))

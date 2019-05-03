@@ -227,5 +227,6 @@
     <string name="unknown_error">Unknown error</string>
     <string name="fieldworker">Fieldworker</string>
     <string name="supervisor">Supervisor</string>
+    <string name="sync_notifications_channel_name">Synchronization</string>
 
 </resources>

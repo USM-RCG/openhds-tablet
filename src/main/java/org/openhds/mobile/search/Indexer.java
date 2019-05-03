@@ -25,8 +25,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 import static org.apache.lucene.index.IndexWriterConfig.OpenMode.CREATE_OR_APPEND;
 import static org.apache.lucene.util.Version.LUCENE_47;
 import static org.openhds.mobile.provider.OpenHDSProvider.getDatabaseHelper;
-import static org.openhds.mobile.utilities.NotificationUtils.getNotificationColor;
-import static org.openhds.mobile.utilities.NotificationUtils.getNotificationIcon;
+import static org.openhds.mobile.utilities.NotificationUtils.*;
 import static org.openhds.mobile.utilities.SyncUtils.close;
 
 public class Indexer {
@@ -166,7 +165,7 @@ public class Indexer {
     private void bulkIndex(int label, DocumentSource source, IndexWriter writer) throws IOException {
 
         NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx, TAG)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)
                 .setSmallIcon(getNotificationIcon())
                 .setColor(getNotificationColor(ctx))
                 .setContentTitle(ctx.getString(R.string.updating_index))

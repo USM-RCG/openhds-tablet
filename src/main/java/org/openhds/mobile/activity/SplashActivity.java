@@ -12,9 +12,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-
 import org.openhds.mobile.R;
 import org.openhds.mobile.provider.FormsProviderAPI;
+import org.openhds.mobile.utilities.NotificationUtils;
 
 import java.util.List;
 
@@ -102,6 +102,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void startApp() {
+        NotificationUtils.createChannels(getApplicationContext());
         launchLogin();
     }
 
