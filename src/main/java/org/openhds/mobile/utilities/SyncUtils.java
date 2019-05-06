@@ -798,7 +798,7 @@ public class SyncUtils {
         }
 
         @Override
-        public void close() throws IOException {
+        public void close() {
             c.disconnect();
         }
     }
