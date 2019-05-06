@@ -17,11 +17,11 @@ import org.apache.lucene.store.FSDirectory;
 import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.R;
 import org.openhds.mobile.navconfig.BiokoHierarchy;
+import org.openhds.mobile.utilities.NotificationUtils;
 
 import java.io.File;
 import java.io.IOException;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
 import static org.apache.lucene.index.IndexWriterConfig.OpenMode.CREATE_OR_APPEND;
 import static org.apache.lucene.util.Version.LUCENE_47;
 import static org.openhds.mobile.provider.OpenHDSProvider.getDatabaseHelper;
@@ -164,7 +164,7 @@ public class Indexer {
 
     private void bulkIndex(int label, DocumentSource source, IndexWriter writer) throws IOException {
 
-        NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = NotificationUtils.getNotificationManager(ctx);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)
                 .setSmallIcon(getNotificationIcon())
                 .setColor(getNotificationColor(ctx))

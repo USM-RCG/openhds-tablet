@@ -17,6 +17,7 @@ import org.openhds.mobile.OpenHDS;
 import org.openhds.mobile.R;
 import org.openhds.mobile.offlinedb.OfflineDbService;
 import org.openhds.mobile.utilities.MessageUtils;
+import org.openhds.mobile.utilities.NotificationUtils;
 import org.openhds.mobile.utilities.SyncUtils;
 
 import java.io.File;
@@ -113,7 +114,7 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
     public void installed() {
         Context ctx = getActivity();
         updateStatus();
-        NotificationManager manager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager manager = NotificationUtils.getNotificationManager(ctx);
         manager.cancel(SYNC_NOTIFICATION_ID);
         MessageUtils.showLongToast(ctx, ctx.getString(R.string.sync_database_updated));
         if (isAutoReindexingEnabled(ctx)) {

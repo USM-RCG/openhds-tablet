@@ -45,7 +45,6 @@ import java.security.NoSuchAlgorithmException;
 
 import static android.content.ContentResolver.setIsSyncable;
 import static android.content.ContentResolver.setSyncAutomatically;
-import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.os.Environment.getExternalStorageDirectory;
 import static com.github.batkinson.jrsync.zsync.ZSync.sync;
@@ -409,7 +408,7 @@ public class SyncUtils {
 
         DatabaseAdapter db = DatabaseAdapter.getInstance(ctx);
 
-        final NotificationManager manager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+        final NotificationManager manager = NotificationUtils.getNotificationManager(ctx);
 
         String fingerprint = "?";
 
@@ -651,7 +650,7 @@ public class SyncUtils {
 
             Intent intent = new Intent(ctx, SupervisorActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
             PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            final NotificationManager manager = (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+            final NotificationManager manager = NotificationUtils.getNotificationManager(ctx);
             manager.notify(SYNC_NOTIFICATION_ID, new NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)
                     .setSmallIcon(getNotificationIcon())
                     .setContentTitle(ctx.getString(R.string.sync_database_new_data))
