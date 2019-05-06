@@ -2,12 +2,13 @@ package org.openhds.mobile.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -85,16 +86,16 @@ public class LoginActivity extends AppCompatActivity {
     class TabListener implements ActionBar.TabListener {
 
         @Override
-        public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction ft) {
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
             pager.setCurrentItem(tab.getPosition(), true);
         }
 
         @Override
-        public void onTabUnselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction ft) {
+        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
         }
 
         @Override
-        public void onTabReselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction ft) {
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
         }
     }
 

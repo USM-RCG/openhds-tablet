@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:title="@string/settings">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                                      android:title="@string/settings">
 
-    <android.support.v7.preference.EditTextPreference
+    <androidx.preference.EditTextPreference
         android:key="@string/openhds_server_url_key"
         android:title="@string/openhds_server_url_title"
         android:inputType="textUri"
         android:defaultValue="@string/default_openhds_server_url"
         />
 
-    <android.support.v7.preference.PreferenceCategory android:title="@string/pref_sync_title">
+    <androidx.preference.PreferenceCategory android:title="@string/pref_sync_title">
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="@bool/auto_sync_default"
             android:key="@string/use_auto_sync_key"
             android:summaryOn="@string/auto_sync_enabled"
@@ -19,7 +19,7 @@
             android:title="@string/use_auto_sync"
             />
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="@bool/wifi_sync_default"
             android:key="@string/wifi_sync_key"
             android:summaryOn="@string/wifi_sync_enabled"
@@ -27,7 +27,7 @@
             android:title="@string/wifi_sync"
             />
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="@bool/use_sidecar_default"
             android:key="@string/use_sidecar_key"
             android:summaryOn="@string/use_sidecar_enabled"
@@ -35,7 +35,7 @@
             android:title="@string/use_sidecar"
             android:dependency="@string/wifi_sync_key"/>
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="@bool/use_zsync_default"
             android:key="@string/use_zsync_key"
             android:summaryOff="@string/use_zsync_disabled"
@@ -43,18 +43,18 @@
             android:title="@string/use_zsync"
             />
 
-        <android.support.v7.preference.EditTextPreference
+        <androidx.preference.EditTextPreference
             android:defaultValue="@string/sync_history_retention_default"
             android:inputType="number"
             android:key="@string/sync_history_retention_key"
             android:title="@string/sync_history_retention"
             />
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory android:title="@string/pref_search_title">
+    <androidx.preference.PreferenceCategory android:title="@string/pref_search_title">
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="@bool/use_search_default"
             android:key="@string/use_search_key"
             android:summaryOn="@string/use_search_enabled"
@@ -62,7 +62,7 @@
             android:title="@string/use_search"
             />
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="@bool/auto_index_on_db_update_default"
             android:key="@string/auto_index_on_db_update_key"
             android:summaryOff="@string/auto_index_on_db_update_disabled"
@@ -71,10 +71,10 @@
             android:dependency="@string/use_search_key"
             />
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v14.preference.MultiSelectListPreference
+    <androidx.preference.MultiSelectListPreference
         android:key="@string/active_modules_key"
         android:title="@string/active_modules"/>
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

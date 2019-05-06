@@ -5,7 +5,7 @@
         android:id="@+id/field_worker_search"
         android:title="@string/search_label"
         app:showAsAction="ifRoom"
-        app:actionViewClass="android.support.v7.widget.SearchView" />
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
     <item
         android:id="@+id/logout_menu_button"
         android:title="@string/logout"

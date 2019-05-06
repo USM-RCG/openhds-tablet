@@ -3,7 +3,7 @@ package org.openhds.mobile.utilities;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import org.openhds.mobile.R;
 
 import static android.os.Build.VERSION.SDK_INT;
