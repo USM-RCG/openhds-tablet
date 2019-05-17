@@ -30,9 +30,9 @@ with (imports) {
            label: 'mildFormLabel',
            builder: new BiokoFormPayloadBuilders.Sbcc() });
 
-   bind({ form: 'net_education',
-          label: 'netEducationFormLabel',
-          builder: new BiokoFormPayloadBuilders.Sbcc() });
+    bind({ form: 'net_education',
+           label: 'netEducationFormLabel',
+           builder: new BiokoFormPayloadBuilders.Sbcc() });
 
     function launcher(l) {
         return new Launcher({
