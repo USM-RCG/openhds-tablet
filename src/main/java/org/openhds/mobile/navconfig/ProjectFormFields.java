@@ -153,8 +153,6 @@ public class ProjectFormFields {
     public static final class BedNet {
         public static final String BED_NET_CODE = "netCode";
         public static final String HOUSEHOLD_SIZE = "householdSize";
-        public static final String LOCATION_EXTID = "locationExtId";
-        public static final String LOCATION_UUID = "locationUuid";
     }
 
     public static final class SprayHousehold {

@@ -48,8 +48,8 @@ public class BiokoFormPayloadBuilders {
             String locationExtId = location.getExtId();
             String locationUuid = location.getUuid();
 
-            formPayload.put(ProjectFormFields.BedNet.LOCATION_EXTID, locationExtId);
-            formPayload.put(ProjectFormFields.BedNet.LOCATION_UUID, locationUuid);
+            formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
+            formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, locationUuid);
 
@@ -83,8 +83,8 @@ public class BiokoFormPayloadBuilders {
             Map<String, String> formPayload = new HashMap<>();
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
-            formPayload.put(ProjectFormFields.BedNet.LOCATION_EXTID, household.getExtId());
-            formPayload.put(ProjectFormFields.BedNet.LOCATION_UUID, household.getUuid());
+            formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, household.getExtId());
+            formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, household.getUuid());
             return formPayload;
         }
     }
