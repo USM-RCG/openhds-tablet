@@ -24,7 +24,7 @@ with (imports) {
 
     bind({ form: 'irs_iec_r26',
            label: 'advSprayFormLabel',
-           builder: new BiokoFormPayloadBuilders.SprayHousehold() });
+           builder: new BiokoFormPayloadBuilders.DefaultHousehold() });
 
     function launcher(l) {
         return new Launcher({

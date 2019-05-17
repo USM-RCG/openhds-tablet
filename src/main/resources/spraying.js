@@ -24,7 +24,7 @@ with (imports) {
 
     bind({ form: 'irs_sp1_r26',
            label: 'sprayingFormLabel',
-           builder: new BiokoFormPayloadBuilders.SprayHousehold() });
+           builder: new BiokoFormPayloadBuilders.DefaultHousehold() });
 
     bind({ form: 'super_ojo',
            label: 'superOjoFormLabel',

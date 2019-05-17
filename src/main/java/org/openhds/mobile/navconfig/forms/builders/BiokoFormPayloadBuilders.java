@@ -77,7 +77,7 @@ public class BiokoFormPayloadBuilders {
     }
 
     @UsedByJSConfig
-    public static class SprayHousehold implements FormPayloadBuilder {
+    public static class DefaultHousehold implements FormPayloadBuilder {
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {
             Map<String, String> formPayload = new HashMap<>();
