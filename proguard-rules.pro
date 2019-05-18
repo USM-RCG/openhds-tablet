@@ -8,6 +8,9 @@
 -keep class org.openhds.mobile.R$* { *; }
 
 # app's scriptable classes
+-keep class org.openhds.mobile.navconfig.forms.builders.** { *; }
+-keep class org.openhds.mobile.navconfig.forms.consumers.** { *; }
+-keep class org.openhds.mobile.navconfig.forms.filters.** { *; }
 -keep class org.openhds.mobile.navconfig.NavigatorConfig { *; }
 -keep class * extends org.openhds.mobile.navconfig.forms.builders.FormPayloadBuilder { *; }
 -keep class * extends org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer { *; }
