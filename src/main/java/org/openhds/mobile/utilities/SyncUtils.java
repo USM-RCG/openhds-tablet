@@ -20,6 +20,7 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.activity.SupervisorActivity;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.provider.OpenHDSProvider;
+import org.openhds.mobile.syncadpt.Constants;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -52,6 +53,7 @@ import static java.net.HttpURLConnection.HTTP_NOT_MODIFIED;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.openhds.mobile.OpenHDS.AUTHORITY;
 import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
+import static org.openhds.mobile.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceBool;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
 import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
@@ -72,8 +74,6 @@ public class SyncUtils {
     private static final int BUFFER_SIZE = 8192;
 
     public static final String SQLITE_MIME_TYPE = "application/x-sqlite3";
-
-    public static final String ACCOUNT_TYPE = "cims-bioko.org";
 
     /**
      * Generates a filename to use for storing the ETag header value for a file. The value generated is deterministic

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+    <TextView
+            android:id="@+id/title"
+            style="@style/LoginHeader"
+            tools:text="Extra-extra long sample login heading" />
+
+    <EditText
+            android:id="@+id/usernameEditText"
+            style="@style/LoginText"
+            android:layout_below="@id/titleTextView"
+            android:hint="@string/login_username"
+            android:nextFocusForward="@+id/passwordEditText"
+            android:inputType="textNoSuggestions">
+        <requestFocus />
+    </EditText>
+
+    <EditText
+            android:id="@+id/passwordEditText"
+            style="@style/LoginText"
+            android:layout_below="@id/usernameEditText"
+            android:hint="@string/login_password"
+            android:inputType="textPassword"
+            android:nextFocusForward="@+id/loginButton" />
+
+    <Button
+            android:id="@+id/loginButton"
+            style="@style/Button"
+            android:layout_alignEnd="@id/passwordEditText"
+            android:layout_alignRight="@id/passwordEditText"
+            android:layout_below="@id/passwordEditText"
+            android:text="@string/login_btn" />
+
+</RelativeLayout>

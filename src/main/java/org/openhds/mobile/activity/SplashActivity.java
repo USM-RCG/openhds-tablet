@@ -1,12 +1,16 @@
 package org.openhds.mobile.activity;
 
 import android.Manifest;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -18,12 +22,17 @@ import org.openhds.mobile.utilities.NotificationUtils;
 
 import java.util.List;
 
+import static org.openhds.mobile.syncadpt.Constants.ACCOUNT_TYPE;
+import static org.openhds.mobile.syncadpt.Constants.AUTHTOKEN_TYPE_DEVICE;
+
 /**
  * This activity simply forwards to the actual opening activity for the application, showing an image by its style
  * instead of inflating a layout or setting any view. This ensures the image is available immediately, and the
  * actual opening activity is available as soon as it is ready.
  */
 public class SplashActivity extends AppCompatActivity {
+
+    private static final String TAG = SplashActivity.class.getSimpleName();
 
     private static final int STORAGE_PERMISSION_REQUEST = 1;
 
@@ -103,7 +112,23 @@ public class SplashActivity extends AppCompatActivity {
 
     private void startApp() {
         NotificationUtils.createChannels(getApplicationContext());
+        getToken();
         launchLogin();
+    }
+
+    private void getToken() {
+        AccountManager.get(getBaseContext()).getAuthTokenByFeatures(ACCOUNT_TYPE, AUTHTOKEN_TYPE_DEVICE,
+                null, this, null, null, new AccountManagerCallback<Bundle>() {
+            @Override
+            public void run(AccountManagerFuture<Bundle> future) {
+                try {
+                    Bundle result = future.getResult();
+                    result.getString(AccountManager.KEY_AUTHTOKEN);
+                } catch (Exception e) {
+                    Log.e(TAG, "failed to retrieve token", e);
+                }
+            }
+        }, null);
     }
 
     private void launchLogin() {

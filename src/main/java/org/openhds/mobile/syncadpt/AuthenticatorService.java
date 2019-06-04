@@ -6,11 +6,11 @@ import android.os.IBinder;
 
 public class AuthenticatorService extends Service {
 
-    private AuthenticatorStub auth;
+    private AccountAuthenticator auth;
 
     @Override
     public void onCreate() {
-        auth = new AuthenticatorStub(this);
+        auth = new AccountAuthenticator(this);
     }
 
     @Override
