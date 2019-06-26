@@ -3,17 +3,19 @@ package org.openhds.mobile.syncadpt;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import org.json.JSONObject;
 import org.openhds.mobile.R;
 
 import static android.accounts.AccountManager.*;
 import static android.widget.Toast.LENGTH_SHORT;
-import static org.openhds.mobile.syncadpt.AuthUtils.fetchToken;
+import static org.openhds.mobile.syncadpt.AuthUtils.register;
 
 public class AuthenticatorActivity extends AccountAuthenticatorActivity implements LoginTaskListener {
 
@@ -67,7 +69,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
         String username = ((TextView) findViewById(R.id.usernameEditText)).getText().toString();
         String password = ((TextView) findViewById(R.id.passwordEditText)).getText().toString();
         String accountType = getIntent().getStringExtra(KEY_ACCOUNT_TYPE);
-        task = new LoginTask(username, password, accountType, this);
+        task = new LoginTask(getApplicationContext(), username, password, accountType, this);
         task.execute();
     }
 
@@ -97,19 +99,23 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
 
 
 interface LoginTaskListener {
+
     void error(String message);
+
     void success(Intent result);
 }
 
 
 class LoginTask extends AsyncTask<Void, Void, Intent> {
 
+    private final Context ctx;
     private final String username;
     private final String password;
     private final String accountType;
     private LoginTaskListener listener;
 
-    public LoginTask(String username, String password, String accountType, LoginTaskListener listener) {
+    public LoginTask(Context ctx, String username, String password, String accountType, LoginTaskListener listener) {
+        this.ctx = ctx;
         this.username = username;
         this.password = password;
         this.accountType = accountType;
@@ -118,13 +124,15 @@ class LoginTask extends AsyncTask<Void, Void, Intent> {
 
     @Override
     protected Intent doInBackground(Void... params) {
+
         Bundle data = new Bundle();
+
         try {
-            String token = fetchToken(username, password, accountType);
+            JSONObject result = register(ctx, username, password);
             data.putString(KEY_ACCOUNT_NAME, username);
             data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-            data.putString(AccountManager.KEY_AUTHTOKEN, token);
-            data.putString(KEY_PASSWORD, password);
+            data.putString(AccountManager.KEY_AUTHTOKEN, result.getString("access_token"));
+            data.putString(KEY_PASSWORD, result.getString("secret"));
         } catch (Exception e) {
             data.putString(KEY_ERROR_MESSAGE, e.getMessage());
         }

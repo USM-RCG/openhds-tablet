@@ -31,6 +31,8 @@
     <string name="default_openhds_server_url" translatable="false">https://cims-bioko.org</string>
     <string name="supervisor_login_url" translatable="false">/api/rest/rounds</string>
     <string name="sync_database_path" translatable="false">/api/rest/mobiledb</string>
+    <string name="auth_registration_path" translatable="false">/api/device/registration</string>
+    <string name="auth_token_path" translatable="false">/api/device/token</string>
     <string name="no_server_url">No server URL has been set</string>
 
     <!-- Details Fragment Values -->

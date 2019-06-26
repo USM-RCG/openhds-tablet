@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import static android.accounts.AccountManager.*;
-import static org.openhds.mobile.syncadpt.AuthUtils.fetchToken;
+import static org.openhds.mobile.syncadpt.AuthUtils.token;
 import static org.openhds.mobile.syncadpt.Constants.AUTHTOKEN_TYPE_DEVICE;
 
 public class AccountAuthenticator extends AbstractAccountAuthenticator {
@@ -63,7 +63,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
             String password = am.getPassword(account);
             if (password != null) {
                 try {
-                    authToken = fetchToken(account.name, password, authTokenType);
+                    authToken = token(ctx, account.name, password).getString("access_token");
                 } catch (Exception e) {
                     Log.w(TAG, "failed to obtain new token", e);
                 }
