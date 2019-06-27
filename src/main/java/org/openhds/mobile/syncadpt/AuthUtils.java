@@ -25,15 +25,15 @@ public class AuthUtils {
      *
      * @param ctx      used to get the registration endpoint relative to server url in settings
      * @param name     the device 'username' to use when authenticating to device api
-     * @param password the password to use when authenticating
+     * @param secret the secret to use when authenticating
      * @return a {@link JSONObject} containing the response data.
      * @throws IOException   when url is bad, or io fails
      * @throws JSONException when construction of the response object fails
      */
-    public static JSONObject register(Context ctx, String name, String password) throws IOException, JSONException {
+    public static JSONObject register(Context ctx, String name, String secret) throws IOException, JSONException {
         HttpURLConnection urlConn = (HttpURLConnection) getRegistrationEndpoint(ctx).openConnection();
         urlConn.setRequestProperty("Content-Type", "application/json");
-        urlConn.setRequestProperty("Authorization", encodeBasicCreds(name, password));
+        urlConn.setRequestProperty("Authorization", encodeBasicCreds(name, secret));
         BufferedOutputStream out = null;
         BufferedInputStream in = null;
         try {
@@ -63,15 +63,15 @@ public class AuthUtils {
      *
      * @param ctx      used to get the token endpoint relative to server url in settings
      * @param name     the device 'username' to use when authenticating to device api
-     * @param password the password to use when authenticating
+     * @param secret the secret to use when authenticating
      * @return a {@link JSONObject} containing the response data.
      * @throws IOException   when url is bad, or io fails
      * @throws JSONException when construction of the response object fails
      */
-    public static JSONObject token(Context ctx, String name, String password) throws IOException, JSONException {
+    public static JSONObject token(Context ctx, String name, String secret) throws IOException, JSONException {
         HttpURLConnection urlConn = (HttpURLConnection) getTokenEndpoint(ctx).openConnection();
         urlConn.setRequestProperty("Content-Type", "application/json");
-        urlConn.setRequestProperty("Authorization", encodeBasicCreds(name, password));
+        urlConn.setRequestProperty("Authorization", encodeBasicCreds(name, secret));
         BufferedInputStream in = null;
         try {
             if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK || !urlConn.getContentType().startsWith("application/json")) {
