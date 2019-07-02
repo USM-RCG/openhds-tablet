@@ -2,6 +2,8 @@ package org.openhds.mobile.syncadpt;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
@@ -11,11 +13,11 @@ import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.util.Log;
-
 import org.openhds.mobile.R;
 import org.openhds.mobile.sidecar.Sidecar;
 import org.openhds.mobile.sidecar.SidecarNotFoundException;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -56,15 +58,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     NsdServiceInfo info = Sidecar.discover((NsdManager) ctx.getSystemService(Context.NSD_SERVICE), 30);
                     URL endpoint = new URL("http", info.getHost().getHostName(), info.getPort(), ctx.getString(R.string.sync_database_path));
                     Log.i(TAG, "local sync " + endpoint);
-                    downloadUpdate(ctx, endpoint, null, null);
+                    downloadUpdate(ctx, endpoint, null);
                 } else {
                     URL endpoint = getSyncEndpoint(ctx);
                     Log.i(TAG, "remote sync " + endpoint);
-                    downloadUpdate(ctx, endpoint, account.name, AccountManager.get(ctx).getPassword(account));
+                    String token = AccountManager.get(ctx).blockingGetAuthToken(account, Constants.AUTHTOKEN_TYPE_DEVICE, true);
+                    downloadUpdate(ctx, endpoint, token);
                 }
             } catch (MalformedURLException e) {
                 Log.w(TAG, "bad endpoint url", e);
-            } catch (SidecarNotFoundException e) {
+            } catch (SidecarNotFoundException | AuthenticatorException | IOException | OperationCanceledException e) {
                 Log.w(TAG, e.getMessage());
             }
         } else {

@@ -16,25 +16,23 @@ import java.io.File;
 public class HttpTaskRequest {
 
     private final String url;
-    private final String userName;
-    private final String password;
+    private final String auth;
     private final String accept;
     private final String eTag;
     private final File file;
 
-    public HttpTaskRequest(String url, String accept, String userName, String password) {
-        this(url, accept, userName, password, null);
+    public HttpTaskRequest(String url, String accept, String auth) {
+        this(url, accept, auth, null);
     }
 
-    public HttpTaskRequest(String url, String accept, String userName, String password, String eTag) {
-        this(url, accept, userName, password, eTag, null);
+    public HttpTaskRequest(String url, String accept, String auth, String eTag) {
+        this(url, accept, auth, eTag, null);
     }
 
-    public HttpTaskRequest(String url, String accept, String userName, String password, String eTag, File saveTo) {
+    public HttpTaskRequest(String url, String accept, String auth, String eTag, File saveTo) {
         this.url = url;
+        this.auth = auth;
         this.accept = accept;
-        this.userName = userName;
-        this.password = password;
         this.eTag = eTag;
         file = saveTo;
     }
@@ -47,12 +45,8 @@ public class HttpTaskRequest {
         return accept;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getPassword() {
-        return password;
+    public String getAuth() {
+        return auth;
     }
 
     public String getETag() {

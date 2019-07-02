@@ -16,7 +16,6 @@ import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_NOT_MODIFIED;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
-import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
 import static org.openhds.mobile.utilities.SyncUtils.streamToFile;
 
 /**
@@ -63,8 +62,7 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
         HttpURLConnection conn;
         try {
             URL url = new URL(req.getUrl());
-            String auth = encodeBasicCreds(req.getUserName(), req.getPassword());
-            conn = HttpUtils.get(url, req.getAccept(), auth, req.getETag());
+            conn = HttpUtils.get(url, req.getAccept(), req.getAuth(), req.getETag());
             statusCode = conn.getResponseCode();
         } catch (Exception e) {
             return new HttpTaskResponse(false, Result.CONNECT_FAILURE, statusCode, null);

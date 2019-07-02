@@ -56,8 +56,7 @@ import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
 import static org.openhds.mobile.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceBool;
 import static org.openhds.mobile.utilities.ConfigUtils.getPreferenceString;
-import static org.openhds.mobile.utilities.HttpUtils.encodeBasicCreds;
-import static org.openhds.mobile.utilities.HttpUtils.get;
+import static org.openhds.mobile.utilities.HttpUtils.*;
 import static org.openhds.mobile.utilities.NotificationUtils.*;
 import static org.openhds.mobile.utilities.StringUtils.join;
 import static org.openhds.mobile.utilities.UrlUtils.buildServerUrl;
@@ -397,10 +396,9 @@ public class SyncUtils {
      *
      * @param ctx      app context to use for locating resources like files, etc.
      * @param endpoint url of the remote http endpoint to sync with
-     * @param username username to use for http auth
-     * @param password password to use for http auth
+     * @param accessToken bearer token to use when contacting server
      */
-    public static void downloadUpdate(final Context ctx, URL endpoint, String username, String password) {
+    public static void downloadUpdate(final Context ctx, URL endpoint, String accessToken) {
 
         File dbFile = getDatabaseFile(ctx), dbTempFile = getTempFile(dbFile);
 
@@ -425,8 +423,7 @@ public class SyncUtils {
         try {
 
             long startTime = System.currentTimeMillis();
-
-            String creds = username != null? encodeBasicCreds(username, password) : null;
+            String creds = accessToken != null? encodeBearerCreds(accessToken) : null;
             HttpURLConnection httpConn = get(endpoint, accept, creds, existingFingerprint);
             int httpResult = httpConn.getResponseCode();
 

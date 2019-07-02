@@ -24,6 +24,15 @@ public class HttpUtils {
     }
 
     /**
+     * Encodes an HTTP Bearer authentication header for the specified token.
+     * <p>
+     * FIXME: password exposed to memory scan as String via constant pool
+     */
+    public static String encodeBearerCreds(String token) {
+        return String.format("Bearer %s", token);
+    }
+
+    /**
      * Constructs an {@link HttpURLConnection} with the given request headers.
      */
     public static HttpURLConnection get(URL url, Map<String, String> headers) throws IOException {
