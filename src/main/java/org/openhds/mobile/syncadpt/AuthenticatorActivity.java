@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,13 +15,17 @@ import org.json.JSONObject;
 import org.openhds.mobile.R;
 
 import static android.accounts.AccountManager.*;
+import static android.content.ContentResolver.setIsSyncable;
+import static android.content.ContentResolver.setSyncAutomatically;
 import static android.widget.Toast.LENGTH_SHORT;
+import static org.openhds.mobile.OpenHDS.AUTHORITY;
 import static org.openhds.mobile.syncadpt.AuthUtils.register;
 
 public class AuthenticatorActivity extends AccountAuthenticatorActivity implements LoginTaskListener {
 
     public static final String KEY_AUTH_TOKEN_TYPE = "tokenType";
     public static final String KEY_NEW_ACCOUNT = "newAccount";
+    private static final String TAG = AuthenticatorActivity.class.getSimpleName();
 
     private AccountManager accountManager;
     private String tokenType;
@@ -85,8 +90,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
 
         if (getIntent().getBooleanExtra(KEY_NEW_ACCOUNT, false)) {
             String token = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
-            accountManager.addAccountExplicitly(account, accountPassword, null);
-            accountManager.setAuthToken(account, tokenType, token);
+            if (accountManager.addAccountExplicitly(account, accountPassword, null)) {
+                setIsSyncable(account, AUTHORITY, 1);
+                setSyncAutomatically(account, AUTHORITY, true);
+                accountManager.setAuthToken(account, tokenType, token);
+            } else {
+                Log.e(TAG, "Failed to add account");
+            }
         } else {
             accountManager.setPassword(account, accountPassword);
         }
