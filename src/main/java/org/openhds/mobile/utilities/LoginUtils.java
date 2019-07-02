@@ -4,16 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 
 import org.openhds.mobile.activity.LoginActivity;
-import org.openhds.mobile.model.core.Supervisor;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
-import static org.openhds.mobile.activity.LoginActivity.FIELD_WORKER_IDX;
-import static org.openhds.mobile.activity.LoginActivity.SELECTED_LOGIN_KEY;
-import static org.openhds.mobile.activity.LoginActivity.SUPERVISOR_IDX;
 
 public class LoginUtils {
 
@@ -26,9 +22,6 @@ public class LoginUtils {
         private Login() {
         }
 
-        public boolean hasAuthenticatedUser() {
-            return authenticatedUser != null;
-        }
 
         public void setAuthenticatedUser(User user) {
             authenticatedUser = user;
@@ -39,10 +32,9 @@ public class LoginUtils {
         }
 
         public void logout(Activity ctx, boolean launchLoginActivity) {
-            boolean showSupervisorLogin = authenticatedUser instanceof Supervisor;
             authenticatedUser = null;
             if (launchLoginActivity) {
-                launchLogin(ctx, showSupervisorLogin);
+                launchLogin(ctx);
             }
         }
 
@@ -55,8 +47,7 @@ public class LoginUtils {
         return logins.get(type);
     }
 
-    public static void launchLogin(Activity ctx, boolean showSupervisor) {
-        ctx.startActivity(new Intent(ctx, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TASK)
-                .putExtra(SELECTED_LOGIN_KEY, showSupervisor ? SUPERVISOR_IDX : FIELD_WORKER_IDX));
+    public static void launchLogin(Activity ctx) {
+        ctx.startActivity(new Intent(ctx, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TASK));
     }
 }

@@ -14,7 +14,7 @@
     <EditText
             android:id="@+id/usernameEditText"
             style="@style/LoginText"
-            android:layout_below="@id/titleTextView"
+            android:layout_below="@id/title"
             android:hint="@string/login_username"
             android:nextFocusForward="@+id/passwordEditText"
             android:inputType="textNoSuggestions">

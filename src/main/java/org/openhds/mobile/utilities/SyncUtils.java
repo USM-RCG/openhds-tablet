@@ -20,7 +20,6 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.activity.SupervisorActivity;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.provider.OpenHDSProvider;
-import org.openhds.mobile.syncadpt.Constants;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -44,8 +43,6 @@ import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import static android.content.ContentResolver.setIsSyncable;
-import static android.content.ContentResolver.setSyncAutomatically;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.os.Environment.getExternalStorageDirectory;
 import static com.github.batkinson.jrsync.zsync.ZSync.sync;
@@ -290,32 +287,6 @@ public class SyncUtils {
                 listener.streamed(read);
             }
         }
-    }
-
-    /**
-     * Adds an account, which is required for synchronizing with the server, if none exist.
-     *
-     * @param ctx      app context, used to access the account manager
-     * @param username username of server account to sync with
-     * @param password password for specified username
-     * @return the created account, or null if no account was created
-     */
-    public static Account installAccount(Context ctx, String username, String password) {
-        AccountManager manager = AccountManager.get(ctx);
-        Account[] accounts = manager.getAccountsByType(ACCOUNT_TYPE);
-        if (accounts.length > 0) {
-            Log.i(TAG, "account exists: " + accounts[0].name);
-        } else {
-            Account account = new Account(username, ACCOUNT_TYPE);
-            if (manager.addAccountExplicitly(account, password, null)) {
-                Log.i(TAG, "added account " + username);
-                setIsSyncable(account, AUTHORITY, 1);
-                setSyncAutomatically(account, AUTHORITY, true);
-                return account;
-            }
-            Log.w(TAG, "failed to add account");
-        }
-        return null;
     }
 
     /**

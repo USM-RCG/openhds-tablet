@@ -5,5 +5,9 @@
 		android:id="@+id/configure_server"
 		android:title="@string/settings"
 		app:showAsAction="ifRoom|withText" />
+	<item
+			android:id="@+id/show_supervisor"
+			android:title="@string/supervisor"
+			app:showAsAction="ifRoom|withText" />
 </menu>
 
