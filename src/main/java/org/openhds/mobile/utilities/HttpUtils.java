@@ -14,7 +14,7 @@ public class HttpUtils {
     /**
      * Encodes an HTTP Basic authentication header for the specified username
      * and password.
-     *
+     * <p>
      * FIXME: password exposed to memory scan as String via constant pool
      */
     public static String encodeBasicCreds(String username, String password) {
@@ -37,7 +37,7 @@ public class HttpUtils {
      */
     public static HttpURLConnection get(URL url, Map<String, String> headers) throws IOException {
         HttpURLConnection.setFollowRedirects(false);
-        HttpURLConnection c = (HttpURLConnection)url.openConnection();
+        HttpURLConnection c = (HttpURLConnection) url.openConnection();
         for (Map.Entry<String, String> h : headers.entrySet()) {
             c.addRequestProperty(h.getKey(), h.getValue());
         }
