@@ -12,9 +12,9 @@
 -keep class org.openhds.mobile.navconfig.forms.consumers.** { *; }
 -keep class org.openhds.mobile.navconfig.forms.filters.** { *; }
 -keep class org.openhds.mobile.navconfig.NavigatorConfig { *; }
--keep class * extends org.openhds.mobile.navconfig.forms.builders.FormPayloadBuilder { *; }
--keep class * extends org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer { *; }
--keep class * extends org.openhds.mobile.navconfig.forms.filters.FormFilter { *; }
+-keep class * implements org.openhds.mobile.navconfig.forms.builders.FormPayloadBuilder { *; }
+-keep class * implements org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer { *; }
+-keep class * implements org.openhds.mobile.navconfig.forms.filters.FormFilter { *; }
 -keep class * extends org.openhds.mobile.fragment.navigate.detail.DetailFragment { *; }
 
 # jdom (xml)
