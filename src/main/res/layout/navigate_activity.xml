@@ -1,50 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:baselineAligned="false"
-    android:animateLayoutChanges="true"
-    android:orientation="horizontal" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:baselineAligned="false"
+              android:orientation="vertical">
 
-    <LinearLayout
-        style="@style/FieldworkerSideColumn"
-        android:orientation="vertical">
-
-        <fragment
-            android:name="org.openhds.mobile.fragment.navigate.HierarchyButtonFragment"
-            android:id="@+id/hierarchy_button_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <fragment
-            android:name="org.openhds.mobile.fragment.navigate.DetailToggleFragment"
-            android:id="@+id/detail_toggle_fragment"
-            android:layout_width="match_parent"
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/navigate_toolbar"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/toggle_fragment_spacing"/>
-
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/middle_column"
-        style="@style/FieldworkerMiddleColumn"/>
+            android:layout_width="match_parent"
+            android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"/>
 
     <LinearLayout
-        style="@style/FieldworkerSideColumn"
-        android:orientation="vertical">
-
-        <fragment
-            android:name="org.openhds.mobile.fragment.FormSelectionFragment"
-            android:id="@+id/form_selection_fragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:orientation="horizontal">
 
-        <fragment
-            android:name="org.openhds.mobile.fragment.navigate.FormListFragment"
-            android:id="@+id/form_list_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <LinearLayout
+                style="@style/FieldworkerSideColumn"
+                android:orientation="vertical">
 
+            <fragment
+                    android:name="org.openhds.mobile.fragment.navigate.HierarchyButtonFragment"
+                    android:id="@+id/hierarchy_button_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <fragment
+                    android:name="org.openhds.mobile.fragment.navigate.DetailToggleFragment"
+                    android:id="@+id/detail_toggle_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/toggle_fragment_spacing"/>
+
+        </LinearLayout>
+
+        <FrameLayout
+                android:id="@+id/middle_column"
+                style="@style/FieldworkerMiddleColumn"/>
+
+        <LinearLayout
+                style="@style/FieldworkerSideColumn"
+                android:orientation="vertical">
+
+            <fragment
+                    android:name="org.openhds.mobile.fragment.FormSelectionFragment"
+                    android:id="@+id/form_selection_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <fragment
+                    android:name="org.openhds.mobile.fragment.navigate.FormListFragment"
+                    android:id="@+id/form_list_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

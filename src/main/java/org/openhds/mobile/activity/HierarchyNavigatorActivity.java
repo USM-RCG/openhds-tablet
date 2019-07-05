@@ -6,6 +6,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -107,6 +109,14 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
         currentModule = config.getModule(currentModuleName);
 
         setTitle(currentModule.getActivityTitle());
+
+        Toolbar toolbar = findViewById(R.id.navigate_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
 
         queryHelper = DefaultQueryHelper.getInstance();
 
