@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -29,6 +30,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import androidx.appcompat.widget.Toolbar;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.flexible.core.QueryNodeException;
@@ -106,6 +108,9 @@ public class SearchableActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_results);
         setTitle(R.string.search_label);
+
+        Toolbar toolbar = findViewById(R.id.search_toolbar);
+        setSupportActionBar(toolbar);
 
         listContainer = findViewById(R.id.list_container);
         basicQuery = listContainer.findViewById(R.id.basic_query_text);
