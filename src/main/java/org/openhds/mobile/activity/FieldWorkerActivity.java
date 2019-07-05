@@ -6,6 +6,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuItemCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -40,11 +42,17 @@ public class FieldWorkerActivity extends AppCompatActivity implements OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // basic view setup
         setContentView(R.layout.fieldworker_activity);
         setTitle(getText(R.string.field_worker_home));
 
-        // fill the middle column with a button for each available activity
+        Toolbar toolbar = findViewById(R.id.fieldworker_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
+
         LinearLayout activitiesLayout = findViewById(R.id.portal_middle_column);
         Iterator<NavigatorModule> moduleIter = ConfigUtils.getActiveModules(this).iterator();
         while (moduleIter.hasNext()) {

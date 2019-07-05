@@ -1,34 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <FrameLayout
-        style="@style/FieldworkerSideColumn">
-        <fragment
-            android:name="org.openhds.mobile.fragment.navigate.FavoritesFragment"
-            android:id="@+id/favorites_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </FrameLayout>
-
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/FieldworkerMiddleColumn">
-        <LinearLayout
-            android:id="@+id/portal_middle_column"
-            android:layout_width="match_parent"
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/fieldworker_toolbar"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
+            android:layout_width="match_parent"
+            android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimary" />
 
-    <FrameLayout
-        style="@style/FieldworkerSideColumn">
-        <fragment
-            android:name="org.openhds.mobile.fragment.navigate.FormListFragment"
-            android:id="@+id/portal_form_list"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"/>
-    </FrameLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+        <FrameLayout style="@style/FieldworkerSideColumn">
+            <fragment
+                    android:name="org.openhds.mobile.fragment.navigate.FavoritesFragment"
+                    android:id="@+id/favorites_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+        </FrameLayout>
+        <ScrollView style="@style/FieldworkerMiddleColumn">
+            <LinearLayout
+                    android:id="@+id/portal_middle_column"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+        </ScrollView>
+        <FrameLayout style="@style/FieldworkerSideColumn">
+            <fragment
+                    android:name="org.openhds.mobile.fragment.navigate.FormListFragment"
+                    android:id="@+id/portal_form_list"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"/>
+        </FrameLayout>
+    </LinearLayout>
 
 </LinearLayout>
