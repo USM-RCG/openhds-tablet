@@ -1,42 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/supervisor_main_activity"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:tag="landscape">
+              android:id="@+id/supervisor_main_activity"
+              android:orientation="vertical"
+              android:layout_height="match_parent"
+              android:layout_width="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/supervisor_toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"/>
 
     <LinearLayout
-        style="@style/SupervisorSideColumn"
-        android:orientation="vertical">
-        <fragment
-            android:id="@+id/supervisor_sync_fragment"
-            android:name="org.openhds.mobile.fragment.SyncDatabaseFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <fragment
-            android:id="@+id/supervisor_sync_history_fragment"
-            android:name="org.openhds.mobile.fragment.SyncHistoryFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/sync_history_spacing" />
-    </LinearLayout>
-
-    <FrameLayout
-        style="@style/SupervisorMiddleColumn">
-        <fragment
-            android:id="@+id/supervisor_action_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="org.openhds.mobile.fragment.SupervisorActionFragment"/>
-    </FrameLayout>
+            android:tag="landscape">
 
-    <FrameLayout
-        style="@style/SupervisorSideColumn">
-        <fragment
-            android:id="@+id/supervisor_checklist_fragment"
-            android:name="org.openhds.mobile.fragment.ChecklistFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
+        <LinearLayout
+                style="@style/SupervisorSideColumn"
+                android:orientation="vertical">
+            <fragment
+                    android:id="@+id/supervisor_sync_fragment"
+                    android:name="org.openhds.mobile.fragment.SyncDatabaseFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            <fragment
+                    android:id="@+id/supervisor_sync_history_fragment"
+                    android:name="org.openhds.mobile.fragment.SyncHistoryFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/sync_history_spacing"/>
+        </LinearLayout>
+
+        <FrameLayout
+                style="@style/SupervisorMiddleColumn">
+            <fragment
+                    android:id="@+id/supervisor_action_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:name="org.openhds.mobile.fragment.SupervisorActionFragment"/>
+        </FrameLayout>
+
+        <FrameLayout
+                style="@style/SupervisorSideColumn">
+            <fragment
+                    android:id="@+id/supervisor_checklist_fragment"
+                    android:name="org.openhds.mobile.fragment.ChecklistFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+        </FrameLayout>
+    </LinearLayout>
 
 </LinearLayout>

@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import org.openhds.mobile.R;
 import org.openhds.mobile.fragment.ChecklistFragment;
@@ -32,6 +34,14 @@ public class SupervisorActivity extends AppCompatActivity implements SupervisorA
         super.onCreate(savedInstanceState);
         setTitle(R.string.supervisor_home);
         setContentView(R.layout.supervisor_activity);
+
+        Toolbar toolbar = findViewById(R.id.supervisor_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
 
         FragmentManager fragMgr = getSupportFragmentManager();
         checklistFragment = (ChecklistFragment) fragMgr.findFragmentById(R.id.supervisor_checklist_fragment);
