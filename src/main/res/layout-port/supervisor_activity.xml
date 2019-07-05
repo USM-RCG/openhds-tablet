@@ -3,15 +3,22 @@
     android:id="@+id/supervisor_main_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/port_supervisor_pane_spacing"
     android:orientation="vertical"
     android:tag="portrait">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/supervisor_toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"/>
 
     <LinearLayout
         android:id="@+id/supervisor_auxiliary_container"
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="2"
+        android:layout_margin="@dimen/port_supervisor_pane_spacing"
         android:baselineAligned="false"
         android:orientation="horizontal">
 
@@ -36,7 +43,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:layout_marginTop="@dimen/port_supervisor_pane_spacing"
+        android:layout_marginStart="@dimen/port_supervisor_pane_spacing"
+        android:layout_marginLeft="@dimen/port_supervisor_pane_spacing"
+        android:layout_marginRight="@dimen/port_supervisor_pane_spacing"
+        android:layout_marginEnd="@dimen/port_supervisor_pane_spacing"
+        android:layout_marginBottom="@dimen/port_supervisor_pane_spacing"
         android:layout_weight="5"
         android:baselineAligned="false">
 
