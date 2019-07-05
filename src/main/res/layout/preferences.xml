@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/preferences_toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimary" />
 
     <fragment
         android:layout_width="match_parent"
@@ -8,4 +17,4 @@
         android:name="org.openhds.mobile.fragment.PreferenceFragment"
         android:id="@+id/preference_fragment" />
 
-</FrameLayout>
+</LinearLayout>
