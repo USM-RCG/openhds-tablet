@@ -3,11 +3,13 @@
 	xmlns:android="http://schemas.android.com/apk/res/android" >
 	<item
 		android:id="@+id/configure_server"
+		android:icon="@drawable/ic_settings_applications"
 		android:title="@string/settings"
 		app:showAsAction="ifRoom|withText" />
 	<item
-			android:id="@+id/show_supervisor"
-			android:title="@string/supervisor"
-			app:showAsAction="ifRoom|withText" />
+		android:id="@+id/show_supervisor"
+		android:icon="@drawable/ic_supervisor_account"
+		android:title="@string/supervisor"
+		app:showAsAction="ifRoom|withText" />
 </menu>
 

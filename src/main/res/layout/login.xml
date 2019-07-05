@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.drawerlayout.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
-    <fragment
-            android:name="org.openhds.mobile.fragment.FieldWorkerLoginFragment"
-            android:id="@+id/field_worker_login_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/login_toolbar"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:minHeight="?attr/actionBarSize"
+                android:background="?attr/colorPrimary" />
+        <fragment
+                android:name="org.openhds.mobile.fragment.FieldWorkerLoginFragment"
+                android:id="@+id/field_worker_login_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </LinearLayout>
 
-</LinearLayout>
+    <com.google.android.material.navigation.NavigationView
+            android:id="@+id/login_navigation_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:menu="@menu/login_menu"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>
