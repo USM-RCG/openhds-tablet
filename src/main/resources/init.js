@@ -5,6 +5,6 @@
  'spraying.js',
  'netreg.js',
  'mis.js',
- 'entymology.js'].forEach(function(m) {
+ 'entomology.js'].forEach(function(m) {
    config.executeScript(m);
  });

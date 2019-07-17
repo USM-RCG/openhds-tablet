@@ -55,10 +55,10 @@ with (imports) {
     };
 
     var module = new NavigatorModule({
-        getName: function() { return 'entymology'; },
-        getActivityTitle: function() { return config.getString('entymology.activityTitle'); },
-        getLaunchLabel: function() { return config.getString('entymology.launchTitle'); },
-        getLaunchDescription: function() { return config.getString('entymology.launchDescription'); },
+        getName: function() { return 'entomology'; },
+        getActivityTitle: function() { return config.getString('entomology.activityTitle'); },
+        getLaunchLabel: function() { return config.getString('entomology.launchTitle'); },
+        getLaunchDescription: function() { return config.getString('entomology.launchDescription'); },
         getBindings: function() { return binds; },
         getLaunchers: function(level) { return launchers[level] || []; },
         getDetailFragment: function(level) { return details[level] || null; }
