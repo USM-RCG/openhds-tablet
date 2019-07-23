@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.github.batkinson.jrsync.Metadata;
 import com.github.batkinson.jrsync.zsync.ProgressTracker;
 import com.github.batkinson.jrsync.zsync.RangeRequest;
@@ -70,6 +71,7 @@ public class SyncUtils {
     private static final int BUFFER_SIZE = 8192;
 
     public static final String SQLITE_MIME_TYPE = "application/x-sqlite3";
+    public static final String DATA_INSTALLED_ACTION = "DATA_INSTALLED";
 
     /**
      * Generates a filename to use for storing the ETag header value for a file. The value generated is deterministic
@@ -371,13 +373,14 @@ public class SyncUtils {
      */
     public static void downloadUpdate(final Context ctx, URL endpoint, String accessToken) {
 
+        final LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(ctx);
+        final NotificationManager notificationManager = NotificationUtils.getNotificationManager(ctx);
+
         File dbFile = getDatabaseFile(ctx), dbTempFile = getTempFile(dbFile);
 
         String existingFingerprint = loadFirstLine(getFingerprintFile(dbTempFile.exists() ? dbTempFile : dbFile));
 
         DatabaseAdapter db = DatabaseAdapter.getInstance(ctx);
-
-        final NotificationManager manager = NotificationUtils.getNotificationManager(ctx);
 
         String fingerprint = "?";
 
@@ -413,7 +416,7 @@ public class SyncUtils {
                     break;
                 case HTTP_OK:
                     try {
-                        manager.cancel(SYNC_NOTIFICATION_ID);
+                        notificationManager.cancel(SYNC_NOTIFICATION_ID);
                         File fingerprintFile = getFingerprintFile(dbTempFile);
                         fingerprint = httpConn.getHeaderField("ETag");
                         Log.i(TAG, "update " + fingerprint + " found, fetching");
@@ -424,7 +427,7 @@ public class SyncUtils {
                             }
                         }
 
-                        manager.notify(SYNC_NOTIFICATION_ID, builder.build());
+                        notificationManager.notify(SYNC_NOTIFICATION_ID, builder.build());
 
                         InputStream responseBody = httpConn.getInputStream();
                         String responseType = httpConn.getContentType().split(";")[0].toLowerCase();
@@ -448,7 +451,7 @@ public class SyncUtils {
                             }
                             RangeRequestFactory factory = new RangeRequestFactoryImpl(endpoint, SQLITE_MIME_TYPE, creds);
                             Log.i(TAG, "syncing incrementally");
-                            incrementalSync(responseBody, dbTempFile, scratch, factory, builder, manager, ctx);
+                            incrementalSync(responseBody, dbTempFile, scratch, factory, builder, notificationManager, ctx);
                             if (!scratch.renameTo(dbTempFile)) {
                                 Log.e(TAG, "failed to install sync result " + scratch);
                             }
@@ -465,7 +468,7 @@ public class SyncUtils {
                                     if (nextValue != fileProgress) {
                                         builder.setProgress(totalSize, nextValue, false);
                                         builder.setContentText(ctx.getString(R.string.sync_downloading));
-                                        manager.notify(SYNC_NOTIFICATION_ID, builder.build());
+                                        notificationManager.notify(SYNC_NOTIFICATION_ID, builder.build());
                                     }
                                     fileProgress = nextValue;
                                 }
@@ -480,7 +483,7 @@ public class SyncUtils {
                         db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "success");
                         Intent intent = new Intent(ctx, SupervisorActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                         PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        manager.notify(SYNC_NOTIFICATION_ID, builder
+                        notificationManager.notify(SYNC_NOTIFICATION_ID, builder
                                 .setSmallIcon(getNotificationIcon())
                                 .setContentText(ctx.getString(R.string.sync_database_new_data_instructions))
                                 .setContentIntent(pending)
@@ -490,7 +493,7 @@ public class SyncUtils {
                     } catch (IOException | NoSuchAlgorithmException e) {
                         Log.e(TAG, "sync io failure", e);
                         db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "error: " + httpResult);
-                        manager.notify(SYNC_NOTIFICATION_ID, builder
+                        notificationManager.notify(SYNC_NOTIFICATION_ID, builder
                                 .setSmallIcon(getNotificationIcon())
                                 .setContentText(ctx.getString(R.string.sync_database_failed))
                                 .setProgress(0, 0, false)
@@ -499,7 +502,7 @@ public class SyncUtils {
                     } catch (InterruptedException e) {
                         Log.e(TAG, "sync thread canceled", e);
                         db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "canceled");
-                        manager.cancel(SYNC_NOTIFICATION_ID);
+                        notificationManager.cancel(SYNC_NOTIFICATION_ID);
                     }
                     break;
                 default:
@@ -508,7 +511,19 @@ public class SyncUtils {
         } catch (IOException e) {
             Log.e(TAG, "sync failed: " + e.getMessage());
         }
+
         db.pruneSyncResults(getHistoryRetention(ctx));
+
+        // automatically install database if it's the first time
+        if (!downloadedContentBefore) {
+            installUpdate(ctx, new DatabaseInstallationListener() {
+                @Override
+                public void installed() {
+                    broadcastManager.sendBroadcast(new Intent(DATA_INSTALLED_ACTION));
+                }
+            });
+        }
+
         ctx.getContentResolver().notifyChange(OpenHDS.CONTENT_BASE_URI, null, false);
     }
 

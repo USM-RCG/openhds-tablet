@@ -1,6 +1,9 @@
 package org.openhds.mobile.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,12 +16,15 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.android.material.navigation.NavigationView;
 import org.openhds.mobile.R;
+import org.openhds.mobile.utilities.MessageUtils;
 import org.openhds.mobile.utilities.SetupUtils;
 import org.openhds.mobile.utilities.SyncUtils;
 
 import static org.openhds.mobile.utilities.SetupUtils.startApp;
+import static org.openhds.mobile.utilities.SyncUtils.DATA_INSTALLED_ACTION;
 
 public class SetupChecklistActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -26,6 +32,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
 
     private CheckBox permissionsCheckbox, appsCheckbox, connectCheckbox, dataCheckbox;
     private Button setupButton;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,12 +63,31 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (DATA_INSTALLED_ACTION.equals(intent.getAction())) {
+                    MessageUtils.showShortToast(SetupChecklistActivity.this, R.string.sync_database_updated);
+                    updateState();
+                }
+            }
+        };
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this)
+                .unregisterReceiver(broadcastReceiver);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         updateState();
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(broadcastReceiver, new IntentFilter(DATA_INSTALLED_ACTION));
     }
 
     private void updateState() {
