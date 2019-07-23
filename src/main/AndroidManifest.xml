@@ -84,11 +84,10 @@
             <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
         </activity>
         <activity android:name=".syncadpt.AuthenticatorActivity" />
-
+        <activity android:name=".activity.SetupChecklistActivity" />
         <meta-data
             android:name="android.app.default_searchable"
             android:value=".activity.SearchableActivity" />
-
         <service android:name=".syncadpt.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>

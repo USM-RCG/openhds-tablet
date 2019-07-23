@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/setup_drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/setup_toolbar"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:minHeight="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+                android:id="@+id/checklistLogo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="CIMS Logo"
+                app:srcCompat="@drawable/splash_logo"
+                app:layout_constraintTop_toBottomOf="@id/setup_toolbar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="20dp"/>
+
+        <TextView
+                android:id="@+id/initialSetupText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Initial Setup"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@+id/checklistLogo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="20dp"/>
+
+        <CheckBox
+                android:id="@+id/grantPermsCheckbox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Grant Permissions"
+                android:singleLine="true"
+                android:clickable="false"
+                app:layout_constraintTop_toBottomOf="@+id/initialSetupText"
+                app:layout_constraintStart_toStartOf="@+id/checklistLogo"
+                android:layout_marginTop="20dp"/>
+        <CheckBox
+                android:id="@+id/installAppsCheckbox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Install Apps"
+                android:singleLine="true"
+                android:clickable="false"
+                app:layout_constraintTop_toBottomOf="@+id/grantPermsCheckbox"
+                app:layout_constraintStart_toStartOf="@+id/grantPermsCheckbox"/>
+        <CheckBox
+                android:id="@+id/serverConnectCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Attach to Server"
+                android:singleLine="true"
+                android:clickable="false"
+                app:layout_constraintTop_toBottomOf="@+id/installAppsCheckbox"
+                app:layout_constraintStart_toStartOf="@+id/installAppsCheckbox"/>
+        <CheckBox
+                android:id="@+id/dataDownloadCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Download Data"
+                android:singleLine="true"
+                android:clickable="false"
+                app:layout_constraintTop_toBottomOf="@+id/serverConnectCheckbox"
+                app:layout_constraintStart_toStartOf="@+id/serverConnectCheckbox"/>
+        <Button
+                android:text="Start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dataDownloadCheckbox"
+                android:id="@+id/setup_button"
+                android:layout_marginTop="15dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+            android:id="@+id/setup_navigation_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:menu="@menu/setup_menu"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>

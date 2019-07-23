@@ -2,7 +2,6 @@ package org.openhds.mobile.utilities;
 
 import android.app.Activity;
 import android.content.Intent;
-
 import org.openhds.mobile.activity.LoginActivity;
 
 import java.io.Serializable;
@@ -47,7 +46,7 @@ public class LoginUtils {
         return logins.get(type);
     }
 
-    public static void launchLogin(Activity ctx) {
+    static void launchLogin(Activity ctx) {
         ctx.startActivity(new Intent(ctx, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TASK));
     }
 }

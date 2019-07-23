@@ -21,7 +21,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         Toolbar toolbar = findViewById(R.id.login_toolbar);
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        DrawerLayout drawerLayout = findViewById(R.id.login_drawer_layout);
         NavigationView navView = findViewById(R.id.login_navigation_view);
         navView.setNavigationItemSelectedListener(this);
         setSupportActionBar(toolbar);
