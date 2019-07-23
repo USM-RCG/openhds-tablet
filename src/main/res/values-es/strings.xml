@@ -204,5 +204,11 @@
     <string name="unknown_error">Error desconocido</string>
     <string name="form_load_failed">Error al cargar formulario</string>
     <string name="sync_notifications_channel_name">Sincronización</string>
+    <string name="cims_setup">Configuración CIMS</string>
+    <string name="fix_permissions">Arreglar Permisos</string>
+    <string name="install_apps">Instalar Aplicaciones</string>
+    <string name="attach_to_server">Adjuntar al Servidor</string>
+    <string name="download_data">Descargar Datos</string>
+    <string name="next">Siguiente</string>
 
 </resources>

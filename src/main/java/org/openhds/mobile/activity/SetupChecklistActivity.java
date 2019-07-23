@@ -51,7 +51,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
             actionBar.setHomeButtonEnabled(true);
         }
 
-        setTitle("CIMS Setup");
+        setTitle(R.string.cims_setup);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
         drawerLayout.addDrawerListener(toggle);
@@ -76,7 +76,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
 
         // configure button
         if (!hasPerms) {
-            setupButton.setText("Fix Permissions");
+            setupButton.setText(R.string.fix_permissions);
             setupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -84,7 +84,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
                 }
             });
         } else if (!hasApps) {
-            setupButton.setText("Install Apps");
+            setupButton.setText(R.string.install_apps);
             setupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -92,7 +92,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
                 }
             });
         } else if (!isConnected) {
-            setupButton.setText("Attach to Server");
+            setupButton.setText(R.string.attach_to_server);
             setupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -100,7 +100,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
                 }
             });
         } else if (!hasData) {
-            setupButton.setText("Download Data");
+            setupButton.setText(R.string.download_data);
             setupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -108,7 +108,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
                 }
             });
         } else {
-            setupButton.setText("Continue");
+            setupButton.setText(R.string.next);
             setupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
