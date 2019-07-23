@@ -520,6 +520,7 @@ public class SyncUtils {
                 @Override
                 public void installed() {
                     broadcastManager.sendBroadcast(new Intent(DATA_INSTALLED_ACTION));
+                    notificationManager.cancel(SYNC_NOTIFICATION_ID);
                 }
             });
         }
