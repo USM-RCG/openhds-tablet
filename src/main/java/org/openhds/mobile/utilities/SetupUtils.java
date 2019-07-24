@@ -28,6 +28,7 @@ import static androidx.core.content.ContextCompat.checkSelfPermission;
 import static org.openhds.mobile.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.openhds.mobile.syncadpt.Constants.AUTHTOKEN_TYPE_DEVICE;
 import static org.openhds.mobile.utilities.LoginUtils.launchLogin;
+import static org.openhds.mobile.utilities.SyncUtils.downloadedContentBefore;
 
 public class SetupUtils {
 
@@ -70,15 +71,7 @@ public class SetupUtils {
     }
 
     public static boolean isDataAvailable(Context ctx) {
-        Cursor c = null;
-        try {
-            c = ctx.getContentResolver().query(OpenHDS.FieldWorkers.CONTENT_ID_URI_BASE, null, null, null, null);
-            return c != null && c.getCount() > 0;
-        } finally {
-            if (c != null) {
-                c.close();
-            }
-        }
+        return downloadedContentBefore(ctx);
     }
 
     public static boolean isAccountInstalled(Context ctx) {

@@ -361,6 +361,10 @@ public class SyncUtils {
         }
     }
 
+    public static boolean downloadedContentBefore(Context ctx) {
+        return getFingerprintFile(getDatabaseFile(ctx)).exists();
+    }
+
     /**
      * Downloads an SQLite database and notifies the user to apply it manually via system notifications. There are two
      * modes of downloading the SQLite file, incremental and direct. By default, incremental downloading is enabled,
@@ -384,7 +388,7 @@ public class SyncUtils {
 
         String fingerprint = "?";
 
-        boolean downloadedContentBefore = getFingerprintFile(dbFile).exists();
+        boolean downloadedContentBefore = downloadedContentBefore(ctx);
         boolean useZsync = isZyncEnabled(ctx) && downloadedContentBefore;
 
         String accept;
