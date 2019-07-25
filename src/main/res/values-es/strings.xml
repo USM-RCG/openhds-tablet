@@ -214,5 +214,6 @@
     <string name="cims_logo">CIMS Logo</string>
     <string name="device_name">Nombre del dispositivo</string>
     <string name="device_secret">Secreto del dispositivo</string>
+    <string name="initial_setup">Configuración Inicial</string>
 
 </resources>
