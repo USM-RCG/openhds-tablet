@@ -36,7 +36,7 @@ public class FieldWorkerLoginFragment extends Fragment implements OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.generic_login_fragment, container, false);
+        View v = inflater.inflate(R.layout.fieldworker_login_fragment, container, false);
         TextView title = v.findViewById(R.id.titleTextView);
         title.setText(R.string.fieldworker_login);
 
