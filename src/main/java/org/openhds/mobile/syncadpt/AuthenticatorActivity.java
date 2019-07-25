@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONObject;
@@ -21,7 +23,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static org.openhds.mobile.OpenHDS.AUTHORITY;
 import static org.openhds.mobile.syncadpt.AuthUtils.register;
 
-public class AuthenticatorActivity extends AccountAuthenticatorActivity implements LoginTaskListener {
+public class AuthenticatorActivity extends AccountAuthenticatorActivity implements LoginTaskListener, View.OnKeyListener {
 
     public static final String KEY_AUTH_TOKEN_TYPE = "tokenType";
     public static final String KEY_NEW_ACCOUNT = "newAccount";
@@ -38,11 +40,11 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.generic_login_fragment);
+        setContentView(R.layout.authenticator_activity);
         accountManager = get(getBaseContext());
 
-        TextView title = findViewById(R.id.titleTextView);
-        title.setText("Login");
+        TextView title = findViewById(R.id.title);
+        title.setText(R.string.device_login);
 
         String accountName = getIntent().getStringExtra(KEY_ACCOUNT_NAME);
 
@@ -53,6 +55,11 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
         if (accountName != null) {
             ((TextView) findViewById(R.id.usernameEditText)).setText(accountName);
         }
+
+        EditText usernameEditText = findViewById(R.id.usernameEditText);
+        EditText passwordEditText = findViewById(R.id.passwordEditText);
+        usernameEditText.setOnKeyListener(this);
+        passwordEditText.setOnKeyListener(this);
 
         findViewById(R.id.loginButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +102,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
                 setSyncAutomatically(account, AUTHORITY, true);
                 accountManager.setAuthToken(account, tokenType, token);
             } else {
-                Log.e(TAG, "Failed to add account");
+                Log.e(TAG, "failed to add account");
             }
         } else {
             accountManager.setPassword(account, accountPassword);
@@ -104,6 +111,15 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity implemen
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+            submit();
+            return true;
+        }
+        return false;
     }
 }
 
