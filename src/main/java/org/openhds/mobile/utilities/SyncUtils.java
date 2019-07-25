@@ -21,6 +21,7 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.activity.SupervisorActivity;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.provider.OpenHDSProvider;
+import org.openhds.mobile.syncadpt.Constants;
 import org.openhds.mobile.syncadpt.SyncCancelReceiver;
 
 import java.io.BufferedInputStream;
@@ -48,8 +49,7 @@ import java.security.NoSuchAlgorithmException;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.os.Environment.getExternalStorageDirectory;
 import static com.github.batkinson.jrsync.zsync.ZSync.sync;
-import static java.net.HttpURLConnection.HTTP_NOT_MODIFIED;
-import static java.net.HttpURLConnection.HTTP_OK;
+import static java.net.HttpURLConnection.*;
 import static org.openhds.mobile.OpenHDS.AUTHORITY;
 import static org.openhds.mobile.provider.OpenHDSProvider.DATABASE_NAME;
 import static org.openhds.mobile.syncadpt.Constants.ACCOUNT_TYPE;
@@ -423,6 +423,11 @@ public class SyncUtils {
                     .addAction(R.drawable.ic_cancel, ctx.getString(R.string.cancel_label), pendingCancelBroadcast);
 
             switch (httpResult) {
+                case HTTP_UNAUTHORIZED:
+                    if (accessToken != null) {
+                        Log.i(TAG, "received unauthorized, invalidating access token");
+                        AccountManager.get(ctx).invalidateAuthToken(ACCOUNT_TYPE, accessToken);
+                    }
                 case HTTP_NOT_MODIFIED:
                     Log.i(TAG, "no update found");
                     break;
