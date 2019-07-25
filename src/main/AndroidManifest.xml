@@ -115,7 +115,11 @@
         <service
             android:name=".offlinedb.OfflineDbService"
             android:exported="false"/>
-
+        <receiver android:name=".syncadpt.SyncCancelReceiver">
+            <intent-filter>
+                <action android:name="org.openhds.mobile.SYNC_CANCELLED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

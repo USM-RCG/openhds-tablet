@@ -21,6 +21,7 @@ import org.openhds.mobile.R;
 import org.openhds.mobile.activity.SupervisorActivity;
 import org.openhds.mobile.provider.DatabaseAdapter;
 import org.openhds.mobile.provider.OpenHDSProvider;
+import org.openhds.mobile.syncadpt.SyncCancelReceiver;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -72,6 +73,7 @@ public class SyncUtils {
 
     public static final String SQLITE_MIME_TYPE = "application/x-sqlite3";
     public static final String DATA_INSTALLED_ACTION = "DATA_INSTALLED";
+    public static final String SYNC_CANCELLED_ACTION = "org.openhds.mobile.SYNC_CANCELLED";
 
     /**
      * Generates a filename to use for storing the ETag header value for a file. The value generated is deterministic
@@ -356,6 +358,7 @@ public class SyncUtils {
         if (accounts.length > 0) {
             Log.i(TAG, "sync cancellation requested by user");
             ctx.getContentResolver().cancelSync(accounts[0], AUTHORITY);
+            NotificationUtils.getNotificationManager(ctx).cancel(SYNC_NOTIFICATION_ID);
         } else {
             Log.w(TAG, "sync cancellation ignored, no account");
         }
@@ -405,6 +408,10 @@ public class SyncUtils {
             HttpURLConnection httpConn = get(endpoint, accept, creds, existingFingerprint);
             int httpResult = httpConn.getResponseCode();
 
+            Intent cancelBroadcast = new Intent(ctx, SyncCancelReceiver.class);
+            cancelBroadcast.setAction(SYNC_CANCELLED_ACTION);
+            PendingIntent pendingCancelBroadcast = PendingIntent.getBroadcast(ctx, 0, cancelBroadcast, 0);
+
             final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)
                     .setSmallIcon(android.R.drawable.stat_sys_download)
                     .setTicker("")
@@ -412,7 +419,8 @@ public class SyncUtils {
                     .setContentTitle(ctx.getString(R.string.sync_database_new_data))
                     .setContentText(ctx.getString(R.string.sync_database_in_progress))
                     .setProgress(0, 0, true)
-                    .setOngoing(true);
+                    .setOngoing(true)
+                    .addAction(R.drawable.ic_cancel, ctx.getString(R.string.cancel_label), pendingCancelBroadcast);
 
             switch (httpResult) {
                 case HTTP_NOT_MODIFIED:
