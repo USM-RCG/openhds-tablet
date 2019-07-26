@@ -22,7 +22,7 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
         <ImageView
-                android:id="@+id/checklistLogo"
+                android:id="@+id/cims_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/cims_logo"
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/initial_setup"
                 android:textSize="20sp"
-                app:layout_constraintTop_toBottomOf="@+id/checklistLogo"
+                app:layout_constraintTop_toBottomOf="@+id/cims_logo"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="20dp"/>
@@ -51,7 +51,7 @@
                 android:singleLine="true"
                 android:clickable="false"
                 app:layout_constraintTop_toBottomOf="@+id/initialSetupText"
-                app:layout_constraintStart_toStartOf="@+id/checklistLogo"
+                app:layout_constraintStart_toStartOf="@+id/cims_logo"
                 android:layout_marginTop="20dp"/>
         <CheckBox
                 android:id="@+id/installAppsCheckbox"

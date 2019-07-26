@@ -8,7 +8,7 @@
         android:layout_gravity="bottom">
 
     <ImageView
-            android:id="@+id/nav_header_logo"
+            android:id="@+id/cims_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/cims_logo"
@@ -26,8 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@id/nav_header_logo"
-            app:layout_constraintEnd_toEndOf="@id/nav_header_logo"
+            app:layout_constraintStart_toStartOf="@id/cims_logo"
+            app:layout_constraintEnd_toEndOf="@id/cims_logo"
             android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
