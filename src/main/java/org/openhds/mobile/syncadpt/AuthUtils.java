@@ -70,6 +70,7 @@ public class AuthUtils {
      */
     public static JSONObject token(Context ctx, String name, String secret) throws IOException, JSONException {
         HttpURLConnection urlConn = (HttpURLConnection) getTokenEndpoint(ctx).openConnection();
+        urlConn.setRequestMethod("POST");
         urlConn.setRequestProperty("Content-Type", "application/json");
         urlConn.setRequestProperty("Authorization", encodeBasicCreds(name, secret));
         BufferedInputStream in = null;
