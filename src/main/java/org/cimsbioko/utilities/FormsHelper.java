@@ -19,7 +19,7 @@ import java.util.List;
 import static org.cimsbioko.provider.InstanceProviderAPI.InstanceColumns.CONTENT_URI;
 import static org.cimsbioko.utilities.SQLUtils.makePlaceholders;
 
-public class OdkCollectHelper {
+public class FormsHelper {
 
     private static final String[] INSTANCE_COLUMNS = {
             InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH,
@@ -94,7 +94,7 @@ public class OdkCollectHelper {
     }
 
     /**
-     * Registers the given XML file as a form instance with ODK Collect.
+     * Registers the given XML file as a form instance with CIMS Forms.
      *
      * @param resolver
      * @param instance
@@ -169,7 +169,7 @@ public class OdkCollectHelper {
 
     /**
      * Converts a collection of {@link FormInstance}s to an array of file system paths. This is often handy when working
-     * with ODK's instance content provider.
+     * with CIMS Forms's instance content provider.
      *
      * @param forms list of forms
      * @return array of file system paths in order of the provided forms
@@ -183,7 +183,7 @@ public class OdkCollectHelper {
     }
 
     /**
-     * Deletes the list of {@link FormInstance}s using ODKs instance provider. This will delete forms from its db and
+     * Deletes the list of {@link FormInstance}s using CIMS Forms' instance provider. This will delete forms from its db and
      * from the file system.
      *
      * @param resolver
@@ -197,9 +197,9 @@ public class OdkCollectHelper {
 
     /**
      * Moves the specified form instance from its current filesystem location to the specified filesystem location,
-     * creating directories if necessary and updating ODK's reference to the file using its instance form provider.
+     * creating directories if necessary and updating CIMS Forms' reference to the file using its instance form provider.
      *
-     * @param resolver content resolver to use for using ODK content provider
+     * @param resolver content resolver to use for using CIMS Forms' content provider
      * @param instance the {@link FormInstance} to move
      * @param dest     a {@link File} representing the new location
      */

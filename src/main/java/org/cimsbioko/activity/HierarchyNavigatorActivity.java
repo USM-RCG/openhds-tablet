@@ -38,7 +38,7 @@ import org.cimsbioko.navconfig.forms.consumers.FormPayloadConsumer;
 import org.cimsbioko.provider.DatabaseAdapter;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.utilities.ConfigUtils;
-import org.cimsbioko.utilities.OdkCollectHelper;
+import org.cimsbioko.utilities.FormsHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
 
     private static final String TAG = HierarchyNavigatorActivity.class.getSimpleName();
 
-    private static final int ODK_ACTIVITY_REQUEST_CODE = 0;
+    private static final int FORM_ACTIVITY_REQUEST_CODE = 0;
 
     private static final String VALUE_FRAGMENT_TAG = "hierarchyValueFragment";
     private static final String DETAIL_FRAGMENT_TAG = "hierarchyDetailFragment";
@@ -249,8 +249,8 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
     private void launchNewForm(Binding binding) {
         if (binding != null) {
             try {
-                showShortToast(this, R.string.launching_odk_collect);
-                startActivityForResult(editIntent(generate(getContentResolver(), binding, buildPayload(binding))), ODK_ACTIVITY_REQUEST_CODE);
+                showShortToast(this, R.string.launching_form);
+                startActivityForResult(editIntent(generate(getContentResolver(), binding, buildPayload(binding))), FORM_ACTIVITY_REQUEST_CODE);
             } catch (Exception e) {
                 showShortToast(this, "failed to launch form: " + e.getMessage());
             }
@@ -265,7 +265,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case ODK_ACTIVITY_REQUEST_CODE:
+                case FORM_ACTIVITY_REQUEST_CODE:
                     handleFormResult(data);
                     updateAfterResult = true;
                     break;
@@ -274,7 +274,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
     }
 
     /**
-     * Handles forms created with launchNewForm on return from ODK.
+     * Handles forms created with launchNewForm on return from the forms app.
      */
     private void handleFormResult(Intent data) {
         FormInstance instance = lookup(getContentResolver(), data.getData());
@@ -480,7 +480,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
         List<String> sentFormPaths = new ArrayList<>();
         DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance(this);
         Collection<String> attachedPaths = dbAdapter.findFormsForHierarchy(hierarchyPath.toString());
-        for (FormInstance attachedForm : OdkCollectHelper.getByPaths(getContentResolver(), attachedPaths)) {
+        for (FormInstance attachedForm : FormsHelper.getByPaths(getContentResolver(), attachedPaths)) {
             if (attachedForm.isSubmitted()) {
                 sentFormPaths.add(attachedForm.getFilePath());
             } else {

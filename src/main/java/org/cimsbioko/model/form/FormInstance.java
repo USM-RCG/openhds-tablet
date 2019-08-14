@@ -13,11 +13,11 @@ import java.util.Date;
 import java.util.Map;
 
 import static org.cimsbioko.utilities.FormUtils.formFile;
-import static org.cimsbioko.utilities.FormUtils.generateODKForm;
+import static org.cimsbioko.utilities.FormUtils.generateForm;
 import static org.cimsbioko.utilities.FormUtils.loadInstance;
 import static org.cimsbioko.utilities.FormUtils.updateInstance;
-import static org.cimsbioko.utilities.OdkCollectHelper.getBlankInstance;
-import static org.cimsbioko.utilities.OdkCollectHelper.getInstance;
+import static org.cimsbioko.utilities.FormsHelper.getBlankInstance;
+import static org.cimsbioko.utilities.FormsHelper.getInstance;
 
 public class FormInstance implements Serializable {
 
@@ -160,15 +160,15 @@ public class FormInstance implements Serializable {
     /**
      * Generates a new {@link FormInstance}.
      *
-     * @param resolver content resolver to use for instance registration with ODK
+     * @param resolver content resolver to use for instance registration with Forms
      * @param binding the binding to use for instance generation
      * @param data the form data to populate the new instance with
-     * @return the {@link Uri} to a new form instance, registered with ODK
+     * @return the {@link Uri} to a new form instance, registered with Forms
      * @throws IOException
      */
     public static Uri generate(ContentResolver resolver, Binding binding, Map<String, String> data) throws IOException {
         FormInstance template = getBlankInstance(resolver, binding.getForm());
-        return generateODKForm(resolver, binding, template, data, formFile(template.getFileName(), new Date()));
+        return generateForm(resolver, binding, template, data, formFile(template.getFileName(), new Date()));
     }
 
 }

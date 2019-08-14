@@ -35,7 +35,7 @@ public class SetupUtils {
 
     public static boolean setupRequirementsMet(Context ctx) {
         return hasRequiredPermissions(ctx)
-                && isODKInstalled(ctx.getPackageManager())
+                && isFormsAppInstalled(ctx.getPackageManager())
                 && isAccountInstalled(ctx)
                 && isDataAvailable(ctx);
     }
@@ -76,24 +76,24 @@ public class SetupUtils {
         return AccountManager.get(ctx).getAccountsByType(ACCOUNT_TYPE).length > 0;
     }
 
-    public static boolean isODKInstalled(PackageManager manager) {
-        Intent odkFormsIntent = new Intent(Intent.ACTION_EDIT, FormsProviderAPI.FormsColumns.CONTENT_URI);
-        List<ResolveInfo> intentMatches = manager.queryIntentActivities(odkFormsIntent, 0);
+    public static boolean isFormsAppInstalled(PackageManager manager) {
+        Intent formsIntent = new Intent(Intent.ACTION_EDIT, FormsProviderAPI.FormsColumns.CONTENT_URI);
+        List<ResolveInfo> intentMatches = manager.queryIntentActivities(formsIntent, 0);
         return !intentMatches.isEmpty();
     }
 
-    public static void promptODKInstall(final Activity activity) {
+    public static void promptFormsAppInstall(final Activity activity) {
 
         DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == DialogInterface.BUTTON_POSITIVE) {
-                    launchODKMarketInstall();
+                    launchFormsAppMarketInstall();
                 }
                 activity.finish();
             }
 
-            private void launchODKMarketInstall() {
+            private void launchFormsAppMarketInstall() {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("market://details?id=org.odk.collect.android"));
                 activity.startActivity(intent);
@@ -108,9 +108,9 @@ public class SetupUtils {
         };
 
         new AlertDialog.Builder(activity)
-                .setTitle(R.string.odk_required)
+                .setTitle(R.string.forms_app_required)
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setMessage(R.string.odk_install_prompt)
+                .setMessage(R.string.forms_app_install_prompt)
                 .setNegativeButton(R.string.quit_label, clickListener)
                 .setPositiveButton(R.string.install_label, clickListener)
                 .setOnCancelListener(cancelListener)

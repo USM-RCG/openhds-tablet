@@ -4,9 +4,11 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * This class was taken from the OpenDataKit project version 1.3.0
+ * This class was originally taken from the OpenDataKit project version 1.3.0. It has been updated to use the CIMS Form
+ * app's content provider.
  */
 public final class FormsProviderAPI {
+
     public static final String AUTHORITY = "org.cimsbioko.forms.provider.odk.forms";
 
     // This class cannot be instantiated

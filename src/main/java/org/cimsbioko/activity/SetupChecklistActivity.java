@@ -114,7 +114,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
             setupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SetupUtils.promptODKInstall(SetupChecklistActivity.this);
+                    SetupUtils.promptFormsAppInstall(SetupChecklistActivity.this);
                 }
             });
         } else if (!isConnected) {
@@ -153,7 +153,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
     }
 
     private boolean hasApps() {
-        return SetupUtils.isODKInstalled(getPackageManager());
+        return SetupUtils.isFormsAppInstalled(getPackageManager());
     }
 
     private boolean hasPermissions() {

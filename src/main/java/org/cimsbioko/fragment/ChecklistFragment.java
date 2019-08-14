@@ -19,7 +19,7 @@ import org.cimsbioko.adapter.ChecklistAdapter;
 import org.cimsbioko.model.form.FormInstance;
 import org.cimsbioko.navconfig.ProjectFormFields;
 import org.cimsbioko.navconfig.ProjectResources;
-import org.cimsbioko.utilities.OdkCollectHelper;
+import org.cimsbioko.utilities.FormsHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.List;
 
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.requiresApproval;
 import static org.cimsbioko.utilities.FormUtils.updateFormElement;
-import static org.cimsbioko.utilities.OdkCollectHelper.deleteFormInstances;
+import static org.cimsbioko.utilities.FormsHelper.deleteFormInstances;
 
 public class ChecklistFragment extends Fragment {
 
@@ -118,7 +118,7 @@ public class ChecklistFragment extends Fragment {
     }
 
     private ChecklistAdapter setupDeleteAdapter() {
-        List<FormInstance> formInstances = OdkCollectHelper.getAllUnsentFormInstances(getActivity().getContentResolver());
+        List<FormInstance> formInstances = FormsHelper.getAllUnsentFormInstances(getActivity().getContentResolver());
         return new ChecklistAdapter(getActivity(), R.id.form_instance_check_item_orange, formInstances);
     }
 
@@ -153,7 +153,7 @@ public class ChecklistFragment extends Fragment {
     }
 
     private ChecklistAdapter setupApproveAdapter() {
-        List<FormInstance> formInstances = OdkCollectHelper.getAllUnsentFormInstances(getActivity().getContentResolver());
+        List<FormInstance> formInstances = FormsHelper.getAllUnsentFormInstances(getActivity().getContentResolver());
         List<FormInstance> needApproval = new ArrayList<>();
         for (FormInstance instance : formInstances) {
             try {
@@ -201,7 +201,7 @@ public class ChecklistFragment extends Fragment {
 
     private void approveForm(FormInstance instance) throws IOException {
         updateFormElement(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NO_REVIEW_NEEDED, instance.getFilePath());
-        OdkCollectHelper.setStatusComplete(getActivity().getContentResolver(), Uri.parse(instance.getUriString()));
+        FormsHelper.setStatusComplete(getActivity().getContentResolver(), Uri.parse(instance.getUriString()));
     }
 
     private class ButtonListener implements View.OnClickListener {

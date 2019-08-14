@@ -30,7 +30,7 @@ import java.util.Iterator;
 import static org.cimsbioko.search.Utils.isSearchEnabled;
 import static org.cimsbioko.utilities.LayoutUtils.makeTextWithPayload;
 import static org.cimsbioko.utilities.LoginUtils.getLogin;
-import static org.cimsbioko.utilities.OdkCollectHelper.getAllUnsentFormInstances;
+import static org.cimsbioko.utilities.FormsHelper.getAllUnsentFormInstances;
 
 public class FieldWorkerActivity extends AppCompatActivity implements OnClickListener {
 

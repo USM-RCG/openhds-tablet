@@ -108,7 +108,7 @@
     <string name="supervisor_approve_all">Aprobar Todo</string>
     <string name="supervisor_approve_selected">Aprobar Seleccionado</string>
     <string name="sub_district_label">Subdistrito</string>
-    <string name="launching_odk_collect">Iniciando ODK Collect…</string>
+    <string name="launching_form">Iniciando Formulario…</string>
     <string name="delete_button_label">Eliminar</string>
     <string name="find_label">Encontrar</string>
     <string name="edit_label">Editar</string>
@@ -139,8 +139,8 @@
     <string name="server_url_title">URL del servidor</string>
     <string name="form_not_found">Formulario no encontrado</string>
 
-    <string name="odk_required">ODK Requerido</string>
-    <string name="odk_install_prompt">Esta aplicación requiere Open Data Kit. Instalarlo ahora?</string>
+    <string name="forms_app_required">Formularios CIMS Requerido</string>
+    <string name="forms_app_install_prompt">Esta aplicación requiere la aplicación CIMS Forms. Instalarlo ahora?</string>
     <string name="quit_label">Salir</string>
     <string name="install_label">Instalar</string>
     <string name="sync_database_button_check">Buscar</string>

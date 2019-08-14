@@ -3,7 +3,7 @@
 The tablet application providing the primary user interface used by CIMS tablet
 users. It is used both by supervisors and field workers to and perform
 administrative tasks and form data entry respectively. The application is
-essentially a convenient interface for launching forms in ODK Collect,
+essentially a convenient interface for launching forms in CIMS Forms,
 pre-filled with data based on a location hierarchy. It communicates with CIMS
 Server for supervisor authentication, and for synchronizing core demographic
 data used for field worker authentication and pre-filling forms.

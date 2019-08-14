@@ -34,7 +34,7 @@ import java.util.TimeZone;
 import static android.os.Environment.getExternalStorageDirectory;
 import static org.cimsbioko.model.form.FormInstance.BINDING_ATTR;
 import static org.cimsbioko.model.form.FormInstance.BINDING_MAP_KEY;
-import static org.cimsbioko.utilities.OdkCollectHelper.registerInstance;
+import static org.cimsbioko.utilities.FormsHelper.registerInstance;
 
 /**
  * Dumping grounds for repeated jdom code. It might be possible to eliminate this code entirely, but for now it
@@ -105,7 +105,7 @@ public class FormUtils {
     /**
      * Constructs the filename for a form.
      *
-     * @param name the ODK instance id
+     * @param name the form instance id
      * @param time the form creation time
      * @return the formatted file name to use for the form
      */
@@ -113,17 +113,17 @@ public class FormUtils {
         return String.format("%s%s", formBaseName(name, time), FILE_EXTENSION);
     }
 
-    private static File getODKDir() {
+    private static File getFormsDir() {
         return new File(getExternalStorageDirectory(), "odk");
     }
 
     public static File getInstancesDir() {
-        return new File(getODKDir(), "instances");
+        return new File(getFormsDir(), "instances");
     }
 
     /**
      * Constructs the location to store form instances for the given form name, by convention. It generates locations
-     * on external storage since ODK Collect and this application communicate through the file system. Both applications
+     * on external storage since CIMS Forms and this application communicate through the file system. Both applications
      * must be able to read and write to the location.
      *
      * @param name the form name to use as a subdirectory
@@ -136,7 +136,7 @@ public class FormUtils {
     /**
      * Constructs a {@link File} object specifying the location to store a form.
      *
-     * @param name the odk instance id (or form name)
+     * @param name the form instance id (or form name)
      * @param time the creation time of the form
      * @return the filesystem location to save/load the form
      */
@@ -301,16 +301,16 @@ public class FormUtils {
     }
 
     /**
-     * Generates and registers a new XML form with the specified values and registers it with ODK.
+     * Generates and registers a new XML form with the specified values and registers it with CIMS Forms.
      *
      * @param resolver
      * @param binding  the form binding form the form to generate
      * @param values   name/value pairs specifying values to merge with the blank form
-     * @param location the filesystem location to save the generated form to, it must be accessible to ODK Collect
-     * @return the content {@link Uri} of the form registered with ODK
+     * @param location the filesystem location to save the generated form to, it must be accessible to CIMS Forms
+     * @return the content {@link Uri} of the form registered with CIMS Forms
      * @throws IOException
      */
-    public static Uri generateODKForm(ContentResolver resolver, Binding binding, FormInstance template, Map<String, String> values, File location)
+    public static Uri generateForm(ContentResolver resolver, Binding binding, FormInstance template, Map<String, String> values, File location)
             throws IOException {
         String formName = binding.getForm(), bindName = binding.getName();
         if (template != null) {
@@ -332,10 +332,10 @@ public class FormUtils {
     }
 
     /**
-     * Creates an {@link Intent} that can be used to edit a form using ODK Collect.
+     * Creates an {@link Intent} that can be used to edit a form using CIMS Forms.
      *
      * @param formUri the content {@link Uri} for the form instance to edit
-     * @return an {@link Intent} useful for launching the editing activity in ODK
+     * @return an {@link Intent} useful for launching the editing activity in CIMS Forms
      */
     public static Intent editIntent(Uri formUri) {
         return new Intent(Intent.ACTION_EDIT, formUri);

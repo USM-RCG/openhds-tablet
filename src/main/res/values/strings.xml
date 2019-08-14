@@ -146,7 +146,7 @@
     <string name="supervisor_approve_all"> Approve All </string>
     <string name="supervisor_approve_selected"> Approve Selected </string>
     <string name="sub_district_label">Subdistrict</string>
-    <string name="launching_odk_collect">Launching ODK Collect…</string>
+    <string name="launching_form">Launching Form…</string>
     <string name="delete_button_label">Delete Selected</string>
     <string name="find_label">Find</string>
     <string name="edit_label">Edit</string>
@@ -159,8 +159,8 @@
     <string name="db_val_age_not_applicable">n/a</string>
     <string name="form_not_found">Form not found</string>
 
-    <string name="odk_required">ODK Required</string>
-    <string name="odk_install_prompt">This application requires Open Data Kit. Install it now?</string>
+    <string name="forms_app_required">Forms App Required</string>
+    <string name="forms_app_install_prompt">This application requires the CIMS Forms app. Install it now?</string>
     <string name="quit_label">Quit</string>
     <string name="install_label">Install</string>
     <string name="search_label">Search</string>

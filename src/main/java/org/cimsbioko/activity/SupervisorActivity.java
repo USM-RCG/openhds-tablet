@@ -14,7 +14,7 @@ import org.cimsbioko.fragment.ChecklistFragment;
 import org.cimsbioko.fragment.SupervisorActionFragment;
 import org.cimsbioko.model.form.FormInstance;
 import org.cimsbioko.search.IndexingService;
-import org.cimsbioko.utilities.OdkCollectHelper;
+import org.cimsbioko.utilities.FormsHelper;
 
 import java.io.IOException;
 import java.util.List;
@@ -71,17 +71,17 @@ public class SupervisorActivity extends AppCompatActivity implements SupervisorA
 
     public void sendApprovedForms() {
         ContentResolver resolver = getContentResolver();
-        List<FormInstance> allFormInstances = OdkCollectHelper.getAllUnsentFormInstances(resolver);
+        List<FormInstance> allFormInstances = FormsHelper.getAllUnsentFormInstances(resolver);
         for (FormInstance instance : allFormInstances) {
             try {
                 if (requiresApproval(instance.load())) {
-                    OdkCollectHelper.setStatusIncomplete(resolver, Uri.parse(instance.getUriString()));
+                    FormsHelper.setStatusIncomplete(resolver, Uri.parse(instance.getUriString()));
                 }
             } catch (IOException e) {
                 Log.e(TAG, "failure sending approved forms, form: " + instance.getFilePath(), e);
             }
         }
-        showShortToast(this, R.string.launching_odk_collect);
+        showShortToast(this, R.string.launching_form);
         startActivity(new Intent(Intent.ACTION_EDIT));
     }
 }

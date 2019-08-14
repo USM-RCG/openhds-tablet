@@ -40,7 +40,7 @@ import static org.cimsbioko.utilities.ConfigUtils.getActiveModuleForBinding;
 import static org.cimsbioko.utilities.ConfigUtils.getActiveModules;
 import static org.cimsbioko.utilities.FormUtils.editIntent;
 import static org.cimsbioko.utilities.MessageUtils.showShortToast;
-import static org.cimsbioko.utilities.OdkCollectHelper.deleteFormInstances;
+import static org.cimsbioko.utilities.FormsHelper.deleteFormInstances;
 
 
 public class FormListFragment extends Fragment {
@@ -103,7 +103,7 @@ public class FormListFragment extends Fragment {
     private void editForm(FormInstance selected) {
         if (selected.canEdit()) {
             Uri uri = Uri.parse(selected.getUriString());
-            showShortToast(getActivity(), R.string.launching_odk_collect);
+            showShortToast(getActivity(), R.string.launching_form);
             startActivityForResult(editIntent(uri), 0);
         } else {
             showShortToast(getActivity(), R.string.form_not_editable);

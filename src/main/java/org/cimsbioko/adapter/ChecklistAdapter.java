@@ -64,7 +64,7 @@ public class ChecklistAdapter extends ArrayAdapter<FormInstance> {
             public void onClick(View v) {
                 FormInstance selected = (FormInstance) v.getTag();
                 Uri uri = Uri.parse(selected.getUriString());
-                showShortToast(getContext(), R.string.launching_odk_collect);
+                showShortToast(getContext(), R.string.launching_form);
                 ((Activity) getContext()).startActivityForResult(editIntent(uri), 0);
             }
         });
