@@ -20,8 +20,8 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Taken from ODK Collect v1.16.3, this provides a typed reference to the content provider for
- * form instances.
+ * Originally from ODK Collect v1.16.3, this provides a typed reference to the content provider for
+ * form instances. It has been updated to use the CIMS Forms content providers instead of ODK Collect's.
  */
 public final class InstanceProviderAPI {
 
