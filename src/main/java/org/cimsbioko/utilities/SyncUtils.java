@@ -7,15 +7,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.core.app.NotificationCompat;
 import android.util.Log;
-
+import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.github.batkinson.jrsync.Metadata;
 import com.github.batkinson.jrsync.zsync.ProgressTracker;
 import com.github.batkinson.jrsync.zsync.RangeRequest;
 import com.github.batkinson.jrsync.zsync.RangeRequestFactory;
-
 import org.cimsbioko.App;
 import org.cimsbioko.R;
 import org.cimsbioko.activity.SupervisorActivity;
@@ -23,20 +21,7 @@ import org.cimsbioko.provider.ContentProvider;
 import org.cimsbioko.provider.DatabaseAdapter;
 import org.cimsbioko.syncadpt.SyncCancelReceiver;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -54,7 +39,8 @@ import static org.cimsbioko.provider.ContentProvider.DATABASE_NAME;
 import static org.cimsbioko.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.cimsbioko.utilities.ConfigUtils.getPreferenceBool;
 import static org.cimsbioko.utilities.ConfigUtils.getPreferenceString;
-import static org.cimsbioko.utilities.HttpUtils.*;
+import static org.cimsbioko.utilities.HttpUtils.encodeBearerCreds;
+import static org.cimsbioko.utilities.HttpUtils.get;
 import static org.cimsbioko.utilities.NotificationUtils.*;
 import static org.cimsbioko.utilities.StringUtils.join;
 import static org.cimsbioko.utilities.UrlUtils.buildServerUrl;
@@ -382,7 +368,12 @@ public class SyncUtils {
         final LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(ctx);
         final NotificationManager notificationManager = NotificationUtils.getNotificationManager(ctx);
 
-        File dbFile = getDatabaseFile(ctx), dbTempFile = getTempFile(dbFile);
+        File dbFile = getDatabaseFile(ctx), dbDir = dbFile.getParentFile(), dbTempFile = getTempFile(dbFile);
+
+        if (!dbDir.exists() && !dbDir.mkdirs()) {
+            Log.w(TAG, "failed to create missing dir " + dbDir + ", sync cancelled");
+            return;
+        }
 
         String existingFingerprint = loadFirstLine(getFingerprintFile(dbTempFile.exists() ? dbTempFile : dbFile));
 
