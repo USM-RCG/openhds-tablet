@@ -15,7 +15,7 @@
                 android:minHeight="?attr/actionBarSize"
                 android:background="?attr/colorPrimary" />
         <fragment
-                android:name="org.openhds.mobile.fragment.FieldWorkerLoginFragment"
+                android:name="org.cimsbioko.fragment.FieldWorkerLoginFragment"
                 android:id="@+id/field_worker_login_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

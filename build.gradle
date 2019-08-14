@@ -40,7 +40,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        applicationId 'org.openhds.mobile'
+        applicationId 'org.cimsbioko'
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 54

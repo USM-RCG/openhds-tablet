@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- package name must be unique so suffix with "tests" so package loader doesn't ignore us -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.openhds.mobile.tests"
+          package="org.cimsbioko.tests"
           android:versionCode="1"
           android:versionName="1.0">
 
@@ -17,10 +17,10 @@
     </application>
     <!--
     This declares that this application uses the instrumentation test runner targeting
-    the package of org.openhds.mobile.  To run the tests use the command:
-    "adb shell am instrument -w org.openhds.mobile.tests/android.test.InstrumentationTestRunner"
+    the package of org.cimsbioko.  To run the tests use the command:
+    "adb shell am instrument -w org.cimsbioko.tests/android.test.InstrumentationTestRunner"
     -->
     <instrumentation android:name="android.test.InstrumentationTestRunner"
-                     android:targetPackage="org.openhds.mobile"
-                     android:label="Tests for org.openhds.mobile"/>
+                     android:targetPackage="org.cimsbioko"
+                     android:label="Tests for org.cimsbioko"/>
 </manifest>

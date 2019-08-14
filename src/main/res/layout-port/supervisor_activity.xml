@@ -24,14 +24,14 @@
 
         <fragment
             android:id="@+id/supervisor_sync_fragment"
-            android:name="org.openhds.mobile.fragment.SyncDatabaseFragment"
+            android:name="org.cimsbioko.fragment.SyncDatabaseFragment"
             android:layout_width="0px"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <fragment
             android:id="@+id/supervisor_sync_history_fragment"
-            android:name="org.openhds.mobile.fragment.SyncHistoryFragment"
+            android:name="org.cimsbioko.fragment.SyncHistoryFragment"
             android:layout_width="0px"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/port_supervisor_pane_spacing"
@@ -58,12 +58,12 @@
                 android:id="@+id/supervisor_action_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:name="org.openhds.mobile.fragment.SupervisorActionFragment"/>
+                android:name="org.cimsbioko.fragment.SupervisorActionFragment"/>
         </FrameLayout>
 
         <fragment
             android:id="@+id/supervisor_checklist_fragment"
-            android:name="org.openhds.mobile.fragment.ChecklistFragment"
+            android:name="org.cimsbioko.fragment.ChecklistFragment"
             android:layout_width="0px"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/port_supervisor_pane_spacing"

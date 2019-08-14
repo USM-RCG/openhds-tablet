@@ -5,17 +5,17 @@
 -keep class android.support.v7.widget.SearchView { *; }
 
 # androidplot accesses resources dynamically
--keep class org.openhds.mobile.R$* { *; }
+-keep class org.cimsbioko.R$* { *; }
 
 # app's scriptable classes
--keep class org.openhds.mobile.navconfig.forms.builders.** { *; }
--keep class org.openhds.mobile.navconfig.forms.consumers.** { *; }
--keep class org.openhds.mobile.navconfig.forms.filters.** { *; }
--keep class org.openhds.mobile.navconfig.NavigatorConfig { *; }
--keep class * implements org.openhds.mobile.navconfig.forms.builders.FormPayloadBuilder { *; }
--keep class * implements org.openhds.mobile.navconfig.forms.consumers.FormPayloadConsumer { *; }
--keep class * implements org.openhds.mobile.navconfig.forms.filters.FormFilter { *; }
--keep class * extends org.openhds.mobile.fragment.navigate.detail.DetailFragment { *; }
+-keep class org.cimsbioko.navconfig.forms.builders.** { *; }
+-keep class org.cimsbioko.navconfig.forms.consumers.** { *; }
+-keep class org.cimsbioko.navconfig.forms.filters.** { *; }
+-keep class org.cimsbioko.navconfig.NavigatorConfig { *; }
+-keep class * implements org.cimsbioko.navconfig.forms.builders.FormPayloadBuilder { *; }
+-keep class * implements org.cimsbioko.navconfig.forms.consumers.FormPayloadConsumer { *; }
+-keep class * implements org.cimsbioko.navconfig.forms.filters.FormFilter { *; }
+-keep class * extends org.cimsbioko.fragment.navigate.detail.DetailFragment { *; }
 
 # jdom (xml)
 -dontwarn org.jdom2.xpath.jaxen.**

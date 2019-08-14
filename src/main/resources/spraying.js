@@ -1,10 +1,10 @@
 var imports = JavaImporter(
-    org.openhds.mobile.navconfig,
-    org.openhds.mobile.navconfig.forms,
-    org.openhds.mobile.navconfig.forms.filters,
-    org.openhds.mobile.navconfig.forms.builders,
-    org.openhds.mobile.navconfig.forms.consumers,
-    org.openhds.mobile.fragment.navigate.detail
+    org.cimsbioko.navconfig,
+    org.cimsbioko.navconfig.forms,
+    org.cimsbioko.navconfig.forms.filters,
+    org.cimsbioko.navconfig.forms.builders,
+    org.cimsbioko.navconfig.forms.consumers,
+    org.cimsbioko.fragment.navigate.detail
 );
 
 with (imports) {

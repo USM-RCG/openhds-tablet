@@ -24,13 +24,13 @@
                 android:orientation="vertical">
 
             <fragment
-                    android:name="org.openhds.mobile.fragment.navigate.HierarchyButtonFragment"
+                    android:name="org.cimsbioko.fragment.navigate.HierarchyButtonFragment"
                     android:id="@+id/hierarchy_button_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
             <fragment
-                    android:name="org.openhds.mobile.fragment.navigate.DetailToggleFragment"
+                    android:name="org.cimsbioko.fragment.navigate.DetailToggleFragment"
                     android:id="@+id/detail_toggle_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -47,13 +47,13 @@
                 android:orientation="vertical">
 
             <fragment
-                    android:name="org.openhds.mobile.fragment.FormSelectionFragment"
+                    android:name="org.cimsbioko.fragment.FormSelectionFragment"
                     android:id="@+id/form_selection_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
             <fragment
-                    android:name="org.openhds.mobile.fragment.navigate.FormListFragment"
+                    android:name="org.cimsbioko.fragment.navigate.FormListFragment"
                     android:id="@+id/form_list_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
