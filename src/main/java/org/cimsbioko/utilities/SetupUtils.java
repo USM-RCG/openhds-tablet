@@ -95,7 +95,7 @@ public class SetupUtils {
 
             private void launchFormsAppMarketInstall() {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("market://details?id=org.odk.collect.android"));
+                intent.setData(Uri.parse("market://details?id=org.cimsbioko.forms"));
                 activity.startActivity(intent);
             }
         };
