@@ -114,7 +114,7 @@ public class FormUtils {
     }
 
     private static File getFormsDir() {
-        return new File(getExternalStorageDirectory(), "odk");
+        return SyncUtils.getExternalDir();
     }
 
     public static File getInstancesDir() {

@@ -725,7 +725,7 @@ public class SyncUtils {
      *
      * @return a {@link File} indicating where cims-specific (public) files are/can be stored
      */
-    private static File getExternalDir() {
+    public static File getExternalDir() {
         return new File(getExternalStorageDirectory(), "cims");
     }
 
