@@ -7,7 +7,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
-
     <TextView
             android:id="@+id/title"
             style="@style/LoginHeader"
@@ -34,6 +33,13 @@
             android:nextFocusForward="@+id/loginButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/usernameEditText"/>
+
+    <Button
+            android:id="@+id/scanButton"
+            style="@style/Button"
+            android:text="@string/scan_btn"
+            app:layout_constraintEnd_toStartOf="@id/loginButton"
+            app:layout_constraintBottom_toBottomOf="@id/loginButton"/>
 
     <Button
             android:id="@+id/loginButton"

@@ -33,6 +33,8 @@ dependencies {
     implementation 'org.apache.lucene:lucene-suggest:4.7.2'
     implementation 'com.github.batkinson:jrsync:1.4.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
+    implementation 'com.google.zxing:core:3.3.2'
 }
 
 android {
