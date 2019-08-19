@@ -216,5 +216,10 @@
     <string name="device_secret">Secreto del dispositivo</string>
     <string name="initial_setup">Configuración Inicial</string>
     <string name="scan_btn">Escanear</string>
+    <string name="update_server_title">¿Actualizar el servidor?</string>
+    <string name="update_server_msg">La configuración escaneada usa un servidor diferente. ¿Actualizar a %s?</string>
+    <string name="yes_btn">Sí</string>
+    <string name="no_btn">No</string>
+    <string name="server_updated_msg">El servidor fue actualizado</string>
 
 </resources>

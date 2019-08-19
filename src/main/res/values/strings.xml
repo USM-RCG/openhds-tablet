@@ -242,5 +242,10 @@
     <string name="device_secret">Device secret</string>
     <string name="initial_setup">Initial Setup</string>
     <string name="scan_btn">Scan</string>
+    <string name="update_server_title">Update Server?</string>
+    <string name="update_server_msg">The scanned configuration uses a different server. Update to %s?</string>
+    <string name="yes_btn">Yes</string>
+    <string name="no_btn">No</string>
+    <string name="server_updated_msg">Server updated</string>
 
 </resources>

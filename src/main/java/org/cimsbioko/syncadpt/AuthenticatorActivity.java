@@ -130,17 +130,17 @@ public class AuthenticatorActivity extends AppCompatActivity implements LoginTas
                 passwordEditText.setText(secret);
                 if (!UrlUtils.buildServerUrl(this, "").equals(url)) {
                     new AlertDialog.Builder(this)
-                            .setTitle("Update Server")
-                            .setMessage("The scanned configuration uses a different server. Update to " + url + "?")
-                            .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                            .setTitle(R.string.update_server_title)
+                            .setMessage(getString(R.string.update_server_msg, url))
+                            .setPositiveButton(R.string.yes_btn, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Context ctx = AuthenticatorActivity.this;
                                     setServerUrl(ctx, url);
-                                    showLongToast(ctx, "Server updated");
+                                    showLongToast(ctx, R.string.server_updated_msg);
                                 }
                             })
-                            .setNegativeButton("Cancel", null)
+                            .setNegativeButton(R.string.no_btn, null)
                             .show();
                 }
             }
@@ -213,8 +213,7 @@ public class AuthenticatorActivity extends AppCompatActivity implements LoginTas
             if (authResult != null) {
                 authResponse.onResult(authResult);
             } else {
-                authResponse.onError(AccountManager.ERROR_CODE_CANCELED,
-                        "canceled");
+                authResponse.onError(AccountManager.ERROR_CODE_CANCELED, "canceled");
             }
             authResponse = null;
         }
