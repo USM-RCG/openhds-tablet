@@ -21,8 +21,7 @@ public class ConfigUtils {
     }
 
     public static SharedPreferences getSharedPrefs(Context ctx) {
-        // multi-process needed for sync adapter to see preference changes
-        return ctx.getSharedPreferences(ctx.getPackageName() + "_preferences", Context.MODE_MULTI_PROCESS);
+        return ctx.getSharedPreferences(ctx.getPackageName() + "_preferences", Context.MODE_PRIVATE);
     }
 
     public static String getPreferenceString(Context context, int key, String defaultValue) {
