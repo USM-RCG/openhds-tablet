@@ -1,7 +1,6 @@
 package org.cimsbioko.navconfig.db;
 
 import android.content.ContentResolver;
-
 import org.cimsbioko.model.core.Individual;
 import org.cimsbioko.model.core.Location;
 import org.cimsbioko.model.core.LocationHierarchy;
@@ -15,18 +14,8 @@ import org.cimsbioko.repository.gateway.LocationHierarchyGateway;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.cimsbioko.navconfig.BiokoHierarchy.DISTRICT;
-import static org.cimsbioko.navconfig.BiokoHierarchy.HOUSEHOLD;
-import static org.cimsbioko.navconfig.BiokoHierarchy.INDIVIDUAL;
-import static org.cimsbioko.navconfig.BiokoHierarchy.LOCALITY;
-import static org.cimsbioko.navconfig.BiokoHierarchy.MAP_AREA;
-import static org.cimsbioko.navconfig.BiokoHierarchy.PROVINCE;
-import static org.cimsbioko.navconfig.BiokoHierarchy.REGION;
-import static org.cimsbioko.navconfig.BiokoHierarchy.SECTOR;
-import static org.cimsbioko.navconfig.BiokoHierarchy.SUBDISTRICT;
-import static org.cimsbioko.repository.GatewayRegistry.getIndividualGateway;
-import static org.cimsbioko.repository.GatewayRegistry.getLocationGateway;
-import static org.cimsbioko.repository.GatewayRegistry.getLocationHierarchyGateway;
+import static org.cimsbioko.navconfig.BiokoHierarchy.*;
+import static org.cimsbioko.repository.GatewayRegistry.*;
 
 public class DefaultQueryHelper implements QueryHelper {
 
@@ -84,24 +73,26 @@ public class DefaultQueryHelper implements QueryHelper {
     }
 
     public List<DataWrapper> getChildren(ContentResolver resolver, DataWrapper parent, String childLevel) {
-        switch (parent.getCategory()) {
-            case REGION:
-            case PROVINCE:
-            case DISTRICT:
-            case SUBDISTRICT:
-            case LOCALITY:
-            case MAP_AREA:
-                LocationHierarchyGateway locationHierarchyGateway = getLocationHierarchyGateway();
-                return locationHierarchyGateway.getQueryResultList(resolver,
-                        locationHierarchyGateway.findByParent(parent.getUuid()), childLevel);
-            case SECTOR:
-                LocationGateway locationGateway = getLocationGateway();
-                return locationGateway.getQueryResultList(resolver,
-                        locationGateway.findByHierarchy(parent.getUuid()), childLevel);
-            case HOUSEHOLD:
-                IndividualGateway individualGateway = getIndividualGateway();
-                return individualGateway.getQueryResultList(resolver,
-                        individualGateway.findByResidency(parent.getUuid()), childLevel);
+        if (parent != null) {
+            switch (parent.getCategory()) {
+                case REGION:
+                case PROVINCE:
+                case DISTRICT:
+                case SUBDISTRICT:
+                case LOCALITY:
+                case MAP_AREA:
+                    LocationHierarchyGateway locationHierarchyGateway = getLocationHierarchyGateway();
+                    return locationHierarchyGateway.getQueryResultList(resolver,
+                            locationHierarchyGateway.findByParent(parent.getUuid()), childLevel);
+                case SECTOR:
+                    LocationGateway locationGateway = getLocationGateway();
+                    return locationGateway.getQueryResultList(resolver,
+                            locationGateway.findByHierarchy(parent.getUuid()), childLevel);
+                case HOUSEHOLD:
+                    IndividualGateway individualGateway = getIndividualGateway();
+                    return individualGateway.getQueryResultList(resolver,
+                            individualGateway.findByResidency(parent.getUuid()), childLevel);
+            }
         }
         return new ArrayList<>();
     }
