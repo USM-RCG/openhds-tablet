@@ -44,6 +44,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.WildcardQuery;
 import org.cimsbioko.R;
+import org.cimsbioko.model.core.LocationHierarchy;
 import org.cimsbioko.navconfig.BiokoHierarchy;
 import org.cimsbioko.navconfig.HierarchyPath;
 import org.cimsbioko.navconfig.NavigatorConfig;
@@ -54,6 +55,7 @@ import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.search.SearchJob;
 import org.cimsbioko.search.SearchQueue;
 import org.cimsbioko.utilities.ConfigUtils;
+import org.cimsbioko.utilities.MessageUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -368,7 +370,8 @@ public class SearchableActivity extends AppCompatActivity {
                 revPath.push(item);
             }
 
-            if (!revPath.isEmpty()) {
+            String rootLevel = NavigatorConfig.getInstance().getLevels().get(0);
+            if (!revPath.isEmpty() && revPath.peek().getCategory().equals(rootLevel)) {
                 HierarchyPath path = new HierarchyPath();
                 while (!revPath.isEmpty()) {
                     DataWrapper item = revPath.pop();
@@ -391,6 +394,8 @@ public class SearchableActivity extends AppCompatActivity {
                 intent.putExtra(ACTIVITY_MODULE_EXTRA, moduleToLaunch);
                 intent.putExtra(HIERARCHY_PATH_KEY, path);
                 startActivity(intent);
+            } else {
+                MessageUtils.showShortToast(SearchableActivity.this, R.string.result_invalid_path);
             }
         }
 

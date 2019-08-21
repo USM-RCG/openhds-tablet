@@ -247,5 +247,6 @@
     <string name="yes_btn">Yes</string>
     <string name="no_btn">No</string>
     <string name="server_updated_msg">Server updated</string>
+    <string name="result_invalid_path">Invalid selection: bad hierarchy path</string>
 
 </resources>

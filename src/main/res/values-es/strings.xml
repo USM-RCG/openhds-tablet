@@ -221,5 +221,6 @@
     <string name="yes_btn">Sí</string>
     <string name="no_btn">No</string>
     <string name="server_updated_msg">El servidor fue actualizado</string>
+    <string name="result_invalid_path">Selección no válida: ruta de jerarquía incorrecta</string>
 
 </resources>
