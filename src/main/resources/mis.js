@@ -1,4 +1,4 @@
-var imports = JavaImporter(
+const imports = JavaImporter(
     org.cimsbioko.navconfig,
     org.cimsbioko.navconfig.forms,
     org.cimsbioko.navconfig.forms.filters,
@@ -9,16 +9,16 @@ var imports = JavaImporter(
 
 with (imports) {
 
-    var binds = {};
+    const binds = {};
 
     function bind(b) {
-        var bind_name = b.name || b.form;
+        const bind_name = b.name || b.form;
         binds[bind_name] = new Binding({
-            getName: function() { return bind_name; },
-            getForm: function() { return b.form; },
-            getLabel: function() { return config.getString(b.label); },
-            getBuilder: function() { return b.builder; },
-            getConsumer: function() { return b.consumer || new DefaultConsumer(); },
+            getName() { return bind_name; },
+            getForm() { return b.form; },
+            getLabel() { return config.getString(b.label); },
+            getBuilder() { return b.builder; },
+            getConsumer() { return b.consumer || new DefaultConsumer(); },
         });
     }
 
@@ -28,32 +28,30 @@ with (imports) {
 
     function launcher(l) {
         return new Launcher({
-            getLabel: function() { return config.getString(l.label); },
-            relevantFor: function(ctx) { return l.filter? l.filter.shouldDisplay(ctx) : true; },
-            getBinding: function() { return binds[l.bind]; }
+            getLabel() { return config.getString(l.label); },
+            relevantFor(ctx) { return l.filter? l.filter.shouldDisplay(ctx) : true; },
+            getBinding() { return binds[l.bind]; }
         });
     }
 
-    var launchers = {
+    const launchers = {
         household: [
             launcher({ label: 'mis.formLabel',
                        bind: 'malaria_indicator_survey' })
         ]
     };
 
-    var details = {
+    const details = {
         individual: new IndividualDetailFragment()
     };
 
-    var module = new NavigatorModule({
-        getName: function() { return 'mis'; },
-        getActivityTitle: function() { return config.getString('mis.activityTitle'); },
-        getLaunchLabel: function() { return config.getString('mis.launchTitle'); },
-        getLaunchDescription: function() { return config.getString('mis.launchDescription'); },
-        getBindings: function() { return binds; },
-        getLaunchers: function(level) { return launchers[level] || []; },
-        getDetailFragment: function(level) { return details[level] || null; }
+    exports.module = new NavigatorModule({
+        getName() { return 'mis'; },
+        getActivityTitle() { return config.getString('mis.activityTitle'); },
+        getLaunchLabel() { return config.getString('mis.launchTitle'); },
+        getLaunchDescription() { return config.getString('mis.launchDescription'); },
+        getBindings() { return binds; },
+        getLaunchers(level) { return launchers[level] || []; },
+        getDetailFragment(level) { return details[level] || null; }
     });
-
-    config.addModule(module);
 }

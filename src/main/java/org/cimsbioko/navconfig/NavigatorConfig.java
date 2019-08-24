@@ -1,32 +1,24 @@
 package org.cimsbioko.navconfig;
 
 import android.util.Log;
-
+import org.cimsbioko.navconfig.forms.Binding;
+import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.LazilyLoadedCtor;
 import org.mozilla.javascript.ScriptableObject;
-import org.cimsbioko.navconfig.forms.Binding;
-import org.cimsbioko.navconfig.forms.UsedByJSConfig;
+import org.mozilla.javascript.commonjs.module.Require;
+import org.mozilla.javascript.commonjs.module.RequireBuilder;
+import org.mozilla.javascript.commonjs.module.provider.SoftCachingModuleScriptProvider;
+import org.mozilla.javascript.commonjs.module.provider.UrlModuleSourceProvider;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.unmodifiableCollection;
-import static java.util.Collections.unmodifiableSet;
+import static java.util.Collections.*;
 import static java.util.ResourceBundle.getBundle;
+import static org.mozilla.javascript.Context.VERSION_ES6;
 
 
 /**
@@ -39,7 +31,7 @@ import static java.util.ResourceBundle.getBundle;
 public class NavigatorConfig {
 
     private static final String TAG = NavigatorConfig.class.getSimpleName();
-    private static final String INIT_SCRIPT_NAME = "init.js";
+    private static final String INIT_MODULE = "init";
     private static final String BUNDLE_NAME = "strings";
 
     private static NavigatorConfig instance;
@@ -53,55 +45,55 @@ public class NavigatorConfig {
         init();
     }
 
-    public void init() {
-        initModules();
-        initFormBindings();
-    }
-
-    public void setModules(URL modulesUrl) throws MalformedURLException {
-        URL [] urls = {modulesUrl};
-        moduleLoader = URLClassLoader.newInstance(urls, NavigatorConfig.class.getClassLoader());
+    private void init() {
+        loadModules();
+        consolidateFormBindings();
     }
 
     /*
      * Define the navigation modules. They will show up in the interface in the order specified.
      */
-    private void initModules() {
+    private void loadModules() {
         modules = new LinkedHashMap<>();
         try {
-            executeScript(INIT_SCRIPT_NAME);
-        } catch (IOException e) {
+            Context ctx = Context.enter();
+            ctx.setOptimizationLevel(-1);
+            ctx.setLanguageVersion(VERSION_ES6);
+            try {
+                ScriptableObject scope = ctx.initSafeStandardObjects();
+                new LazilyLoadedCtor(scope, "JavaImporter", "org.mozilla.javascript.ImporterTopLevel", false);
+                new LazilyLoadedCtor(scope, "org", "org.mozilla.javascript.NativeJavaTopPackage", false);
+                RequireBuilder rb = new RequireBuilder()
+                        .setSandboxed(true)
+                        .setModuleScriptProvider(
+                                new SoftCachingModuleScriptProvider(
+                                        new UrlModuleSourceProvider(getJsModulePath(), null)));
+                Require require = rb.createRequire(ctx, scope);
+                require.install(scope);
+                scope.put("config", scope, this);
+                Log.i(TAG, "loading init module");
+                require.requireMain(ctx, INIT_MODULE);
+            } finally {
+                Context.exit();
+            }
+        } catch (Exception e) {
             Log.e(TAG, "failure initializing modules", e);
         }
     }
 
-    @UsedByJSConfig
-    public void executeScript(String resourcePath) throws IOException {
-        InputStream scriptStream = moduleLoader.getResourceAsStream(resourcePath);
-        if (scriptStream != null) {
-            Reader scriptReader = new InputStreamReader(scriptStream);
-            Context ctx = Context.enter();
-            ctx.setOptimizationLevel(-1);
-            try {
-                ScriptableObject scope = ctx.initSafeStandardObjects();
-                new LazilyLoadedCtor(scope,
-                        "JavaImporter", "org.mozilla.javascript.ImporterTopLevel", false);
-                new LazilyLoadedCtor(scope,
-                        "org", "org.mozilla.javascript.NativeJavaTopPackage", false);
-                scope.put("config", scope, this);
-                Log.i(TAG, "executing config script " + resourcePath);
-                ctx.evaluateReader(scope, scriptReader, resourcePath, 1, null);
-            } finally {
-                Context.exit();
-                scriptStream.close();
-            }
+    private List<URI> getJsModulePath() throws URISyntaxException {
+        List<URI> uris = new ArrayList<>();
+        URL root = moduleLoader.getResource(INIT_MODULE + ".js");
+        if (root != null) {
+            uris.add(root.toURI());
         }
+        return uris;
     }
 
     /**
-     * Creates and index of all module {@link Binding} objects by name for fast access.
+     * Creates an index of all module {@link Binding} objects by name for fast access.
      */
-    private void initFormBindings() {
+    private void consolidateFormBindings() {
         bindings = new HashMap<>();
         for (NavigatorModule module : modules.values()) {
             bindings.putAll(module.getBindings());

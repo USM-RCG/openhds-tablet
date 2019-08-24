@@ -1,10 +1,10 @@
-'use strict';
+const modules = [
+  'gisops',
+  'advspray',
+  'spraying',
+  'netreg',
+  'mis',
+  'entomology'
+];
 
-['gisops.js',
- 'advspray.js',
- 'spraying.js',
- 'netreg.js',
- 'mis.js',
- 'entomology.js'].forEach(function(m) {
-   config.executeScript(m);
- });
+modules.map(name => require(name).module).forEach(module => config.addModule(module));
