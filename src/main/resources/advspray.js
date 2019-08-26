@@ -1,57 +1,16 @@
-const imports = JavaImporter(
-    org.cimsbioko.navconfig,
-    org.cimsbioko.navconfig.forms,
-    org.cimsbioko.navconfig.forms.filters,
-    org.cimsbioko.navconfig.forms.builders,
-    org.cimsbioko.navconfig.forms.consumers,
-    org.cimsbioko.fragment.navigate.detail
-);
+const ji = JavaImporter(org.cimsbioko.navconfig.forms.builders);
+const navmod = require('navmod');
+const m = new navmod.Builder();
 
-with (imports) {
+m.bind({ form: 'irs_iec_r26',
+       label: 'advSprayFormLabel',
+       builder: new ji.BiokoFormPayloadBuilders.DefaultHousehold() });
 
-    const binds = {};
+m.launcher({ level: 'household', label: 'advspray.advSprayLabel', bind: 'irs_iec_r26' });
 
-    function bind(b) {
-        const bind_name = b.name || b.form;
-        binds[bind_name] = new Binding({
-            getName() { return bind_name; },
-            getForm() { return b.form; },
-            getLabel() { return config.getString(b.label); },
-            getBuilder() { return b.builder; },
-            getConsumer() { return b.consumer || new DefaultConsumer(); },
-        });
-    }
-
-    bind({ form: 'irs_iec_r26',
-           label: 'advSprayFormLabel',
-           builder: new BiokoFormPayloadBuilders.DefaultHousehold() });
-
-    function launcher(l) {
-        return new Launcher({
-            getLabel() { return config.getString(l.label); },
-            relevantFor(ctx) { return l.filter? l.filter.shouldDisplay(ctx) : true; },
-            getBinding() { return binds[l.bind]; }
-        });
-    }
-
-    const launchers = {
-        household: [
-            launcher({ label: 'advspray.advSprayLabel', bind: 'irs_iec_r26' }),
-        ]
-    };
-
-    const details = {
-        individual: new IndividualDetailFragment()
-    };
-
-    exports.module = new NavigatorModule({
-        getName() { return 'advspray'; },
-        getActivityTitle() { return config.getString('advspray.activityTitle'); },
-        getLaunchLabel() { return config.getString('advspray.launchTitle'); },
-        getLaunchDescription() { return config.getString('advspray.launchDescription'); },
-        getBindings() { return binds; },
-        getLaunchers(level) { return launchers[level] || []; },
-        getDetailFragment(level) { return details[level] || null; }
-    });
-}
+exports.module = m.build({
+    name: 'advspray',
+    title: 'advspray.activityTitle',
+    launchLabel: 'advspray.launchTitle',
+    launchDescription: 'advspray.launchDescription'});
 

@@ -1,98 +1,73 @@
-const imports = JavaImporter(
-    org.cimsbioko.navconfig,
-    org.cimsbioko.navconfig.forms,
+const ji = JavaImporter(
     org.cimsbioko.navconfig.forms.filters,
     org.cimsbioko.navconfig.forms.builders,
-    org.cimsbioko.navconfig.forms.consumers,
-    org.cimsbioko.fragment.navigate.detail
+    org.cimsbioko.navconfig.forms.consumers
 );
+const navmod = require('navmod');
+const m = new navmod.Builder();
 
-with (imports) {
+m.bind({
+    name: 'household',
+    form: 'location',
+    label: 'householdFormLabel',
+    builder: new ji.CensusFormPayloadBuilders.AddLocation(),
+    consumer: new ji.CensusFormPayloadConsumers.AddLocation() });
 
-    const binds = {};
+m.bind({
+    form: 'location_evaluation',
+    label: 'locationEvaluationFormLabel',
+    builder: new ji.CensusFormPayloadBuilders.LocationEvaluation() });
 
-    function bind(b) {
-        const bind_name = b.name || b.form;
-        binds[bind_name] = new Binding({
-            getName() { return bind_name; },
-            getForm() { return b.form; },
-            getLabel() { return config.getString(b.label); },
-            getBuilder() { return b.builder; },
-            getConsumer() { return b.consumer || new DefaultConsumer(); },
-        });
-    }
+m.bind({
+    form: 'bed_net',
+    label: 'bedNetFormLabel',
+    builder: new ji.BiokoFormPayloadBuilders.DistributeBednets() });
 
-    bind({ name: 'household',
-           form: 'location',
-           label: 'householdFormLabel',
-           builder: new CensusFormPayloadBuilders.AddLocation(),
-           consumer: new CensusFormPayloadConsumers.AddLocation() });
+m.bind({
+    name: 'household_head',
+    form: 'individual',
+    label: 'individualFormLabel',
+    builder: new ji.CensusFormPayloadBuilders.AddHeadOfHousehold(),
+    consumer: new ji.CensusFormPayloadConsumers.AddHeadOfHousehold() });
 
-    bind({ form: 'location_evaluation',
-           label: 'locationEvaluationFormLabel',
-           builder: new CensusFormPayloadBuilders.LocationEvaluation() });
+m.bind({
+    name: 'household_member',
+    form: 'individual',
+    label: 'individualFormLabel',
+    builder: new ji.CensusFormPayloadBuilders.AddMemberOfHousehold(),
+    consumer: new ji.CensusFormPayloadConsumers.AddMemberOfHousehold() });
 
-    bind({ form: 'bed_net',
-           label: 'bedNetFormLabel',
-           builder: new BiokoFormPayloadBuilders.DistributeBednets() });
+m.bind({
+    form: 'fingerprints',
+    label: 'fingerprintsFormLabel',
+    builder: new ji.CensusFormPayloadBuilders.Fingerprints() });
 
-    bind({ name: 'household_head',
-           form: 'individual',
-           label: 'individualFormLabel',
-           builder: new CensusFormPayloadBuilders.AddHeadOfHousehold(),
-           consumer: new CensusFormPayloadConsumers.AddHeadOfHousehold() });
+m.launcher({
+    level: 'sector',
+    label: 'census.householdLabel',
+    bind: 'household',
+    filter: new ji.CensusFormFilters.AddLocation() });
 
-    bind({ name: 'household_member',
-           form: 'individual',
-           label: 'individualFormLabel',
-           builder: new CensusFormPayloadBuilders.AddMemberOfHousehold(),
-           consumer: new CensusFormPayloadConsumers.AddMemberOfHousehold() });
+m.launcher({ level: 'household', label: 'census.locationEvaluationLabel', bind: 'location_evaluation' });
 
-    bind({ form: 'fingerprints',
-           label: 'fingerprintsFormLabel',
-           builder: new CensusFormPayloadBuilders.Fingerprints() });
+m.launcher({
+    level: 'household',
+    label: 'census.headOfHouseholdLabel',
+    bind: 'household_head',
+    filter: new ji.CensusFormFilters.AddHeadOfHousehold() });
 
-    function launcher(l) {
-        return new Launcher({
-            getLabel() { return config.getString(l.label); },
-            relevantFor(ctx) { return l.filter? l.filter.shouldDisplay(ctx) : true; },
-            getBinding() { return binds[l.bind]; }
-        });
-    }
+m.launcher({
+    level: 'household',
+    label: 'census.householdMemberLabel',
+    bind: 'household_member',
+    filter: ji.InvertedFilter.invert(new ji.CensusFormFilters.AddHeadOfHousehold()) });
 
-    const launchers = {
-        sector: [
-            launcher({ label: 'census.householdLabel', bind: 'household',
-                       filter: new CensusFormFilters.AddLocation() })
-        ],
-        household: [
-            launcher({ label: 'census.locationEvaluationLabel',
-                       bind: 'location_evaluation' }),
-            launcher({ label: 'census.headOfHouseholdLabel',
-                       bind: 'household_head',
-                       filter: new CensusFormFilters.AddHeadOfHousehold() }),
-            launcher({ label: 'census.householdMemberLabel',
-                       bind: 'household_member',
-                       filter: InvertedFilter.invert(new CensusFormFilters.AddHeadOfHousehold()) }),
-            launcher({ label: 'census.bednetsLabel', bind: 'bed_net' })
-        ],
-        individual: [
-            launcher({ label: 'census.fingerprintsLabel',
-                       bind: 'fingerprints' })
-        ]
-    };
+m.launcher({ level: 'household', label: 'census.bednetsLabel', bind: 'bed_net' });
 
-    const details = {
-        individual: new IndividualDetailFragment()
-    };
+m.launcher({ level: 'individual', label: 'census.fingerprintsLabel', bind: 'fingerprints' });
 
-    exports.module = new NavigatorModule({
-        getName() { return 'census'; },
-        getActivityTitle() { return config.getString('census.activityTitle'); },
-        getLaunchLabel() { return config.getString('census.launchTitle'); },
-        getLaunchDescription() { return config.getString('census.launchDescription'); },
-        getBindings() { return binds; },
-        getLaunchers(level) { return launchers[level] || []; },
-        getDetailFragment(level) { return details[level] || null; }
-    });
-}
+exports.module = m.build({
+    name: 'census',
+    activityTitle: 'census.activityTitle',
+    launchLabel: 'census.launchTitle',
+    launchDescription: 'census.launchDescription'});
