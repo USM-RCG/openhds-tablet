@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import org.cimsbioko.activity.DeviceAuthenticatorActivity;
 
 import static android.accounts.AccountManager.*;
 import static org.cimsbioko.syncadpt.AuthUtils.token;
@@ -29,10 +30,10 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) {
 
-        Intent intent = new Intent(ctx, AuthenticatorActivity.class);
+        Intent intent = new Intent(ctx, DeviceAuthenticatorActivity.class);
         intent.putExtra(KEY_ACCOUNT_TYPE, accountType);
-        intent.putExtra(AuthenticatorActivity.KEY_AUTH_TOKEN_TYPE, authTokenType);
-        intent.putExtra(AuthenticatorActivity.KEY_NEW_ACCOUNT, true);
+        intent.putExtra(DeviceAuthenticatorActivity.KEY_AUTH_TOKEN_TYPE, authTokenType);
+        intent.putExtra(DeviceAuthenticatorActivity.KEY_NEW_ACCOUNT, true);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
 
         Bundle bundle = new Bundle();
@@ -78,7 +79,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
             result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
             return result;
         } else { // failed to get a token using stored creds, reprompt
-            Intent intent = new Intent(ctx, AuthenticatorActivity.class);
+            Intent intent = new Intent(ctx, DeviceAuthenticatorActivity.class);
             intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
             intent.putExtra(KEY_ACCOUNT_TYPE, account.type);
             intent.putExtra(KEY_ACCOUNT_NAME, account.name);

@@ -1,4 +1,4 @@
-package org.cimsbioko.syncadpt;
+package org.cimsbioko.activity;
 
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
@@ -20,6 +20,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import org.cimsbioko.R;
+import org.cimsbioko.syncadpt.Constants;
 import org.cimsbioko.utilities.UrlUtils;
 import org.json.JSONObject;
 
@@ -36,11 +37,11 @@ import static org.cimsbioko.utilities.MessageUtils.showLongToast;
 import static org.cimsbioko.utilities.UrlUtils.setServerUrl;
 import static org.cimsbioko.utilities.UrlUtils.urlDecode;
 
-public class AuthenticatorActivity extends AppCompatActivity implements LoginTaskListener, View.OnKeyListener {
+public class DeviceAuthenticatorActivity extends AppCompatActivity implements LoginTaskListener, View.OnKeyListener {
 
     public static final String KEY_AUTH_TOKEN_TYPE = "tokenType";
     public static final String KEY_NEW_ACCOUNT = "newAccount";
-    private static final String TAG = AuthenticatorActivity.class.getSimpleName();
+    private static final String TAG = DeviceAuthenticatorActivity.class.getSimpleName();
     private static final Pattern SCAN_PATTERN = Pattern.compile("^cimsmcfg://(.*)[?]d=(.*)&s=(.*)$");
 
     private AccountManager accountManager;
@@ -135,7 +136,7 @@ public class AuthenticatorActivity extends AppCompatActivity implements LoginTas
                             .setPositiveButton(R.string.yes_btn, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Context ctx = AuthenticatorActivity.this;
+                                    Context ctx = DeviceAuthenticatorActivity.this;
                                     setServerUrl(ctx, url);
                                     showLongToast(ctx, R.string.server_updated_msg);
                                 }
