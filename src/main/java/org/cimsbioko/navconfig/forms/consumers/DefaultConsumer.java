@@ -10,8 +10,6 @@ import java.util.Map;
  */
 public class DefaultConsumer implements FormPayloadConsumer {
 
-    public static final DefaultConsumer INSTANCE = new DefaultConsumer();
-
     @Override
     public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
         return new ConsumerResult(false);
