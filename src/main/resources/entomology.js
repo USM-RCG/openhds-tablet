@@ -23,7 +23,7 @@ m.launcher({ level: 'household', label: 'susceptibilityTestLabel', bind: 'suscep
 
 exports.module = m.build({
     name: 'entomology',
-    activityTitle: 'entomology.activityTitle',
+    title: 'entomology.activityTitle',
     launchLabel: 'entomology.launchTitle',
     launchDescription: 'entomology.launchDescription'});
 

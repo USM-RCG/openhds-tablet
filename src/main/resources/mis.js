@@ -11,6 +11,6 @@ m.launcher({ level: 'household', label: 'mis.formLabel', bind: 'malaria_indicato
 
 exports.module = m.build({
     name: 'mis',
-    activityTitle: 'mis.activityTitle',
+    title: 'mis.activityTitle',
     launchLabel: 'mis.launchTitle',
     launchDescription: 'mis.launchDescription'});

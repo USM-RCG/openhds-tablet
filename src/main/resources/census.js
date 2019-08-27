@@ -68,6 +68,6 @@ m.launcher({ level: 'individual', label: 'census.fingerprintsLabel', bind: 'fing
 
 exports.module = m.build({
     name: 'census',
-    activityTitle: 'census.activityTitle',
+    title: 'census.activityTitle',
     launchLabel: 'census.launchTitle',
     launchDescription: 'census.launchDescription'});

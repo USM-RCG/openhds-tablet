@@ -15,7 +15,7 @@ m.launcher({ level: 'individual', label: 'netEducationFormLabel', bind: 'net_edu
 
 exports.module = m.build({
     name: 'sbcc',
-    activityTitle: 'sbcc.activityTitle',
+    title: 'sbcc.activityTitle',
     launchLabel: 'sbcc.launchTitle',
     launchDescription: 'sbcc.launchDescription'});
 
