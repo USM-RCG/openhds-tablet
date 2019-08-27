@@ -59,13 +59,4 @@ public class GatewayRegistry {
     public static LocationHierarchyGateway getLocationHierarchyGateway() {
         return lazy(LocationHierarchyGateway.class);
     }
-
-    @SuppressWarnings("unchecked")
-    public static Gateway getGatewayByName(String name) {
-        try {
-            return lazy((Class<Gateway>) Class.forName(name));
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("failed to load gateway class " + name);
-        }
-    }
 }

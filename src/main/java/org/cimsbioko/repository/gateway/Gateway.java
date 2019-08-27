@@ -21,6 +21,7 @@ import static org.cimsbioko.repository.RepositoryUtils.update;
  * Supertype for database table Gateways.  Expose and implement query and CRUD operations,
  */
 public abstract class Gateway<T> {
+
     protected final Uri tableUri;
     protected final String idColumnName;
     protected final Converter<T> converter;
@@ -30,10 +31,6 @@ public abstract class Gateway<T> {
         this.tableUri = tableUri;
         this.idColumnName = idColumnName;
         this.converter = converter;
-    }
-
-    public Converter<T> getConverter() {
-        return converter;
     }
 
     private ContentResolver getContentResolver() {
