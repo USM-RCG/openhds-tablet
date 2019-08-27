@@ -112,7 +112,7 @@ public class FormListFragment extends Fragment {
 
     private void removeForm(FormInstance selected) {
         Context ctx = getActivity();
-        if (deleteFormInstances(ctx.getContentResolver(), asList(selected)) == 1) {
+        if (deleteFormInstances(asList(selected)) == 1) {
             adapter.remove(selected);
             showShortToast(ctx, R.string.deleted);
         }

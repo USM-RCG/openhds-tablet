@@ -115,6 +115,6 @@ public class FieldWorkerActivity extends AppCompatActivity implements OnClickLis
     }
 
     private void populateFormInstanceListView() {
-        formListFragment.populate(getAllUnsentFormInstances(getContentResolver()));
+        formListFragment.populate(getAllUnsentFormInstances());
     }
 }

@@ -1,6 +1,5 @@
 package org.cimsbioko.utilities;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import org.jdom2.Attribute;
@@ -31,7 +30,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import static android.os.Environment.getExternalStorageDirectory;
 import static org.cimsbioko.model.form.FormInstance.BINDING_ATTR;
 import static org.cimsbioko.model.form.FormInstance.BINDING_MAP_KEY;
 import static org.cimsbioko.utilities.FormsHelper.registerInstance;
@@ -303,14 +301,13 @@ public class FormUtils {
     /**
      * Generates and registers a new XML form with the specified values and registers it with CIMS Forms.
      *
-     * @param resolver
      * @param binding  the form binding form the form to generate
      * @param values   name/value pairs specifying values to merge with the blank form
      * @param location the filesystem location to save the generated form to, it must be accessible to CIMS Forms
      * @return the content {@link Uri} of the form registered with CIMS Forms
      * @throws IOException
      */
-    public static Uri generateForm(ContentResolver resolver, Binding binding, FormInstance template, Map<String, String> values, File location)
+    public static Uri generateForm(Binding binding, FormInstance template, Map<String, String> values, File location)
             throws IOException {
         String formName = binding.getForm(), bindName = binding.getName();
         if (template != null) {
@@ -322,7 +319,7 @@ public class FormUtils {
                     values.put(BINDING_MAP_KEY, binding.getName());
                 }
                 saveForm(genInstanceDoc(tFile, values), location);
-                return registerInstance(resolver, location, location.getName(), tName, tVersion);
+                return registerInstance(location, location.getName(), tName, tVersion);
             } catch (JDOMException e) {
                 throw new IOException("failed to fill out form", e);
             }

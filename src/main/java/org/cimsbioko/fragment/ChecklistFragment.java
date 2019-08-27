@@ -118,7 +118,7 @@ public class ChecklistFragment extends Fragment {
     }
 
     private ChecklistAdapter setupDeleteAdapter() {
-        List<FormInstance> formInstances = FormsHelper.getAllUnsentFormInstances(getActivity().getContentResolver());
+        List<FormInstance> formInstances = FormsHelper.getAllUnsentFormInstances();
         return new ChecklistAdapter(getActivity(), R.id.form_instance_check_item_orange, formInstances);
     }
 
@@ -153,7 +153,7 @@ public class ChecklistFragment extends Fragment {
     }
 
     private ChecklistAdapter setupApproveAdapter() {
-        List<FormInstance> formInstances = FormsHelper.getAllUnsentFormInstances(getActivity().getContentResolver());
+        List<FormInstance> formInstances = FormsHelper.getAllUnsentFormInstances();
         List<FormInstance> needApproval = new ArrayList<>();
         for (FormInstance instance : formInstances) {
             try {
@@ -169,7 +169,7 @@ public class ChecklistFragment extends Fragment {
 
     public void deleteSelected() {
         List<FormInstance> formsToDelete = adapter.getCheckedInstances();
-        int deleted = deleteFormInstances(getActivity().getContentResolver(), formsToDelete);
+        int deleted = deleteFormInstances(formsToDelete);
         if (deleted != formsToDelete.size()) {
             Log.w(TAG, String.format("wrong number of forms deleted: expected %d, got %d", formsToDelete.size(), deleted));
         }
@@ -201,7 +201,7 @@ public class ChecklistFragment extends Fragment {
 
     private void approveForm(FormInstance instance) throws IOException {
         updateFormElement(ProjectFormFields.General.NEEDS_REVIEW, ProjectResources.General.FORM_NO_REVIEW_NEEDED, instance.getFilePath());
-        FormsHelper.setStatusComplete(getActivity().getContentResolver(), Uri.parse(instance.getUriString()));
+        FormsHelper.setStatusComplete(Uri.parse(instance.getUriString()));
     }
 
     private class ButtonListener implements View.OnClickListener {

@@ -1,6 +1,5 @@
 package org.cimsbioko.model.form;
 
-import android.content.ContentResolver;
 import android.net.Uri;
 
 import org.cimsbioko.navconfig.NavigatorConfig;
@@ -149,26 +148,24 @@ public class FormInstance implements Serializable {
     /**
      * Retrieves a {@link FormInstance} from a specified {@link Uri}.
      *
-     * @param resolver the content resolved to use for the lookup
      * @param uri the uri of the instance to lookup
      * @return a {@link FormInstance} object if found, null otherwise
      */
-    public static FormInstance lookup(ContentResolver resolver, Uri uri) {
-        return getInstance(resolver, uri);
+    public static FormInstance lookup(Uri uri) {
+        return getInstance(uri);
     }
 
     /**
      * Generates a new {@link FormInstance}.
      *
-     * @param resolver content resolver to use for instance registration with Forms
      * @param binding the binding to use for instance generation
      * @param data the form data to populate the new instance with
      * @return the {@link Uri} to a new form instance, registered with Forms
      * @throws IOException
      */
-    public static Uri generate(ContentResolver resolver, Binding binding, Map<String, String> data) throws IOException {
-        FormInstance template = getBlankInstance(resolver, binding.getForm());
-        return generateForm(resolver, binding, template, data, formFile(template.getFileName(), new Date()));
+    public static Uri generate(Binding binding, Map<String, String> data) throws IOException {
+        FormInstance template = getBlankInstance(binding.getForm());
+        return generateForm(binding, template, data, formFile(template.getFileName(), new Date()));
     }
 
 }

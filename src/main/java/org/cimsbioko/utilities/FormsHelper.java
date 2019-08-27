@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
+import org.cimsbioko.App;
 import org.cimsbioko.model.form.FormInstance;
 import org.cimsbioko.provider.FormsProviderAPI;
 import org.cimsbioko.provider.InstanceProviderAPI;
@@ -29,10 +30,14 @@ public class FormsHelper {
             InstanceProviderAPI.InstanceColumns.STATUS,
             InstanceProviderAPI.InstanceColumns.CAN_EDIT_WHEN_COMPLETE};
 
-    public static List<FormInstance> getAllUnsentFormInstances(ContentResolver resolver) {
+    public static ContentResolver getContentResolver() {
+        return App.getApp().getContentResolver();
+    }
+
+    public static List<FormInstance> getAllUnsentFormInstances() {
 
         ArrayList<FormInstance> formInstances = new ArrayList<>();
-        Cursor cursor = resolver.query(CONTENT_URI, INSTANCE_COLUMNS,
+        Cursor cursor = getContentResolver().query(CONTENT_URI, INSTANCE_COLUMNS,
                 InstanceProviderAPI.InstanceColumns.STATUS + " != ?",
                 new String[]{InstanceProviderAPI.STATUS_SUBMITTED}, null);
 
@@ -62,24 +67,24 @@ public class FormsHelper {
         return formInstance;
     }
 
-    public static void setStatusIncomplete(ContentResolver resolver, Uri uri) {
+    public static void setStatusIncomplete(Uri uri) {
         ContentValues cv = new ContentValues();
         cv.put(InstanceProviderAPI.InstanceColumns.STATUS, InstanceProviderAPI.STATUS_INCOMPLETE);
-        resolver.update(uri, cv, null, null);
+        getContentResolver().update(uri, cv, null, null);
     }
 
-    public static void setStatusComplete(ContentResolver resolver, Uri uri) {
+    public static void setStatusComplete(Uri uri) {
         ContentValues cv = new ContentValues();
         cv.put(InstanceProviderAPI.InstanceColumns.STATUS, InstanceProviderAPI.STATUS_COMPLETE);
-        resolver.update(uri, cv, null, null);
+        getContentResolver().update(uri, cv, null, null);
     }
 
-    public static List<FormInstance> getByPaths(ContentResolver resolver, Collection<String> formPaths) {
+    public static List<FormInstance> getByPaths(Collection<String> formPaths) {
         ArrayList<FormInstance> formInstances = new ArrayList<>();
         if (!formPaths.isEmpty()) {
             String where = String.format("%s IN (%s)", InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, makePlaceholders(formPaths.size()));
-            String[] whereArgs = formPaths.toArray(new String[formPaths.size()]);
-            Cursor cursor = resolver.query(CONTENT_URI, INSTANCE_COLUMNS, where, whereArgs, null);
+            String[] whereArgs = formPaths.toArray(new String[0]);
+            Cursor cursor = getContentResolver().query(CONTENT_URI, INSTANCE_COLUMNS, where, whereArgs, null);
             if (cursor != null) {
                 try {
                     while (cursor.moveToNext()) {
@@ -96,30 +101,28 @@ public class FormsHelper {
     /**
      * Registers the given XML file as a form instance with CIMS Forms.
      *
-     * @param resolver
      * @param instance
      * @param name
      * @param id
      * @param version
      * @return the {@link Uri} for the registered form instance
      */
-    public static Uri registerInstance(ContentResolver resolver, File instance, String name, String id, String version) {
+    public static Uri registerInstance(File instance, String name, String id, String version) {
         ContentValues values = new ContentValues();
         values.put(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, instance.getAbsolutePath());
         values.put(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME, name);
         values.put(InstanceProviderAPI.InstanceColumns.JR_FORM_ID, id);
         values.put(InstanceProviderAPI.InstanceColumns.JR_VERSION, version);
-        return resolver.insert(InstanceProviderAPI.InstanceColumns.CONTENT_URI, values);
+        return getContentResolver().insert(InstanceProviderAPI.InstanceColumns.CONTENT_URI, values);
     }
 
     /**
      * Retrieves metadata for the blank form identified by the specified form id.
      *
-     * @param resolver
      * @param formId   the form id as specified on the form's data instance element
      * @return a {@link FormInstance} object containing the matching form's metadata or null if none was found.
      */
-    public static FormInstance getBlankInstance(ContentResolver resolver, String formId) {
+    public static FormInstance getBlankInstance(String formId) {
         FormInstance metadata = null;
         final String[] columns = {FormsProviderAPI.FormsColumns.JR_FORM_ID,
                 FormsProviderAPI.FormsColumns.FORM_FILE_PATH,
@@ -128,7 +131,7 @@ public class FormsHelper {
         };
         final String where = FormsProviderAPI.FormsColumns.JR_FORM_ID + " = ?";
         final String[] whereArgs = {formId};
-        Cursor cursor = resolver.query(FormsProviderAPI.FormsColumns.CONTENT_URI, columns, where, whereArgs, null);
+        Cursor cursor = getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI, columns, where, whereArgs, null);
         if (cursor != null) {
             try {
                 if (cursor.moveToFirst()) {
@@ -148,13 +151,12 @@ public class FormsHelper {
     /**
      * Retrieves metadata for the blank form identified by the specified form id.
      *
-     * @param resolver
      * @param instance the uri of the instance of interest
      * @return a {@link FormInstance} object containing the instance's metadata or null if none was found.
      */
-    public static FormInstance getInstance(ContentResolver resolver, Uri instance) {
+    public static FormInstance getInstance(Uri instance) {
         FormInstance metadata = null;
-        Cursor cursor = resolver.query(instance, INSTANCE_COLUMNS, null, null, null);
+        Cursor cursor = getContentResolver().query(instance, INSTANCE_COLUMNS, null, null, null);
         if (cursor != null) {
             try {
                 if (cursor.moveToFirst()) {
@@ -186,24 +188,22 @@ public class FormsHelper {
      * Deletes the list of {@link FormInstance}s using CIMS Forms' instance provider. This will delete forms from its db and
      * from the file system.
      *
-     * @param resolver
      * @param forms    list of forms
      * @return the number of forms removed
      */
-    public static int deleteFormInstances(ContentResolver resolver, Collection<FormInstance> forms) {
+    public static int deleteFormInstances(Collection<FormInstance> forms) {
         String where = String.format("%s IN (%s)", InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, makePlaceholders(forms.size()));
-        return resolver.delete(CONTENT_URI, where, formPaths(forms));
+        return getContentResolver().delete(CONTENT_URI, where, formPaths(forms));
     }
 
     /**
      * Moves the specified form instance from its current filesystem location to the specified filesystem location,
      * creating directories if necessary and updating CIMS Forms' reference to the file using its instance form provider.
      *
-     * @param resolver content resolver to use for using CIMS Forms' content provider
      * @param instance the {@link FormInstance} to move
      * @param dest     a {@link File} representing the new location
      */
-    public static void moveInstance(ContentResolver resolver, FormInstance instance, File dest) throws IOException {
+    public static void moveInstance(FormInstance instance, File dest) throws IOException {
 
         File source = new File(instance.getFilePath());
         if (!source.exists())
@@ -215,7 +215,7 @@ public class FormsHelper {
 
         if (source.renameTo(dest)) {
             instance.setFilePath(dest.getAbsolutePath());
-            updatePath(resolver, Uri.parse(instance.getUriString()), instance.getFilePath());
+            updatePath(Uri.parse(instance.getUriString()), instance.getFilePath());
         } else {
             throw new IOException(String.format("failed to move form %s to %s", source, dest));
         }
@@ -224,13 +224,12 @@ public class FormsHelper {
     /**
      * Updates the filesystem path of the instance at specified {@link Uri}.
      *
-     * @param resolver the content resolve to use for the update
      * @param uri      the uri to the instance to update
      * @param path     the new filesystem path of the instance
      */
-    public static void updatePath(ContentResolver resolver, Uri uri, String path) {
+    public static void updatePath(Uri uri, String path) {
         ContentValues cv = new ContentValues();
         cv.put(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, path);
-        resolver.update(uri, cv, null, null);
+        getContentResolver().update(uri, cv, null, null);
     }
 }

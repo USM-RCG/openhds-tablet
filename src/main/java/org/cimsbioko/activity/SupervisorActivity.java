@@ -71,11 +71,11 @@ public class SupervisorActivity extends AppCompatActivity implements SupervisorA
 
     public void sendApprovedForms() {
         ContentResolver resolver = getContentResolver();
-        List<FormInstance> allFormInstances = FormsHelper.getAllUnsentFormInstances(resolver);
+        List<FormInstance> allFormInstances = FormsHelper.getAllUnsentFormInstances();
         for (FormInstance instance : allFormInstances) {
             try {
                 if (requiresApproval(instance.load())) {
-                    FormsHelper.setStatusIncomplete(resolver, Uri.parse(instance.getUriString()));
+                    FormsHelper.setStatusIncomplete(Uri.parse(instance.getUriString()));
                 }
             } catch (IOException e) {
                 Log.e(TAG, "failure sending approved forms, form: " + instance.getFilePath(), e);

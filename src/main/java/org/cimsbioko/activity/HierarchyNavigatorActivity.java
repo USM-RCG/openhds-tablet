@@ -250,7 +250,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
         if (binding != null) {
             try {
                 showShortToast(this, R.string.launching_form);
-                startActivityForResult(editIntent(generate(getContentResolver(), binding, buildPayload(binding))), FORM_ACTIVITY_REQUEST_CODE);
+                startActivityForResult(editIntent(generate(binding, buildPayload(binding))), FORM_ACTIVITY_REQUEST_CODE);
             } catch (Exception e) {
                 showShortToast(this, "failed to launch form: " + e.getMessage());
             }
@@ -277,7 +277,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
      * Handles forms created with launchNewForm on return from the forms app.
      */
     private void handleFormResult(Intent data) {
-        FormInstance instance = lookup(getContentResolver(), data.getData());
+        FormInstance instance = lookup(data.getData());
         String formPath = instance.getFilePath();
         if (formPath != null) {
             DatabaseAdapter.getInstance(this).attachFormToHierarchy(hierarchyPath.toString(), formPath);
@@ -480,7 +480,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
         List<String> sentFormPaths = new ArrayList<>();
         DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance(this);
         Collection<String> attachedPaths = dbAdapter.findFormsForHierarchy(hierarchyPath.toString());
-        for (FormInstance attachedForm : FormsHelper.getByPaths(getContentResolver(), attachedPaths)) {
+        for (FormInstance attachedForm : FormsHelper.getByPaths(attachedPaths)) {
             if (attachedForm.isSubmitted()) {
                 sentFormPaths.add(attachedForm.getFilePath());
             } else {
