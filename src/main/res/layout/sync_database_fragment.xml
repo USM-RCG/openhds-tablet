@@ -5,29 +5,24 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/sync_description"
         style="@style/ListHeader"
         android:text="@string/sync_database_description" />
 
     <TableLayout
-        android:id="@+id/sync_summary_table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:shrinkColumns="1"
         android:stretchColumns="1">
 
         <TableRow
-            android:id="@+id/sync_summary_header"
             android:background="@color/LighterGray">
 
             <TextView
-                android:id="@+id/sync_updated_column_header"
                 style="@style/SyncDBColumn"
                 android:layout_column="1"
                 android:text="@string/sync_database_column_updated" />
 
             <TextView
-                android:id="@+id/sync_fingerprint_column_header"
                 style="@style/SyncDBColumn"
                 android:layout_column="4"
                 android:layout_gravity="center_horizontal"

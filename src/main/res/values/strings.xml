@@ -7,13 +7,11 @@
     <string name="login_username">Username</string>
     <string name="login_password">Password</string>
     <string name="fieldworker_login">Fieldworker Login</string>
-    <string name="supervisor_login">Supervisor Login</string>
     <string name="settings">Settings</string>
     <string name="malformed_url">Malformed URL</string>
     <string name="malformed_url_msg">The value entered is not a valid URL.</string>
     <string name="server_url_key" translatable="false">server_url</string>
     <string name="server_url_title">Server URL</string>
-    <string name="supervisor_bad_credentials">Invalid supervisor credentials</string>
     <string name="send_forms">Send Forms</string>
     <string name="delete_forms">Delete Forms</string>
     <string name="approve_forms">Approve Forms</string>
@@ -29,7 +27,6 @@
 
     <!-- Server URLs and Paths -->
     <string name="default_server_url" translatable="false">https://cims-bioko.org</string>
-    <string name="supervisor_login_url" translatable="false">/api/rest/rounds</string>
     <string name="sync_database_path" translatable="false">/api/rest/mobiledb</string>
     <string name="auth_registration_path" translatable="false">/api/device/registration</string>
     <string name="auth_token_path" translatable="false">/api/device/token</string>
@@ -43,8 +40,6 @@
     <!-- Database/Form Values -->
     <string name="db_val_true">True</string>
     <string name="db_val_false">False</string>
-    <string name="db_val_age_units_years">Years</string>
-    <string name="db_val_age_units_months">Months</string>
     <string name="db_val_gender_male">Male</string>
     <string name="db_val_gender_female">Female</string>
     <string name="db_val_language_pref_spanish">Spanish</string>
@@ -105,11 +100,8 @@
     <string name="sync_downloading">Downloading file</string>
 
     <!-- Individual Labels -->
-    <string name="individual_first_name_label">First Name</string>
-    <string name="individual_last_name_label">Last Name</string>
     <string name="individual_full_name_label">Name</string>
     <string name="individual_other_names_label">Other Names</string>
-    <string name="individual_age_label">Age</string>
     <string name="individual_date_of_birth_label">Date of Birth</string>
     <string name="individual_relationship_to_head_label">Relationship to Head</string>
     <string name="individual_personal_phone_number_label">Personal Phone Number</string>
@@ -121,20 +113,8 @@
     <string name="individual_status_label">Status</string>
 
     <!-- Fieldworker Labels -->
-    <string name="field_worker_first_name_label">First Name</string>
-    <string name="field_worker_last_name_label">Last Name</string>
-    <string name="field_worker_id_label">Id</string>
 
     <!-- Location Labels -->
-    <string name="location_name_label">Name</string>
-    <string name="location_ext_id_label">Id</string>
-    <string name="location_sector_label">Sector</string>
-    <string name="location_map_area_label">Map Area</string>
-    <string name="location_locality_label">Locality</string>
-    <string name="location_community_label">Community</string>
-    <string name="location_community_code_label">Community Code</string>
-    <string name="location_building_number_label">Building Number</string>
-    <string name="location_floor_number_label">Floor Number</string>
     <string name="location_description_label">Description</string>
 
     <string name="unsent_forms">Unsent Forms</string>
@@ -156,7 +136,6 @@
     <string name="cancel_label">Cancel</string>
     <string name="delete_dialog_warning_title">Warning</string>
     <string name="uuid">UUID</string>
-    <string name="db_val_age_not_applicable">n/a</string>
     <string name="form_not_found">Form not found</string>
 
     <string name="forms_app_required">Forms App Required</string>
@@ -177,7 +156,6 @@
 
     <string name="rebuild_search_indices">Rebuild Search Indices</string>
     <string name="searching">Searching…</string>
-    <string name="no_results">No Results</string>
 
     <string name="pref_search_title">Search</string>
     <string name="use_search_key" translatable="false">use_search</string>
@@ -223,11 +201,6 @@
     <string name="wifi_sync_enabled">Sync on Wi-Fi only</string>
     <string name="wifi_sync_disabled">Sync on any network</string>
     <string name="field_worker_none_exist">No fieldworkers, please sync.</string>
-    <string name="server_connect_error">Failed to connect to server</string>
-    <string name="http_client_error">Request failed due to client error</string>
-    <string name="http_server_error">Request failed due to server error</string>
-    <string name="unknown_error">Unknown error</string>
-    <string name="fieldworker">Fieldworker</string>
     <string name="supervisor">Supervisor</string>
     <string name="sync_notifications_channel_name">Synchronization</string>
     <string name="cims_setup">CIMS Setup</string>

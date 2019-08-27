@@ -6,14 +6,11 @@
     <string name="gender_lbl">Género</string>
     <string name="login_username">Nombre de Usuario</string>
     <string name="login_password">Contraseña</string>
-    <string name="fieldworker">Trabajador de campo</string>
     <string name="fieldworker_login">Inicio de sesión de trabajador</string>
     <string name="supervisor">Supervisor</string>
-    <string name="supervisor_login">Inicio de sesión de supervisor</string>
     <string name="settings">Ajustes</string>
     <string name="malformed_url">URL malformada</string>
     <string name="malformed_url_msg">El valor introducido no es una URL válida.</string>
-    <string name="supervisor_bad_credentials">Credenciales inválidas</string>
     <string name="sync_database_description">Sincroniza los datos con el servidor</string>
     <string name="field_worker_bad_credentials">Credenciales inválidas</string>
     <string name="region_label">Región</string>
@@ -33,8 +30,6 @@
     <!-- Database/Form Values -->
     <string name="db_val_true">True</string>
     <string name="db_val_false">False</string>
-    <string name="db_val_age_units_years">Años</string>
-    <string name="db_val_age_units_months">Meses</string>
     <string name="db_val_gender_male">Masculino</string>
     <string name="db_val_gender_female">Femenino</string>
     <string name="db_val_language_pref_spanish">Español</string>
@@ -72,7 +67,6 @@
     <!-- Individual Labels -->
     <string name="individual_full_name_label">Nombre </string>
  	<string name="individual_other_names_label">Nombre de casa (sobrenombre)</string>
-    <string name="individual_age_label">Edad</string>
     <string name="individual_date_of_birth_label">Fecha de Nacimiento</string>
     <string name="individual_relationship_to_head_label">Relación al Jefe del Hogar</string>
     <string name="individual_personal_phone_number_label">Numero de Teléfono Personal</string>
@@ -83,20 +77,8 @@
     <string name="individual_nationality_label">Nacionalidad</string>
 
     <!-- Fieldworker Labels -->
-    <string name="field_worker_first_name_label">Nombre</string>
-    <string name="field_worker_last_name_label">Apellido</string>
-    <string name="field_worker_id_label">Id</string>
 
     <!-- Location Labels -->
-    <string name="location_name_label">Nombre</string>
-    <string name="location_ext_id_label">Id</string>
-    <string name="location_sector_label">Sector</string>
-    <string name="location_map_area_label">Área de Mapa</string>
-    <string name="location_locality_label">Localidad</string>
-    <string name="location_community_label">Comunidad</string>
-    <string name="location_community_code_label">Codigo Comunidad</string>
-    <string name="location_building_number_label">Numero del Edificio</string>
-    <string name="location_floor_number_label">Numero del Piso</string>
     <string name="location_description_label">Descripción</string>
 
     <!-- UpdateActivity Labels -->
@@ -120,9 +102,6 @@
     <string name="delete_forms">Eliminar Formularios</string>
     <string name="approve_forms">Aprobar Formularios</string>
     <string name="uuid">UUID</string>
-    <string name="db_val_age_not_applicable">n/a</string>
-    <string name="individual_first_name_label">Nombre</string>
-    <string name="individual_last_name_label">Apellido</string>
     <string name="sync_database_updated_never">Nunca</string>
     <string name="sync_database_updated">Base de datos actualizada</string>
     <string name="sync_database_new_data">Los nuevos datos disponibles</string>
@@ -161,7 +140,6 @@
     <string name="auto_index_on_db_update_enabled">Reconstruir los índices después de actualizaciones de la base</string>
     <string name="auto_index_on_db_update_disabled">No reconstruir los índices después de actualizaciones de la base</string>
     <string name="rebuild_search_indices">Reconstruir los Índices de Búsqueda</string>
-    <string name="no_results">No Hay Resultados</string>
     <string name="searching">Buscando…</string>
 
     <string name="pref_search_title">Búsqueda</string>
@@ -198,10 +176,6 @@
     <string name="wifi_sync_disabled">Sincroniza sobre cualquier red</string>
     <string name="wifi_sync">Sincronizar en Wi-Fi</string>
     <string name="field_worker_none_exist">No hay trabajadores de campo, sincronícense.</string>
-    <string name="server_connect_error">Error al conectar con el servidor</string>
-    <string name="http_client_error">Solicitud fallida debido a un error del cliente</string>
-    <string name="http_server_error">Solicitud fallida debido a un error del servidor</string>
-    <string name="unknown_error">Error desconocido</string>
     <string name="form_load_failed">Error al cargar formulario</string>
     <string name="sync_notifications_channel_name">Sincronización</string>
     <string name="cims_setup">Configuración CIMS</string>
