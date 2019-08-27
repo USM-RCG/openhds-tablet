@@ -20,37 +20,7 @@ public class ProjectFormFields {
 
         public static final String DISTRIBUTION_DATE_TIME = "distributionDateTime";
 
-        public static final String REGION_STATE_FIELD_NAME = "regionExtId";
-        public static final String PROVINCE_STATE_FIELD_NAME = "provinceExtId";
-        public static final String DISTRICT_STATE_FIELD_NAME = "districtExtId";
-        public static final String SUB_DISTRICT_STATE_FIELD_NAME = "subDistrictExtId";
-        public static final String LOCALITY_STATE_FIELD_NAME = "localityExtId";
-        public static final String MAP_AREA_STATE_FIELD_NAME = "mapAreaExtId";
-        public static final String SECTOR_STATE_FIELD_NAME = "sectorExtId";
         public static final String HOUSEHOLD_STATE_FIELD_NAME = "householdExtId";
-        public static final String INDIVIDUAL_STATE_FIELD_NAME = "individualExtId";
-
-        private static final Map<String, String> levelExtIdFields = new HashMap<>();
-
-        static {
-            levelExtIdFields.put(REGION, REGION_STATE_FIELD_NAME);
-            levelExtIdFields.put(PROVINCE, PROVINCE_STATE_FIELD_NAME);
-            levelExtIdFields.put(DISTRICT, DISTRICT_STATE_FIELD_NAME);
-            levelExtIdFields.put(SUBDISTRICT, SUB_DISTRICT_STATE_FIELD_NAME);
-            levelExtIdFields.put(LOCALITY, LOCALITY_STATE_FIELD_NAME);
-            levelExtIdFields.put(MAP_AREA, MAP_AREA_STATE_FIELD_NAME);
-            levelExtIdFields.put(SECTOR, SECTOR_STATE_FIELD_NAME);
-            levelExtIdFields.put(HOUSEHOLD, HOUSEHOLD_STATE_FIELD_NAME);
-            levelExtIdFields.put(INDIVIDUAL, INDIVIDUAL_STATE_FIELD_NAME);
-        }
-
-        public static String getExtIdFieldForLevel(String level) {
-            if (levelExtIdFields.containsKey(level)) {
-                return levelExtIdFields.get(level);
-            } else {
-                return null;
-            }
-        }
     }
 
     public static final class Locations {
