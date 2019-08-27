@@ -36,8 +36,7 @@ m.launcher({ level: 'mapArea', label: 'gisops.createSectorLabel', bind: 'create_
 m.launcher({
     level: 'sector',
     label: 'gisops.locationLabel',
-    bind: 'location',
-    filter: new ji.CensusFormFilters.AddLocation()});
+    bind: 'location' });
 
 m.launcher({ level: 'household', label: 'gisops.duplicateLocationLabel', bind: 'duplicate_location' });
 

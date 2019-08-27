@@ -45,8 +45,7 @@ m.bind({
 m.launcher({
     level: 'sector',
     label: 'census.householdLabel',
-    bind: 'household',
-    filter: new ji.CensusFormFilters.AddLocation() });
+    bind: 'household' });
 
 m.launcher({ level: 'household', label: 'census.locationEvaluationLabel', bind: 'location_evaluation' });
 

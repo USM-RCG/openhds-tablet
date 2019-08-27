@@ -9,14 +9,6 @@ import static org.cimsbioko.navconfig.BiokoHierarchy.HOUSEHOLD;
 public class CensusFormFilters {
 
     @UsedByJSConfig
-    public static class AddLocation implements FormFilter {
-        @Override
-        public boolean shouldDisplay(LaunchContext ctx) {
-            return true;
-        }
-    }
-
-    @UsedByJSConfig
     public static class AddHeadOfHousehold implements FormFilter {
         @Override
         public boolean shouldDisplay(LaunchContext ctx) {
