@@ -22,6 +22,8 @@ public class BiokoHierarchy {
     public static final String LOCALITY = "locality";
     public static final String MAP_AREA = "mapArea";
     public static final String SECTOR = "sector";
+
+    // hard-wired
     public static final String HOUSEHOLD = "household";
     public static final String INDIVIDUAL = "individual";
 
