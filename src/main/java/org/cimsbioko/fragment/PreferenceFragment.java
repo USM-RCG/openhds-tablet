@@ -31,19 +31,19 @@ public class PreferenceFragment extends PreferenceFragmentCompat implements Pref
 
         addPreferencesFromResource(R.xml.preferences);
 
-        serverUrlPref = (EditTextPreference) findPreference(getText(R.string.server_url_key));
+        serverUrlPref = findPreference(getText(R.string.server_url_key));
         serverUrlPref.setOnPreferenceChangeListener(this);
         updateSummary(serverUrlPref, serverUrlPref.getText());
 
-        syncHistoryPref = (EditTextPreference) findPreference(getText(R.string.sync_history_retention_key));
+        syncHistoryPref = findPreference(getText(R.string.sync_history_retention_key));
         syncHistoryPref.setOnPreferenceChangeListener(this);
         updateSummary(syncHistoryPref, syncHistoryPref.getText());
 
-        serverUrlPref = (EditTextPreference) findPreference(getText(R.string.server_url_key));
+        serverUrlPref = findPreference(getText(R.string.server_url_key));
         serverUrlPref.setOnPreferenceChangeListener(this);
         updateSummary(serverUrlPref, serverUrlPref.getText());
 
-        syncHistoryPref = (EditTextPreference) findPreference(getText(R.string.sync_history_retention_key));
+        syncHistoryPref = findPreference(getText(R.string.sync_history_retention_key));
         syncHistoryPref.setOnPreferenceChangeListener(this);
         updateSummary(syncHistoryPref, syncHistoryPref.getText());
 
@@ -54,7 +54,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat implements Pref
             moduleLaunchLabels.put(module.getName(), module.getLaunchLabel());
         }
 
-        activeModulesPref = (MultiSelectListPreference) findPreference(getText(R.string.active_modules_key));
+        activeModulesPref = findPreference(getText(R.string.active_modules_key));
         activeModulesPref.setOnPreferenceChangeListener(this);
         activeModulesPref.setEntries(moduleLaunchLabels.values().toArray(new String[]{}));
         activeModulesPref.setEntryValues(moduleLaunchLabels.keySet().toArray(new String[]{}));
