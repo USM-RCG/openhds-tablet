@@ -1,7 +1,5 @@
 package org.cimsbioko.navconfig.forms.filters;
 
-import android.content.ContentResolver;
-
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.cimsbioko.repository.gateway.IndividualGateway;

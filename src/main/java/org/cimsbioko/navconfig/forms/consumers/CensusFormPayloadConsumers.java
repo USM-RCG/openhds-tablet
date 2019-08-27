@@ -1,7 +1,5 @@
 package org.cimsbioko.navconfig.forms.consumers;
 
-import android.content.ContentResolver;
-
 import org.cimsbioko.model.core.Individual;
 import org.cimsbioko.model.core.Location;
 import org.cimsbioko.model.core.LocationHierarchy;

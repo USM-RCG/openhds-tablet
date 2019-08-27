@@ -1,7 +1,5 @@
 package org.cimsbioko.navconfig.forms.builders;
 
-import android.content.ContentResolver;
-
 import org.cimsbioko.model.core.FieldWorker;
 import org.cimsbioko.model.core.Individual;
 import org.cimsbioko.model.core.Location;

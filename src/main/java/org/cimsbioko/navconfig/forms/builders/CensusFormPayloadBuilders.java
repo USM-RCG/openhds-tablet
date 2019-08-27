@@ -1,7 +1,5 @@
 package org.cimsbioko.navconfig.forms.builders;
 
-import android.content.ContentResolver;
-
 import org.cimsbioko.model.core.*;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
