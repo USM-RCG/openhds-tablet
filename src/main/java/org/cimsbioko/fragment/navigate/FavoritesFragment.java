@@ -1,7 +1,6 @@
 package org.cimsbioko.fragment.navigate;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -189,7 +188,6 @@ public class FavoritesFragment extends Fragment {
         @Override
         protected List<DataWrapper> doInBackground(Void... params) {
             Context ctx = getActivity();
-            ContentResolver resolver = ctx.getContentResolver();
             DatabaseAdapter db = DatabaseAdapter.getInstance(ctx);
             List<String> favoriteIds = db.getFavoriteIds();
             List<DataWrapper> hydratedFavorites = new ArrayList<>(favoriteIds.size());
