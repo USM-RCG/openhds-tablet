@@ -57,8 +57,7 @@ public class BiokoFormPayloadBuilders {
 
             // pre-fill the householdSize for this particular household
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-            ContentResolver contentResolver = ctx.getContentResolver();
-            List<Individual> individuals = individualGateway.getList(contentResolver, individualGateway.findByResidency(locationUuid));
+            List<Individual> individuals = individualGateway.getList(individualGateway.findByResidency(locationUuid));
             String householdSize = Integer.toString(individuals.size());
             formPayload.put(ProjectFormFields.BedNet.HOUSEHOLD_SIZE, householdSize);
 
@@ -68,8 +67,7 @@ public class BiokoFormPayloadBuilders {
         private String generateNetCode(LaunchContext ctx) {
             HierarchyPath hierPath = ctx.getHierarchyPath();
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            ContentResolver contentResolver = ctx.getContentResolver();
-            Location household = locationGateway.getFirst(contentResolver, locationGateway.findById(hierPath.get(HOUSEHOLD).getUuid()));
+            Location household = locationGateway.getFirst(locationGateway.findById(hierPath.get(HOUSEHOLD).getUuid()));
             String map = hierPath.get(MAP_AREA).getName(), sector = hierPath.get(SECTOR).getName();
             String year = new SimpleDateFormat("yy").format(new Date());
             return String.format("%s/%s%sE%03d", year, map, sector, household.getBuildingNumber());
@@ -123,8 +121,6 @@ public class BiokoFormPayloadBuilders {
 
             Map<String,String> formPayload = new HashMap<>();
 
-            ContentResolver contentResolver = ctx.getContentResolver();
-
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
 
             DataWrapper mapArea = ctx.getHierarchyPath().get(MAP_AREA);
@@ -136,9 +132,8 @@ public class BiokoFormPayloadBuilders {
 
             // Assign the next sequential building number in sector
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            Location existing = locationGateway.getFirst(contentResolver,locationGateway.findById(locationUuid));
-            int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(
-                    ctx.getApplicationContext(), mapArea.getName(), sector.getName());
+            Location existing = locationGateway.getFirst(locationGateway.findById(locationUuid));
+            int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(mapArea.getName(), sector.getName());
 
             formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, mapArea.getName());
             formPayload.put(ProjectFormFields.Locations.SECTOR_NAME, sector.getName());

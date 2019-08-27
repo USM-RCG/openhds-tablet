@@ -20,13 +20,12 @@ public class BiokoFormPayloadConsumers {
         public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             LocationHierarchyGateway hierGateway = GatewayRegistry.getLocationHierarchyGateway();
-            ContentResolver resolver = ctx.getContentResolver();
 
             String localityUuid = formPayload.get(ProjectFormFields.CreateMap.LOCALITY_UUID);
             String mapUuid = formPayload.get(ProjectFormFields.CreateMap.MAP_UUID);
             String mapName = formPayload.get(ProjectFormFields.CreateMap.MAP_NAME);
 
-            LocationHierarchy locality = hierGateway.getFirst(resolver, hierGateway.findById(localityUuid));
+            LocationHierarchy locality = hierGateway.getFirst(hierGateway.findById(localityUuid));
 
             LocationHierarchy map = new LocationHierarchy();
             map.setUuid(mapUuid);
@@ -35,7 +34,7 @@ public class BiokoFormPayloadConsumers {
             map.setParentUuid(localityUuid);
             map.setLevel(BiokoHierarchy.SERVER_MAP_AREA);
 
-            hierGateway.insertOrUpdate(resolver, map);
+            hierGateway.insertOrUpdate(map);
 
             return new ConsumerResult(false);
         }
@@ -47,14 +46,13 @@ public class BiokoFormPayloadConsumers {
         public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             LocationHierarchyGateway hierGateway = GatewayRegistry.getLocationHierarchyGateway();
-            ContentResolver resolver = ctx.getContentResolver();
 
             String mapUuid = formPayload.get(ProjectFormFields.CreateSector.MAP_UUID);
             String sectorUuid = formPayload.get(ProjectFormFields.CreateSector.SECTOR_UUID);
             String sectorName = formPayload.get(ProjectFormFields.CreateSector.SECTOR_NAME);
 
-            LocationHierarchy map = hierGateway.getFirst(resolver, hierGateway.findById(mapUuid));
-            LocationHierarchy locality = hierGateway.getFirst(resolver, hierGateway.findById(map.getParentUuid()));
+            LocationHierarchy map = hierGateway.getFirst(hierGateway.findById(mapUuid));
+            LocationHierarchy locality = hierGateway.getFirst(hierGateway.findById(map.getParentUuid()));
 
             LocationHierarchy sector = new LocationHierarchy();
             sector.setUuid(sectorUuid);
@@ -63,7 +61,7 @@ public class BiokoFormPayloadConsumers {
             sector.setParentUuid(mapUuid);
             sector.setLevel(BiokoHierarchy.SERVER_SECTOR);
 
-            hierGateway.insertOrUpdate(resolver, sector);
+            hierGateway.insertOrUpdate(sector);
 
             return new ConsumerResult(false);
         }

@@ -1,6 +1,5 @@
 package org.cimsbioko.repository;
 
-import android.content.ContentResolver;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -85,11 +84,11 @@ public class DataWrapper implements Parcelable {
         return String.format("%s:%s", category, uuid);
     }
 
-    public static DataWrapper getByHierarchyId(ContentResolver resolver, String hierId) {
+    public static DataWrapper getByHierarchyId(String hierId) {
         String [] parts = hierId.split(":");
         if (parts.length == 2) {
             String level = parts[0], uuid = parts[1];
-            return DefaultQueryHelper.getInstance().get(resolver, level, uuid);
+            return DefaultQueryHelper.getInstance().get(level, uuid);
         }
         return null;
     }

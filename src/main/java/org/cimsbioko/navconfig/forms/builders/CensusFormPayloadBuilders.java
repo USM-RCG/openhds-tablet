@@ -24,16 +24,15 @@ public class CensusFormPayloadBuilders {
 
     private static void addNewLocationPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
-        ContentResolver contentResolver = ctx.getContentResolver();
         LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
         LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
 
         DataWrapper sectorDataWrapper = ctx.getHierarchyPath().get(SECTOR);
 
-        LocationHierarchy sector = locationHierarchyGateway.getFirst(contentResolver, locationHierarchyGateway.findById(sectorDataWrapper.getUuid()));
-        LocationHierarchy mapArea = locationHierarchyGateway.getFirst(contentResolver, locationHierarchyGateway.findById(sector.getParentUuid()));
+        LocationHierarchy sector = locationHierarchyGateway.getFirst(locationHierarchyGateway.findById(sectorDataWrapper.getUuid()));
+        LocationHierarchy mapArea = locationHierarchyGateway.getFirst(locationHierarchyGateway.findById(sector.getParentUuid()));
 
-        int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(ctx.getApplicationContext(), mapArea.getName(), sector.getName());
+        int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(mapArea.getName(), sector.getName());
 
         formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
         formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, formatBuilding(nextBuildingNumber, false));
@@ -47,7 +46,7 @@ public class CensusFormPayloadBuilders {
 
     private static void addNewIndividualPayload(Map<String, String> formPayload, LaunchContext navigateActivity) {
         DataWrapper locationDataWrapper = navigateActivity.getHierarchyPath().get(HOUSEHOLD);
-        String individualExtId = IdHelper.generateIndividualExtId(navigateActivity.getContentResolver(), locationDataWrapper);
+        String individualExtId = IdHelper.generateIndividualExtId(locationDataWrapper);
         formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, individualExtId);
         formPayload.put(ProjectFormFields.Individuals.HOUSEHOLD_UUID, navigateActivity.getCurrentSelection().getUuid());
         formPayload.put(ProjectFormFields.Individuals.HOUSEHOLD_EXTID, navigateActivity.getCurrentSelection().getExtId());
@@ -71,9 +70,8 @@ public class CensusFormPayloadBuilders {
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {
             Map<String, String> formPayload = new HashMap<>();
-            ContentResolver contentResolver = ctx.getContentResolver();
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            Location household = locationGateway.getFirst(contentResolver, locationGateway.findById(ctx.getHierarchyPath().get(HOUSEHOLD).getUuid()));
+            Location household = locationGateway.getFirst(locationGateway.findById(ctx.getHierarchyPath().get(HOUSEHOLD).getUuid()));
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
@@ -94,11 +92,9 @@ public class CensusFormPayloadBuilders {
 
             DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
 
-            ContentResolver resolver = ctx.getContentResolver();
             IndividualGateway individualGateway = new IndividualGateway();
 
-            List<Individual> residents = individualGateway.getList(
-                    resolver, individualGateway.findByResidency(household.getUuid()));
+            List<Individual> residents = individualGateway.getList(individualGateway.findByResidency(household.getUuid()));
 
             // pre-fill contact name and number as best we can without household role info
             if (residents.size() == 1) {

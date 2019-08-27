@@ -432,10 +432,10 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
         int depth = hierarchyPath.depth();
         String level = getLevel();
         if (ROOT_LEVEL.equals(level)) {
-            currentResults = queryHelper.getAll(getContentResolver(), config.getTopLevel());
+            currentResults = queryHelper.getAll(config.getTopLevel());
         } else {
             String nextLevel = depth >= config.getLevels().size() ? null : config.getLevels().get(depth);
-            currentResults = queryHelper.getChildren(getContentResolver(), getCurrentSelection(), nextLevel);
+            currentResults = queryHelper.getChildren(getCurrentSelection(), nextLevel);
         }
     }
 

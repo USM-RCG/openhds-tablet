@@ -44,7 +44,6 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.WildcardQuery;
 import org.cimsbioko.R;
-import org.cimsbioko.model.core.LocationHierarchy;
 import org.cimsbioko.navconfig.BiokoHierarchy;
 import org.cimsbioko.navconfig.HierarchyPath;
 import org.cimsbioko.navconfig.NavigatorConfig;
@@ -156,8 +155,7 @@ public class SearchableActivity extends AppCompatActivity {
             tb.setOnCheckedChangeListener(toggleHandler);
         }
 
-        Set<String> enabledAdminLevels = new HashSet<>();
-        enabledAdminLevels.addAll(enabledLevels);
+        Set<String> enabledAdminLevels = new HashSet<>(enabledLevels);
         enabledAdminLevels.retainAll(config.getAdminLevels());
         boolean adminLevelsEnabled = !enabledAdminLevels.isEmpty();
         hierarchyToggle.setChecked(adminLevelsEnabled);
@@ -400,7 +398,7 @@ public class SearchableActivity extends AppCompatActivity {
         }
 
         private DataWrapper getParent(DataWrapper item) {
-            return DefaultQueryHelper.getInstance().getParent(getContentResolver(), item.getCategory(), item.getUuid());
+            return DefaultQueryHelper.getInstance().getParent(item.getCategory(), item.getUuid());
         }
     }
 
@@ -476,7 +474,7 @@ public class SearchableActivity extends AppCompatActivity {
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
                 Document doc = searcher.doc(scoreDoc.doc);
                 String uuid = doc.get("uuid"), level = doc.get("level");
-                DataWrapper item = helper.get(getContentResolver(), level, uuid);
+                DataWrapper item = helper.get(level, uuid);
                 if (item != null) {
                     items.add(item);
                 }

@@ -1,6 +1,5 @@
 package org.cimsbioko.navconfig.db;
 
-import android.content.ContentResolver;
 import org.cimsbioko.model.core.Individual;
 import org.cimsbioko.model.core.Location;
 import org.cimsbioko.model.core.LocationHierarchy;
@@ -50,7 +49,7 @@ public class DefaultQueryHelper implements QueryHelper {
         }
     }
 
-    public List<DataWrapper> getAll(ContentResolver resolver, String level) {
+    public List<DataWrapper> getAll(String level) {
         switch (level) {
             case REGION:
             case PROVINCE:
@@ -61,18 +60,18 @@ public class DefaultQueryHelper implements QueryHelper {
             case SECTOR:
                 String serverLevel = NavigatorConfig.getInstance().getServerLevel(level);
                 LocationHierarchyGateway hierGateway = getLocationHierarchyGateway();
-                return hierGateway.getQueryResultList(resolver, hierGateway.findByLevel(serverLevel), level);
+                return hierGateway.getQueryResultList(hierGateway.findByLevel(serverLevel), level);
             case HOUSEHOLD:
             case INDIVIDUAL:
                 Gateway<?> gateway = getLevelGateway(level);
                 if (gateway != null) {
-                    return gateway.getQueryResultList(resolver, gateway.findAll(), level);
+                    return gateway.getQueryResultList(gateway.findAll(), level);
                 }
         }
         return new ArrayList<>();
     }
 
-    public List<DataWrapper> getChildren(ContentResolver resolver, DataWrapper parent, String childLevel) {
+    public List<DataWrapper> getChildren(DataWrapper parent, String childLevel) {
         if (parent != null) {
             switch (parent.getCategory()) {
                 case REGION:
@@ -82,15 +81,15 @@ public class DefaultQueryHelper implements QueryHelper {
                 case LOCALITY:
                 case MAP_AREA:
                     LocationHierarchyGateway locationHierarchyGateway = getLocationHierarchyGateway();
-                    return locationHierarchyGateway.getQueryResultList(resolver,
+                    return locationHierarchyGateway.getQueryResultList(
                             locationHierarchyGateway.findByParent(parent.getUuid()), childLevel);
                 case SECTOR:
                     LocationGateway locationGateway = getLocationGateway();
-                    return locationGateway.getQueryResultList(resolver,
+                    return locationGateway.getQueryResultList(
                             locationGateway.findByHierarchy(parent.getUuid()), childLevel);
                 case HOUSEHOLD:
                     IndividualGateway individualGateway = getIndividualGateway();
-                    return individualGateway.getQueryResultList(resolver,
+                    return individualGateway.getQueryResultList(
                             individualGateway.findByResidency(parent.getUuid()), childLevel);
             }
         }
@@ -98,13 +97,13 @@ public class DefaultQueryHelper implements QueryHelper {
     }
 
     @Override
-    public DataWrapper get(ContentResolver resolver, String level, String uuid) {
+    public DataWrapper get(String level, String uuid) {
         Gateway gw = getLevelGateway(level);
-        return gw != null ? gw.getFirstQueryResult(resolver, gw.findById(uuid), level) : null;
+        return gw != null ? gw.getFirstQueryResult(gw.findById(uuid), level) : null;
     }
 
     @Override
-    public DataWrapper getParent(ContentResolver resolver, String level, String uuid) {
+    public DataWrapper getParent(String level, String uuid) {
         String parentLevel = NavigatorConfig.getInstance().getParentLevel(level);
         switch (level) {
             case PROVINCE:
@@ -114,16 +113,16 @@ public class DefaultQueryHelper implements QueryHelper {
             case MAP_AREA:
             case SECTOR:
                 LocationHierarchyGateway hierarchyGateway = getLocationHierarchyGateway();
-                LocationHierarchy lh = hierarchyGateway.getFirst(resolver, hierarchyGateway.findById(uuid));
-                return get(resolver, parentLevel, lh.getParentUuid());
+                LocationHierarchy lh = hierarchyGateway.getFirst(hierarchyGateway.findById(uuid));
+                return get(parentLevel, lh.getParentUuid());
             case HOUSEHOLD:
                 LocationGateway locationGateway = getLocationGateway();
-                Location l = locationGateway.getFirst(resolver, locationGateway.findById(uuid));
-                return get(resolver, parentLevel, l.getHierarchyUuid());
+                Location l = locationGateway.getFirst(locationGateway.findById(uuid));
+                return get(parentLevel, l.getHierarchyUuid());
             case INDIVIDUAL:
                 IndividualGateway individualGateway = getIndividualGateway();
-                Individual i = individualGateway.getFirst(resolver, individualGateway.findById(uuid));
-                return get(resolver, parentLevel, i.getCurrentResidenceUuid());
+                Individual i = individualGateway.getFirst(individualGateway.findById(uuid));
+                return get(parentLevel, i.getCurrentResidenceUuid());
             default:
                 return null;
         }

@@ -1,6 +1,5 @@
 package org.cimsbioko.repository.gateway;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import org.cimsbioko.App;
@@ -69,7 +68,7 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
         }
 
         @Override
-        public DataWrapper toDataWrapper(ContentResolver contentResolver, LocationHierarchy locationHierarchy, String level) {
+        public DataWrapper toDataWrapper(LocationHierarchy locationHierarchy, String level) {
             DataWrapper dataWrapper = new DataWrapper();
             dataWrapper.setExtId(locationHierarchy.getExtId());
             dataWrapper.setUuid(locationHierarchy.getUuid());

@@ -1,6 +1,5 @@
 package org.cimsbioko.navconfig;
 
-import android.content.ContentResolver;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -121,21 +120,21 @@ public class HierarchyPath implements Parcelable, Cloneable {
         }
     }
 
-    public static HierarchyPath fromString(ContentResolver resolver, String pathStr) {
+    public static HierarchyPath fromString(String pathStr) {
         if (pathStr != null) {
             Matcher leafMatcher = LEAF_PATTERN.matcher(pathStr);
             if (leafMatcher.matches()) {
                 QueryHelper helper = DefaultQueryHelper.getInstance();
-                DataWrapper leafNode = helper.get(resolver, leafMatcher.group(1), leafMatcher.group(2));
-                return fromLeafString(resolver, leafNode);
+                DataWrapper leafNode = helper.get(leafMatcher.group(1), leafMatcher.group(2));
+                return fromLeafString(leafNode);
             } else {
-                return fromPathString(resolver, pathStr);
+                return fromPathString(pathStr);
             }
         }
         return null;
     }
 
-    private static HierarchyPath fromPathString(ContentResolver resolver, String pathStr) {
+    private static HierarchyPath fromPathString(String pathStr) {
         QueryHelper helper = DefaultQueryHelper.getInstance();
         HierarchyPath path = null;
         List<String> configuredLevels = NavigatorConfig.getInstance().getLevels();
@@ -145,7 +144,7 @@ public class HierarchyPath implements Parcelable, Cloneable {
                 path = new HierarchyPath();
                 for (int i = 0; i < pathPieces.length; i++) {
                     String p = pathPieces[i], level = configuredLevels.get(i);
-                    DataWrapper value = helper.get(resolver, level, p);
+                    DataWrapper value = helper.get(level, p);
                     if (value != null) {
                         path.down(level, value);
                     } else {
@@ -158,7 +157,7 @@ public class HierarchyPath implements Parcelable, Cloneable {
         return path;
     }
 
-    private static HierarchyPath fromLeafString(ContentResolver resolver, DataWrapper leaf) {
+    private static HierarchyPath fromLeafString(DataWrapper leaf) {
 
         QueryHelper helper = DefaultQueryHelper.getInstance();
 
@@ -168,7 +167,7 @@ public class HierarchyPath implements Parcelable, Cloneable {
             traversed.push(leaf);
             DataWrapper child = leaf, parent;
             do {
-                parent = helper.getParent(resolver, child.getCategory(), child.getUuid());
+                parent = helper.getParent(child.getCategory(), child.getUuid());
                 if (parent != null) {
                     traversed.push(parent);
                     child = parent;

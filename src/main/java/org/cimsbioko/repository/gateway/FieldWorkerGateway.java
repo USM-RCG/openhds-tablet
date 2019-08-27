@@ -1,6 +1,5 @@
 package org.cimsbioko.repository.gateway;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import org.cimsbioko.App;
@@ -58,7 +57,7 @@ public class FieldWorkerGateway extends Gateway<FieldWorker> {
         }
 
         @Override
-        public DataWrapper toDataWrapper(ContentResolver contentResolver, FieldWorker fieldWorker, String level) {
+        public DataWrapper toDataWrapper(FieldWorker fieldWorker, String level) {
             DataWrapper dataWrapper = new DataWrapper();
             dataWrapper.setExtId(fieldWorker.getExtId());
             dataWrapper.setName(fieldWorker.getFirstName());

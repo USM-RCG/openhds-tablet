@@ -1,6 +1,5 @@
 package org.cimsbioko.repository;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 
@@ -15,6 +14,6 @@ public interface Converter<T> {
 
     String getId(T entity);
 
-    DataWrapper toDataWrapper(ContentResolver contentResolver, T entity, String level);
+    DataWrapper toDataWrapper(T entity, String level);
 
 }

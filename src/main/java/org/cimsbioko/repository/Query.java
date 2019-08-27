@@ -1,8 +1,8 @@
 package org.cimsbioko.repository;
 
-import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
+import org.cimsbioko.App;
 
 import static org.cimsbioko.repository.RepositoryUtils.EQUALS;
 
@@ -35,8 +35,8 @@ public class Query {
         this.operator = operator;
     }
 
-    public Cursor select(ContentResolver contentResolver) {
+    public Cursor select() {
         final String whereStatement = RepositoryUtils.buildWhereStatement(columnNames, operator);
-        return RepositoryUtils.query(contentResolver, tableUri, whereStatement, columnValues, columnOrderBy);
+        return RepositoryUtils.query(App.getApp().getContentResolver(), tableUri, whereStatement, columnValues, columnOrderBy);
     }
 }

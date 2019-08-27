@@ -25,7 +25,7 @@ import static org.cimsbioko.navconfig.forms.builders.PayloadTools.flagForReview;
 
 public class CensusFormPayloadConsumers {
 
-    private static void ensureLocationSectorExists(Map<String, String> payload, ContentResolver resolver) {
+    private static void ensureLocationSectorExists(Map<String, String> payload) {
 
         LocationHierarchyGateway gw = GatewayRegistry.getLocationHierarchyGateway();
 
@@ -35,12 +35,12 @@ public class CensusFormPayloadConsumers {
         String formSectorName = payload.get(ProjectFormFields.Locations.SECTOR_NAME);
 
         // compute the sector's expected extid based on embedded map uuid and specified sector name
-        LocationHierarchy mapArea = gw.getFirst(resolver, gw.findById(formMapUuid));
+        LocationHierarchy mapArea = gw.getFirst(gw.findById(formMapUuid));
         String computedSectorExtId = mapArea.getExtId().replaceFirst("^(M\\d+)\\b", "$1\\" + formSectorName);
 
         // lookup the sectors by expected extid and embedded sector uuid
-        LocationHierarchy sectorByUuid = gw.getFirst(resolver, gw.findById(formSectorUuid));
-        LocationHierarchy sectorByComputedExtId = gw.getFirst(resolver, gw.findByExtId(computedSectorExtId));
+        LocationHierarchy sectorByUuid = gw.getFirst(gw.findById(formSectorUuid));
+        LocationHierarchy sectorByComputedExtId = gw.getFirst(gw.findByExtId(computedSectorExtId));
 
         boolean sectorNeedsUpdate = sectorByUuid == null || !computedSectorExtId.equals(sectorByUuid.getExtId());
 
@@ -51,7 +51,7 @@ public class CensusFormPayloadConsumers {
             sectorByComputedExtId.setExtId(computedSectorExtId);
             sectorByComputedExtId.setName(formSectorName);
             sectorByComputedExtId.setLevel(SECTOR);
-            gw.insertOrUpdate(resolver, sectorByComputedExtId);
+            gw.insertOrUpdate(sectorByComputedExtId);
         }
 
         if (sectorNeedsUpdate) {
@@ -62,16 +62,16 @@ public class CensusFormPayloadConsumers {
         }
     }
 
-    private static Location insertOrUpdateLocation(Map<String, String> formPayload, ContentResolver contentResolver) {
+    private static Location insertOrUpdateLocation(Map<String, String> formPayload) {
         Location location = LocationFormAdapter.fromForm(formPayload);
-        GatewayRegistry.getLocationGateway().insertOrUpdate(contentResolver, location);
+        GatewayRegistry.getLocationGateway().insertOrUpdate(location);
         return location;
     }
 
-    private static Individual insertOrUpdateIndividual(Map<String, String> formPayLoad, ContentResolver contentResolver) {
+    private static Individual insertOrUpdateIndividual(Map<String, String> formPayLoad) {
         Individual individual = IndividualFormAdapter.fromForm(formPayLoad);
         IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-        individualGateway.insertOrUpdate(contentResolver, individual);
+        individualGateway.insertOrUpdate(individual);
         return individual;
     }
 
@@ -80,9 +80,8 @@ public class CensusFormPayloadConsumers {
 
         @Override
         public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
-            ContentResolver contentResolver = ctx.getContentResolver();
-            ensureLocationSectorExists(formPayload, contentResolver);
-            insertOrUpdateLocation(formPayload, contentResolver);
+            ensureLocationSectorExists(formPayload);
+            insertOrUpdateLocation(formPayload);
             return new ConsumerResult(true);
         }
 
@@ -97,7 +96,7 @@ public class CensusFormPayloadConsumers {
 
         @Override
         public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
-            insertOrUpdateIndividual(formPayload, ctx.getContentResolver());
+            insertOrUpdateIndividual(formPayload);
             return super.consumeFormPayload(formPayload, ctx);
         }
     }
@@ -109,17 +108,16 @@ public class CensusFormPayloadConsumers {
         public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            ContentResolver contentResolver = ctx.getContentResolver();
 
-            Individual individual = insertOrUpdateIndividual(formPayload, ctx.getContentResolver());
+            Individual individual = insertOrUpdateIndividual(formPayload);
 
             // Update the name of the location with the head's last name
             DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD);
-            Location location = locationGateway.getFirst(contentResolver, locationGateway.findById(selectedLocation.getUuid()));
+            Location location = locationGateway.getFirst(locationGateway.findById(selectedLocation.getUuid()));
             String locationName = individual.getLastName();
             location.setName(locationName);
             selectedLocation.setName(locationName);
-            locationGateway.insertOrUpdate(contentResolver, location);
+            locationGateway.insertOrUpdate(location);
 
             return new ConsumerResult(true);
         }

@@ -1,6 +1,5 @@
 package org.cimsbioko.repository.gateway;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 
@@ -103,7 +102,7 @@ public class IndividualGateway extends Gateway<Individual> {
         }
 
         @Override
-        public DataWrapper toDataWrapper(ContentResolver contentResolver, Individual individual, String level) {
+        public DataWrapper toDataWrapper(Individual individual, String level) {
 
             DataWrapper dataWrapper = new DataWrapper();
             dataWrapper.setUuid(individual.getUuid());

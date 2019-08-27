@@ -80,6 +80,6 @@ public class IndividualDetailFragment extends DetailFragment {
 
     private Individual getIndividual(String uuid) {
         IndividualGateway gateway = GatewayRegistry.getIndividualGateway();
-        return gateway.getFirst(getActivity().getContentResolver(), gateway.findById(uuid));
+        return gateway.getFirst(gateway.findById(uuid));
     }
 }

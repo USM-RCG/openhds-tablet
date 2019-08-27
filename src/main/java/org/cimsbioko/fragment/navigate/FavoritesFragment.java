@@ -109,7 +109,7 @@ public class FavoritesFragment extends Fragment {
 
     private void selectFavorite(DataWrapper selected) {
         Context ctx = getActivity();
-        HierarchyPath path = HierarchyPath.fromString(ctx.getContentResolver(), selected.getHierarchyId());
+        HierarchyPath path = HierarchyPath.fromString(selected.getHierarchyId());
         if (path != null) {
             Collection<NavigatorModule> activeModules = ConfigUtils.getActiveModules(ctx);
             if (!activeModules.isEmpty()) {
@@ -195,7 +195,7 @@ public class FavoritesFragment extends Fragment {
             List<DataWrapper> hydratedFavorites = new ArrayList<>(favoriteIds.size());
             for (int i = 0; !isCancelled() && i < favoriteIds.size(); i++) {
                 String itemId = favoriteIds.get(i);
-                DataWrapper item = DataWrapper.getByHierarchyId(resolver, itemId);
+                DataWrapper item = DataWrapper.getByHierarchyId(itemId);
                 if (item != null) {
                     hydratedFavorites.add(item);
                 } else {

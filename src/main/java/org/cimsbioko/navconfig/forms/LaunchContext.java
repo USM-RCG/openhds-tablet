@@ -1,8 +1,5 @@
 package org.cimsbioko.navconfig.forms;
 
-import android.content.ContentResolver;
-import android.content.Context;
-
 import org.cimsbioko.activity.HierarchyNavigatorActivity;
 import org.cimsbioko.navconfig.HierarchyPath;
 import org.cimsbioko.model.core.FieldWorker;
@@ -14,11 +11,7 @@ import org.cimsbioko.repository.DataWrapper;
  * that dependency can be easily identified and, if necessary, decoupled.
  */
 public interface LaunchContext {
-
-    Context getApplicationContext();
-    ContentResolver getContentResolver();
     FieldWorker getCurrentFieldWorker();
     DataWrapper getCurrentSelection();
     HierarchyPath getHierarchyPath();
-
 }

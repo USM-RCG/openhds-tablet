@@ -22,10 +22,9 @@ public class CensusFormFilters {
     public static class AddHeadOfHousehold implements FormFilter {
         @Override
         public boolean shouldDisplay(LaunchContext ctx) {
-            ContentResolver resolver = ctx.getContentResolver();
             IndividualGateway individualGateway = new IndividualGateway();
             String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
-            return individualGateway.getFirst(resolver, individualGateway.findByResidency(locationUuid)) == null;
+            return individualGateway.getFirst(individualGateway.findByResidency(locationUuid)) == null;
         }
     }
 }

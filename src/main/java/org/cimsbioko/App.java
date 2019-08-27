@@ -1,16 +1,26 @@
 package org.cimsbioko;
 
+import android.app.Application;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-public class App {
+public class App extends Application {
 
     public static final String AUTHORITY = "org.cimsbioko";
     private static final String SCHEME = "content://";
     public static final String CONTENT_BASE = SCHEME + AUTHORITY;
     public static final Uri CONTENT_BASE_URI = Uri.parse(SCHEME + AUTHORITY);
 
-    private App() {
+    private static App singleton;
+
+    @Override
+    public void onCreate() {
+        singleton = this;
+        super.onCreate();
+    }
+
+    public static App getApp() {
+        return singleton;
     }
 
     public static final String DEFAULT_SORT_ORDER = "_id ASC";

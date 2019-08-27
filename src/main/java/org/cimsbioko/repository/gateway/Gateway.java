@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import org.cimsbioko.App;
 import org.cimsbioko.repository.Converter;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.Query;
@@ -35,52 +36,55 @@ public abstract class Gateway<T> {
         return converter;
     }
 
+    private ContentResolver getContentResolver() {
+        return App.getApp().getContentResolver();
+    }
+
     // true if entity was inserted, false if updated
-    public boolean insertOrUpdate(ContentResolver contentResolver, T entity) {
+    public boolean insertOrUpdate(T entity) {
+        ContentResolver resolver = getContentResolver();
         ContentValues contentValues = converter.toContentValues(entity);
         String id = converter.getId(entity);
-        if (exists(contentResolver, id)) {
-            update(contentResolver, tableUri, contentValues, idColumnName, id);
+        if (exists(id)) {
+            update(resolver, tableUri, contentValues, idColumnName, id);
             return false;
         } else {
-            return null != insert(contentResolver, tableUri, contentValues);
+            return null != insert(resolver, tableUri, contentValues);
         }
     }
 
     // true if entity was found with given id
-    public boolean exists(ContentResolver contentResolver, String id) {
+    public boolean exists(String id) {
         Query query = findById(id);
-        return null != getFirst(contentResolver, query);
+        return null != getFirst(query);
     }
 
     // get the first result from a query as an entity or null
-    public T getFirst(ContentResolver contentResolver, Query query) {
-        Cursor cursor = query.select(contentResolver);
-        return toEntity(cursor);
+    public T getFirst(Query query) {
+        return toEntity(query.select());
     }
 
     // get all results from a query as a list
-    public List<T> getList(ContentResolver contentResolver, Query query) {
-        Cursor cursor = query.select(contentResolver);
-        return toList(cursor);
+    public List<T> getList(Query query) {
+        return toList(query.select());
     }
 
     // get the first result from a query as a QueryResult or null
-    public DataWrapper getFirstQueryResult(ContentResolver contentResolver, Query query, String level) {
-        T entity = getFirst(contentResolver, query);
+    public DataWrapper getFirstQueryResult(Query query, String level) {
+        T entity = getFirst(query);
         if (null == entity) {
             return null;
         }
-        return converter.toDataWrapper(contentResolver, entity, level);
+        return converter.toDataWrapper(entity, level);
     }
 
     // get all results from a query as a list of QueryResults
-    public List<DataWrapper> getQueryResultList(ContentResolver contentResolver, Query query, String level) {
+    public List<DataWrapper> getQueryResultList(Query query, String level) {
         List<DataWrapper> dataWrappers = new ArrayList<>();
-        Cursor cursor = query.select(contentResolver);
+        Cursor cursor = query.select();
         List<T> entities = toList(cursor);
         for (T entity : entities) {
-            dataWrappers.add(converter.toDataWrapper(contentResolver, entity, level));
+            dataWrappers.add(converter.toDataWrapper(entity, level));
         }
         return dataWrappers;
     }

@@ -1,8 +1,6 @@
 package org.cimsbioko.repository.gateway;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -47,13 +45,12 @@ public class LocationGateway extends Gateway<Location> {
      * map and sector name and not just locations referencing the same parent sector node. This is necessary since
      * multiple sector nodes are created when a sector spans multiple localities.
      *
-     * @param ctx used to lookup database for direct query
      * @param mapArea map name for sector
      * @param sector sector name
      * @return the next sequential building number to use for a new location in the given sector
      */
-    public int nextBuildingNumberInSector(Context ctx, String mapArea, String sector) {
-        SQLiteDatabase db = ContentProvider.getDatabaseHelper(ctx).getReadableDatabase();
+    public int nextBuildingNumberInSector(String mapArea, String sector) {
+        SQLiteDatabase db = ContentProvider.getDatabaseHelper(App.getApp().getApplicationContext()).getReadableDatabase();
         String query = String.format("select max(%s) + 1 from %s where %s = ? and %s = ?",
                 COLUMN_LOCATION_BUILDING_NUMBER, TABLE_NAME, COLUMN_LOCATION_MAP_AREA_NAME, COLUMN_LOCATION_SECTOR_NAME);
         String[] args = {mapArea, sector};
@@ -114,7 +111,7 @@ public class LocationGateway extends Gateway<Location> {
         }
 
         @Override
-        public DataWrapper toDataWrapper(ContentResolver contentResolver, Location location, String level) {
+        public DataWrapper toDataWrapper(Location location, String level) {
             DataWrapper dataWrapper = new DataWrapper();
             dataWrapper.setUuid(location.getUuid());
             dataWrapper.setExtId(location.getExtId());
