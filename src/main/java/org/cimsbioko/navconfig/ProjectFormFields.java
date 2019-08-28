@@ -5,8 +5,6 @@ import org.cimsbioko.App;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.cimsbioko.navconfig.BiokoHierarchy.*;
-
 public class ProjectFormFields {
 
     public static final class General {
