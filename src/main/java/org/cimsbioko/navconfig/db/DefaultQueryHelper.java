@@ -58,9 +58,8 @@ public class DefaultQueryHelper implements QueryHelper {
             case LOCALITY:
             case MAP_AREA:
             case SECTOR:
-                String serverLevel = NavigatorConfig.getInstance().getServerLevel(level);
                 LocationHierarchyGateway hierGateway = getLocationHierarchyGateway();
-                return hierGateway.getQueryResultList(hierGateway.findByLevel(serverLevel), level);
+                return hierGateway.getQueryResultList(hierGateway.findByLevel(level), level);
             case HOUSEHOLD:
             case INDIVIDUAL:
                 Gateway<?> gateway = getLevelGateway(level);

@@ -30,7 +30,7 @@ public class BiokoFormPayloadConsumers {
             map.setExtId(mapName + "/" + locality.getName());
             map.setName(mapName);
             map.setParentUuid(localityUuid);
-            map.setLevel(BiokoHierarchy.SERVER_MAP_AREA);
+            map.setLevel(BiokoHierarchy.MAP_AREA);
 
             hierGateway.insertOrUpdate(map);
 
@@ -57,7 +57,7 @@ public class BiokoFormPayloadConsumers {
             sector.setExtId(map.getName() + sectorName + "/" + locality.getName());
             sector.setName(sectorName);
             sector.setParentUuid(mapUuid);
-            sector.setLevel(BiokoHierarchy.SERVER_SECTOR);
+            sector.setLevel(BiokoHierarchy.SECTOR);
 
             hierGateway.insertOrUpdate(sector);
 

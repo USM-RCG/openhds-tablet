@@ -117,16 +117,14 @@ public class Indexer {
 
     private void bulkIndexHierarchy(IndexWriter writer) throws IOException {
         Cursor c = getDatabase().rawQuery(HIERARCHY_INDEX_QUERY, new String[]{});
-        bulkIndex(R.string.indexing_hierarchy_items,
-                new HierarchyCursorDocumentSource(c, App.HierarchyItems.COLUMN_HIERARCHY_LEVEL), writer);
+        bulkIndex(R.string.indexing_hierarchy_items, new SimpleCursorDocumentSource(c), writer);
     }
 
     public void reindexHierarchy(String uuid) throws IOException {
         IndexWriter writer = getWriter(false);
         try {
             Cursor c = getDatabase().rawQuery(HIERARCHY_UPDATE_QUERY, new String[]{uuid});
-            updateIndex(new HierarchyCursorDocumentSource(c, App.HierarchyItems.COLUMN_HIERARCHY_LEVEL),
-                    writer, App.HierarchyItems.COLUMN_HIERARCHY_UUID);
+            updateIndex(new SimpleCursorDocumentSource(c), writer, App.HierarchyItems.COLUMN_HIERARCHY_UUID);
         } finally {
             writer.commit();
         }
