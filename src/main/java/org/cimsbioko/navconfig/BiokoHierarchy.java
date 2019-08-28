@@ -17,7 +17,7 @@ public class BiokoHierarchy {
     private static final String PROVINCE = "province";
     private static final String DISTRICT = "district";
     private static final String SUBDISTRICT = "subDistrict";
-    public static final String LOCALITY = "locality";
+    private static final String LOCALITY = "locality";
     public static final String MAP_AREA = "mapArea";
     public static final String SECTOR = "sector";
 
