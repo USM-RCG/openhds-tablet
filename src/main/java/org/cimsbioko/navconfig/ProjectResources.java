@@ -9,13 +9,13 @@ public class ProjectResources {
 
     public static class General {
 
-        public static final Map<String, Integer> General = new HashMap<>();
+        static final Map<String, Integer> General = new HashMap<>();
 
         public static final String FORM_NEEDS_REVIEW = "1";
         public static final String FORM_NO_REVIEW_NEEDED = "0";
 
-        public static final String TRUE = "true";
-        public static final String FALSE = "false";
+        static final String TRUE = "true";
+        static final String FALSE = "false";
 
         static{
             General.put(TRUE, R.string.db_val_true);
@@ -25,23 +25,23 @@ public class ProjectResources {
 
     public static final class Individual {
 
-        public static final Map<String, Integer> valueLabels = new HashMap<>();
+        static final Map<String, Integer> valueLabels = new HashMap<>();
 
-        public static final String GENDER_MALE = "Male";
-        public static final String GENDER_FEMALE = "Female";
+        static final String GENDER_MALE = "Male";
+        static final String GENDER_FEMALE = "Female";
 
-        public static final String LANGUAGE_PREF_SPANISH = "Spanish";
-        public static final String LANGUAGE_PREF_FANG = "Fang";
-        public static final String LANGUAGE_PREF_BUBE = "Bubi";
-        public static final String LANGUAGE_PREF_ENGLISH = "English";
-        public static final String LANGUAGE_PREF_FRENCH = "French";
+        static final String LANGUAGE_PREF_SPANISH = "Spanish";
+        static final String LANGUAGE_PREF_FANG = "Fang";
+        static final String LANGUAGE_PREF_BUBE = "Bubi";
+        static final String LANGUAGE_PREF_ENGLISH = "English";
+        static final String LANGUAGE_PREF_FRENCH = "French";
 
-        public static final String NATIONALITY_EQUATO_GUINEAN = "Equato Guinean";
-        public static final String NATIONALITY_OTHER_AFRICAN_COUNTRY = "Other African Country";
-        public static final String NATIONALITY_ASIAN = "Asian";
-        public static final String NATIONALITY_OTHER_NON_AFRICAN_COUNTRY = "Other Non-African Country";
-        public static final String NATIONALITY_OTHER = "Other";
-        public static final String NOT_APPLICABLE = "notApplicable";
+        static final String NATIONALITY_EQUATO_GUINEAN = "Equato Guinean";
+        static final String NATIONALITY_OTHER_AFRICAN_COUNTRY = "Other African Country";
+        static final String NATIONALITY_ASIAN = "Asian";
+        static final String NATIONALITY_OTHER_NON_AFRICAN_COUNTRY = "Other Non-African Country";
+        static final String NATIONALITY_OTHER = "Other";
+        static final String NOT_APPLICABLE = "notApplicable";
 
         private static final String STATUS_PERMANENT = "Permanent";
         private static final String STATUS_VISITOR = "Visitor";
@@ -75,7 +75,7 @@ public class ProjectResources {
 
     public static final class Location {
 
-        public static final Map<String, Integer> valueLabels = new HashMap<>();
+        static final Map<String, Integer> valueLabels = new HashMap<>();
 
         private static final String STATUS_NEVER_AVAILABLE = "neverAvailable";
         private static final String STATUS_REJECTED_INTERVENTION = "rejectedIntervention";
@@ -92,17 +92,17 @@ public class ProjectResources {
 
         private static final Map<String, Integer> valueLabels = new HashMap<>();
 
-        public static final String RELATION_TO_HOH_TYPE_HEAD = "1";
-        public static final String RELATION_TO_HOH_TYPE_SPOUSE = "2";
-        public static final String RELATION_TO_HOH_TYPE_SON_DAUGHTER = "3";
-        public static final String RELATION_TO_HOH_TYPE_BROTHER_SISTER = "4";
-        public static final String RELATION_TO_HOH_TYPE_PARENT = "5";
-        public static final String RELATION_TO_HOH_TYPE_GRANDCHILD = "6";
-        public static final String RELATION_TO_HOH_TYPE_NOT_RELATED = "7";
-        public static final String RELATION_TO_HOH_TYPE_OTHER_RELATIVE = "8";
-        public static final String RELATION_TO_HOH_TYPE_DONT_KNOW = "9";
-        public static final String RELATION_TO_HOH_TYPE_COUSIN = "10";
-        public static final String RELATION_TO_HOH_TYPE_NEPHEW_NIECE = "11";
+        static final String RELATION_TO_HOH_TYPE_HEAD = "1";
+        static final String RELATION_TO_HOH_TYPE_SPOUSE = "2";
+        static final String RELATION_TO_HOH_TYPE_SON_DAUGHTER = "3";
+        static final String RELATION_TO_HOH_TYPE_BROTHER_SISTER = "4";
+        static final String RELATION_TO_HOH_TYPE_PARENT = "5";
+        static final String RELATION_TO_HOH_TYPE_GRANDCHILD = "6";
+        static final String RELATION_TO_HOH_TYPE_NOT_RELATED = "7";
+        static final String RELATION_TO_HOH_TYPE_OTHER_RELATIVE = "8";
+        static final String RELATION_TO_HOH_TYPE_DONT_KNOW = "9";
+        static final String RELATION_TO_HOH_TYPE_COUSIN = "10";
+        static final String RELATION_TO_HOH_TYPE_NEPHEW_NIECE = "11";
 
         static {
             valueLabels.put(RELATION_TO_HOH_TYPE_HEAD, R.string.db_val_relation_to_head_type_head);
