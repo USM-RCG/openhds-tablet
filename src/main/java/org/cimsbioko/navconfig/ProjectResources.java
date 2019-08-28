@@ -21,14 +21,6 @@ public class ProjectResources {
             General.put(TRUE, R.string.db_val_true);
             General.put(FALSE, R.string.db_val_false);
         }
-
-        public static int getGeneralStringId(String key) {
-            if (General.containsKey(key)) {
-                return General.get(key);
-            } else {
-                return 0;
-            }
-        }
     }
 
     public static final class Individual {
@@ -95,14 +87,6 @@ public class ProjectResources {
             Location.put(STATUS_NEVER_AVAILABLE, R.string.db_val_location_status_never_available);
             Location.put(STATUS_REJECTED_INTERVENTION, R.string.db_val_location_status_rejected_intervention);
             Location.put(STATUS_UNINHABITED, R.string.db_val_location_status_uninhabited);
-        }
-
-        public static int getLocationStringId(String key) {
-            if (key != null && Location.containsKey(key)) {
-                return Location.get(key);
-            } else {
-                return 0;
-            }
         }
     }
 
