@@ -193,8 +193,8 @@ public class NavigatorConfig {
      * @param level the hierarchy level
      * @return the level's label for the current locale
      */
-    public int getLevelLabel(String level) {
-        return BiokoHierarchy.INSTANCE.getLevelLabels().get(level);
+    public String getLevelLabel(String level) {
+        return getString(BiokoHierarchy.INSTANCE.getLevelLabels().get(level));
     }
 
     public NavigatorModule getModule(String name) {

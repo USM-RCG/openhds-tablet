@@ -72,7 +72,7 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 		for (String level : config.getLevels()) {
 			final String description = null;
 			RelativeLayout layout = makeTextWithPayload(getActivity(),
-                    getResourceString(getActivity(), config.getLevelLabel(level)), description, level, this,
+					config.getLevelLabel(level), description, level, this,
 					buttonLayout, R.drawable.data_selector, null, null,true);
 			LayoutParams params = (LayoutParams) layout.getLayoutParams();
 			params.setMargins(0, 0, 0, BUTTON_MARGIN);
@@ -117,7 +117,7 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 
 	private void updateButton(String level, DataWrapper data) {
 		if (data == null) {
-			String levelLabel = getString(config.getLevelLabel(level));
+			String levelLabel = config.getLevelLabel(level);
 			setButtonLabel(level, levelLabel, null, true);
 			setHighlighted(level, true);
 		} else {

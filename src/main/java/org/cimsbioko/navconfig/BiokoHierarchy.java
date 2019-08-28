@@ -1,7 +1,5 @@
 package org.cimsbioko.navconfig;
 
-import org.cimsbioko.R;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,21 +25,22 @@ public class BiokoHierarchy {
     public static final String HOUSEHOLD = "household";
     public static final String INDIVIDUAL = "individual";
 
-    private static final Map<String, Integer> levelLabels = new HashMap<>();
+    private static final Map<String, String> levelLabels = new HashMap<>();
     private static final List<String> adminLevels = new ArrayList<>();
     private static final List<String> levels = new ArrayList<>();
 
     static {
 
-        levelLabels.put(REGION, R.string.region_label);
-        levelLabels.put(PROVINCE, R.string.province_label);
-        levelLabels.put(DISTRICT, R.string.district_label);
-        levelLabels.put(SUBDISTRICT, R.string.sub_district_label);
-        levelLabels.put(LOCALITY, R.string.locality_label);
-        levelLabels.put(MAP_AREA, R.string.map_area_label);
-        levelLabels.put(SECTOR, R.string.sector_label);
-        levelLabels.put(HOUSEHOLD, R.string.household_label);
-        levelLabels.put(INDIVIDUAL, R.string.individual_label);
+        levelLabels.put(REGION, "hier.region");
+        levelLabels.put(PROVINCE, "hier.province");
+        levelLabels.put(DISTRICT, "hier.district");
+        levelLabels.put(SUBDISTRICT, "hier.subDistrict");
+        levelLabels.put(LOCALITY, "hier.locality");
+        levelLabels.put(MAP_AREA, "hier.mapArea");
+        levelLabels.put(SECTOR, "hier.sector");
+
+        levelLabels.put(HOUSEHOLD, "hier.household");
+        levelLabels.put(INDIVIDUAL, "hier.individual");
 
         adminLevels.add(REGION);
         adminLevels.add(PROVINCE);
@@ -56,7 +55,7 @@ public class BiokoHierarchy {
         levels.add(INDIVIDUAL);
     }
 
-    Map<String, Integer> getLevelLabels() {
+    Map<String, String> getLevelLabels() {
         return levelLabels;
     }
 
