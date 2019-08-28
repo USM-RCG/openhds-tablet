@@ -30,7 +30,7 @@ public class BiokoFormPayloadConsumers {
             map.setExtId(mapName + "/" + locality.getName());
             map.setName(mapName);
             map.setParentUuid(localityUuid);
-            map.setLevel(BiokoHierarchy.MAP_AREA);
+            map.setLevel("mapArea"); // FIXME: decoupled from hierarchy constants to break dependency
 
             hierGateway.insertOrUpdate(map);
 
@@ -57,7 +57,7 @@ public class BiokoFormPayloadConsumers {
             sector.setExtId(map.getName() + sectorName + "/" + locality.getName());
             sector.setName(sectorName);
             sector.setParentUuid(mapUuid);
-            sector.setLevel(BiokoHierarchy.SECTOR);
+            sector.setLevel("sector"); // FIXME: decoupled from hierarchy constants to break dependency
 
             hierGateway.insertOrUpdate(sector);
 
