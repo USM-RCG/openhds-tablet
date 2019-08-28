@@ -172,7 +172,8 @@ public class BiokoFormPayloadBuilders {
         public Map<String, String> buildPayload(LaunchContext ctx) {
             Map<String,String> formPayload = new HashMap<>();
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
-            DataWrapper map = ctx.getHierarchyPath().get(MAP_AREA);
+            List<DataWrapper> path = ctx.getHierarchyPath().getPath();
+            DataWrapper map = path.get(path.size()-1);
             formPayload.put(ProjectFormFields.CreateSector.MAP_UUID, map.getUuid());
             formPayload.put(ProjectFormFields.CreateSector.SECTOR_UUID, IdHelper.generateEntityUuid());
             return formPayload;
