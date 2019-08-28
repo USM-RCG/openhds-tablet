@@ -13,14 +13,6 @@
     <string name="malformed_url_msg">El valor introducido no es una URL válida.</string>
     <string name="sync_database_description">Sincroniza los datos con el servidor</string>
     <string name="field_worker_bad_credentials">Credenciales inválidas</string>
-    <string name="region_label">Región</string>
-    <string name="province_label">Provincia</string>
-    <string name="district_label">Distrito</string>
-    <string name="locality_label">Localidad</string>
-    <string name="map_area_label">Área de Mapa</string>
-    <string name="sector_label">Sector</string>
-    <string name="household_label">Domicilio</string>
-    <string name="individual_label">Individuo</string>
 
     <!-- Details Fragment Values -->
     <string name="toggle_fragment_button_show_details">Mostrar Detalles</string>
@@ -89,7 +81,6 @@
     <string name="forms_awaiting_approval">Formularios en espera de aprobación</string>
     <string name="supervisor_approve_all">Aprobar Todo</string>
     <string name="supervisor_approve_selected">Aprobar Seleccionado</string>
-    <string name="sub_district_label">Subdistrito</string>
     <string name="launching_form">Iniciando Formulario…</string>
     <string name="delete_button_label">Eliminar</string>
     <string name="find_label">Encontrar</string>

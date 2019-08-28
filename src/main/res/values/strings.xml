@@ -16,14 +16,6 @@
     <string name="delete_forms">Delete Forms</string>
     <string name="approve_forms">Approve Forms</string>
     <string name="field_worker_bad_credentials">Invalid field worker credentials</string>
-    <string name="region_label">Region</string>
-    <string name="province_label">Province</string>
-    <string name="district_label">District</string>
-    <string name="locality_label">Locality</string>
-    <string name="map_area_label">Map Area</string>
-    <string name="sector_label">Sector</string>
-    <string name="household_label">Household</string>
-    <string name="individual_label">Individual</string>
 
     <!-- Server URLs and Paths -->
     <string name="default_server_url" translatable="false">https://cims-bioko.org</string>
@@ -125,7 +117,6 @@
 
     <string name="supervisor_approve_all"> Approve All </string>
     <string name="supervisor_approve_selected"> Approve Selected </string>
-    <string name="sub_district_label">Subdistrict</string>
     <string name="launching_form">Launching Form…</string>
     <string name="delete_button_label">Delete Selected</string>
     <string name="find_label">Find</string>
