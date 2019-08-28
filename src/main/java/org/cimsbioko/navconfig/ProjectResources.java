@@ -35,7 +35,6 @@ public class ProjectResources {
         public static final String LANGUAGE_PREF_BUBE = "Bubi";
         public static final String LANGUAGE_PREF_ENGLISH = "English";
         public static final String LANGUAGE_PREF_FRENCH = "French";
-        public static final String LANGUAGE_PREF_OTHER = "Other";
 
         public static final String NATIONALITY_EQUATO_GUINEAN = "Equato Guinean";
         public static final String NATIONALITY_OTHER_AFRICAN_COUNTRY = "Other African Country";
@@ -55,7 +54,6 @@ public class ProjectResources {
             Individual.put(LANGUAGE_PREF_BUBE, R.string.db_val_language_pref_bubi);
             Individual.put(LANGUAGE_PREF_ENGLISH,R.string.db_val_language_pref_english);
             Individual.put(LANGUAGE_PREF_FRENCH, R.string.db_val_language_pref_french);
-            Individual.put(LANGUAGE_PREF_OTHER, R.string.db_val_language_pref_other);
             Individual.put(STATUS_PERMANENT, R.string.db_val_status_permanent);
             Individual.put(STATUS_VISITOR, R.string.db_val_status_visitor);
             Individual.put(NATIONALITY_EQUATO_GUINEAN, R.string.db_val_nationality_equato_guinean);
