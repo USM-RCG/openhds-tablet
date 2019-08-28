@@ -63,12 +63,15 @@ public class BiokoFormPayloadBuilders {
         }
 
         private String generateNetCode(LaunchContext ctx) {
-            HierarchyPath hierPath = ctx.getHierarchyPath();
+            List<DataWrapper> hierPath = ctx.getHierarchyPath().getPath();
+            int pathLen = hierPath.size();
+            DataWrapper stubLocation = hierPath.get(pathLen - 1),
+                    sector = hierPath.get(pathLen - 2),
+                    map = hierPath.get(pathLen - 3);
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            Location household = locationGateway.getFirst(locationGateway.findById(hierPath.get(HOUSEHOLD).getUuid()));
-            String map = hierPath.get(MAP_AREA).getName(), sector = hierPath.get(SECTOR).getName();
+            Location household = locationGateway.getFirst(locationGateway.findById(stubLocation.getUuid()));
             String year = new SimpleDateFormat("yy").format(new Date());
-            return String.format("%s/%s%sE%03d", year, map, sector, household.getBuildingNumber());
+            return String.format("%s/%s%sE%03d", year, map.getName(), sector.getName(), household.getBuildingNumber());
         }
     }
 
@@ -121,9 +124,11 @@ public class BiokoFormPayloadBuilders {
 
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
 
-            DataWrapper mapArea = ctx.getHierarchyPath().get(MAP_AREA);
-            DataWrapper sector = ctx.getHierarchyPath().get(SECTOR);
-            DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
+            List<DataWrapper> hierPath = ctx.getHierarchyPath().getPath();
+            int pathLen = hierPath.size();
+            DataWrapper household = hierPath.get(pathLen - 1),
+                    sector = hierPath.get(pathLen - 2),
+                    map = hierPath.get(pathLen - 3);
 
             String locationExtId = household.getExtId();
             String locationUuid = household.getUuid();
@@ -131,9 +136,9 @@ public class BiokoFormPayloadBuilders {
             // Assign the next sequential building number in sector
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
             Location existing = locationGateway.getFirst(locationGateway.findById(locationUuid));
-            int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(mapArea.getName(), sector.getName());
+            int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(map.getName(), sector.getName());
 
-            formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, mapArea.getName());
+            formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, map.getName());
             formPayload.put(ProjectFormFields.Locations.SECTOR_NAME, sector.getName());
             formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, formatBuilding(nextBuildingNumber, true));
             formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, formatFloor(1, true));

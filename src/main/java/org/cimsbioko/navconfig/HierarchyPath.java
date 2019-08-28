@@ -7,12 +7,7 @@ import org.cimsbioko.navconfig.db.DefaultQueryHelper;
 import org.cimsbioko.navconfig.db.QueryHelper;
 import org.cimsbioko.repository.DataWrapper;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,8 +37,15 @@ public class HierarchyPath implements Parcelable, Cloneable {
     /**
      * @return the named levels in the path in traversal order.
      */
-    public Set<String> getLevels() {
-        return path.keySet();
+    public List<String> getLevels() {
+        return new ArrayList<>(path.keySet());
+    }
+
+    /**
+     * @return the named levels in the path in traversal order.
+     */
+    public List<DataWrapper> getPath() {
+        return new ArrayList<>(path.values());
     }
 
     /**

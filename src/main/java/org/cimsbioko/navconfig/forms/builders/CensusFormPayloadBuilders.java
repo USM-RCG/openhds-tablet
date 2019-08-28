@@ -5,7 +5,6 @@ import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.navconfig.ProjectFormFields;
-import org.cimsbioko.repository.GatewayRegistry;
 import org.cimsbioko.repository.gateway.*;
 import org.cimsbioko.utilities.IdHelper;
 import org.cimsbioko.utilities.StringUtils;
@@ -17,29 +16,23 @@ import java.util.Map;
 import static org.cimsbioko.navconfig.BiokoHierarchy.*;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatBuilding;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatFloor;
+import static org.cimsbioko.repository.GatewayRegistry.getLocationGateway;
 
 public class CensusFormPayloadBuilders {
 
     private static void addNewLocationPayload(Map<String, String> formPayload, LaunchContext ctx) {
-
-        LocationHierarchyGateway locationHierarchyGateway = GatewayRegistry.getLocationHierarchyGateway();
-        LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-
-        DataWrapper sectorDataWrapper = ctx.getHierarchyPath().get(SECTOR);
-
-        LocationHierarchy sector = locationHierarchyGateway.getFirst(locationHierarchyGateway.findById(sectorDataWrapper.getUuid()));
-        LocationHierarchy mapArea = locationHierarchyGateway.getFirst(locationHierarchyGateway.findById(sector.getParentUuid()));
-
-        int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(mapArea.getName(), sector.getName());
-
+        List<DataWrapper> hierPath = ctx.getHierarchyPath().getPath();
+        int pathLen = hierPath.size();
+        DataWrapper sector = hierPath.get(pathLen - 1), map = hierPath.get(pathLen - 2);
         formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
+        int nextBuildingNumber = getLocationGateway().nextBuildingNumberInSector(map.getName(), sector.getName());
         formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, formatBuilding(nextBuildingNumber, false));
         formPayload.put(ProjectFormFields.Locations.HIERARCHY_EXTID, sector.getExtId());
         formPayload.put(ProjectFormFields.Locations.HIERARCHY_UUID, sector.getUuid());
-        formPayload.put(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID, sector.getParentUuid());
+        formPayload.put(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID, map.getUuid());
         formPayload.put(ProjectFormFields.Locations.SECTOR_NAME, sector.getName());
         formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, formatFloor(1, false));
-        formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, mapArea.getName());
+        formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, map.getName());
     }
 
     private static void addNewIndividualPayload(Map<String, String> formPayload, LaunchContext navigateActivity) {
@@ -68,7 +61,7 @@ public class CensusFormPayloadBuilders {
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {
             Map<String, String> formPayload = new HashMap<>();
-            LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
+            LocationGateway locationGateway = getLocationGateway();
             Location household = locationGateway.getFirst(locationGateway.findById(ctx.getHierarchyPath().get(HOUSEHOLD).getUuid()));
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
