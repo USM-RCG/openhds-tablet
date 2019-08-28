@@ -1,1 +1,0 @@
-var answer = (function (x) { return java.lang.Math.pow(x, 2); })(4);

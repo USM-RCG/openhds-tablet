@@ -1,1 +1,0 @@
-var answer = math.square(5);
