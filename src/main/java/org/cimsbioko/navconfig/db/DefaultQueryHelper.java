@@ -13,7 +13,7 @@ import org.cimsbioko.repository.gateway.LocationHierarchyGateway;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.cimsbioko.navconfig.BiokoHierarchy.*;
+import static org.cimsbioko.navconfig.Hierarchy.*;
 import static org.cimsbioko.repository.GatewayRegistry.*;
 
 public class DefaultQueryHelper implements QueryHelper {

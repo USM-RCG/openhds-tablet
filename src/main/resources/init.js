@@ -1,6 +1,10 @@
 "use strict";
 
-const modules = [
+const hierarchy = require('hierarchy').hierarchy;
+
+config.setHierarchy(hierarchy);
+
+const navmods = [
   'gisops',
   'advspray',
   'spraying',
@@ -9,4 +13,4 @@ const modules = [
   'entomology'
 ];
 
-modules.map(name => require(name).module).forEach(module => config.addModule(module));
+navmods.map(name => require(name).module).forEach(module => config.addModule(module));

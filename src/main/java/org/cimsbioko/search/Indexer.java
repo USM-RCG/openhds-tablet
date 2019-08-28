@@ -16,7 +16,6 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.cimsbioko.R;
-import org.cimsbioko.navconfig.BiokoHierarchy;
 import org.cimsbioko.utilities.NotificationUtils;
 
 import java.io.File;
@@ -24,6 +23,7 @@ import java.io.IOException;
 
 import static org.apache.lucene.index.IndexWriterConfig.OpenMode.CREATE_OR_APPEND;
 import static org.apache.lucene.util.Version.LUCENE_47;
+import static org.cimsbioko.navconfig.Hierarchy.*;
 import static org.cimsbioko.provider.ContentProvider.getDatabaseHelper;
 import static org.cimsbioko.utilities.NotificationUtils.*;
 import static org.cimsbioko.utilities.SyncUtils.close;
@@ -33,7 +33,7 @@ public class Indexer {
     public static final String INDIVIDUAL_INDEX_QUERY = String.format("select %s, '%s' as level, %s," +
                     " ifnull(%s,'') || ' ' || ifnull(%s,'') || ' ' || ifnull(%s,'') as name," +
                     " ifnull(%s,'') || ' ' || ifnull(%s,'') || ' ' || ifnull(%s,'') as phone" +
-                    " from %s", App.Individuals.COLUMN_INDIVIDUAL_UUID, BiokoHierarchy.INDIVIDUAL,
+                    " from %s", App.Individuals.COLUMN_INDIVIDUAL_UUID, INDIVIDUAL,
             App.Individuals.COLUMN_INDIVIDUAL_EXTID, App.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME,
             App.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES, App.Individuals.COLUMN_INDIVIDUAL_LAST_NAME,
             App.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER, App.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER,
@@ -43,7 +43,7 @@ public class Indexer {
             App.Individuals.COLUMN_INDIVIDUAL_UUID);
 
     public static final String LOCATION_INDEX_QUERY = String.format("select %s, '%s' as level, %s, %s from %s",
-            App.Locations.COLUMN_LOCATION_UUID, BiokoHierarchy.HOUSEHOLD, App.Locations.COLUMN_LOCATION_EXTID,
+            App.Locations.COLUMN_LOCATION_UUID, HOUSEHOLD, App.Locations.COLUMN_LOCATION_EXTID,
             App.Locations.COLUMN_LOCATION_NAME, App.Locations.TABLE_NAME);
 
     public static final String LOCATION_UPDATE_QUERY = String.format(LOCATION_INDEX_QUERY + " where %s = ?",

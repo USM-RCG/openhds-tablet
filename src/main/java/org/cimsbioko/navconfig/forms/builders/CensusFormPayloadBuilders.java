@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.cimsbioko.navconfig.BiokoHierarchy.*;
+import static org.cimsbioko.navconfig.Hierarchy.*;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatBuilding;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatFloor;
 import static org.cimsbioko.repository.GatewayRegistry.getLocationGateway;

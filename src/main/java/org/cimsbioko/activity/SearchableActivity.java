@@ -44,7 +44,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.WildcardQuery;
 import org.cimsbioko.R;
-import org.cimsbioko.navconfig.BiokoHierarchy;
+import org.cimsbioko.navconfig.Hierarchy;
 import org.cimsbioko.navconfig.HierarchyPath;
 import org.cimsbioko.navconfig.NavigatorConfig;
 import org.cimsbioko.navconfig.NavigatorModule;
@@ -70,6 +70,8 @@ import static android.view.View.VISIBLE;
 import static java.util.Arrays.asList;
 import static org.cimsbioko.activity.FieldWorkerActivity.ACTIVITY_MODULE_EXTRA;
 import static org.cimsbioko.activity.HierarchyNavigatorActivity.HIERARCHY_PATH_KEY;
+import static org.cimsbioko.navconfig.Hierarchy.HOUSEHOLD;
+import static org.cimsbioko.navconfig.Hierarchy.INDIVIDUAL;
 import static org.cimsbioko.utilities.MessageUtils.showLongToast;
 
 public class SearchableActivity extends AppCompatActivity {
@@ -161,11 +163,11 @@ public class SearchableActivity extends AppCompatActivity {
         hierarchyToggle.setChecked(adminLevelsEnabled);
         hierarchyToggle.setEnabled(allowToggle && adminLevelsEnabled);
 
-        boolean householdLevelEnabled = enabledLevels.contains(BiokoHierarchy.HOUSEHOLD);
+        boolean householdLevelEnabled = enabledLevels.contains(HOUSEHOLD);
         locationToggle.setChecked(householdLevelEnabled);
         locationToggle.setEnabled(allowToggle && householdLevelEnabled);
 
-        boolean individualLevelEnabled = enabledLevels.contains(BiokoHierarchy.INDIVIDUAL);
+        boolean individualLevelEnabled = enabledLevels.contains(INDIVIDUAL);
         individualToggle.setChecked(individualLevelEnabled);
         individualToggle.setEnabled(allowToggle && individualLevelEnabled);
 
@@ -200,10 +202,10 @@ public class SearchableActivity extends AppCompatActivity {
             result.addAll(NavigatorConfig.getInstance().getAdminLevels());
         }
         if (locationToggle.isChecked()) {
-            result.add(BiokoHierarchy.HOUSEHOLD);
+            result.add(HOUSEHOLD);
         }
         if (individualToggle.isChecked()) {
-            result.add(BiokoHierarchy.INDIVIDUAL);
+            result.add(INDIVIDUAL);
         }
 
         result.retainAll(enabledLevels);
@@ -526,10 +528,10 @@ public class SearchableActivity extends AppCompatActivity {
             TextView text2 = convertView.findViewById(android.R.id.text2);
 
             switch (item.getCategory()) {
-                case BiokoHierarchy.HOUSEHOLD:
+                case HOUSEHOLD:
                     icon.setImageResource(R.drawable.location_logo);
                     break;
-                case BiokoHierarchy.INDIVIDUAL:
+                case INDIVIDUAL:
                     icon.setImageResource(R.drawable.individual_logo);
                     break;
                 default:

@@ -14,7 +14,7 @@ import org.cimsbioko.repository.gateway.LocationGateway;
 
 import java.util.Map;
 
-import static org.cimsbioko.navconfig.BiokoHierarchy.HOUSEHOLD;
+import static org.cimsbioko.navconfig.Hierarchy.HOUSEHOLD;
 
 public class CensusFormPayloadConsumers {
 

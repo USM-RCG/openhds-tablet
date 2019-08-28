@@ -1,7 +1,6 @@
 package org.cimsbioko.navconfig.forms.consumers;
 
 import org.cimsbioko.model.core.LocationHierarchy;
-import org.cimsbioko.navconfig.BiokoHierarchy;
 import org.cimsbioko.navconfig.ProjectFormFields;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;

@@ -4,7 +4,7 @@ import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.cimsbioko.repository.gateway.IndividualGateway;
 
-import static org.cimsbioko.navconfig.BiokoHierarchy.HOUSEHOLD;
+import static org.cimsbioko.navconfig.Hierarchy.HOUSEHOLD;
 
 public class CensusFormFilters {
 

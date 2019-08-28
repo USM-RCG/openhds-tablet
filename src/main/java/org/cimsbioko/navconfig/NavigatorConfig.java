@@ -37,12 +37,21 @@ public class NavigatorConfig {
     private static NavigatorConfig instance;
 
     private ClassLoader moduleLoader = NavigatorConfig.class.getClassLoader();
+    private Hierarchy hierarchy;
     private Map<String, NavigatorModule> modules = emptyMap();
     private Map<String, Binding> bindings = emptyMap();
 
 
     protected NavigatorConfig() {
         init();
+    }
+
+    public void setHierarchy(Hierarchy hierarchy) {
+        this.hierarchy = hierarchy;
+    }
+
+    public Hierarchy getHierarchy() {
+        return hierarchy;
     }
 
     private void init() {
@@ -146,7 +155,7 @@ public class NavigatorConfig {
      * @return a list of configured hier levels, from highest to lowest.
      */
     public List<String> getLevels() {
-        return BiokoHierarchy.INSTANCE.getLevels();
+        return hierarchy.getLevels();
     }
 
     /**
@@ -155,7 +164,7 @@ public class NavigatorConfig {
      * @return a list of hier levels corresponding to admin hierarchy, from highest to lowest.
      */
     public List<String> getAdminLevels() {
-        return BiokoHierarchy.INSTANCE.getAdminLevels();
+        return hierarchy.getAdminLevels();
     }
 
     /**
@@ -166,7 +175,7 @@ public class NavigatorConfig {
      * @return the level value corresponding to the parent level of the specified one
      */
     public String getParentLevel(String level) {
-        return BiokoHierarchy.INSTANCE.getParentLevel(level);
+        return hierarchy.getParentLevel(level);
     }
 
     /**
@@ -194,7 +203,7 @@ public class NavigatorConfig {
      * @return the level's label for the current locale
      */
     public String getLevelLabel(String level) {
-        return getString(BiokoHierarchy.INSTANCE.getLevelLabels().get(level));
+        return getString(hierarchy.getLevelLabels().get(level));
     }
 
     public NavigatorModule getModule(String name) {
