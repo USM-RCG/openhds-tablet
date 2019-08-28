@@ -30,36 +30,41 @@ public class DefaultQueryHelper implements QueryHelper {
         return instance;
     }
 
+    private boolean isAdminLevel(String level) {
+        return NavigatorConfig.getInstance().getAdminLevels().contains(level);
+    }
+
+    private boolean isTopLevel(String level) {
+        return NavigatorConfig.getInstance().getTopLevel().equals(level);
+    }
+
+    private boolean isLastAdminLevel(String level) {
+        NavigatorConfig config = NavigatorConfig.getInstance();
+        List<String> adminLevels = config.getAdminLevels();
+        return !adminLevels.isEmpty() && adminLevels.get(adminLevels.size() - 1).equals(level);
+    }
+
     private Gateway<?> getLevelGateway(String level) {
-        switch (level) {
-            case REGION:
-            case PROVINCE:
-            case DISTRICT:
-            case SUBDISTRICT:
-            case LOCALITY:
-            case MAP_AREA:
-            case SECTOR:
-                return getLocationHierarchyGateway();
-            case HOUSEHOLD:
-                return getLocationGateway();
-            case INDIVIDUAL:
-                return getIndividualGateway();
-            default:
-                return null;
+        if (isAdminLevel(level)) {
+            return getLocationHierarchyGateway();
+        } else {
+            switch (level) {
+                case HOUSEHOLD:
+                    return getLocationGateway();
+                case INDIVIDUAL:
+                    return getIndividualGateway();
+                default:
+                    return null;
+            }
         }
     }
 
     public List<DataWrapper> getAll(String level) {
+        if (isAdminLevel(level)) {
+            LocationHierarchyGateway hierGateway = getLocationHierarchyGateway();
+            return hierGateway.getQueryResultList(hierGateway.findByLevel(level), level);
+        }
         switch (level) {
-            case REGION:
-            case PROVINCE:
-            case DISTRICT:
-            case SUBDISTRICT:
-            case LOCALITY:
-            case MAP_AREA:
-            case SECTOR:
-                LocationHierarchyGateway hierGateway = getLocationHierarchyGateway();
-                return hierGateway.getQueryResultList(hierGateway.findByLevel(level), level);
             case HOUSEHOLD:
             case INDIVIDUAL:
                 Gateway<?> gateway = getLevelGateway(level);
@@ -72,24 +77,21 @@ public class DefaultQueryHelper implements QueryHelper {
 
     public List<DataWrapper> getChildren(DataWrapper parent, String childLevel) {
         if (parent != null) {
-            switch (parent.getCategory()) {
-                case REGION:
-                case PROVINCE:
-                case DISTRICT:
-                case SUBDISTRICT:
-                case LOCALITY:
-                case MAP_AREA:
+            String level = parent.getCategory();
+            if (isAdminLevel(level)) {
+                if (!isLastAdminLevel(level)) {
                     LocationHierarchyGateway locationHierarchyGateway = getLocationHierarchyGateway();
                     return locationHierarchyGateway.getQueryResultList(
                             locationHierarchyGateway.findByParent(parent.getUuid()), childLevel);
-                case SECTOR:
+                } else {
                     LocationGateway locationGateway = getLocationGateway();
                     return locationGateway.getQueryResultList(
                             locationGateway.findByHierarchy(parent.getUuid()), childLevel);
-                case HOUSEHOLD:
-                    IndividualGateway individualGateway = getIndividualGateway();
-                    return individualGateway.getQueryResultList(
-                            individualGateway.findByResidency(parent.getUuid()), childLevel);
+                }
+            } else if (HOUSEHOLD.equals(level)) {
+                IndividualGateway individualGateway = getIndividualGateway();
+                return individualGateway.getQueryResultList(
+                        individualGateway.findByResidency(parent.getUuid()), childLevel);
             }
         }
         return new ArrayList<>();
@@ -103,27 +105,25 @@ public class DefaultQueryHelper implements QueryHelper {
 
     @Override
     public DataWrapper getParent(String level, String uuid) {
-        String parentLevel = NavigatorConfig.getInstance().getParentLevel(level);
-        switch (level) {
-            case PROVINCE:
-            case DISTRICT:
-            case SUBDISTRICT:
-            case LOCALITY:
-            case MAP_AREA:
-            case SECTOR:
-                LocationHierarchyGateway hierarchyGateway = getLocationHierarchyGateway();
-                LocationHierarchy lh = hierarchyGateway.getFirst(hierarchyGateway.findById(uuid));
-                return get(parentLevel, lh.getParentUuid());
-            case HOUSEHOLD:
-                LocationGateway locationGateway = getLocationGateway();
-                Location l = locationGateway.getFirst(locationGateway.findById(uuid));
-                return get(parentLevel, l.getHierarchyUuid());
-            case INDIVIDUAL:
-                IndividualGateway individualGateway = getIndividualGateway();
-                Individual i = individualGateway.getFirst(individualGateway.findById(uuid));
-                return get(parentLevel, i.getCurrentResidenceUuid());
-            default:
-                return null;
+        NavigatorConfig config = NavigatorConfig.getInstance();
+        String parentLevel = config.getParentLevel(level);
+        if (isAdminLevel(level) && !isTopLevel(level)) {
+            LocationHierarchyGateway hierarchyGateway = getLocationHierarchyGateway();
+            LocationHierarchy lh = hierarchyGateway.getFirst(hierarchyGateway.findById(uuid));
+            return get(parentLevel, lh.getParentUuid());
+        } else {
+            switch (level) {
+                case HOUSEHOLD:
+                    LocationGateway locationGateway = getLocationGateway();
+                    Location l = locationGateway.getFirst(locationGateway.findById(uuid));
+                    return get(parentLevel, l.getHierarchyUuid());
+                case INDIVIDUAL:
+                    IndividualGateway individualGateway = getIndividualGateway();
+                    Individual i = individualGateway.getFirst(individualGateway.findById(uuid));
+                    return get(parentLevel, i.getCurrentResidenceUuid());
+                default:
+                    return null;
+            }
         }
     }
 
