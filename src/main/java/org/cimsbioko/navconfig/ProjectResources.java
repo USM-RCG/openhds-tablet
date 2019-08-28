@@ -25,7 +25,7 @@ public class ProjectResources {
 
     public static final class Individual {
 
-        public static final Map<String, Integer> Individual = new HashMap<>();
+        public static final Map<String, Integer> valueLabels = new HashMap<>();
 
         public static final String GENDER_MALE = "Male";
         public static final String GENDER_FEMALE = "Female";
@@ -47,26 +47,26 @@ public class ProjectResources {
         private static final String STATUS_VISITOR = "Visitor";
 
         static {
-            Individual.put(GENDER_MALE, R.string.db_val_gender_male);
-            Individual.put(GENDER_FEMALE, R.string.db_val_gender_female);
-            Individual.put(LANGUAGE_PREF_SPANISH,R.string.db_val_language_pref_spanish);
-            Individual.put(LANGUAGE_PREF_FANG, R.string.db_val_language_pref_fang);
-            Individual.put(LANGUAGE_PREF_BUBE, R.string.db_val_language_pref_bubi);
-            Individual.put(LANGUAGE_PREF_ENGLISH,R.string.db_val_language_pref_english);
-            Individual.put(LANGUAGE_PREF_FRENCH, R.string.db_val_language_pref_french);
-            Individual.put(STATUS_PERMANENT, R.string.db_val_status_permanent);
-            Individual.put(STATUS_VISITOR, R.string.db_val_status_visitor);
-            Individual.put(NATIONALITY_EQUATO_GUINEAN, R.string.db_val_nationality_equato_guinean);
-            Individual.put(NATIONALITY_OTHER_AFRICAN_COUNTRY, R.string.db_val_nationality_other_african_country);
-            Individual.put(NATIONALITY_ASIAN, R.string.db_val_nationality_asian);
-            Individual.put(NATIONALITY_OTHER_NON_AFRICAN_COUNTRY, R.string.db_val_nationality_other_non_african_country);
-            Individual.put(NATIONALITY_OTHER, R.string.db_val_nationality_other);
-            Individual.put(NOT_APPLICABLE, R.string.not_available);
+            valueLabels.put(GENDER_MALE, R.string.db_val_gender_male);
+            valueLabels.put(GENDER_FEMALE, R.string.db_val_gender_female);
+            valueLabels.put(LANGUAGE_PREF_SPANISH,R.string.db_val_language_pref_spanish);
+            valueLabels.put(LANGUAGE_PREF_FANG, R.string.db_val_language_pref_fang);
+            valueLabels.put(LANGUAGE_PREF_BUBE, R.string.db_val_language_pref_bubi);
+            valueLabels.put(LANGUAGE_PREF_ENGLISH,R.string.db_val_language_pref_english);
+            valueLabels.put(LANGUAGE_PREF_FRENCH, R.string.db_val_language_pref_french);
+            valueLabels.put(STATUS_PERMANENT, R.string.db_val_status_permanent);
+            valueLabels.put(STATUS_VISITOR, R.string.db_val_status_visitor);
+            valueLabels.put(NATIONALITY_EQUATO_GUINEAN, R.string.db_val_nationality_equato_guinean);
+            valueLabels.put(NATIONALITY_OTHER_AFRICAN_COUNTRY, R.string.db_val_nationality_other_african_country);
+            valueLabels.put(NATIONALITY_ASIAN, R.string.db_val_nationality_asian);
+            valueLabels.put(NATIONALITY_OTHER_NON_AFRICAN_COUNTRY, R.string.db_val_nationality_other_non_african_country);
+            valueLabels.put(NATIONALITY_OTHER, R.string.db_val_nationality_other);
+            valueLabels.put(NOT_APPLICABLE, R.string.not_available);
         }
 
         public static int getIndividualStringId(String key) {
-            if (key != null && Individual.containsKey(key)) {
-                return Individual.get(key);
+            if (key != null && valueLabels.containsKey(key)) {
+                return valueLabels.get(key);
             } else {
                 return 0;
             }
@@ -75,22 +75,22 @@ public class ProjectResources {
 
     public static final class Location {
 
-        public static final Map<String, Integer> Location = new HashMap<>();
+        public static final Map<String, Integer> valueLabels = new HashMap<>();
 
         private static final String STATUS_NEVER_AVAILABLE = "neverAvailable";
         private static final String STATUS_REJECTED_INTERVENTION = "rejectedIntervention";
         private static final String STATUS_UNINHABITED = "uninhabited";
 
         static {
-            Location.put(STATUS_NEVER_AVAILABLE, R.string.db_val_location_status_never_available);
-            Location.put(STATUS_REJECTED_INTERVENTION, R.string.db_val_location_status_rejected_intervention);
-            Location.put(STATUS_UNINHABITED, R.string.db_val_location_status_uninhabited);
+            valueLabels.put(STATUS_NEVER_AVAILABLE, R.string.db_val_location_status_never_available);
+            valueLabels.put(STATUS_REJECTED_INTERVENTION, R.string.db_val_location_status_rejected_intervention);
+            valueLabels.put(STATUS_UNINHABITED, R.string.db_val_location_status_uninhabited);
         }
     }
 
     public static final class Relationship {
 
-        private static final Map<String, Integer> Relationship = new HashMap<>();
+        private static final Map<String, Integer> valueLabels = new HashMap<>();
 
         public static final String RELATION_TO_HOH_TYPE_HEAD = "1";
         public static final String RELATION_TO_HOH_TYPE_SPOUSE = "2";
@@ -105,22 +105,22 @@ public class ProjectResources {
         public static final String RELATION_TO_HOH_TYPE_NEPHEW_NIECE = "11";
 
         static {
-            Relationship.put(RELATION_TO_HOH_TYPE_HEAD, R.string.db_val_relation_to_head_type_head);
-            Relationship.put(RELATION_TO_HOH_TYPE_SPOUSE, R.string.db_val_relation_to_head_type_spouse);
-            Relationship.put(RELATION_TO_HOH_TYPE_SON_DAUGHTER, R.string.db_val_relation_to_head_type_son_daughter);
-            Relationship.put(RELATION_TO_HOH_TYPE_BROTHER_SISTER, R.string.db_val_relation_to_head_type_brother_sister);
-            Relationship.put(RELATION_TO_HOH_TYPE_COUSIN, R.string.db_val_relation_to_head_type_cousin);
-            Relationship.put(RELATION_TO_HOH_TYPE_NEPHEW_NIECE, R.string.db_val_relation_to_head_type_nephew_niece);
-            Relationship.put(RELATION_TO_HOH_TYPE_PARENT, R.string.db_val_relation_to_head_type_parent);
-            Relationship.put(RELATION_TO_HOH_TYPE_GRANDCHILD, R.string.db_val_relation_to_head_type_grandchild);
-            Relationship.put(RELATION_TO_HOH_TYPE_NOT_RELATED, R.string.db_val_relation_to_head_type_not_related);
-            Relationship.put(RELATION_TO_HOH_TYPE_OTHER_RELATIVE, R.string.db_val_relation_to_head_type_other_relative);
-            Relationship.put(RELATION_TO_HOH_TYPE_DONT_KNOW, R.string.db_val_relation_to_head_type_dont_know);
+            valueLabels.put(RELATION_TO_HOH_TYPE_HEAD, R.string.db_val_relation_to_head_type_head);
+            valueLabels.put(RELATION_TO_HOH_TYPE_SPOUSE, R.string.db_val_relation_to_head_type_spouse);
+            valueLabels.put(RELATION_TO_HOH_TYPE_SON_DAUGHTER, R.string.db_val_relation_to_head_type_son_daughter);
+            valueLabels.put(RELATION_TO_HOH_TYPE_BROTHER_SISTER, R.string.db_val_relation_to_head_type_brother_sister);
+            valueLabels.put(RELATION_TO_HOH_TYPE_COUSIN, R.string.db_val_relation_to_head_type_cousin);
+            valueLabels.put(RELATION_TO_HOH_TYPE_NEPHEW_NIECE, R.string.db_val_relation_to_head_type_nephew_niece);
+            valueLabels.put(RELATION_TO_HOH_TYPE_PARENT, R.string.db_val_relation_to_head_type_parent);
+            valueLabels.put(RELATION_TO_HOH_TYPE_GRANDCHILD, R.string.db_val_relation_to_head_type_grandchild);
+            valueLabels.put(RELATION_TO_HOH_TYPE_NOT_RELATED, R.string.db_val_relation_to_head_type_not_related);
+            valueLabels.put(RELATION_TO_HOH_TYPE_OTHER_RELATIVE, R.string.db_val_relation_to_head_type_other_relative);
+            valueLabels.put(RELATION_TO_HOH_TYPE_DONT_KNOW, R.string.db_val_relation_to_head_type_dont_know);
         }
 
         public static int getRelationshipStringId(String key) {
-            if (key != null && Relationship.containsKey(key)) {
-                return Relationship.get(key);
+            if (key != null && valueLabels.containsKey(key)) {
+                return valueLabels.get(key);
             } else {
                 return 0;
             }
