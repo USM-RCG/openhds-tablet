@@ -13,10 +13,10 @@ public class BiokoHierarchy {
 
     static final BiokoHierarchy INSTANCE = new BiokoHierarchy();
 
-    public static final String REGION = "region";
-    public static final String PROVINCE = "province";
-    public static final String DISTRICT = "district";
-    public static final String SUBDISTRICT = "subDistrict";
+    private static final String REGION = "region";
+    private static final String PROVINCE = "province";
+    private static final String DISTRICT = "district";
+    private static final String SUBDISTRICT = "subDistrict";
     public static final String LOCALITY = "locality";
     public static final String MAP_AREA = "mapArea";
     public static final String SECTOR = "sector";
