@@ -6,8 +6,8 @@ import android.net.Uri;
 import java.util.List;
 
 import static org.cimsbioko.App.getApp;
-import static org.cimsbioko.repository.RepositoryUtils.EQUALS;
-import static org.cimsbioko.repository.RepositoryUtils.buildWhereStatement;
+import static org.cimsbioko.repository.WhereUtils.EQUALS;
+import static org.cimsbioko.repository.WhereUtils.buildWhereStatement;
 
 /**
  * Represent a database query to be performed.  Might be saved and performed in pieces by an Iterator.

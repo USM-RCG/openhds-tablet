@@ -5,8 +5,8 @@ import android.content.ContentValues;
 import android.net.Uri;
 
 import static org.cimsbioko.App.getApp;
-import static org.cimsbioko.repository.RepositoryUtils.EQUALS;
-import static org.cimsbioko.repository.RepositoryUtils.buildWhereStatement;
+import static org.cimsbioko.repository.WhereUtils.EQUALS;
+import static org.cimsbioko.repository.WhereUtils.buildWhereStatement;
 
 
 /**

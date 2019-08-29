@@ -7,7 +7,7 @@ import android.database.Cursor;
  *
  * BSH
  */
-class RepositoryUtils {
+class WhereUtils {
 
     static final String EQUALS = "=";
     static final String LIKE = "LIKE";

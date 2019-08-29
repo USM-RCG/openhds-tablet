@@ -6,7 +6,7 @@ import org.cimsbioko.App;
 import org.cimsbioko.model.core.LocationHierarchy;
 
 import static org.cimsbioko.App.HierarchyItems.*;
-import static org.cimsbioko.repository.RepositoryUtils.extractString;
+import static org.cimsbioko.repository.WhereUtils.extractString;
 
 /**
  * Convert LocationHierarchy items to and from database.  LocationHierarchy-specific queries.
