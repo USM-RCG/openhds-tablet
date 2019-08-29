@@ -39,15 +39,5 @@ class WhereUtils {
     private static String buildWhereClause(String columnName, String operator) {
         return columnName + " " + operator + " " + WHERE_PLACEHOLDER;
     }
-
-    static String extractString(Cursor cursor, String columnName) {
-        int columnIndex = cursor.getColumnIndex(columnName);
-        return columnIndex < 0 ? null : cursor.getString(columnIndex);
-    }
-
-    static int extractInt(Cursor cursor, String columnName) {
-        int columnIndex = cursor.getColumnIndex(columnName);
-        return columnIndex < 0 ? 0 : cursor.getInt(columnIndex);
-    }
 }
 

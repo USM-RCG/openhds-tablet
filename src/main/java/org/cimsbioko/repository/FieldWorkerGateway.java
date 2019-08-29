@@ -6,7 +6,7 @@ import org.cimsbioko.App;
 import org.cimsbioko.model.core.FieldWorker;
 
 import static org.cimsbioko.App.FieldWorkers.*;
-import static org.cimsbioko.repository.WhereUtils.extractString;
+import static org.cimsbioko.repository.CursorConvert.extractString;
 
 
 /**

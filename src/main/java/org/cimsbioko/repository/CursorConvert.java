@@ -5,9 +5,9 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CursorConvert {
+class CursorConvert {
 
-    public static <X> List<X> list(Cursor cursor, CursorConverter<X> converter) {
+    static <X> List<X> list(Cursor cursor, CursorConverter<X> converter) {
         List<X> result = new ArrayList<>();
         if (cursor != null) {
             try {
@@ -21,7 +21,7 @@ public class CursorConvert {
         return result;
     }
 
-    public static <Y> Y one(Cursor cursor, CursorConverter<Y> converter) {
+    static <Y> Y one(Cursor cursor, CursorConverter<Y> converter) {
         if (cursor != null) {
             try {
                 if (cursor.moveToFirst()) {
@@ -34,4 +34,13 @@ public class CursorConvert {
         return null;
     }
 
+    static String extractString(Cursor cursor, String columnName) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        return columnIndex < 0 ? null : cursor.getString(columnIndex);
+    }
+
+    static int extractInt(Cursor cursor, String columnName) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        return columnIndex < 0 ? 0 : cursor.getInt(columnIndex);
+    }
 }
