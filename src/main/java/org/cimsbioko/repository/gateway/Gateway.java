@@ -91,11 +91,6 @@ public abstract class Gateway<T> {
         return new Query(tableUri, null, null, idColumnName);
     }
 
-    // find entities where given columns are SQL "LIKE" corresponding value
-    public Query findByCriteriaLike(String[] columnNames, String[] columnValues, String columnOrderBy) {
-        return new Query(tableUri, columnNames, columnValues, columnOrderBy, LIKE);
-    }
-
     // convert first result and close cursor
     protected T toEntity(Cursor cursor) {
         if(!cursor.moveToFirst()) {

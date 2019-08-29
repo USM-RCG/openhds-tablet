@@ -24,10 +24,6 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
         return new Query(tableUri, COLUMN_HIERARCHY_LEVEL, level, COLUMN_HIERARCHY_UUID);
     }
 
-    public Query findByExtId(String extId) {
-        return new Query(tableUri, COLUMN_HIERARCHY_EXTID, extId, COLUMN_HIERARCHY_UUID);
-    }
-
     public Query findByParent(String parentId) {
         return new Query(tableUri, COLUMN_HIERARCHY_PARENT, parentId, COLUMN_HIERARCHY_EXTID);
     }
