@@ -9,8 +9,12 @@ import org.cimsbioko.R;
 import org.cimsbioko.model.core.Location;
 import org.cimsbioko.provider.ContentProvider;
 import org.cimsbioko.repository.Converter;
+import org.cimsbioko.repository.CursorConverter;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.Query;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_ATTRS;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_BUILDING_NUMBER;
@@ -31,6 +35,9 @@ import static org.cimsbioko.repository.RepositoryUtils.extractString;
  * Convert Locations to and from database.  Location-specific queries.
  */
 public class LocationGateway extends Gateway<Location> {
+
+    private static final LocationEntityConverter ENTITY_CONVERTER = new LocationEntityConverter();
+    private static final Map<String, LocationWrapperConverter> WRAPPER_CONVERTERS = new HashMap<>();
 
     public LocationGateway() {
         super(App.Locations.CONTENT_ID_URI_BASE, COLUMN_LOCATION_UUID, new LocationConverter());
@@ -64,28 +71,66 @@ public class LocationGateway extends Gateway<Location> {
             c.close();
         }
     }
+
+    @Override
+    CursorConverter<Location> getEntityConverter() {
+        return ENTITY_CONVERTER;
+    }
+
+    @Override
+    CursorConverter<DataWrapper> getWrapperConverter(String level) {
+        if (WRAPPER_CONVERTERS.containsKey(level)) {
+            return WRAPPER_CONVERTERS.get(level);
+        } else {
+            LocationWrapperConverter converter = new LocationWrapperConverter(level);
+            WRAPPER_CONVERTERS.put(level, converter);
+            return converter;
+        }
+    }
+}
+
+class LocationEntityConverter implements CursorConverter<Location> {
+    @Override
+    public Location convert(Cursor c) {
+        Location location = new Location();
+        location.setUuid(extractString(c, COLUMN_LOCATION_UUID));
+        location.setExtId(extractString(c, COLUMN_LOCATION_EXTID));
+        location.setHierarchyUuid(extractString(c, COLUMN_LOCATION_HIERARCHY_UUID));
+        location.setLatitude(extractString(c, COLUMN_LOCATION_LATITUDE));
+        location.setLongitude(extractString(c, COLUMN_LOCATION_LONGITUDE));
+        location.setName(extractString(c, COLUMN_LOCATION_NAME));
+        location.setSectorName(extractString(c, COLUMN_LOCATION_SECTOR_NAME));
+        location.setMapAreaName(extractString(c, COLUMN_LOCATION_MAP_AREA_NAME));
+        location.setBuildingNumber(extractInt(c, COLUMN_LOCATION_BUILDING_NUMBER));
+        location.setDescription(extractString(c, COLUMN_LOCATION_DESCRIPTION));
+        location.setLongitude(extractString(c, COLUMN_LOCATION_LONGITUDE));
+        location.setLatitude(extractString(c, COLUMN_LOCATION_LATITUDE));
+        location.setAttrs(extractString(c, COLUMN_LOCATION_ATTRS));
+        return location;
+    }
+}
+
+class LocationWrapperConverter implements CursorConverter<DataWrapper> {
+
+    private final String level;
+
+    public LocationWrapperConverter(String level) {
+        this.level = level;
+    }
+
+    @Override
+    public DataWrapper convert(Cursor c) {
+        DataWrapper dataWrapper = new DataWrapper();
+        dataWrapper.setUuid(extractString(c, COLUMN_LOCATION_UUID));
+        dataWrapper.setExtId(extractString(c, COLUMN_LOCATION_EXTID));
+        dataWrapper.setName(extractString(c, COLUMN_LOCATION_NAME));
+        dataWrapper.getStringsPayload().put(R.string.location_description_label, extractString(c, COLUMN_LOCATION_DESCRIPTION));
+        dataWrapper.setCategory(level);
+        return dataWrapper;
+    }
 }
 
 class LocationConverter implements Converter<Location> {
-
-    @Override
-    public Location toEntity(Cursor cursor) {
-        Location location = new Location();
-        location.setUuid(extractString(cursor, COLUMN_LOCATION_UUID));
-        location.setExtId(extractString(cursor, COLUMN_LOCATION_EXTID));
-        location.setHierarchyUuid(extractString(cursor, COLUMN_LOCATION_HIERARCHY_UUID));
-        location.setLatitude(extractString(cursor, COLUMN_LOCATION_LATITUDE));
-        location.setLongitude(extractString(cursor, COLUMN_LOCATION_LONGITUDE));
-        location.setName(extractString(cursor, COLUMN_LOCATION_NAME));
-        location.setSectorName(extractString(cursor, COLUMN_LOCATION_SECTOR_NAME));
-        location.setMapAreaName(extractString(cursor, COLUMN_LOCATION_MAP_AREA_NAME));
-        location.setBuildingNumber(extractInt(cursor, COLUMN_LOCATION_BUILDING_NUMBER));
-        location.setDescription(extractString(cursor, COLUMN_LOCATION_DESCRIPTION));
-        location.setLongitude(extractString(cursor, COLUMN_LOCATION_LONGITUDE));
-        location.setLatitude(extractString(cursor, COLUMN_LOCATION_LATITUDE));
-        location.setAttrs(extractString(cursor, COLUMN_LOCATION_ATTRS));
-        return location;
-    }
 
     @Override
     public ContentValues toContentValues(Location location) {
@@ -109,16 +154,5 @@ class LocationConverter implements Converter<Location> {
     @Override
     public String getId(Location location) {
         return location.getUuid();
-    }
-
-    @Override
-    public DataWrapper toWrapper(Cursor cursor, String level) {
-        DataWrapper dataWrapper = new DataWrapper();
-        dataWrapper.setUuid(extractString(cursor, COLUMN_LOCATION_UUID));
-        dataWrapper.setExtId(extractString(cursor, COLUMN_LOCATION_EXTID));
-        dataWrapper.setName(extractString(cursor, COLUMN_LOCATION_NAME));
-        dataWrapper.getStringsPayload().put(R.string.location_description_label, extractString(cursor, COLUMN_LOCATION_DESCRIPTION));
-        dataWrapper.setCategory(level);
-        return dataWrapper;
     }
 }

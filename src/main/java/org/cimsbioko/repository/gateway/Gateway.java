@@ -2,13 +2,9 @@ package org.cimsbioko.repository.gateway;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.net.Uri;
-import org.cimsbioko.repository.Converter;
-import org.cimsbioko.repository.DataWrapper;
-import org.cimsbioko.repository.Query;
+import org.cimsbioko.repository.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.cimsbioko.App.getApp;
@@ -52,39 +48,28 @@ public abstract class Gateway<T> {
         return null != getFirst(query);
     }
 
+    abstract CursorConverter<T> getEntityConverter();
+
+    abstract CursorConverter<DataWrapper> getWrapperConverter(String level);
+
     // get the first result from a query as an entity or null
     public T getFirst(Query query) {
-        return toEntity(query.select());
+        return CursorConvert.one(query.select(), getEntityConverter());
     }
 
     // get all results from a query as a list
     public List<T> getList(Query query) {
-        return toList(query.select());
+        return CursorConvert.list(query.select(), getEntityConverter());
     }
 
     // get the first result from a query as a QueryResult or null
     public DataWrapper getFirstQueryResult(Query query, String level) {
-        Cursor cursor = query.select();
-        if (cursor != null && cursor.moveToNext()) {
-            return converter.toWrapper(cursor, level);
-        }
-        return null;
+        return CursorConvert.one(query.select(), getWrapperConverter(level));
     }
 
     // get all results from a query as a list of QueryResults
     public List<DataWrapper> getQueryResultList(Query query, String level) {
-        List<DataWrapper> dataWrappers = new ArrayList<>();
-        Cursor cursor = query.select();
-        if (cursor != null) {
-            try {
-                while (cursor.moveToNext()) {
-                    dataWrappers.add(converter.toWrapper(cursor, level));
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        return dataWrappers;
+        return CursorConvert.list(query.select(), getWrapperConverter(level));
     }
 
     // find entities with given id
@@ -95,26 +80,5 @@ public abstract class Gateway<T> {
     // find entities ordered by id, might be huge
     public Query findAll() {
         return new Query(tableUri, null, null, idColumnName);
-    }
-
-    // convert first result and close cursor
-    protected T toEntity(Cursor cursor) {
-        if(!cursor.moveToFirst()) {
-            cursor.close();
-            return null;
-        }
-        T entity = converter.toEntity(cursor);
-        cursor.close();
-        return entity;
-    }
-
-    // convert all results and close cursor
-    protected List<T> toList(Cursor cursor) {
-        List<T> list = new ArrayList<>();
-        while(cursor.moveToNext()) {
-            list.add(converter.toEntity(cursor));
-        }
-        cursor.close();
-        return list;
     }
 }
