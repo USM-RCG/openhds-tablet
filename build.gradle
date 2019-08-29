@@ -78,7 +78,6 @@ android {
         }
         buildTypes.each {
             it.minifyEnabled true
-            it.useProguard true // required since r8 screws up META-INF/services files needed for lucene
             it.proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
