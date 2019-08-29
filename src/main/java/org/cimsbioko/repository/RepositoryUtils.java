@@ -42,18 +42,12 @@ public class RepositoryUtils {
 
     public static String extractString(Cursor cursor, String columnName) {
         int columnIndex = cursor.getColumnIndex(columnName);
-        if (columnIndex < 0) {
-            return null;
-        }
-        return cursor.getString(columnIndex);
+        return columnIndex < 0 ? null : cursor.getString(columnIndex);
     }
 
     public static int extractInt(Cursor cursor, String columnName) {
         int columnIndex = cursor.getColumnIndex(columnName);
-        if (columnIndex < 0) {
-            return 0;
-        }
-        return cursor.getInt(columnIndex);
+        return columnIndex < 0 ? 0 : cursor.getInt(columnIndex);
     }
 }
 
