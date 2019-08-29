@@ -56,4 +56,8 @@ public class Query<T> {
     public List<DataWrapper> getWrapperList() {
         return CursorConvert.list(select(), gateway.getWrapperConverter());
     }
+
+    public boolean exists() {
+        return select().moveToFirst();
+    }
 }

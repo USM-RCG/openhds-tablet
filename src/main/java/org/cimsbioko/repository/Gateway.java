@@ -28,18 +28,13 @@ public abstract class Gateway<T> {
         ContentResolver resolver = getApp().getContentResolver();
         ContentValues contentValues = getContentValuesConverter().toContentValues(entity);
         String id = getId(entity);
-        if (exists(id)) {
+        if (findById(id).exists()) {
             final String[] columnNames = {idColumnName}, columnValues = {id};
             resolver.update(tableUri, contentValues, buildWhereStatement(columnNames, EQUALS), columnValues);
             return false;
         } else {
             return null != resolver.insert(tableUri, contentValues);
         }
-    }
-
-    // true if entity was found with given id
-    public boolean exists(String id) {
-        return null != findById(id).getFirst();
     }
 
     abstract String getId(T entity);
