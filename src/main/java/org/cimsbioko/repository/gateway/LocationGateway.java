@@ -112,12 +112,12 @@ class LocationConverter implements Converter<Location> {
     }
 
     @Override
-    public DataWrapper toDataWrapper(Location location, String level) {
+    public DataWrapper toWrapper(Cursor cursor, String level) {
         DataWrapper dataWrapper = new DataWrapper();
-        dataWrapper.setUuid(location.getUuid());
-        dataWrapper.setExtId(location.getExtId());
-        dataWrapper.setName(location.getName());
-        dataWrapper.getStringsPayload().put(R.string.location_description_label, location.getDescription());
+        dataWrapper.setUuid(extractString(cursor, COLUMN_LOCATION_UUID));
+        dataWrapper.setExtId(extractString(cursor, COLUMN_LOCATION_EXTID));
+        dataWrapper.setName(extractString(cursor, COLUMN_LOCATION_NAME));
+        dataWrapper.getStringsPayload().put(R.string.location_description_label, extractString(cursor, COLUMN_LOCATION_DESCRIPTION));
         dataWrapper.setCategory(level);
         return dataWrapper;
     }

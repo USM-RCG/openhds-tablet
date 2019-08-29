@@ -61,11 +61,11 @@ class LocationHierarchyConverter implements Converter<LocationHierarchy> {
     }
 
     @Override
-    public DataWrapper toDataWrapper(LocationHierarchy locationHierarchy, String level) {
+    public DataWrapper toWrapper(Cursor cursor, String level) {
         DataWrapper dataWrapper = new DataWrapper();
-        dataWrapper.setExtId(locationHierarchy.getExtId());
-        dataWrapper.setUuid(locationHierarchy.getUuid());
-        dataWrapper.setName(locationHierarchy.getName());
+        dataWrapper.setExtId(extractString(cursor, COLUMN_HIERARCHY_EXTID));
+        dataWrapper.setUuid(extractString(cursor, COLUMN_HIERARCHY_UUID));
+        dataWrapper.setName(extractString(cursor, COLUMN_HIERARCHY_NAME));
         dataWrapper.setCategory(level);
         return dataWrapper;
     }

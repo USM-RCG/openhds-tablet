@@ -58,12 +58,12 @@ class FieldWorkerConverter implements Converter<FieldWorker> {
     }
 
     @Override
-    public DataWrapper toDataWrapper(FieldWorker fieldWorker, String level) {
+    public DataWrapper toWrapper(Cursor cursor, String level) {
         DataWrapper dataWrapper = new DataWrapper();
-        dataWrapper.setExtId(fieldWorker.getExtId());
-        dataWrapper.setName(fieldWorker.getFirstName());
+        dataWrapper.setExtId(extractString(cursor, COLUMN_FIELD_WORKER_EXTID));
+        dataWrapper.setName(extractString(cursor, COLUMN_FIELD_WORKER_FIRST_NAME));
+        dataWrapper.setUuid(extractString(cursor, COLUMN_FIELD_WORKER_UUID));
         dataWrapper.setCategory(level);
-        dataWrapper.setUuid(fieldWorker.getUuid());
         return dataWrapper;
     }
 }

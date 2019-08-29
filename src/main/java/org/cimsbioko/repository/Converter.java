@@ -14,6 +14,6 @@ public interface Converter<T> {
 
     String getId(T entity);
 
-    DataWrapper toDataWrapper(T entity, String level);
+    DataWrapper toWrapper(Cursor cursor, String level);
 
 }

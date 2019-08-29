@@ -28,7 +28,6 @@ import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HE
 import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID;
 import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_STATUS;
 import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_UUID;
-import static org.cimsbioko.model.core.Individual.getFullName;
 import static org.cimsbioko.repository.RepositoryUtils.extractString;
 
 
@@ -103,17 +102,17 @@ class IndividualConverter implements Converter<Individual> {
     }
 
     @Override
-    public DataWrapper toDataWrapper(Individual individual, String level) {
+    public DataWrapper toWrapper(Cursor cursor, String level) {
 
         DataWrapper dataWrapper = new DataWrapper();
-        dataWrapper.setUuid(individual.getUuid());
-        dataWrapper.setExtId(individual.getExtId());
-        dataWrapper.setName(getFullName(individual));
+        dataWrapper.setUuid(extractString(cursor, COLUMN_INDIVIDUAL_UUID));
+        dataWrapper.setExtId(extractString(cursor, COLUMN_INDIVIDUAL_EXTID));
+        dataWrapper.setName(extractString(cursor, COLUMN_INDIVIDUAL_FIRST_NAME) + " " + extractString(cursor, COLUMN_INDIVIDUAL_LAST_NAME));
         dataWrapper.setCategory(level);
 
         // for Bioko add individual details to payload
-        dataWrapper.getStringsPayload().put(R.string.individual_other_names_label, individual.getOtherNames());
-        dataWrapper.getStringsPayload().put(R.string.individual_language_preference_label, individual.getLanguagePreference());
+        dataWrapper.getStringsPayload().put(R.string.individual_other_names_label, extractString(cursor, COLUMN_INDIVIDUAL_OTHER_NAMES));
+        dataWrapper.getStringsPayload().put(R.string.individual_language_preference_label, extractString(cursor, COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE));
 
         return dataWrapper;
     }

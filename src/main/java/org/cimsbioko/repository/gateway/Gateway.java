@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.cimsbioko.App.getApp;
-import static org.cimsbioko.repository.RepositoryUtils.*;
+import static org.cimsbioko.repository.RepositoryUtils.EQUALS;
+import static org.cimsbioko.repository.RepositoryUtils.buildWhereStatement;
 
 
 /**
@@ -63,20 +64,25 @@ public abstract class Gateway<T> {
 
     // get the first result from a query as a QueryResult or null
     public DataWrapper getFirstQueryResult(Query query, String level) {
-        T entity = getFirst(query);
-        if (null == entity) {
-            return null;
+        Cursor cursor = query.select();
+        if (cursor != null && cursor.moveToNext()) {
+            return converter.toWrapper(cursor, level);
         }
-        return converter.toDataWrapper(entity, level);
+        return null;
     }
 
     // get all results from a query as a list of QueryResults
     public List<DataWrapper> getQueryResultList(Query query, String level) {
         List<DataWrapper> dataWrappers = new ArrayList<>();
         Cursor cursor = query.select();
-        List<T> entities = toList(cursor);
-        for (T entity : entities) {
-            dataWrappers.add(converter.toDataWrapper(entity, level));
+        if (cursor != null) {
+            try {
+                while (cursor.moveToNext()) {
+                    dataWrappers.add(converter.toWrapper(cursor, level));
+                }
+            } finally {
+                cursor.close();
+            }
         }
         return dataWrappers;
     }
