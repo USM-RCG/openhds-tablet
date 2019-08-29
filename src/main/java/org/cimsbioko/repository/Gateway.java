@@ -14,11 +14,11 @@ import static org.cimsbioko.repository.RepositoryUtils.buildWhereStatement;
  */
 public abstract class Gateway<T> {
 
-    protected final Uri tableUri;
-    protected final String idColumnName;
+    final Uri tableUri;
+    private final String idColumnName;
 
     // subclass constructor must supply implementation details
-    public Gateway(Uri tableUri, String idColumnName) {
+    Gateway(Uri tableUri, String idColumnName) {
         this.tableUri = tableUri;
         this.idColumnName = idColumnName;
     }

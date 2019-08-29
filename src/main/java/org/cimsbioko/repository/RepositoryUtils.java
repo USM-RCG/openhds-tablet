@@ -7,16 +7,16 @@ import android.database.Cursor;
  *
  * BSH
  */
-public class RepositoryUtils {
+class RepositoryUtils {
 
-    public static final String EQUALS = "=";
-    public static final String LIKE = "LIKE";
+    static final String EQUALS = "=";
+    static final String LIKE = "LIKE";
 
     private static final String AND = "AND";
     private static final String WHERE_PLACEHOLDER = "?";
     private static final String WHERE_ALL = "1";
 
-    public static String buildWhereStatement(String[] columnNames, String operator) {
+    static String buildWhereStatement(String[] columnNames, String operator) {
         if (null == columnNames || 0 == columnNames.length) {
             return WHERE_ALL;
         }
@@ -40,12 +40,12 @@ public class RepositoryUtils {
         return columnName + " " + operator + " " + WHERE_PLACEHOLDER;
     }
 
-    public static String extractString(Cursor cursor, String columnName) {
+    static String extractString(Cursor cursor, String columnName) {
         int columnIndex = cursor.getColumnIndex(columnName);
         return columnIndex < 0 ? null : cursor.getString(columnIndex);
     }
 
-    public static int extractInt(Cursor cursor, String columnName) {
+    static int extractInt(Cursor cursor, String columnName) {
         int columnIndex = cursor.getColumnIndex(columnName);
         return columnIndex < 0 ? 0 : cursor.getInt(columnIndex);
     }

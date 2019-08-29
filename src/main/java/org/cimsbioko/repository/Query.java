@@ -22,7 +22,7 @@ public class Query<T> {
     private final String operator;
 
     // simple query on one column equals value
-    public Query(Gateway<T> gateway, Uri tableUri, String columnName, String columnValue, String columnOrderBy) {
+    Query(Gateway<T> gateway, Uri tableUri, String columnName, String columnValue, String columnOrderBy) {
         this.gateway = gateway;
         this.tableUri = tableUri;
         this.columnNames = null == columnName ? null : new String[] {columnName};
@@ -31,7 +31,7 @@ public class Query<T> {
         this.operator = EQUALS;
     }
 
-    public Cursor select() {
+    private Cursor select() {
         return getApp()
                 .getContentResolver()
                 .query(tableUri, null, buildWhereStatement(columnNames, operator), columnValues, columnOrderBy);
