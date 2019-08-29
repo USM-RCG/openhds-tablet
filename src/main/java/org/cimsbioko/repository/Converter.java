@@ -8,7 +8,7 @@ import android.database.Cursor;
  */
 public interface Converter<T> {
 
-    T fromCursor(Cursor cursor);
+    T toEntity(Cursor cursor);
 
     ContentValues toContentValues(T entity);
 

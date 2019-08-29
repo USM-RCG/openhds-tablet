@@ -69,7 +69,7 @@ public class LocationGateway extends Gateway<Location> {
 class LocationConverter implements Converter<Location> {
 
     @Override
-    public Location fromCursor(Cursor cursor) {
+    public Location toEntity(Cursor cursor) {
         Location location = new Location();
         location.setUuid(extractString(cursor, COLUMN_LOCATION_UUID));
         location.setExtId(extractString(cursor, COLUMN_LOCATION_EXTID));

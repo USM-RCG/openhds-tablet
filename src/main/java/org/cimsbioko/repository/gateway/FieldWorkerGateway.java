@@ -29,7 +29,7 @@ public class FieldWorkerGateway extends Gateway<FieldWorker> {
 class FieldWorkerConverter implements Converter<FieldWorker> {
 
     @Override
-    public FieldWorker fromCursor(Cursor cursor) {
+    public FieldWorker toEntity(Cursor cursor) {
         FieldWorker fieldWorker = new FieldWorker();
         fieldWorker.setExtId(extractString(cursor, COLUMN_FIELD_WORKER_EXTID));
         fieldWorker.setIdPrefix(extractString(cursor, COLUMN_FIELD_WORKER_ID_PREFIX));

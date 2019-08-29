@@ -97,7 +97,7 @@ public abstract class Gateway<T> {
             cursor.close();
             return null;
         }
-        T entity = converter.fromCursor(cursor);
+        T entity = converter.toEntity(cursor);
         cursor.close();
         return entity;
     }
@@ -106,7 +106,7 @@ public abstract class Gateway<T> {
     protected List<T> toList(Cursor cursor) {
         List<T> list = new ArrayList<>();
         while(cursor.moveToNext()) {
-            list.add(converter.fromCursor(cursor));
+            list.add(converter.toEntity(cursor));
         }
         cursor.close();
         return list;

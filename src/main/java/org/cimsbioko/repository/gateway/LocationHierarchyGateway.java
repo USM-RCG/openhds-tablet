@@ -32,7 +32,7 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
 class LocationHierarchyConverter implements Converter<LocationHierarchy> {
 
     @Override
-    public LocationHierarchy fromCursor(Cursor cursor) {
+    public LocationHierarchy toEntity(Cursor cursor) {
         LocationHierarchy locationHierarchy = new LocationHierarchy();
         locationHierarchy.setUuid(extractString(cursor, COLUMN_HIERARCHY_UUID));
         locationHierarchy.setExtId(extractString(cursor, COLUMN_HIERARCHY_EXTID));

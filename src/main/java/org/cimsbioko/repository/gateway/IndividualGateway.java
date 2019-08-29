@@ -50,7 +50,7 @@ public class IndividualGateway extends Gateway<Individual> {
 class IndividualConverter implements Converter<Individual> {
 
     @Override
-    public Individual fromCursor(Cursor cursor) {
+    public Individual toEntity(Cursor cursor) {
         Individual individual = new Individual();
         individual.setUuid(extractString(cursor, COLUMN_INDIVIDUAL_UUID));
         individual.setExtId(extractString(cursor, COLUMN_INDIVIDUAL_EXTID));
