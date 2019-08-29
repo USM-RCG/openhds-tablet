@@ -34,7 +34,7 @@ public class LocationGateway extends Gateway<Location> {
     private static final LocationWrapperConverter WRAPPER_CONVERTER = new LocationWrapperConverter();
     private static final LocationContentValuesConverter CONTENT_VALUES_CONVERTER = new LocationContentValuesConverter();
 
-    public LocationGateway() {
+    LocationGateway() {
         super(App.Locations.CONTENT_ID_URI_BASE, COLUMN_LOCATION_UUID);
     }
 

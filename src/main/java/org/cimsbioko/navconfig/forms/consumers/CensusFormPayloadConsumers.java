@@ -8,26 +8,25 @@ import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.cimsbioko.navconfig.forms.adapters.IndividualFormAdapter;
 import org.cimsbioko.navconfig.forms.adapters.LocationFormAdapter;
 import org.cimsbioko.repository.DataWrapper;
-import org.cimsbioko.repository.GatewayRegistry;
-import org.cimsbioko.repository.IndividualGateway;
 import org.cimsbioko.repository.LocationGateway;
 
 import java.util.Map;
 
 import static org.cimsbioko.navconfig.Hierarchy.HOUSEHOLD;
+import static org.cimsbioko.repository.GatewayRegistry.getIndividualGateway;
+import static org.cimsbioko.repository.GatewayRegistry.getLocationGateway;
 
 public class CensusFormPayloadConsumers {
 
     private static Location insertOrUpdateLocation(Map<String, String> formPayload) {
         Location location = LocationFormAdapter.fromForm(formPayload);
-        GatewayRegistry.getLocationGateway().insertOrUpdate(location);
+        getLocationGateway().insertOrUpdate(location);
         return location;
     }
 
     private static Individual insertOrUpdateIndividual(Map<String, String> formPayLoad) {
         Individual individual = IndividualFormAdapter.fromForm(formPayLoad);
-        IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-        individualGateway.insertOrUpdate(individual);
+        getIndividualGateway().insertOrUpdate(individual);
         return individual;
     }
 
@@ -62,7 +61,7 @@ public class CensusFormPayloadConsumers {
         @Override
         public ConsumerResult consumeFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
 
-            LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
+            LocationGateway locationGateway = getLocationGateway();
 
             Individual individual = insertOrUpdateIndividual(formPayload);
 

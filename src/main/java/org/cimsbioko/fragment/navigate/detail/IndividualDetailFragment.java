@@ -12,9 +12,8 @@ import org.cimsbioko.R;
 import org.cimsbioko.model.core.Individual;
 import org.cimsbioko.navconfig.ProjectResources;
 import org.cimsbioko.repository.DataWrapper;
-import org.cimsbioko.repository.GatewayRegistry;
-import org.cimsbioko.repository.IndividualGateway;
 
+import static org.cimsbioko.repository.GatewayRegistry.getIndividualGateway;
 import static org.cimsbioko.utilities.LayoutUtils.makeLargeTextWithValueAndLabel;
 
 public class IndividualDetailFragment extends DetailFragment {
@@ -79,7 +78,6 @@ public class IndividualDetailFragment extends DetailFragment {
     }
 
     private Individual getIndividual(String uuid) {
-        IndividualGateway gateway = GatewayRegistry.getIndividualGateway();
-        return gateway.findById(uuid).getFirst();
+        return getIndividualGateway().findById(uuid).getFirst();
     }
 }

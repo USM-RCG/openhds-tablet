@@ -38,7 +38,7 @@ public class IndividualGateway extends Gateway<Individual> {
     private static final IndividualWrapperConverter WRAPPER_CONVERTER = new IndividualWrapperConverter();
     private static final IndividualContentValuesConverter CONTENT_VALUES_CONVERTER = new IndividualContentValuesConverter();
 
-    public IndividualGateway() {
+    IndividualGateway() {
         super(App.Individuals.CONTENT_ID_URI_BASE, COLUMN_INDIVIDUAL_UUID);
     }
 

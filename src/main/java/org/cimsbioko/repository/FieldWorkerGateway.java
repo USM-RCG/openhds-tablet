@@ -18,7 +18,7 @@ public class FieldWorkerGateway extends Gateway<FieldWorker> {
     private static final FieldWorkerWrapperConverter WRAPPER_CONVERTER = new FieldWorkerWrapperConverter();
     private static final FieldWorkerContentValuesConverter CONTENT_VALUES_CONVERTER = new FieldWorkerContentValuesConverter();
 
-    public FieldWorkerGateway() {
+    FieldWorkerGateway() {
         super(App.FieldWorkers.CONTENT_ID_URI_BASE, COLUMN_FIELD_WORKER_UUID);
     }
 

@@ -8,8 +8,6 @@ import org.cimsbioko.navconfig.ProjectFormFields;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.cimsbioko.repository.DataWrapper;
-import org.cimsbioko.repository.GatewayRegistry;
-import org.cimsbioko.repository.IndividualGateway;
 import org.cimsbioko.repository.LocationGateway;
 import org.cimsbioko.utilities.IdHelper;
 
@@ -25,6 +23,8 @@ import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatBuilding
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatDate;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatFloor;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatTime;
+import static org.cimsbioko.repository.GatewayRegistry.getIndividualGateway;
+import static org.cimsbioko.repository.GatewayRegistry.getLocationGateway;
 
 public class BiokoFormPayloadBuilders {
 
@@ -54,8 +54,7 @@ public class BiokoFormPayloadBuilders {
             formPayload.put(ProjectFormFields.BedNet.BED_NET_CODE, generateNetCode(ctx));
 
             // pre-fill the householdSize for this particular household
-            IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-            List<Individual> individuals = individualGateway.findByResidency(locationUuid).getList();
+            List<Individual> individuals = getIndividualGateway().findByResidency(locationUuid).getList();
             String householdSize = Integer.toString(individuals.size());
             formPayload.put(ProjectFormFields.BedNet.HOUSEHOLD_SIZE, householdSize);
 
@@ -68,8 +67,7 @@ public class BiokoFormPayloadBuilders {
             DataWrapper stubLocation = hierPath.get(pathLen - 1),
                     sector = hierPath.get(pathLen - 2),
                     map = hierPath.get(pathLen - 3);
-            LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            Location household = locationGateway.findById(stubLocation.getUuid()).getFirst();
+            Location household = getLocationGateway().findById(stubLocation.getUuid()).getFirst();
             String year = new SimpleDateFormat("yy").format(new Date());
             return String.format("%s/%s%sE%03d", year, map.getName(), sector.getName(), household.getBuildingNumber());
         }
@@ -134,7 +132,7 @@ public class BiokoFormPayloadBuilders {
             String locationUuid = household.getUuid();
 
             // Assign the next sequential building number in sector
-            LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
+            LocationGateway locationGateway = getLocationGateway();
             Location existing = locationGateway.findById(locationUuid).getFirst();
             int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(map.getName(), sector.getName());
 

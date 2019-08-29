@@ -5,8 +5,6 @@ import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.navconfig.ProjectFormFields;
-import org.cimsbioko.repository.IndividualGateway;
-import org.cimsbioko.repository.LocationGateway;
 import org.cimsbioko.utilities.IdHelper;
 import org.cimsbioko.utilities.StringUtils;
 
@@ -17,6 +15,7 @@ import java.util.Map;
 import static org.cimsbioko.navconfig.Hierarchy.*;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatBuilding;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatFloor;
+import static org.cimsbioko.repository.GatewayRegistry.getIndividualGateway;
 import static org.cimsbioko.repository.GatewayRegistry.getLocationGateway;
 
 public class CensusFormPayloadBuilders {
@@ -62,8 +61,7 @@ public class CensusFormPayloadBuilders {
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {
             Map<String, String> formPayload = new HashMap<>();
-            LocationGateway locationGateway = getLocationGateway();
-            Location household = locationGateway.findById(ctx.getHierarchyPath().get(HOUSEHOLD).getUuid()).getFirst();
+            Location household = getLocationGateway().findById(ctx.getHierarchyPath().get(HOUSEHOLD).getUuid()).getFirst();
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
@@ -84,9 +82,7 @@ public class CensusFormPayloadBuilders {
 
             DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
 
-            IndividualGateway individualGateway = new IndividualGateway();
-
-            List<Individual> residents = individualGateway.findByResidency(household.getUuid()).getList();
+            List<Individual> residents = getIndividualGateway().findByResidency(household.getUuid()).getList();
 
             // pre-fill contact name and number as best we can without household role info
             if (residents.size() == 1) {

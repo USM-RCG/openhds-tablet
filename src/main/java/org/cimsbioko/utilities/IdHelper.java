@@ -2,11 +2,11 @@ package org.cimsbioko.utilities;
 
 import org.cimsbioko.model.core.Individual;
 import org.cimsbioko.repository.DataWrapper;
-import org.cimsbioko.repository.GatewayRegistry;
-import org.cimsbioko.repository.IndividualGateway;
 
 import java.util.List;
 import java.util.UUID;
+
+import static org.cimsbioko.repository.GatewayRegistry.getIndividualGateway;
 
 public class IdHelper {
 
@@ -15,8 +15,7 @@ public class IdHelper {
     }
 
     public static String generateIndividualExtId(DataWrapper location) {
-        IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-        List<Individual> individuals = individualGateway.findByResidency(location.getUuid()).getList();
+        List<Individual> individuals = getIndividualGateway().findByResidency(location.getUuid()).getList();
         int individualsInHousehold = individuals.size() + 1;
         return location.getExtId() + "-" + String.format("%03d", individualsInHousehold);
     }

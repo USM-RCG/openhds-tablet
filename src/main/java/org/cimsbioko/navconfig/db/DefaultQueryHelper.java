@@ -6,8 +6,6 @@ import org.cimsbioko.model.core.LocationHierarchy;
 import org.cimsbioko.navconfig.NavigatorConfig;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.Gateway;
-import org.cimsbioko.repository.IndividualGateway;
-import org.cimsbioko.repository.LocationGateway;
 import org.cimsbioko.repository.LocationHierarchyGateway;
 
 import java.util.ArrayList;
@@ -83,12 +81,10 @@ public class DefaultQueryHelper implements QueryHelper {
                     LocationHierarchyGateway locationHierarchyGateway = getLocationHierarchyGateway();
                     return locationHierarchyGateway.findByParent(parent.getUuid()).getWrapperList();
                 } else {
-                    LocationGateway locationGateway = getLocationGateway();
-                    return locationGateway.findByHierarchy(parent.getUuid()).getWrapperList();
+                    return getLocationGateway().findByHierarchy(parent.getUuid()).getWrapperList();
                 }
             } else if (HOUSEHOLD.equals(level)) {
-                IndividualGateway individualGateway = getIndividualGateway();
-                return individualGateway.findByResidency(parent.getUuid()).getWrapperList();
+                return getIndividualGateway().findByResidency(parent.getUuid()).getWrapperList();
             }
         }
         return new ArrayList<>();
@@ -111,12 +107,10 @@ public class DefaultQueryHelper implements QueryHelper {
         } else {
             switch (level) {
                 case HOUSEHOLD:
-                    LocationGateway locationGateway = getLocationGateway();
-                    Location l = locationGateway.findById(uuid).getFirst();
+                    Location l = getLocationGateway().findById(uuid).getFirst();
                     return get(parentLevel, l.getHierarchyUuid());
                 case INDIVIDUAL:
-                    IndividualGateway individualGateway = getIndividualGateway();
-                    Individual i = individualGateway.findById(uuid).getFirst();
+                    Individual i = getIndividualGateway().findById(uuid).getFirst();
                     return get(parentLevel, i.getCurrentResidenceUuid());
                 default:
                     return null;

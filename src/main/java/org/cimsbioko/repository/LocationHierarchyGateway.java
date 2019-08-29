@@ -17,7 +17,7 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
     private static final LocationHierarchyWrapperConverter WRAPPER_CONVERTER = new LocationHierarchyWrapperConverter();
     private static final LocationHierarchyContentValuesConverter CONTENT_VALUES_CONVERTER = new LocationHierarchyContentValuesConverter();
 
-    public LocationHierarchyGateway() {
+    LocationHierarchyGateway() {
         super(App.HierarchyItems.CONTENT_ID_URI_BASE, COLUMN_HIERARCHY_UUID);
     }
 
