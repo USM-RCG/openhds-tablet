@@ -31,46 +31,46 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
     public Query findByParent(String parentId) {
         return new Query(tableUri, COLUMN_HIERARCHY_PARENT, parentId, COLUMN_HIERARCHY_EXTID);
     }
+}
 
-    private static class LocationHierarchyConverter implements Converter<LocationHierarchy> {
+class LocationHierarchyConverter implements Converter<LocationHierarchy> {
 
-        @Override
-        public LocationHierarchy fromCursor(Cursor cursor) {
-            LocationHierarchy locationHierarchy = new LocationHierarchy();
-            locationHierarchy.setUuid(extractString(cursor, COLUMN_HIERARCHY_UUID));
-            locationHierarchy.setExtId(extractString(cursor, COLUMN_HIERARCHY_EXTID));
-            locationHierarchy.setName(extractString(cursor, COLUMN_HIERARCHY_NAME));
-            locationHierarchy.setLevel(extractString(cursor, COLUMN_HIERARCHY_LEVEL));
-            locationHierarchy.setParentUuid(extractString(cursor, COLUMN_HIERARCHY_PARENT));
-            locationHierarchy.setAttrs(extractString(cursor, COLUMN_HIERARCHY_ATTRS));
-            return locationHierarchy;
-        }
+    @Override
+    public LocationHierarchy fromCursor(Cursor cursor) {
+        LocationHierarchy locationHierarchy = new LocationHierarchy();
+        locationHierarchy.setUuid(extractString(cursor, COLUMN_HIERARCHY_UUID));
+        locationHierarchy.setExtId(extractString(cursor, COLUMN_HIERARCHY_EXTID));
+        locationHierarchy.setName(extractString(cursor, COLUMN_HIERARCHY_NAME));
+        locationHierarchy.setLevel(extractString(cursor, COLUMN_HIERARCHY_LEVEL));
+        locationHierarchy.setParentUuid(extractString(cursor, COLUMN_HIERARCHY_PARENT));
+        locationHierarchy.setAttrs(extractString(cursor, COLUMN_HIERARCHY_ATTRS));
+        return locationHierarchy;
+    }
 
-        @Override
-        public ContentValues toContentValues(LocationHierarchy locationHierarchy) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(COLUMN_HIERARCHY_UUID, locationHierarchy.getUuid());
-            contentValues.put(COLUMN_HIERARCHY_EXTID, locationHierarchy.getExtId());
-            contentValues.put(COLUMN_HIERARCHY_NAME, locationHierarchy.getName());
-            contentValues.put(COLUMN_HIERARCHY_LEVEL, locationHierarchy.getLevel());
-            contentValues.put(COLUMN_HIERARCHY_PARENT, locationHierarchy.getParentUuid());
-            contentValues.put(COLUMN_HIERARCHY_ATTRS, locationHierarchy.getAttrs());
-            return contentValues;
-        }
+    @Override
+    public ContentValues toContentValues(LocationHierarchy locationHierarchy) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_HIERARCHY_UUID, locationHierarchy.getUuid());
+        contentValues.put(COLUMN_HIERARCHY_EXTID, locationHierarchy.getExtId());
+        contentValues.put(COLUMN_HIERARCHY_NAME, locationHierarchy.getName());
+        contentValues.put(COLUMN_HIERARCHY_LEVEL, locationHierarchy.getLevel());
+        contentValues.put(COLUMN_HIERARCHY_PARENT, locationHierarchy.getParentUuid());
+        contentValues.put(COLUMN_HIERARCHY_ATTRS, locationHierarchy.getAttrs());
+        return contentValues;
+    }
 
-        @Override
-        public String getId(LocationHierarchy locationHierarchy) {
-            return locationHierarchy.getUuid();
-        }
+    @Override
+    public String getId(LocationHierarchy locationHierarchy) {
+        return locationHierarchy.getUuid();
+    }
 
-        @Override
-        public DataWrapper toDataWrapper(LocationHierarchy locationHierarchy, String level) {
-            DataWrapper dataWrapper = new DataWrapper();
-            dataWrapper.setExtId(locationHierarchy.getExtId());
-            dataWrapper.setUuid(locationHierarchy.getUuid());
-            dataWrapper.setName(locationHierarchy.getName());
-            dataWrapper.setCategory(level);
-            return dataWrapper;
-        }
+    @Override
+    public DataWrapper toDataWrapper(LocationHierarchy locationHierarchy, String level) {
+        DataWrapper dataWrapper = new DataWrapper();
+        dataWrapper.setExtId(locationHierarchy.getExtId());
+        dataWrapper.setUuid(locationHierarchy.getUuid());
+        dataWrapper.setName(locationHierarchy.getName());
+        dataWrapper.setCategory(level);
+        return dataWrapper;
     }
 }

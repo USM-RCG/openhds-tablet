@@ -64,61 +64,61 @@ public class LocationGateway extends Gateway<Location> {
             c.close();
         }
     }
+}
 
-    private static class LocationConverter implements Converter<Location> {
+class LocationConverter implements Converter<Location> {
 
-        @Override
-        public Location fromCursor(Cursor cursor) {
-            Location location = new Location();
-            location.setUuid(extractString(cursor, COLUMN_LOCATION_UUID));
-            location.setExtId(extractString(cursor, COLUMN_LOCATION_EXTID));
-            location.setHierarchyUuid(extractString(cursor, COLUMN_LOCATION_HIERARCHY_UUID));
-            location.setLatitude(extractString(cursor, COLUMN_LOCATION_LATITUDE));
-            location.setLongitude(extractString(cursor, COLUMN_LOCATION_LONGITUDE));
-            location.setName(extractString(cursor, COLUMN_LOCATION_NAME));
-            location.setSectorName(extractString(cursor, COLUMN_LOCATION_SECTOR_NAME));
-            location.setMapAreaName(extractString(cursor, COLUMN_LOCATION_MAP_AREA_NAME));
-            location.setBuildingNumber(extractInt(cursor, COLUMN_LOCATION_BUILDING_NUMBER));
-            location.setDescription(extractString(cursor, COLUMN_LOCATION_DESCRIPTION));
-            location.setLongitude(extractString(cursor, COLUMN_LOCATION_LONGITUDE));
-            location.setLatitude(extractString(cursor, COLUMN_LOCATION_LATITUDE));
-            location.setAttrs(extractString(cursor, COLUMN_LOCATION_ATTRS));
-            return location;
-        }
+    @Override
+    public Location fromCursor(Cursor cursor) {
+        Location location = new Location();
+        location.setUuid(extractString(cursor, COLUMN_LOCATION_UUID));
+        location.setExtId(extractString(cursor, COLUMN_LOCATION_EXTID));
+        location.setHierarchyUuid(extractString(cursor, COLUMN_LOCATION_HIERARCHY_UUID));
+        location.setLatitude(extractString(cursor, COLUMN_LOCATION_LATITUDE));
+        location.setLongitude(extractString(cursor, COLUMN_LOCATION_LONGITUDE));
+        location.setName(extractString(cursor, COLUMN_LOCATION_NAME));
+        location.setSectorName(extractString(cursor, COLUMN_LOCATION_SECTOR_NAME));
+        location.setMapAreaName(extractString(cursor, COLUMN_LOCATION_MAP_AREA_NAME));
+        location.setBuildingNumber(extractInt(cursor, COLUMN_LOCATION_BUILDING_NUMBER));
+        location.setDescription(extractString(cursor, COLUMN_LOCATION_DESCRIPTION));
+        location.setLongitude(extractString(cursor, COLUMN_LOCATION_LONGITUDE));
+        location.setLatitude(extractString(cursor, COLUMN_LOCATION_LATITUDE));
+        location.setAttrs(extractString(cursor, COLUMN_LOCATION_ATTRS));
+        return location;
+    }
 
-        @Override
-        public ContentValues toContentValues(Location location) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(COLUMN_LOCATION_UUID, location.getUuid());
-            contentValues.put(COLUMN_LOCATION_EXTID, location.getExtId());
-            contentValues.put(COLUMN_LOCATION_HIERARCHY_UUID, location.getHierarchyUuid());
-            contentValues.put(COLUMN_LOCATION_LATITUDE, location.getLatitude());
-            contentValues.put(COLUMN_LOCATION_LONGITUDE, location.getLongitude());
-            contentValues.put(COLUMN_LOCATION_NAME, location.getName());
-            contentValues.put(COLUMN_LOCATION_SECTOR_NAME, location.getSectorName());
-            contentValues.put(COLUMN_LOCATION_MAP_AREA_NAME, location.getMapAreaName());
-            contentValues.put(COLUMN_LOCATION_BUILDING_NUMBER, location.getBuildingNumber());
-            contentValues.put(COLUMN_LOCATION_DESCRIPTION, location.getDescription());
-            contentValues.put(COLUMN_LOCATION_LONGITUDE, location.getLongitude());
-            contentValues.put(COLUMN_LOCATION_LATITUDE, location.getLatitude());
-            contentValues.put(COLUMN_LOCATION_ATTRS, location.getAttrs());
-            return contentValues;
-        }
+    @Override
+    public ContentValues toContentValues(Location location) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_LOCATION_UUID, location.getUuid());
+        contentValues.put(COLUMN_LOCATION_EXTID, location.getExtId());
+        contentValues.put(COLUMN_LOCATION_HIERARCHY_UUID, location.getHierarchyUuid());
+        contentValues.put(COLUMN_LOCATION_LATITUDE, location.getLatitude());
+        contentValues.put(COLUMN_LOCATION_LONGITUDE, location.getLongitude());
+        contentValues.put(COLUMN_LOCATION_NAME, location.getName());
+        contentValues.put(COLUMN_LOCATION_SECTOR_NAME, location.getSectorName());
+        contentValues.put(COLUMN_LOCATION_MAP_AREA_NAME, location.getMapAreaName());
+        contentValues.put(COLUMN_LOCATION_BUILDING_NUMBER, location.getBuildingNumber());
+        contentValues.put(COLUMN_LOCATION_DESCRIPTION, location.getDescription());
+        contentValues.put(COLUMN_LOCATION_LONGITUDE, location.getLongitude());
+        contentValues.put(COLUMN_LOCATION_LATITUDE, location.getLatitude());
+        contentValues.put(COLUMN_LOCATION_ATTRS, location.getAttrs());
+        return contentValues;
+    }
 
-        @Override
-        public String getId(Location location) {
-            return location.getUuid();
-        }
+    @Override
+    public String getId(Location location) {
+        return location.getUuid();
+    }
 
-        @Override
-        public DataWrapper toDataWrapper(Location location, String level) {
-            DataWrapper dataWrapper = new DataWrapper();
-            dataWrapper.setUuid(location.getUuid());
-            dataWrapper.setExtId(location.getExtId());
-            dataWrapper.setName(location.getName());
-            dataWrapper.getStringsPayload().put(R.string.location_description_label, location.getDescription());
-            dataWrapper.setCategory(level);
-            return dataWrapper;
-        }
+    @Override
+    public DataWrapper toDataWrapper(Location location, String level) {
+        DataWrapper dataWrapper = new DataWrapper();
+        dataWrapper.setUuid(location.getUuid());
+        dataWrapper.setExtId(location.getExtId());
+        dataWrapper.setName(location.getName());
+        dataWrapper.getStringsPayload().put(R.string.location_description_label, location.getDescription());
+        dataWrapper.setCategory(level);
+        return dataWrapper;
     }
 }

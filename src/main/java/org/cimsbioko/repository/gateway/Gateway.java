@@ -116,5 +116,4 @@ public abstract class Gateway<T> {
         cursor.close();
         return list;
     }
-
 }
