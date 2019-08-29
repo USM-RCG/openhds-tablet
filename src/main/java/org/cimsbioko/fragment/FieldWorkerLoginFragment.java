@@ -80,7 +80,7 @@ public class FieldWorkerLoginFragment extends Fragment implements OnClickListene
 
         FieldWorkerGateway fieldWorkerGateway = GatewayRegistry.getFieldWorkerGateway();
 
-        FieldWorker fieldWorker = fieldWorkerGateway.getFirst(fieldWorkerGateway.findByExtId(username));
+        FieldWorker fieldWorker = fieldWorkerGateway.findByExtId(username).getFirst();
 
         Activity activity = getActivity();
         LoginUtils.Login login = getLogin(FieldWorker.class);
@@ -97,7 +97,7 @@ public class FieldWorkerLoginFragment extends Fragment implements OnClickListene
                 showLongToast(getActivity(), R.string.field_worker_bad_credentials);
             }
         } else {
-            if (fieldWorkerGateway.getFirst(fieldWorkerGateway.findAll()) != null) {
+            if (fieldWorkerGateway.findAll().getFirst() != null) {
                 showLongToast(getActivity(), R.string.field_worker_bad_credentials);
             } else {
                 showLongToast(getActivity(), R.string.field_worker_none_exist);

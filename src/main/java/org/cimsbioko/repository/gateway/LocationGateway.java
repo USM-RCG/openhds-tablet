@@ -44,8 +44,8 @@ public class LocationGateway extends Gateway<Location> {
         super(App.Locations.CONTENT_ID_URI_BASE, COLUMN_LOCATION_UUID);
     }
 
-    public Query findByHierarchy(String hierarchyId) {
-        return new Query(tableUri, COLUMN_LOCATION_HIERARCHY_UUID, hierarchyId, COLUMN_LOCATION_EXTID);
+    public Query<Location> findByHierarchy(String hierarchyId) {
+        return new Query<>(this, tableUri, COLUMN_LOCATION_HIERARCHY_UUID, hierarchyId, COLUMN_LOCATION_EXTID);
     }
 
     /**
@@ -79,12 +79,12 @@ public class LocationGateway extends Gateway<Location> {
     }
 
     @Override
-    CursorConverter<Location> getEntityConverter() {
+    public CursorConverter<Location> getEntityConverter() {
         return ENTITY_CONVERTER;
     }
 
     @Override
-    CursorConverter<DataWrapper> getWrapperConverter(String level) {
+    public CursorConverter<DataWrapper> getWrapperConverter(String level) {
         if (WRAPPER_CONVERTERS.containsKey(level)) {
             return WRAPPER_CONVERTERS.get(level);
         } else {

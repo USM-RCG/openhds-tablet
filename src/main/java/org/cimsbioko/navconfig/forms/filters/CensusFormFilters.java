@@ -14,7 +14,7 @@ public class CensusFormFilters {
         public boolean shouldDisplay(LaunchContext ctx) {
             IndividualGateway individualGateway = new IndividualGateway();
             String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
-            return individualGateway.getFirst(individualGateway.findByResidency(locationUuid)) == null;
+            return individualGateway.findByResidency(locationUuid).getFirst() == null;
         }
     }
 }

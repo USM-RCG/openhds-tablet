@@ -28,12 +28,12 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
         super(App.HierarchyItems.CONTENT_ID_URI_BASE, COLUMN_HIERARCHY_UUID);
     }
 
-    public Query findByLevel(String level) {
-        return new Query(tableUri, COLUMN_HIERARCHY_LEVEL, level, COLUMN_HIERARCHY_UUID);
+    public Query<LocationHierarchy> findByLevel(String level) {
+        return new Query<>(this, tableUri, COLUMN_HIERARCHY_LEVEL, level, COLUMN_HIERARCHY_UUID);
     }
 
-    public Query findByParent(String parentId) {
-        return new Query(tableUri, COLUMN_HIERARCHY_PARENT, parentId, COLUMN_HIERARCHY_EXTID);
+    public Query<LocationHierarchy> findByParent(String parentId) {
+        return new Query<>(this, tableUri, COLUMN_HIERARCHY_PARENT, parentId, COLUMN_HIERARCHY_EXTID);
     }
 
     @Override
@@ -42,12 +42,12 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
     }
 
     @Override
-    CursorConverter<LocationHierarchy> getEntityConverter() {
+    public CursorConverter<LocationHierarchy> getEntityConverter() {
         return ENTITY_CONVERTER;
     }
 
     @Override
-    CursorConverter<DataWrapper> getWrapperConverter(String level) {
+    public CursorConverter<DataWrapper> getWrapperConverter(String level) {
         if (WRAPPER_CONVERTERS.containsKey(level)) {
             return WRAPPER_CONVERTERS.get(level);
         } else {

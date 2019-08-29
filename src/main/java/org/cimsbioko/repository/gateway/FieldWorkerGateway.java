@@ -29,8 +29,8 @@ public class FieldWorkerGateway extends Gateway<FieldWorker> {
         super(App.FieldWorkers.CONTENT_ID_URI_BASE, COLUMN_FIELD_WORKER_UUID);
     }
 
-    public Query findByExtId(String extId) {
-        return new Query(tableUri, COLUMN_FIELD_WORKER_EXTID, extId, COLUMN_FIELD_WORKER_UUID);
+    public Query<FieldWorker> findByExtId(String extId) {
+        return new Query<>(this, tableUri, COLUMN_FIELD_WORKER_EXTID, extId, COLUMN_FIELD_WORKER_UUID);
     }
 
     @Override
@@ -39,12 +39,12 @@ public class FieldWorkerGateway extends Gateway<FieldWorker> {
     }
 
     @Override
-    CursorConverter<FieldWorker> getEntityConverter() {
+    public CursorConverter<FieldWorker> getEntityConverter() {
         return ENTITY_CONVERTER;
     }
 
     @Override
-    CursorConverter<DataWrapper> getWrapperConverter(String level) {
+    public CursorConverter<DataWrapper> getWrapperConverter(String level) {
         if (WRAPPER_CONVERTERS.containsKey(level)) {
             return WRAPPER_CONVERTERS.get(level);
         } else {

@@ -62,7 +62,7 @@ public class CensusFormPayloadBuilders {
         public Map<String, String> buildPayload(LaunchContext ctx) {
             Map<String, String> formPayload = new HashMap<>();
             LocationGateway locationGateway = getLocationGateway();
-            Location household = locationGateway.getFirst(locationGateway.findById(ctx.getHierarchyPath().get(HOUSEHOLD).getUuid()));
+            Location household = locationGateway.findById(ctx.getHierarchyPath().get(HOUSEHOLD).getUuid()).getFirst();
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
@@ -85,7 +85,7 @@ public class CensusFormPayloadBuilders {
 
             IndividualGateway individualGateway = new IndividualGateway();
 
-            List<Individual> residents = individualGateway.getList(individualGateway.findByResidency(household.getUuid()));
+            List<Individual> residents = individualGateway.findByResidency(household.getUuid()).getList();
 
             // pre-fill contact name and number as best we can without household role info
             if (residents.size() == 1) {

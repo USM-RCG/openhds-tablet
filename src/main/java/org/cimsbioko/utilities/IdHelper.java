@@ -16,7 +16,7 @@ public class IdHelper {
 
     public static String generateIndividualExtId(DataWrapper location) {
         IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-        List<Individual> individuals = individualGateway.getList(individualGateway.findByResidency(location.getUuid()));
+        List<Individual> individuals = individualGateway.findByResidency(location.getUuid()).getList();
         int individualsInHousehold = individuals.size() + 1;
         return location.getExtId() + "-" + String.format("%03d", individualsInHousehold);
     }

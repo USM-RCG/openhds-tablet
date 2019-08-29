@@ -68,7 +68,7 @@ public class CensusFormPayloadConsumers {
 
             // Update the name of the location with the head's last name
             DataWrapper selectedLocation = ctx.getHierarchyPath().get(HOUSEHOLD);
-            Location location = locationGateway.getFirst(locationGateway.findById(selectedLocation.getUuid()));
+            Location location = locationGateway.findById(selectedLocation.getUuid()).getFirst();
             String locationName = individual.getLastName();
             location.setName(locationName);
             selectedLocation.setName(locationName);

@@ -22,7 +22,7 @@ public class BiokoFormPayloadConsumers {
             String mapUuid = formPayload.get(ProjectFormFields.CreateMap.MAP_UUID);
             String mapName = formPayload.get(ProjectFormFields.CreateMap.MAP_NAME);
 
-            LocationHierarchy locality = hierGateway.getFirst(hierGateway.findById(localityUuid));
+            LocationHierarchy locality = hierGateway.findById(localityUuid).getFirst();
 
             LocationHierarchy map = new LocationHierarchy();
             map.setUuid(mapUuid);
@@ -48,8 +48,8 @@ public class BiokoFormPayloadConsumers {
             String sectorUuid = formPayload.get(ProjectFormFields.CreateSector.SECTOR_UUID);
             String sectorName = formPayload.get(ProjectFormFields.CreateSector.SECTOR_NAME);
 
-            LocationHierarchy map = hierGateway.getFirst(hierGateway.findById(mapUuid));
-            LocationHierarchy locality = hierGateway.getFirst(hierGateway.findById(map.getParentUuid()));
+            LocationHierarchy map = hierGateway.findById(mapUuid).getFirst();
+            LocationHierarchy locality = hierGateway.findById(map.getParentUuid()).getFirst();
 
             LocationHierarchy sector = new LocationHierarchy();
             sector.setUuid(sectorUuid);

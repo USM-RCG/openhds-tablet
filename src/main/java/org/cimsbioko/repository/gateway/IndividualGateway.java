@@ -48,8 +48,8 @@ public class IndividualGateway extends Gateway<Individual> {
         super(App.Individuals.CONTENT_ID_URI_BASE, COLUMN_INDIVIDUAL_UUID);
     }
 
-    public Query findByResidency(String residencyId) {
-        return new Query(tableUri, COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, residencyId, COLUMN_INDIVIDUAL_EXTID);
+    public Query<Individual> findByResidency(String residencyId) {
+        return new Query<>(this, tableUri, COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, residencyId, COLUMN_INDIVIDUAL_EXTID);
     }
 
     @Override
@@ -58,12 +58,12 @@ public class IndividualGateway extends Gateway<Individual> {
     }
 
     @Override
-    CursorConverter<Individual> getEntityConverter() {
+    public CursorConverter<Individual> getEntityConverter() {
         return ENTITY_CONVERTER;
     }
 
     @Override
-    CursorConverter<DataWrapper> getWrapperConverter(String level) {
+    public CursorConverter<DataWrapper> getWrapperConverter(String level) {
         if (WRAPPER_CONVERTERS.containsKey(level)) {
             return WRAPPER_CONVERTERS.get(level);
         } else {

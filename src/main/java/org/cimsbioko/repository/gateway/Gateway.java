@@ -5,8 +5,6 @@ import android.content.ContentValues;
 import android.net.Uri;
 import org.cimsbioko.repository.*;
 
-import java.util.List;
-
 import static org.cimsbioko.App.getApp;
 import static org.cimsbioko.repository.RepositoryUtils.EQUALS;
 import static org.cimsbioko.repository.RepositoryUtils.buildWhereStatement;
@@ -42,45 +40,24 @@ public abstract class Gateway<T> {
 
     // true if entity was found with given id
     public boolean exists(String id) {
-        Query query = findById(id);
-        return null != getFirst(query);
+        return null != findById(id).getFirst();
     }
 
     abstract String getId(T entity);
 
-    abstract CursorConverter<T> getEntityConverter();
+    public abstract CursorConverter<T> getEntityConverter();
 
-    abstract CursorConverter<DataWrapper> getWrapperConverter(String level);
+    public abstract CursorConverter<DataWrapper> getWrapperConverter(String level);
 
     abstract ContentValuesConverter<T> getContentValuesConverter();
 
-    // get the first result from a query as an entity or null
-    public T getFirst(Query query) {
-        return CursorConvert.one(query.select(), getEntityConverter());
-    }
-
-    // get all results from a query as a list
-    public List<T> getList(Query query) {
-        return CursorConvert.list(query.select(), getEntityConverter());
-    }
-
-    // get the first result from a query as a QueryResult or null
-    public DataWrapper getFirstQueryResult(Query query, String level) {
-        return CursorConvert.one(query.select(), getWrapperConverter(level));
-    }
-
-    // get all results from a query as a list of QueryResults
-    public List<DataWrapper> getQueryResultList(Query query, String level) {
-        return CursorConvert.list(query.select(), getWrapperConverter(level));
-    }
-
     // find entities with given id
-    public Query findById(String id) {
-        return new Query(tableUri, idColumnName, id, idColumnName);
+    public Query<T> findById(String id) {
+        return new Query<>(this, tableUri, idColumnName, id, idColumnName);
     }
 
     // find entities ordered by id, might be huge
-    public Query findAll() {
-        return new Query(tableUri, null, null, idColumnName);
+    public Query<T> findAll() {
+        return new Query<>(this, tableUri, null, null, idColumnName);
     }
 }

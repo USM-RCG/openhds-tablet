@@ -55,7 +55,7 @@ public class BiokoFormPayloadBuilders {
 
             // pre-fill the householdSize for this particular household
             IndividualGateway individualGateway = GatewayRegistry.getIndividualGateway();
-            List<Individual> individuals = individualGateway.getList(individualGateway.findByResidency(locationUuid));
+            List<Individual> individuals = individualGateway.findByResidency(locationUuid).getList();
             String householdSize = Integer.toString(individuals.size());
             formPayload.put(ProjectFormFields.BedNet.HOUSEHOLD_SIZE, householdSize);
 
@@ -69,7 +69,7 @@ public class BiokoFormPayloadBuilders {
                     sector = hierPath.get(pathLen - 2),
                     map = hierPath.get(pathLen - 3);
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            Location household = locationGateway.getFirst(locationGateway.findById(stubLocation.getUuid()));
+            Location household = locationGateway.findById(stubLocation.getUuid()).getFirst();
             String year = new SimpleDateFormat("yy").format(new Date());
             return String.format("%s/%s%sE%03d", year, map.getName(), sector.getName(), household.getBuildingNumber());
         }
@@ -135,7 +135,7 @@ public class BiokoFormPayloadBuilders {
 
             // Assign the next sequential building number in sector
             LocationGateway locationGateway = GatewayRegistry.getLocationGateway();
-            Location existing = locationGateway.getFirst(locationGateway.findById(locationUuid));
+            Location existing = locationGateway.findById(locationUuid).getFirst();
             int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(map.getName(), sector.getName());
 
             formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, map.getName());
