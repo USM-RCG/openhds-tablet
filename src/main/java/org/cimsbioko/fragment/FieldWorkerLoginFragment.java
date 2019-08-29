@@ -97,7 +97,7 @@ public class FieldWorkerLoginFragment extends Fragment implements OnClickListene
                 showLongToast(getActivity(), R.string.field_worker_bad_credentials);
             }
         } else {
-            if (fieldWorkerGateway.findAll().getFirst() != null) {
+            if (fieldWorkerGateway.findAll().exists()) {
                 showLongToast(getActivity(), R.string.field_worker_bad_credentials);
             } else {
                 showLongToast(getActivity(), R.string.field_worker_none_exist);

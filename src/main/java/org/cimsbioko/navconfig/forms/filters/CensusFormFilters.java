@@ -12,9 +12,8 @@ public class CensusFormFilters {
     public static class AddHeadOfHousehold implements FormFilter {
         @Override
         public boolean shouldDisplay(LaunchContext ctx) {
-            IndividualGateway individualGateway = new IndividualGateway();
-            String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
-            return individualGateway.findByResidency(locationUuid).getFirst() == null;
+            return !getIndividualGateway().findByResidency(ctx.getHierarchyPath().get(HOUSEHOLD).getUuid())
+                    .exists();
         }
     }
 }
