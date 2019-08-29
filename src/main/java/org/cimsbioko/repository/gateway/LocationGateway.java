@@ -8,7 +8,7 @@ import org.cimsbioko.App;
 import org.cimsbioko.R;
 import org.cimsbioko.model.core.Location;
 import org.cimsbioko.provider.ContentProvider;
-import org.cimsbioko.repository.Converter;
+import org.cimsbioko.repository.ContentValuesConverter;
 import org.cimsbioko.repository.CursorConverter;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.Query;
@@ -38,9 +38,10 @@ public class LocationGateway extends Gateway<Location> {
 
     private static final LocationEntityConverter ENTITY_CONVERTER = new LocationEntityConverter();
     private static final Map<String, LocationWrapperConverter> WRAPPER_CONVERTERS = new HashMap<>();
+    private static final LocationContentValuesConverter CONTENT_VALUES_CONVERTER = new LocationContentValuesConverter();
 
     public LocationGateway() {
-        super(App.Locations.CONTENT_ID_URI_BASE, COLUMN_LOCATION_UUID, new LocationConverter());
+        super(App.Locations.CONTENT_ID_URI_BASE, COLUMN_LOCATION_UUID);
     }
 
     public Query findByHierarchy(String hierarchyId) {
@@ -73,6 +74,11 @@ public class LocationGateway extends Gateway<Location> {
     }
 
     @Override
+    String getId(Location entity) {
+        return entity.getUuid();
+    }
+
+    @Override
     CursorConverter<Location> getEntityConverter() {
         return ENTITY_CONVERTER;
     }
@@ -86,6 +92,11 @@ public class LocationGateway extends Gateway<Location> {
             WRAPPER_CONVERTERS.put(level, converter);
             return converter;
         }
+    }
+
+    @Override
+    ContentValuesConverter<Location> getContentValuesConverter() {
+        return CONTENT_VALUES_CONVERTER;
     }
 }
 
@@ -130,7 +141,7 @@ class LocationWrapperConverter implements CursorConverter<DataWrapper> {
     }
 }
 
-class LocationConverter implements Converter<Location> {
+class LocationContentValuesConverter implements ContentValuesConverter<Location> {
 
     @Override
     public ContentValues toContentValues(Location location) {
@@ -149,10 +160,5 @@ class LocationConverter implements Converter<Location> {
         contentValues.put(COLUMN_LOCATION_LATITUDE, location.getLatitude());
         contentValues.put(COLUMN_LOCATION_ATTRS, location.getAttrs());
         return contentValues;
-    }
-
-    @Override
-    public String getId(Location location) {
-        return location.getUuid();
     }
 }

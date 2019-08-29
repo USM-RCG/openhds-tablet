@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import org.cimsbioko.App;
 import org.cimsbioko.model.core.LocationHierarchy;
-import org.cimsbioko.repository.Converter;
+import org.cimsbioko.repository.ContentValuesConverter;
 import org.cimsbioko.repository.CursorConverter;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.Query;
@@ -22,9 +22,10 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
 
     private static final LocationHierarchyEntityConverter ENTITY_CONVERTER = new LocationHierarchyEntityConverter();
     private static final Map<String, LocationHierarchyWrapperConverter> WRAPPER_CONVERTERS = new HashMap<>();
+    private static final LocationHierarchyContentValuesConverter CONTENT_VALUES_CONVERTER = new LocationHierarchyContentValuesConverter();
 
     public LocationHierarchyGateway() {
-        super(App.HierarchyItems.CONTENT_ID_URI_BASE, COLUMN_HIERARCHY_UUID, new LocationHierarchyConverter());
+        super(App.HierarchyItems.CONTENT_ID_URI_BASE, COLUMN_HIERARCHY_UUID);
     }
 
     public Query findByLevel(String level) {
@@ -33,6 +34,11 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
 
     public Query findByParent(String parentId) {
         return new Query(tableUri, COLUMN_HIERARCHY_PARENT, parentId, COLUMN_HIERARCHY_EXTID);
+    }
+
+    @Override
+    String getId(LocationHierarchy entity) {
+        return entity.getUuid();
     }
 
     @Override
@@ -49,6 +55,11 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
             WRAPPER_CONVERTERS.put(level, converter);
             return converter;
         }
+    }
+
+    @Override
+    ContentValuesConverter<LocationHierarchy> getContentValuesConverter() {
+        return CONTENT_VALUES_CONVERTER;
     }
 }
 
@@ -86,7 +97,7 @@ class LocationHierarchyWrapperConverter implements CursorConverter<DataWrapper> 
     }
 }
 
-class LocationHierarchyConverter implements Converter<LocationHierarchy> {
+class LocationHierarchyContentValuesConverter implements ContentValuesConverter<LocationHierarchy> {
 
     @Override
     public ContentValues toContentValues(LocationHierarchy locationHierarchy) {
@@ -98,10 +109,5 @@ class LocationHierarchyConverter implements Converter<LocationHierarchy> {
         contentValues.put(COLUMN_HIERARCHY_PARENT, locationHierarchy.getParentUuid());
         contentValues.put(COLUMN_HIERARCHY_ATTRS, locationHierarchy.getAttrs());
         return contentValues;
-    }
-
-    @Override
-    public String getId(LocationHierarchy locationHierarchy) {
-        return locationHierarchy.getUuid();
     }
 }

@@ -19,20 +19,18 @@ public abstract class Gateway<T> {
 
     protected final Uri tableUri;
     protected final String idColumnName;
-    protected final Converter<T> converter;
 
     // subclass constructor must supply implementation details
-    public Gateway(Uri tableUri, String idColumnName, Converter<T> converter) {
+    public Gateway(Uri tableUri, String idColumnName) {
         this.tableUri = tableUri;
         this.idColumnName = idColumnName;
-        this.converter = converter;
     }
 
     // true if entity was inserted, false if updated
     public boolean insertOrUpdate(T entity) {
         ContentResolver resolver = getApp().getContentResolver();
-        ContentValues contentValues = converter.toContentValues(entity);
-        String id = converter.getId(entity);
+        ContentValues contentValues = getContentValuesConverter().toContentValues(entity);
+        String id = getId(entity);
         if (exists(id)) {
             final String[] columnNames = {idColumnName}, columnValues = {id};
             resolver.update(tableUri, contentValues, buildWhereStatement(columnNames, EQUALS), columnValues);
@@ -48,9 +46,13 @@ public abstract class Gateway<T> {
         return null != getFirst(query);
     }
 
+    abstract String getId(T entity);
+
     abstract CursorConverter<T> getEntityConverter();
 
     abstract CursorConverter<DataWrapper> getWrapperConverter(String level);
+
+    abstract ContentValuesConverter<T> getContentValuesConverter();
 
     // get the first result from a query as an entity or null
     public T getFirst(Query query) {

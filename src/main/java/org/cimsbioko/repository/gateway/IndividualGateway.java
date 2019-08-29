@@ -6,7 +6,7 @@ import android.database.Cursor;
 import org.cimsbioko.App;
 import org.cimsbioko.R;
 import org.cimsbioko.model.core.Individual;
-import org.cimsbioko.repository.Converter;
+import org.cimsbioko.repository.ContentValuesConverter;
 import org.cimsbioko.repository.CursorConverter;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.Query;
@@ -42,13 +42,19 @@ public class IndividualGateway extends Gateway<Individual> {
 
     private static final IndividualEntityConverter ENTITY_CONVERTER = new IndividualEntityConverter();
     private static final Map<String, IndividualWrapperConverter> WRAPPER_CONVERTERS = new HashMap<>();
+    private static final IndividualContentValuesConverter CONTENT_VALUES_CONVERTER = new IndividualContentValuesConverter();
 
     public IndividualGateway() {
-        super(App.Individuals.CONTENT_ID_URI_BASE, COLUMN_INDIVIDUAL_UUID, new IndividualConverter());
+        super(App.Individuals.CONTENT_ID_URI_BASE, COLUMN_INDIVIDUAL_UUID);
     }
 
     public Query findByResidency(String residencyId) {
         return new Query(tableUri, COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, residencyId, COLUMN_INDIVIDUAL_EXTID);
+    }
+
+    @Override
+    String getId(Individual entity) {
+        return entity.getUuid();
     }
 
     @Override
@@ -65,6 +71,11 @@ public class IndividualGateway extends Gateway<Individual> {
             WRAPPER_CONVERTERS.put(level, converter);
             return converter;
         }
+    }
+
+    @Override
+    ContentValuesConverter<Individual> getContentValuesConverter() {
+        return CONTENT_VALUES_CONVERTER;
     }
 }
 
@@ -119,7 +130,7 @@ class IndividualWrapperConverter implements CursorConverter<DataWrapper> {
     }
 }
 
-class IndividualConverter implements Converter<Individual> {
+class IndividualContentValuesConverter implements ContentValuesConverter<Individual> {
 
     @Override
     public ContentValues toContentValues(Individual individual) {
@@ -143,10 +154,5 @@ class IndividualConverter implements Converter<Individual> {
         contentValues.put(COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD, individual.getRelationshipToHead());
         contentValues.put(COLUMN_INDIVIDUAL_ATTRS, individual.getAttrs());
         return contentValues;
-    }
-
-    @Override
-    public String getId(Individual individual) {
-        return individual.getUuid();
     }
 }

@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import org.cimsbioko.App;
 import org.cimsbioko.model.core.FieldWorker;
-import org.cimsbioko.repository.Converter;
+import org.cimsbioko.repository.ContentValuesConverter;
 import org.cimsbioko.repository.CursorConverter;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.Query;
@@ -23,13 +23,19 @@ public class FieldWorkerGateway extends Gateway<FieldWorker> {
 
     private static final FieldWorkerEntityConverter ENTITY_CONVERTER = new FieldWorkerEntityConverter();
     private static final Map<String, FieldWorkerWrapperConverter> WRAPPER_CONVERTERS = new HashMap<>();
+    private static final FieldWorkerContentValuesConverter CONTENT_VALUES_CONVERTER = new FieldWorkerContentValuesConverter();
 
     public FieldWorkerGateway() {
-        super(App.FieldWorkers.CONTENT_ID_URI_BASE, COLUMN_FIELD_WORKER_UUID, new FieldWorkerConverter());
+        super(App.FieldWorkers.CONTENT_ID_URI_BASE, COLUMN_FIELD_WORKER_UUID);
     }
 
     public Query findByExtId(String extId) {
         return new Query(tableUri, COLUMN_FIELD_WORKER_EXTID, extId, COLUMN_FIELD_WORKER_UUID);
+    }
+
+    @Override
+    String getId(FieldWorker entity) {
+        return entity.getUuid();
     }
 
     @Override
@@ -47,10 +53,14 @@ public class FieldWorkerGateway extends Gateway<FieldWorker> {
             return converter;
         }
     }
+
+    @Override
+    ContentValuesConverter<FieldWorker> getContentValuesConverter() {
+        return CONTENT_VALUES_CONVERTER;
+    }
 }
 
 class FieldWorkerEntityConverter implements CursorConverter<FieldWorker> {
-
     @Override
     public FieldWorker convert(Cursor c) {
         FieldWorker fieldWorker = new FieldWorker();
@@ -83,8 +93,7 @@ class FieldWorkerWrapperConverter implements CursorConverter<DataWrapper> {
     }
 }
 
-class FieldWorkerConverter implements Converter<FieldWorker> {
-
+class FieldWorkerContentValuesConverter implements ContentValuesConverter<FieldWorker> {
     @Override
     public ContentValues toContentValues(FieldWorker fieldWorker) {
         ContentValues contentValues = new ContentValues();
@@ -95,10 +104,5 @@ class FieldWorkerConverter implements Converter<FieldWorker> {
         contentValues.put(COLUMN_FIELD_WORKER_PASSWORD, fieldWorker.getPasswordHash());
         contentValues.put(COLUMN_FIELD_WORKER_UUID, fieldWorker.getUuid());
         return contentValues;
-    }
-
-    @Override
-    public String getId(FieldWorker fieldWorker) {
-        return fieldWorker.getUuid();
     }
 }
