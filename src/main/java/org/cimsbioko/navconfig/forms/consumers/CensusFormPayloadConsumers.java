@@ -9,8 +9,8 @@ import org.cimsbioko.navconfig.forms.adapters.IndividualFormAdapter;
 import org.cimsbioko.navconfig.forms.adapters.LocationFormAdapter;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.GatewayRegistry;
-import org.cimsbioko.repository.gateway.IndividualGateway;
-import org.cimsbioko.repository.gateway.LocationGateway;
+import org.cimsbioko.repository.IndividualGateway;
+import org.cimsbioko.repository.LocationGateway;
 
 import java.util.Map;
 

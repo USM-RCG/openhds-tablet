@@ -5,7 +5,7 @@ import org.cimsbioko.navconfig.ProjectFormFields;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.cimsbioko.repository.GatewayRegistry;
-import org.cimsbioko.repository.gateway.LocationHierarchyGateway;
+import org.cimsbioko.repository.LocationHierarchyGateway;
 
 import java.util.Map;
 

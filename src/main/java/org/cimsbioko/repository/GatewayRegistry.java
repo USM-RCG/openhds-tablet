@@ -2,12 +2,6 @@ package org.cimsbioko.repository;
 
 import android.util.Log;
 
-import org.cimsbioko.repository.gateway.FieldWorkerGateway;
-import org.cimsbioko.repository.gateway.Gateway;
-import org.cimsbioko.repository.gateway.IndividualGateway;
-import org.cimsbioko.repository.gateway.LocationGateway;
-import org.cimsbioko.repository.gateway.LocationHierarchyGateway;
-
 import java.util.HashMap;
 import java.util.Map;
 

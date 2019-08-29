@@ -5,10 +5,10 @@ import org.cimsbioko.model.core.Location;
 import org.cimsbioko.model.core.LocationHierarchy;
 import org.cimsbioko.navconfig.NavigatorConfig;
 import org.cimsbioko.repository.DataWrapper;
-import org.cimsbioko.repository.gateway.Gateway;
-import org.cimsbioko.repository.gateway.IndividualGateway;
-import org.cimsbioko.repository.gateway.LocationGateway;
-import org.cimsbioko.repository.gateway.LocationHierarchyGateway;
+import org.cimsbioko.repository.Gateway;
+import org.cimsbioko.repository.IndividualGateway;
+import org.cimsbioko.repository.LocationGateway;
+import org.cimsbioko.repository.LocationHierarchyGateway;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,7 +3,7 @@ package org.cimsbioko.utilities;
 import org.cimsbioko.model.core.Individual;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.GatewayRegistry;
-import org.cimsbioko.repository.gateway.IndividualGateway;
+import org.cimsbioko.repository.IndividualGateway;
 
 import java.util.List;
 import java.util.UUID;

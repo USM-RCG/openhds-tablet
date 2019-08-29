@@ -1,4 +1,4 @@
-package org.cimsbioko.repository.gateway;
+package org.cimsbioko.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -6,10 +6,6 @@ import android.database.Cursor;
 import org.cimsbioko.App;
 import org.cimsbioko.R;
 import org.cimsbioko.model.core.Individual;
-import org.cimsbioko.repository.ContentValuesConverter;
-import org.cimsbioko.repository.CursorConverter;
-import org.cimsbioko.repository.DataWrapper;
-import org.cimsbioko.repository.Query;
 
 import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_ATTRS;
 import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_DOB;

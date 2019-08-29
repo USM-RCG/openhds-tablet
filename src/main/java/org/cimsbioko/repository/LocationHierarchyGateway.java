@@ -1,13 +1,9 @@
-package org.cimsbioko.repository.gateway;
+package org.cimsbioko.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import org.cimsbioko.App;
 import org.cimsbioko.model.core.LocationHierarchy;
-import org.cimsbioko.repository.ContentValuesConverter;
-import org.cimsbioko.repository.CursorConverter;
-import org.cimsbioko.repository.DataWrapper;
-import org.cimsbioko.repository.Query;
 
 import static org.cimsbioko.App.HierarchyItems.*;
 import static org.cimsbioko.repository.RepositoryUtils.extractString;

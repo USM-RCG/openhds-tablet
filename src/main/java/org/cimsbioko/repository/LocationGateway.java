@@ -1,4 +1,4 @@
-package org.cimsbioko.repository.gateway;
+package org.cimsbioko.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -8,10 +8,6 @@ import org.cimsbioko.App;
 import org.cimsbioko.R;
 import org.cimsbioko.model.core.Location;
 import org.cimsbioko.provider.ContentProvider;
-import org.cimsbioko.repository.ContentValuesConverter;
-import org.cimsbioko.repository.CursorConverter;
-import org.cimsbioko.repository.DataWrapper;
-import org.cimsbioko.repository.Query;
 
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_ATTRS;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_BUILDING_NUMBER;

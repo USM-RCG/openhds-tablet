@@ -1,9 +1,8 @@
-package org.cimsbioko.repository.gateway;
+package org.cimsbioko.repository;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
-import org.cimsbioko.repository.*;
 
 import static org.cimsbioko.App.getApp;
 import static org.cimsbioko.repository.RepositoryUtils.EQUALS;

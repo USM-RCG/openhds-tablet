@@ -2,7 +2,6 @@ package org.cimsbioko.repository;
 
 import android.database.Cursor;
 import android.net.Uri;
-import org.cimsbioko.repository.gateway.Gateway;
 
 import java.util.List;
 

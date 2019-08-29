@@ -5,7 +5,8 @@ import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.navconfig.ProjectFormFields;
-import org.cimsbioko.repository.gateway.*;
+import org.cimsbioko.repository.IndividualGateway;
+import org.cimsbioko.repository.LocationGateway;
 import org.cimsbioko.utilities.IdHelper;
 import org.cimsbioko.utilities.StringUtils;
 

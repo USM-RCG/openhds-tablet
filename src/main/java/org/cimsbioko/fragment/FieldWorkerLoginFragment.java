@@ -19,7 +19,7 @@ import org.cimsbioko.R;
 import org.cimsbioko.activity.FieldWorkerActivity;
 import org.cimsbioko.model.core.FieldWorker;
 import org.cimsbioko.repository.GatewayRegistry;
-import org.cimsbioko.repository.gateway.FieldWorkerGateway;
+import org.cimsbioko.repository.FieldWorkerGateway;
 import org.cimsbioko.utilities.LoginUtils;
 
 import static android.text.InputType.TYPE_CLASS_TEXT;

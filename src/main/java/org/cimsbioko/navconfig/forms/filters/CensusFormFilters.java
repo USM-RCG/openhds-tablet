@@ -2,7 +2,7 @@ package org.cimsbioko.navconfig.forms.filters;
 
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
-import org.cimsbioko.repository.gateway.IndividualGateway;
+import org.cimsbioko.repository.IndividualGateway;
 
 import static org.cimsbioko.navconfig.Hierarchy.HOUSEHOLD;
 

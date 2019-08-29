@@ -13,7 +13,7 @@ import org.cimsbioko.model.core.Individual;
 import org.cimsbioko.navconfig.ProjectResources;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.GatewayRegistry;
-import org.cimsbioko.repository.gateway.IndividualGateway;
+import org.cimsbioko.repository.IndividualGateway;
 
 import static org.cimsbioko.utilities.LayoutUtils.makeLargeTextWithValueAndLabel;
 
