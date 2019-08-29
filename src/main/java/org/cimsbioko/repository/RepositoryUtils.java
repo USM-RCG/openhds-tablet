@@ -1,9 +1,6 @@
 package org.cimsbioko.repository;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.database.Cursor;
-import android.net.Uri;
 
 /**
  * Utilities to build queries and facilitate CRUD operations.
@@ -18,30 +15,6 @@ public class RepositoryUtils {
     private static final String AND = "AND";
     private static final String WHERE_PLACEHOLDER = "?";
     private static final String WHERE_ALL = "1";
-
-    public static Uri insert(ContentResolver contentResolver, Uri tableUri, ContentValues contentValues) {
-        return contentResolver.insert(tableUri, contentValues);
-    }
-
-    public static int update(ContentResolver contentResolver, Uri tableUri, ContentValues contentValues,
-                             String columnName, String columnValue) {
-
-        final String[] columnNames = {columnName};
-        final String[] columnValues = {columnValue};
-        return update(contentResolver, tableUri, contentValues, columnNames, columnValues);
-    }
-
-    public static int update(ContentResolver contentResolver, Uri tableUri, ContentValues contentValues,
-                             String[] columnNames, String[] columnValues) {
-
-        final String whereStatement = buildWhereStatement(columnNames, EQUALS);
-        return contentResolver.update(tableUri, contentValues, whereStatement, columnValues);
-    }
-
-    public static Cursor query(ContentResolver contentResolver, Uri tableUri, String whereStatement,
-                               String[] columnValues, String columnOrderBy) {
-        return contentResolver.query(tableUri, null, whereStatement, columnValues, columnOrderBy);
-    }
 
     public static String buildWhereStatement(String[] columnNames, String operator) {
         if (null == columnNames || 0 == columnNames.length) {

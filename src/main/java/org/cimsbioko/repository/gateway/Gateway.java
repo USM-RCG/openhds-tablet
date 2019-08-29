@@ -4,7 +4,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import org.cimsbioko.App;
 import org.cimsbioko.repository.Converter;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.Query;
@@ -12,9 +11,8 @@ import org.cimsbioko.repository.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.cimsbioko.repository.RepositoryUtils.LIKE;
-import static org.cimsbioko.repository.RepositoryUtils.insert;
-import static org.cimsbioko.repository.RepositoryUtils.update;
+import static org.cimsbioko.App.getApp;
+import static org.cimsbioko.repository.RepositoryUtils.*;
 
 
 /**
@@ -33,20 +31,17 @@ public abstract class Gateway<T> {
         this.converter = converter;
     }
 
-    private ContentResolver getContentResolver() {
-        return App.getApp().getContentResolver();
-    }
-
     // true if entity was inserted, false if updated
     public boolean insertOrUpdate(T entity) {
-        ContentResolver resolver = getContentResolver();
+        ContentResolver resolver = getApp().getContentResolver();
         ContentValues contentValues = converter.toContentValues(entity);
         String id = converter.getId(entity);
         if (exists(id)) {
-            update(resolver, tableUri, contentValues, idColumnName, id);
+            final String[] columnNames = {idColumnName}, columnValues = {id};
+            resolver.update(tableUri, contentValues, buildWhereStatement(columnNames, EQUALS), columnValues);
             return false;
         } else {
-            return null != insert(resolver, tableUri, contentValues);
+            return null != resolver.insert(tableUri, contentValues);
         }
     }
 

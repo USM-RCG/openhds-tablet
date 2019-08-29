@@ -2,9 +2,10 @@ package org.cimsbioko.repository;
 
 import android.database.Cursor;
 import android.net.Uri;
-import org.cimsbioko.App;
 
+import static org.cimsbioko.App.getApp;
 import static org.cimsbioko.repository.RepositoryUtils.EQUALS;
+import static org.cimsbioko.repository.RepositoryUtils.buildWhereStatement;
 
 /**
  * Represent a database query to be performed.  Might be saved and performed in pieces by an Iterator.
@@ -36,7 +37,8 @@ public class Query {
     }
 
     public Cursor select() {
-        final String whereStatement = RepositoryUtils.buildWhereStatement(columnNames, operator);
-        return RepositoryUtils.query(App.getApp().getContentResolver(), tableUri, whereStatement, columnValues, columnOrderBy);
+        return getApp()
+                .getContentResolver()
+                .query(tableUri, null, buildWhereStatement(columnNames, operator), columnValues, columnOrderBy);
     }
 }
