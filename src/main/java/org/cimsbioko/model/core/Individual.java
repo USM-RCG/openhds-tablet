@@ -154,8 +154,7 @@ public class Individual implements Serializable {
 	}
 
 	public static String getFullName(Individual individual) {
-		return individual.getFirstName() + " "
-				+ individual.getLastName();
+		return individual.getFirstName() + " " + individual.getLastName();
 	}
 
 	public String getRelationshipToHead() {

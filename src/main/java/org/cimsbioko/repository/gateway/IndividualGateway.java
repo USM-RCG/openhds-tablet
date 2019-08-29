@@ -41,8 +41,7 @@ public class IndividualGateway extends Gateway<Individual> {
     }
 
     public Query findByResidency(String residencyId) {
-        return new Query(
-                tableUri, COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, residencyId, COLUMN_INDIVIDUAL_EXTID);
+        return new Query(tableUri, COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, residencyId, COLUMN_INDIVIDUAL_EXTID);
     }
 }
 
