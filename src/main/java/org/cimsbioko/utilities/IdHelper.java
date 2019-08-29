@@ -1,12 +1,12 @@
 package org.cimsbioko.utilities;
 
 import org.cimsbioko.model.core.Individual;
-import org.cimsbioko.repository.DataWrapper;
+import org.cimsbioko.data.DataWrapper;
 
 import java.util.List;
 import java.util.UUID;
 
-import static org.cimsbioko.repository.GatewayRegistry.getIndividualGateway;
+import static org.cimsbioko.data.GatewayRegistry.getIndividualGateway;
 
 public class IdHelper {
 

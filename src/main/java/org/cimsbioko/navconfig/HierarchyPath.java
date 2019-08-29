@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import org.cimsbioko.navconfig.db.DefaultQueryHelper;
 import org.cimsbioko.navconfig.db.QueryHelper;
-import org.cimsbioko.repository.DataWrapper;
+import org.cimsbioko.data.DataWrapper;
 
 import java.util.*;
 import java.util.regex.Matcher;

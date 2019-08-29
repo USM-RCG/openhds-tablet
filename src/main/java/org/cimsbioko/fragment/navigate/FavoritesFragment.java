@@ -21,7 +21,7 @@ import org.cimsbioko.activity.HierarchyNavigatorActivity;
 import org.cimsbioko.navconfig.HierarchyPath;
 import org.cimsbioko.navconfig.NavigatorModule;
 import org.cimsbioko.provider.DatabaseAdapter;
-import org.cimsbioko.repository.DataWrapper;
+import org.cimsbioko.data.DataWrapper;
 import org.cimsbioko.utilities.ConfigUtils;
 import org.cimsbioko.utilities.MessageUtils;
 

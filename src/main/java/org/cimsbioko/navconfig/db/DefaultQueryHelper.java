@@ -4,15 +4,15 @@ import org.cimsbioko.model.core.Individual;
 import org.cimsbioko.model.core.Location;
 import org.cimsbioko.model.core.LocationHierarchy;
 import org.cimsbioko.navconfig.NavigatorConfig;
-import org.cimsbioko.repository.DataWrapper;
-import org.cimsbioko.repository.Gateway;
-import org.cimsbioko.repository.LocationHierarchyGateway;
+import org.cimsbioko.data.DataWrapper;
+import org.cimsbioko.data.Gateway;
+import org.cimsbioko.data.LocationHierarchyGateway;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.cimsbioko.navconfig.Hierarchy.*;
-import static org.cimsbioko.repository.GatewayRegistry.*;
+import static org.cimsbioko.data.GatewayRegistry.*;
 
 public class DefaultQueryHelper implements QueryHelper {
 

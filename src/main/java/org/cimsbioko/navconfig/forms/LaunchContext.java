@@ -3,7 +3,7 @@ package org.cimsbioko.navconfig.forms;
 import org.cimsbioko.activity.HierarchyNavigatorActivity;
 import org.cimsbioko.navconfig.HierarchyPath;
 import org.cimsbioko.model.core.FieldWorker;
-import org.cimsbioko.repository.DataWrapper;
+import org.cimsbioko.data.DataWrapper;
 
 /**
  * This is the formal contract currently required to build a payload and launch a form. Currently,

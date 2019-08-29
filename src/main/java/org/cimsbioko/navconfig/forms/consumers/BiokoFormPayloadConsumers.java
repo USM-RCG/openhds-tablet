@@ -4,8 +4,8 @@ import org.cimsbioko.model.core.LocationHierarchy;
 import org.cimsbioko.navconfig.ProjectFormFields;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
-import org.cimsbioko.repository.GatewayRegistry;
-import org.cimsbioko.repository.LocationHierarchyGateway;
+import org.cimsbioko.data.GatewayRegistry;
+import org.cimsbioko.data.LocationHierarchyGateway;
 
 import java.util.Map;
 

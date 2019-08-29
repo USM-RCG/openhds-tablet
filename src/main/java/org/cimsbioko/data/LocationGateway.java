@@ -1,4 +1,4 @@
-package org.cimsbioko.repository;
+package org.cimsbioko.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -22,8 +22,8 @@ import static org.cimsbioko.App.Locations.COLUMN_LOCATION_SECTOR_NAME;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_UUID;
 import static org.cimsbioko.App.Locations.TABLE_NAME;
 import static org.cimsbioko.navconfig.Hierarchy.HOUSEHOLD;
-import static org.cimsbioko.repository.CursorConvert.extractInt;
-import static org.cimsbioko.repository.CursorConvert.extractString;
+import static org.cimsbioko.data.CursorConvert.extractInt;
+import static org.cimsbioko.data.CursorConvert.extractString;
 
 /**
  * Convert Locations to and from database.  Location-specific queries.

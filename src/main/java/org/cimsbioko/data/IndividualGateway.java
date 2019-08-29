@@ -1,4 +1,4 @@
-package org.cimsbioko.repository;
+package org.cimsbioko.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -26,7 +26,7 @@ import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION
 import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_STATUS;
 import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_UUID;
 import static org.cimsbioko.navconfig.Hierarchy.INDIVIDUAL;
-import static org.cimsbioko.repository.CursorConvert.extractString;
+import static org.cimsbioko.data.CursorConvert.extractString;
 
 
 /**

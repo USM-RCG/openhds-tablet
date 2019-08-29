@@ -7,14 +7,14 @@ import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.cimsbioko.navconfig.forms.adapters.IndividualFormAdapter;
 import org.cimsbioko.navconfig.forms.adapters.LocationFormAdapter;
-import org.cimsbioko.repository.DataWrapper;
-import org.cimsbioko.repository.LocationGateway;
+import org.cimsbioko.data.DataWrapper;
+import org.cimsbioko.data.LocationGateway;
 
 import java.util.Map;
 
 import static org.cimsbioko.navconfig.Hierarchy.HOUSEHOLD;
-import static org.cimsbioko.repository.GatewayRegistry.getIndividualGateway;
-import static org.cimsbioko.repository.GatewayRegistry.getLocationGateway;
+import static org.cimsbioko.data.GatewayRegistry.getIndividualGateway;
+import static org.cimsbioko.data.GatewayRegistry.getLocationGateway;
 
 public class CensusFormPayloadConsumers {
 

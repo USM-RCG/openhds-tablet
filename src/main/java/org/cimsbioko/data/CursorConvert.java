@@ -1,4 +1,4 @@
-package org.cimsbioko.repository;
+package org.cimsbioko.data;
 
 import android.database.Cursor;
 

@@ -1,4 +1,4 @@
-package org.cimsbioko.repository;
+package org.cimsbioko.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -6,7 +6,7 @@ import org.cimsbioko.App;
 import org.cimsbioko.model.core.FieldWorker;
 
 import static org.cimsbioko.App.FieldWorkers.*;
-import static org.cimsbioko.repository.CursorConvert.extractString;
+import static org.cimsbioko.data.CursorConvert.extractString;
 
 
 /**

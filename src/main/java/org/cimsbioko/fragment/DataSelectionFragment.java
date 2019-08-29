@@ -16,7 +16,7 @@ import android.widget.RelativeLayout;
 
 import org.cimsbioko.R;
 import org.cimsbioko.provider.DatabaseAdapter;
-import org.cimsbioko.repository.DataWrapper;
+import org.cimsbioko.data.DataWrapper;
 import org.cimsbioko.utilities.MessageUtils;
 
 import java.util.List;

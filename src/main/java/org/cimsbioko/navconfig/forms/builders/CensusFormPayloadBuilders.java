@@ -3,7 +3,7 @@ package org.cimsbioko.navconfig.forms.builders;
 import org.cimsbioko.model.core.*;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
-import org.cimsbioko.repository.DataWrapper;
+import org.cimsbioko.data.DataWrapper;
 import org.cimsbioko.navconfig.ProjectFormFields;
 import org.cimsbioko.utilities.IdHelper;
 import org.cimsbioko.utilities.StringUtils;
@@ -15,8 +15,8 @@ import java.util.Map;
 import static org.cimsbioko.navconfig.Hierarchy.*;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatBuilding;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatFloor;
-import static org.cimsbioko.repository.GatewayRegistry.getIndividualGateway;
-import static org.cimsbioko.repository.GatewayRegistry.getLocationGateway;
+import static org.cimsbioko.data.GatewayRegistry.getIndividualGateway;
+import static org.cimsbioko.data.GatewayRegistry.getLocationGateway;
 
 public class CensusFormPayloadBuilders {
 

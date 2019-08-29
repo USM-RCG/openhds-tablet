@@ -7,8 +7,8 @@ import org.cimsbioko.navconfig.HierarchyPath;
 import org.cimsbioko.navconfig.ProjectFormFields;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
-import org.cimsbioko.repository.DataWrapper;
-import org.cimsbioko.repository.LocationGateway;
+import org.cimsbioko.data.DataWrapper;
+import org.cimsbioko.data.LocationGateway;
 import org.cimsbioko.utilities.IdHelper;
 
 import java.text.SimpleDateFormat;
@@ -23,8 +23,8 @@ import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatBuilding
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatDate;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatFloor;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatTime;
-import static org.cimsbioko.repository.GatewayRegistry.getIndividualGateway;
-import static org.cimsbioko.repository.GatewayRegistry.getLocationGateway;
+import static org.cimsbioko.data.GatewayRegistry.getIndividualGateway;
+import static org.cimsbioko.data.GatewayRegistry.getLocationGateway;
 
 public class BiokoFormPayloadBuilders {
 

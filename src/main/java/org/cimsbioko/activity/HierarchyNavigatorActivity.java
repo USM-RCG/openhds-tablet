@@ -36,7 +36,7 @@ import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.Launcher;
 import org.cimsbioko.navconfig.forms.consumers.FormPayloadConsumer;
 import org.cimsbioko.provider.DatabaseAdapter;
-import org.cimsbioko.repository.DataWrapper;
+import org.cimsbioko.data.DataWrapper;
 import org.cimsbioko.utilities.ConfigUtils;
 import org.cimsbioko.utilities.FormsHelper;
 

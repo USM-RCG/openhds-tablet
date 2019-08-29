@@ -1,4 +1,4 @@
-package org.cimsbioko.repository;
+package org.cimsbioko.data;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -6,8 +6,8 @@ import android.net.Uri;
 import java.util.List;
 
 import static org.cimsbioko.App.getApp;
-import static org.cimsbioko.repository.WhereUtils.EQUALS;
-import static org.cimsbioko.repository.WhereUtils.buildWhereStatement;
+import static org.cimsbioko.data.WhereUtils.EQUALS;
+import static org.cimsbioko.data.WhereUtils.buildWhereStatement;
 
 /**
  * Represent a database query to be performed.  Might be saved and performed in pieces by an Iterator.

@@ -1,6 +1,4 @@
-package org.cimsbioko.repository;
-
-import android.database.Cursor;
+package org.cimsbioko.data;
 
 /**
  * Utilities to build queries and facilitate CRUD operations.

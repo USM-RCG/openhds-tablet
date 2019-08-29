@@ -1,7 +1,7 @@
 package org.cimsbioko.fragment.navigate.detail;
 
 import org.cimsbioko.R;
-import org.cimsbioko.repository.DataWrapper;
+import org.cimsbioko.data.DataWrapper;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

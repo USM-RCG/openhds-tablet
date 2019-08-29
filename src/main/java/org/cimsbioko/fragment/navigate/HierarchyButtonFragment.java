@@ -16,12 +16,11 @@ import android.widget.ScrollView;
 import org.cimsbioko.R;
 import org.cimsbioko.navconfig.HierarchyPath;
 import org.cimsbioko.navconfig.NavigatorConfig;
-import org.cimsbioko.repository.DataWrapper;
+import org.cimsbioko.data.DataWrapper;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.cimsbioko.utilities.ConfigUtils.getResourceString;
 import static org.cimsbioko.utilities.LayoutUtils.configureTextWithPayload;
 import static org.cimsbioko.utilities.LayoutUtils.makeTextWithPayload;
 

@@ -1,6 +1,6 @@
 package org.cimsbioko.navconfig.db;
 
-import org.cimsbioko.repository.DataWrapper;
+import org.cimsbioko.data.DataWrapper;
 
 import java.util.List;
 

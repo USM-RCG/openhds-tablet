@@ -11,9 +11,9 @@ import android.widget.TextView;
 import org.cimsbioko.R;
 import org.cimsbioko.model.core.Individual;
 import org.cimsbioko.navconfig.ProjectResources;
-import org.cimsbioko.repository.DataWrapper;
+import org.cimsbioko.data.DataWrapper;
 
-import static org.cimsbioko.repository.GatewayRegistry.getIndividualGateway;
+import static org.cimsbioko.data.GatewayRegistry.getIndividualGateway;
 import static org.cimsbioko.utilities.LayoutUtils.makeLargeTextWithValueAndLabel;
 
 public class IndividualDetailFragment extends DetailFragment {
