@@ -27,15 +27,6 @@ public class Query {
         this.operator = EQUALS;
     }
 
-    // full, flexible query
-    public Query(Uri tableUri, String[] columnNames, String[] columnValues, String columnOrderBy, String operator) {
-        this.tableUri = tableUri;
-        this.columnNames = columnNames;
-        this.columnValues = columnValues;
-        this.columnOrderBy = columnOrderBy;
-        this.operator = operator;
-    }
-
     public Cursor select() {
         return getApp()
                 .getContentResolver()
