@@ -11,9 +11,6 @@ import org.cimsbioko.repository.CursorConverter;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.Query;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_ATTRS;
 import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_DOB;
 import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_EXTID;
@@ -32,6 +29,7 @@ import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HE
 import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID;
 import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_STATUS;
 import static org.cimsbioko.App.Individuals.COLUMN_INDIVIDUAL_UUID;
+import static org.cimsbioko.navconfig.Hierarchy.INDIVIDUAL;
 import static org.cimsbioko.repository.RepositoryUtils.extractString;
 
 
@@ -41,7 +39,7 @@ import static org.cimsbioko.repository.RepositoryUtils.extractString;
 public class IndividualGateway extends Gateway<Individual> {
 
     private static final IndividualEntityConverter ENTITY_CONVERTER = new IndividualEntityConverter();
-    private static final Map<String, IndividualWrapperConverter> WRAPPER_CONVERTERS = new HashMap<>();
+    private static final IndividualWrapperConverter WRAPPER_CONVERTER = new IndividualWrapperConverter();
     private static final IndividualContentValuesConverter CONTENT_VALUES_CONVERTER = new IndividualContentValuesConverter();
 
     public IndividualGateway() {
@@ -63,14 +61,8 @@ public class IndividualGateway extends Gateway<Individual> {
     }
 
     @Override
-    public CursorConverter<DataWrapper> getWrapperConverter(String level) {
-        if (WRAPPER_CONVERTERS.containsKey(level)) {
-            return WRAPPER_CONVERTERS.get(level);
-        } else {
-            IndividualWrapperConverter converter = new IndividualWrapperConverter(level);
-            WRAPPER_CONVERTERS.put(level, converter);
-            return converter;
-        }
+    public CursorConverter<DataWrapper> getWrapperConverter() {
+        return WRAPPER_CONVERTER;
     }
 
     @Override
@@ -107,20 +99,13 @@ class IndividualEntityConverter implements CursorConverter<Individual> {
 }
 
 class IndividualWrapperConverter implements CursorConverter<DataWrapper> {
-
-    private final String level;
-
-    public IndividualWrapperConverter(String level) {
-        this.level = level;
-    }
-
     @Override
     public DataWrapper convert(Cursor c) {
         DataWrapper dataWrapper = new DataWrapper();
         dataWrapper.setUuid(extractString(c, COLUMN_INDIVIDUAL_UUID));
         dataWrapper.setExtId(extractString(c, COLUMN_INDIVIDUAL_EXTID));
         dataWrapper.setName(extractString(c, COLUMN_INDIVIDUAL_FIRST_NAME) + " " + extractString(c, COLUMN_INDIVIDUAL_LAST_NAME));
-        dataWrapper.setCategory(level);
+        dataWrapper.setCategory(INDIVIDUAL);
 
         // for Bioko add individual details to payload
         dataWrapper.getStringsPayload().put(R.string.individual_other_names_label, extractString(c, COLUMN_INDIVIDUAL_OTHER_NAMES));

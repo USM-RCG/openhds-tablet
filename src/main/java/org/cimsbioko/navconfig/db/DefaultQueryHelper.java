@@ -62,14 +62,14 @@ public class DefaultQueryHelper implements QueryHelper {
     public List<DataWrapper> getAll(String level) {
         if (isAdminLevel(level)) {
             LocationHierarchyGateway hierGateway = getLocationHierarchyGateway();
-            return hierGateway.findByLevel(level).getWrapperList(level);
+            return hierGateway.findByLevel(level).getWrapperList();
         }
         switch (level) {
             case HOUSEHOLD:
             case INDIVIDUAL:
                 Gateway<?> gateway = getLevelGateway(level);
                 if (gateway != null) {
-                    return gateway.findAll().getWrapperList(level);
+                    return gateway.findAll().getWrapperList();
                 }
         }
         return new ArrayList<>();
@@ -81,14 +81,14 @@ public class DefaultQueryHelper implements QueryHelper {
             if (isAdminLevel(level)) {
                 if (!isLastAdminLevel(level)) {
                     LocationHierarchyGateway locationHierarchyGateway = getLocationHierarchyGateway();
-                    return locationHierarchyGateway.findByParent(parent.getUuid()).getWrapperList(childLevel);
+                    return locationHierarchyGateway.findByParent(parent.getUuid()).getWrapperList();
                 } else {
                     LocationGateway locationGateway = getLocationGateway();
-                    return locationGateway.findByHierarchy(parent.getUuid()).getWrapperList(childLevel);
+                    return locationGateway.findByHierarchy(parent.getUuid()).getWrapperList();
                 }
             } else if (HOUSEHOLD.equals(level)) {
                 IndividualGateway individualGateway = getIndividualGateway();
-                return individualGateway.findByResidency(parent.getUuid()).getWrapperList(childLevel);
+                return individualGateway.findByResidency(parent.getUuid()).getWrapperList();
             }
         }
         return new ArrayList<>();
@@ -97,7 +97,7 @@ public class DefaultQueryHelper implements QueryHelper {
     @Override
     public DataWrapper get(String level, String uuid) {
         Gateway gw = getLevelGateway(level);
-        return gw != null ? gw.findById(uuid).getFirstWrapper(level) : null;
+        return gw != null ? gw.findById(uuid).getFirstWrapper() : null;
     }
 
     @Override

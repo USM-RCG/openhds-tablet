@@ -9,9 +9,6 @@ import org.cimsbioko.repository.CursorConverter;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.Query;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.cimsbioko.App.FieldWorkers.*;
 import static org.cimsbioko.repository.RepositoryUtils.extractString;
 
@@ -22,7 +19,7 @@ import static org.cimsbioko.repository.RepositoryUtils.extractString;
 public class FieldWorkerGateway extends Gateway<FieldWorker> {
 
     private static final FieldWorkerEntityConverter ENTITY_CONVERTER = new FieldWorkerEntityConverter();
-    private static final Map<String, FieldWorkerWrapperConverter> WRAPPER_CONVERTERS = new HashMap<>();
+    private static final FieldWorkerWrapperConverter WRAPPER_CONVERTER = new FieldWorkerWrapperConverter();
     private static final FieldWorkerContentValuesConverter CONTENT_VALUES_CONVERTER = new FieldWorkerContentValuesConverter();
 
     public FieldWorkerGateway() {
@@ -44,14 +41,8 @@ public class FieldWorkerGateway extends Gateway<FieldWorker> {
     }
 
     @Override
-    public CursorConverter<DataWrapper> getWrapperConverter(String level) {
-        if (WRAPPER_CONVERTERS.containsKey(level)) {
-            return WRAPPER_CONVERTERS.get(level);
-        } else {
-            FieldWorkerWrapperConverter converter = new FieldWorkerWrapperConverter(level);
-            WRAPPER_CONVERTERS.put(level, converter);
-            return converter;
-        }
+    public CursorConverter<DataWrapper> getWrapperConverter() {
+        return WRAPPER_CONVERTER;
     }
 
     @Override
@@ -75,20 +66,13 @@ class FieldWorkerEntityConverter implements CursorConverter<FieldWorker> {
 }
 
 class FieldWorkerWrapperConverter implements CursorConverter<DataWrapper> {
-
-    private final String level;
-
-    public FieldWorkerWrapperConverter(String level) {
-        this.level = level;
-    }
-
     @Override
     public DataWrapper convert(Cursor c) {
         DataWrapper dataWrapper = new DataWrapper();
         dataWrapper.setExtId(extractString(c, COLUMN_FIELD_WORKER_EXTID));
         dataWrapper.setName(extractString(c, COLUMN_FIELD_WORKER_FIRST_NAME));
         dataWrapper.setUuid(extractString(c, COLUMN_FIELD_WORKER_UUID));
-        dataWrapper.setCategory(level);
+        dataWrapper.setCategory("fieldworker");
         return dataWrapper;
     }
 }

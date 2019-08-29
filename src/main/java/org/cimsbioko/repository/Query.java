@@ -49,12 +49,12 @@ public class Query<T> {
     }
 
     // get the first result from a query as a QueryResult or null
-    public DataWrapper getFirstWrapper(String level) {
-        return CursorConvert.one(select(), gateway.getWrapperConverter(level));
+    public DataWrapper getFirstWrapper() {
+        return CursorConvert.one(select(), gateway.getWrapperConverter());
     }
 
     // get all results from a query as a list of QueryResults
-    public List<DataWrapper> getWrapperList(String level) {
-        return CursorConvert.list(select(), gateway.getWrapperConverter(level));
+    public List<DataWrapper> getWrapperList() {
+        return CursorConvert.list(select(), gateway.getWrapperConverter());
     }
 }

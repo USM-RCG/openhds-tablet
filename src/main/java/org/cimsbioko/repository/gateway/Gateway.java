@@ -47,7 +47,7 @@ public abstract class Gateway<T> {
 
     public abstract CursorConverter<T> getEntityConverter();
 
-    public abstract CursorConverter<DataWrapper> getWrapperConverter(String level);
+    public abstract CursorConverter<DataWrapper> getWrapperConverter();
 
     abstract ContentValuesConverter<T> getContentValuesConverter();
 

@@ -13,9 +13,6 @@ import org.cimsbioko.repository.CursorConverter;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.Query;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_ATTRS;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_BUILDING_NUMBER;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_DESCRIPTION;
@@ -28,6 +25,7 @@ import static org.cimsbioko.App.Locations.COLUMN_LOCATION_NAME;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_SECTOR_NAME;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_UUID;
 import static org.cimsbioko.App.Locations.TABLE_NAME;
+import static org.cimsbioko.navconfig.Hierarchy.HOUSEHOLD;
 import static org.cimsbioko.repository.RepositoryUtils.extractInt;
 import static org.cimsbioko.repository.RepositoryUtils.extractString;
 
@@ -37,7 +35,7 @@ import static org.cimsbioko.repository.RepositoryUtils.extractString;
 public class LocationGateway extends Gateway<Location> {
 
     private static final LocationEntityConverter ENTITY_CONVERTER = new LocationEntityConverter();
-    private static final Map<String, LocationWrapperConverter> WRAPPER_CONVERTERS = new HashMap<>();
+    private static final LocationWrapperConverter WRAPPER_CONVERTER = new LocationWrapperConverter();
     private static final LocationContentValuesConverter CONTENT_VALUES_CONVERTER = new LocationContentValuesConverter();
 
     public LocationGateway() {
@@ -84,14 +82,8 @@ public class LocationGateway extends Gateway<Location> {
     }
 
     @Override
-    public CursorConverter<DataWrapper> getWrapperConverter(String level) {
-        if (WRAPPER_CONVERTERS.containsKey(level)) {
-            return WRAPPER_CONVERTERS.get(level);
-        } else {
-            LocationWrapperConverter converter = new LocationWrapperConverter(level);
-            WRAPPER_CONVERTERS.put(level, converter);
-            return converter;
-        }
+    public CursorConverter<DataWrapper> getWrapperConverter() {
+        return WRAPPER_CONVERTER;
     }
 
     @Override
@@ -122,13 +114,6 @@ class LocationEntityConverter implements CursorConverter<Location> {
 }
 
 class LocationWrapperConverter implements CursorConverter<DataWrapper> {
-
-    private final String level;
-
-    public LocationWrapperConverter(String level) {
-        this.level = level;
-    }
-
     @Override
     public DataWrapper convert(Cursor c) {
         DataWrapper dataWrapper = new DataWrapper();
@@ -136,7 +121,7 @@ class LocationWrapperConverter implements CursorConverter<DataWrapper> {
         dataWrapper.setExtId(extractString(c, COLUMN_LOCATION_EXTID));
         dataWrapper.setName(extractString(c, COLUMN_LOCATION_NAME));
         dataWrapper.getStringsPayload().put(R.string.location_description_label, extractString(c, COLUMN_LOCATION_DESCRIPTION));
-        dataWrapper.setCategory(level);
+        dataWrapper.setCategory(HOUSEHOLD);
         return dataWrapper;
     }
 }

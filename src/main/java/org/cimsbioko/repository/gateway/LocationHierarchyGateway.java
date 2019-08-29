@@ -9,9 +9,6 @@ import org.cimsbioko.repository.CursorConverter;
 import org.cimsbioko.repository.DataWrapper;
 import org.cimsbioko.repository.Query;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.cimsbioko.App.HierarchyItems.*;
 import static org.cimsbioko.repository.RepositoryUtils.extractString;
 
@@ -21,7 +18,7 @@ import static org.cimsbioko.repository.RepositoryUtils.extractString;
 public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
 
     private static final LocationHierarchyEntityConverter ENTITY_CONVERTER = new LocationHierarchyEntityConverter();
-    private static final Map<String, LocationHierarchyWrapperConverter> WRAPPER_CONVERTERS = new HashMap<>();
+    private static final LocationHierarchyWrapperConverter WRAPPER_CONVERTER = new LocationHierarchyWrapperConverter();
     private static final LocationHierarchyContentValuesConverter CONTENT_VALUES_CONVERTER = new LocationHierarchyContentValuesConverter();
 
     public LocationHierarchyGateway() {
@@ -47,14 +44,8 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
     }
 
     @Override
-    public CursorConverter<DataWrapper> getWrapperConverter(String level) {
-        if (WRAPPER_CONVERTERS.containsKey(level)) {
-            return WRAPPER_CONVERTERS.get(level);
-        } else {
-            LocationHierarchyWrapperConverter converter = new LocationHierarchyWrapperConverter(level);
-            WRAPPER_CONVERTERS.put(level, converter);
-            return converter;
-        }
+    public CursorConverter<DataWrapper> getWrapperConverter() {
+        return WRAPPER_CONVERTER;
     }
 
     @Override
@@ -79,10 +70,6 @@ class LocationHierarchyEntityConverter implements CursorConverter<LocationHierar
 }
 
 class LocationHierarchyWrapperConverter implements CursorConverter<DataWrapper> {
-
-    public LocationHierarchyWrapperConverter(String level) {
-    }
-
     @Override
     public DataWrapper convert(Cursor c) {
         DataWrapper dataWrapper = new DataWrapper();
