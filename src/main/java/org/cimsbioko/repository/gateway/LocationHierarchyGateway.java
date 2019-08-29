@@ -80,10 +80,7 @@ class LocationHierarchyEntityConverter implements CursorConverter<LocationHierar
 
 class LocationHierarchyWrapperConverter implements CursorConverter<DataWrapper> {
 
-    private final String level;
-
     public LocationHierarchyWrapperConverter(String level) {
-        this.level = level;
     }
 
     @Override
@@ -92,7 +89,7 @@ class LocationHierarchyWrapperConverter implements CursorConverter<DataWrapper> 
         dataWrapper.setExtId(extractString(c, COLUMN_HIERARCHY_EXTID));
         dataWrapper.setUuid(extractString(c, COLUMN_HIERARCHY_UUID));
         dataWrapper.setName(extractString(c, COLUMN_HIERARCHY_NAME));
-        dataWrapper.setCategory(level);
+        dataWrapper.setCategory(extractString(c, COLUMN_HIERARCHY_LEVEL));
         return dataWrapper;
     }
 }
