@@ -1,7 +1,6 @@
 package org.cimsbioko.navconfig.forms.builders;
 
 import org.cimsbioko.model.core.FieldWorker;
-import org.cimsbioko.navconfig.ProjectResources;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 
 import java.io.IOException;
@@ -10,6 +9,8 @@ import java.util.Calendar;
 import java.util.Map;
 
 import static org.cimsbioko.navconfig.forms.KnownFields.*;
+import static org.cimsbioko.navconfig.forms.KnownValues.FORM_NEEDS_REVIEW;
+import static org.cimsbioko.navconfig.forms.KnownValues.FORM_NO_REVIEW_NEEDED;
 
 public class PayloadTools {
 
@@ -29,7 +30,7 @@ public class PayloadTools {
      */
     public static void flagForReview(Map<String, String> formPayload, boolean shouldReview) {
         formPayload.put(NEEDS_REVIEW,
-                shouldReview ? ProjectResources.General.FORM_NEEDS_REVIEW : ProjectResources.General.FORM_NO_REVIEW_NEEDED);
+                shouldReview ? FORM_NEEDS_REVIEW : FORM_NO_REVIEW_NEEDED);
     }
 
     /**
@@ -45,7 +46,7 @@ public class PayloadTools {
      * @throws IOException
      */
     public static boolean requiresApproval(Map<String, String> formPayload) {
-        return ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(formPayload.get(NEEDS_REVIEW));
+        return FORM_NEEDS_REVIEW.equalsIgnoreCase(formPayload.get(NEEDS_REVIEW));
     }
 
     /**

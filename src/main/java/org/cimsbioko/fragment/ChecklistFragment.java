@@ -17,7 +17,6 @@ import android.widget.TextView;
 import org.cimsbioko.R;
 import org.cimsbioko.adapter.ChecklistAdapter;
 import org.cimsbioko.model.form.FormInstance;
-import org.cimsbioko.navconfig.ProjectResources;
 import org.cimsbioko.utilities.FormsHelper;
 
 import java.io.IOException;
@@ -25,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.cimsbioko.navconfig.forms.KnownFields.NEEDS_REVIEW;
+import static org.cimsbioko.navconfig.forms.KnownValues.FORM_NO_REVIEW_NEEDED;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.requiresApproval;
 import static org.cimsbioko.utilities.FormUtils.updateFormElement;
 import static org.cimsbioko.utilities.FormsHelper.deleteFormInstances;
@@ -200,7 +200,7 @@ public class ChecklistFragment extends Fragment {
     }
 
     private void approveForm(FormInstance instance) throws IOException {
-        updateFormElement(NEEDS_REVIEW, ProjectResources.General.FORM_NO_REVIEW_NEEDED, instance.getFilePath());
+        updateFormElement(NEEDS_REVIEW, FORM_NO_REVIEW_NEEDED, instance.getFilePath());
         FormsHelper.setStatusComplete(Uri.parse(instance.getUriString()));
     }
 

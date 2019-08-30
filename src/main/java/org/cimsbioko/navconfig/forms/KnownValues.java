@@ -1,16 +1,14 @@
-package org.cimsbioko.navconfig;
+package org.cimsbioko.navconfig.forms;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.cimsbioko.R;
 
-public class ProjectResources {
+public class KnownValues {
 
-    public static class General {
-        public static final String FORM_NEEDS_REVIEW = "1";
-        public static final String FORM_NO_REVIEW_NEEDED = "0";
-    }
+    public static final String FORM_NEEDS_REVIEW = "1";
+    public static final String FORM_NO_REVIEW_NEEDED = "0";
 
     public static final class Individual {
 

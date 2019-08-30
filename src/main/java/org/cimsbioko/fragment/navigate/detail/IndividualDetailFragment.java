@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import org.cimsbioko.R;
 import org.cimsbioko.model.core.Individual;
-import org.cimsbioko.navconfig.ProjectResources;
+import org.cimsbioko.navconfig.forms.KnownValues;
 import org.cimsbioko.data.DataWrapper;
 
 import static org.cimsbioko.data.GatewayRegistry.getIndividualGateway;
@@ -48,13 +48,13 @@ public class IndividualDetailFragment extends DetailFragment {
         container.removeAllViews();
         addTextView(container, R.string.individual_full_name_label, individual.getFirstName() + " " + individual.getLastName());
         addTextView(container, R.string.individual_other_names_label, individual.getOtherNames());
-        addTextView(container, R.string.gender_lbl, decodedLabel(ProjectResources.Individual.getIndividualStringId(individual.getGender())));
-        addTextView(container, R.string.individual_language_preference_label, decodedLabel(ProjectResources.Individual.getIndividualStringId(individual.getLanguagePreference())));
-        addTextView(container, R.string.individual_nationality_label, decodedLabel(ProjectResources.Individual.getIndividualStringId(individual.getNationality())));
+        addTextView(container, R.string.gender_lbl, decodedLabel(KnownValues.Individual.getIndividualStringId(individual.getGender())));
+        addTextView(container, R.string.individual_language_preference_label, decodedLabel(KnownValues.Individual.getIndividualStringId(individual.getLanguagePreference())));
+        addTextView(container, R.string.individual_nationality_label, decodedLabel(KnownValues.Individual.getIndividualStringId(individual.getNationality())));
         addTextView(container, R.string.individual_date_of_birth_label, individual.getDob());
         addTextView(container, R.string.uuid, individual.getUuid());
-        addTextView(container, R.string.individual_status_label, decodedLabel(ProjectResources.Individual.getIndividualStringId(individual.getStatus())));
-        addTextView(container, R.string.individual_relationship_to_head_label, decodedLabel(ProjectResources.Relationship.getRelationshipStringId(individual.getRelationshipToHead())));
+        addTextView(container, R.string.individual_status_label, decodedLabel(KnownValues.Individual.getIndividualStringId(individual.getStatus())));
+        addTextView(container, R.string.individual_relationship_to_head_label, decodedLabel(KnownValues.Relationship.getRelationshipStringId(individual.getRelationshipToHead())));
     }
 
     private String decodedLabel(int resId) {
