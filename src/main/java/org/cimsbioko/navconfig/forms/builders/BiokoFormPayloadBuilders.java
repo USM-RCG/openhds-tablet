@@ -51,12 +51,12 @@ public class BiokoFormPayloadBuilders {
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, locationUuid);
 
-            formPayload.put(ProjectFormFields.BedNet.BED_NET_CODE, generateNetCode(ctx));
+            formPayload.put("netCode", generateNetCode(ctx));
 
             // pre-fill the householdSize for this particular household
             List<Individual> individuals = getIndividualGateway().findByResidency(locationUuid).getList();
             String householdSize = Integer.toString(individuals.size());
-            formPayload.put(ProjectFormFields.BedNet.HOUSEHOLD_SIZE, householdSize);
+            formPayload.put("householdSize", householdSize);
 
             return formPayload;
         }
@@ -97,8 +97,8 @@ public class BiokoFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
 
             FieldWorker fieldWorker = ctx.getCurrentFieldWorker();
-            formPayload.put(ProjectFormFields.SprayHousehold.SUPERVISOR_EXT_ID, fieldWorker.getExtId());
-            formPayload.put(ProjectFormFields.SuperOjo.OJO_DATE, formatTime(Calendar.getInstance()));
+            formPayload.put("supervisorExtId", fieldWorker.getExtId());
+            formPayload.put("ojo_date", formatTime(Calendar.getInstance()));
 
 
             String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD).getExtId();
@@ -158,8 +158,8 @@ public class BiokoFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             List<DataWrapper> path = ctx.getHierarchyPath().getPath();
             DataWrapper locality = path.get(path.size()-1);
-            formPayload.put(ProjectFormFields.CreateMap.LOCALITY_UUID, locality.getUuid());
-            formPayload.put(ProjectFormFields.CreateMap.MAP_UUID, IdHelper.generateEntityUuid());
+            formPayload.put("localityUuid", locality.getUuid());
+            formPayload.put("mapUuid", IdHelper.generateEntityUuid());
             return formPayload;
         }
     }
@@ -172,8 +172,8 @@ public class BiokoFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             List<DataWrapper> path = ctx.getHierarchyPath().getPath();
             DataWrapper map = path.get(path.size()-1);
-            formPayload.put(ProjectFormFields.CreateSector.MAP_UUID, map.getUuid());
-            formPayload.put(ProjectFormFields.CreateSector.SECTOR_UUID, IdHelper.generateEntityUuid());
+            formPayload.put("mapUuid", map.getUuid());
+            formPayload.put("sectorUuid", IdHelper.generateEntityUuid());
             return formPayload;
         }
     }
@@ -188,7 +188,7 @@ public class BiokoFormPayloadBuilders {
             DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
-            formPayload.put(ProjectFormFields.MalariaIndicatorSurvey.SURVEY_DATE, formatDate(Calendar.getInstance()));
+            formPayload.put("survey_date", formatDate(Calendar.getInstance()));
             return formPayload;
         }
     }

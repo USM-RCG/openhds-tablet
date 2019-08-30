@@ -1,7 +1,6 @@
 package org.cimsbioko.navconfig.forms.consumers;
 
 import org.cimsbioko.model.core.LocationHierarchy;
-import org.cimsbioko.navconfig.ProjectFormFields;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.cimsbioko.data.GatewayRegistry;
@@ -18,9 +17,9 @@ public class BiokoFormPayloadConsumers {
 
             LocationHierarchyGateway hierGateway = GatewayRegistry.getLocationHierarchyGateway();
 
-            String localityUuid = formPayload.get(ProjectFormFields.CreateMap.LOCALITY_UUID);
-            String mapUuid = formPayload.get(ProjectFormFields.CreateMap.MAP_UUID);
-            String mapName = formPayload.get(ProjectFormFields.CreateMap.MAP_NAME);
+            String localityUuid = formPayload.get("localityUuid");
+            String mapUuid = formPayload.get("mapUuid");
+            String mapName = formPayload.get("mapName");
 
             LocationHierarchy locality = hierGateway.findById(localityUuid).getFirst();
 
@@ -44,9 +43,9 @@ public class BiokoFormPayloadConsumers {
 
             LocationHierarchyGateway hierGateway = GatewayRegistry.getLocationHierarchyGateway();
 
-            String mapUuid = formPayload.get(ProjectFormFields.CreateSector.MAP_UUID);
-            String sectorUuid = formPayload.get(ProjectFormFields.CreateSector.SECTOR_UUID);
-            String sectorName = formPayload.get(ProjectFormFields.CreateSector.SECTOR_NAME);
+            String mapUuid = formPayload.get("mapUuid");
+            String sectorUuid = formPayload.get("sectorUuid");
+            String sectorName = formPayload.get("sectorName");
 
             LocationHierarchy map = hierGateway.findById(mapUuid).getFirst();
             LocationHierarchy locality = hierGateway.findById(map.getParentUuid()).getFirst();

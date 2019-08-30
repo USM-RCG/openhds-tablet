@@ -58,33 +58,4 @@ public class ProjectFormFields {
         public static final String HOUSEHOLD_UUID = "householdUuid";
         public static final String HOUSEHOLD_EXTID = "householdExtId";
     }
-
-    public static final class BedNet {
-        public static final String BED_NET_CODE = "netCode";
-        public static final String HOUSEHOLD_SIZE = "householdSize";
-    }
-
-    public static final class SprayHousehold {
-        public static final String SUPERVISOR_EXT_ID = "supervisorExtId";
-    }
-
-    public static final class SuperOjo {
-        public static final String OJO_DATE = "ojo_date";
-    }
-
-    public static final class CreateMap {
-        public static final String LOCALITY_UUID = "localityUuid";
-        public static final String MAP_UUID = "mapUuid";
-        public static final String MAP_NAME = "mapName";
-    }
-
-    public static final class CreateSector {
-        public static final String MAP_UUID = "mapUuid";
-        public static final String SECTOR_UUID = "sectorUuid";
-        public static final String SECTOR_NAME = "sectorName";
-    }
-
-    public static final class MalariaIndicatorSurvey {
-        public static final String SURVEY_DATE = "survey_date";
-    }
 }
