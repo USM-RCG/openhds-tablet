@@ -8,19 +8,8 @@ import org.cimsbioko.R;
 public class ProjectResources {
 
     public static class General {
-
-        static final Map<String, Integer> General = new HashMap<>();
-
         public static final String FORM_NEEDS_REVIEW = "1";
         public static final String FORM_NO_REVIEW_NEEDED = "0";
-
-        static final String TRUE = "true";
-        static final String FALSE = "false";
-
-        static{
-            General.put(TRUE, R.string.db_val_true);
-            General.put(FALSE, R.string.db_val_false);
-        }
     }
 
     public static final class Individual {
@@ -70,21 +59,6 @@ public class ProjectResources {
             } else {
                 return 0;
             }
-        }
-    }
-
-    public static final class Location {
-
-        static final Map<String, Integer> valueLabels = new HashMap<>();
-
-        private static final String STATUS_NEVER_AVAILABLE = "neverAvailable";
-        private static final String STATUS_REJECTED_INTERVENTION = "rejectedIntervention";
-        private static final String STATUS_UNINHABITED = "uninhabited";
-
-        static {
-            valueLabels.put(STATUS_NEVER_AVAILABLE, R.string.db_val_location_status_never_available);
-            valueLabels.put(STATUS_REJECTED_INTERVENTION, R.string.db_val_location_status_rejected_intervention);
-            valueLabels.put(STATUS_UNINHABITED, R.string.db_val_location_status_uninhabited);
         }
     }
 
