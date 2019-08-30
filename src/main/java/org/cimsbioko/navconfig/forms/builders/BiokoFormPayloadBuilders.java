@@ -4,7 +4,6 @@ import org.cimsbioko.model.core.FieldWorker;
 import org.cimsbioko.model.core.Individual;
 import org.cimsbioko.model.core.Location;
 import org.cimsbioko.navconfig.HierarchyPath;
-import org.cimsbioko.navconfig.ProjectFormFields;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.cimsbioko.data.DataWrapper;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.cimsbioko.navconfig.Hierarchy.*;
+import static org.cimsbioko.navconfig.KnownFields.*;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatBuilding;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatDate;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatFloor;
@@ -39,7 +39,7 @@ public class BiokoFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
 
             // Re-use the collection time to be the bednet's distribution datetime
-            String distributionDateTime = formPayload.get(ProjectFormFields.General.COLLECTION_DATE_TIME);
+            String distributionDateTime = formPayload.get(COLLECTION_DATE_TIME);
             formPayload.put("distributionDateTime", distributionDateTime);
 
             DataWrapper location = ctx.getHierarchyPath().get(HOUSEHOLD);
@@ -48,8 +48,8 @@ public class BiokoFormPayloadBuilders {
 
             formPayload.put("locationExtId", locationExtId);
             formPayload.put("locationUuid", locationUuid);
-            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
-            formPayload.put(ProjectFormFields.General.ENTITY_UUID, locationUuid);
+            formPayload.put(ENTITY_EXTID, locationExtId);
+            formPayload.put(ENTITY_UUID, locationUuid);
 
             formPayload.put("netCode", generateNetCode(ctx));
 
@@ -105,8 +105,8 @@ public class BiokoFormPayloadBuilders {
             String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
             formPayload.put("locationExtId", locationExtId);
             formPayload.put("locationUuid", locationUuid);
-            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
-            formPayload.put(ProjectFormFields.General.ENTITY_UUID, locationUuid);
+            formPayload.put(ENTITY_EXTID, locationExtId);
+            formPayload.put(ENTITY_UUID, locationUuid);
 
             return formPayload;
         }
@@ -142,8 +142,8 @@ public class BiokoFormPayloadBuilders {
             formPayload.put("locationFloorNumber", formatFloor(1, true));
             formPayload.put("locationExtId", locationExtId);
             formPayload.put("locationUuid", locationUuid);
-            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
-            formPayload.put(ProjectFormFields.General.ENTITY_UUID, locationUuid);
+            formPayload.put(ENTITY_EXTID, locationExtId);
+            formPayload.put(ENTITY_UUID, locationUuid);
             formPayload.put("description", existing.getDescription());
 
             return formPayload;
@@ -186,8 +186,8 @@ public class BiokoFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             PayloadTools.flagForReview(formPayload, false);
             DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
-            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
-            formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
+            formPayload.put(ENTITY_EXTID, household.getExtId());
+            formPayload.put(ENTITY_UUID, household.getUuid());
             formPayload.put("survey_date", formatDate(Calendar.getInstance()));
             return formPayload;
         }
@@ -205,8 +205,8 @@ public class BiokoFormPayloadBuilders {
             HierarchyPath path = ctx.getHierarchyPath();
             DataWrapper household = path.get(HOUSEHOLD), individual = path.get(INDIVIDUAL);
 
-            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
-            formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
+            formPayload.put(ENTITY_EXTID, household.getExtId());
+            formPayload.put(ENTITY_UUID, household.getUuid());
 
             if (individual != null) {
                 formPayload.put("individualExtId", individual.getExtId());

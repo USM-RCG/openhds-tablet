@@ -13,12 +13,12 @@ import android.widget.TextView;
 
 import org.cimsbioko.R;
 import org.cimsbioko.model.form.FormInstance;
-import org.cimsbioko.navconfig.ProjectFormFields;
 
 import java.io.IOException;
 import java.util.Map;
 
 import static org.cimsbioko.model.form.FormInstance.getBinding;
+import static org.cimsbioko.navconfig.KnownFields.*;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.requiresApproval;
 
 public class LayoutUtils {
@@ -195,13 +195,13 @@ public class LayoutUtils {
             formTypeView.setText(formTypeName);
 
             // Extract and set values contained within the form instance
-            String entityId = data.get(ProjectFormFields.General.ENTITY_EXTID);
+            String entityId = data.get(ENTITY_EXTID);
             setText(view.findViewById(R.id.form_instance_list_id), entityId);
 
-            String fieldWorker = data.get(ProjectFormFields.General.FIELD_WORKER_EXTID);
+            String fieldWorker = data.get(FIELD_WORKER_EXTID);
             setText(view.findViewById(R.id.form_instance_list_fieldworker), fieldWorker);
 
-            String date = data.get(ProjectFormFields.General.COLLECTION_DATE_TIME);
+            String date = data.get(COLLECTION_DATE_TIME);
             setText(view.findViewById(R.id.form_instance_list_date), date);
 
         } catch (IOException e) {

@@ -2,7 +2,6 @@ package org.cimsbioko.navconfig.forms.consumers;
 
 import org.cimsbioko.model.core.Individual;
 import org.cimsbioko.model.core.Location;
-import org.cimsbioko.navconfig.ProjectFormFields;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.cimsbioko.navconfig.forms.adapters.IndividualFormAdapter;
@@ -15,6 +14,7 @@ import java.util.Map;
 import static org.cimsbioko.navconfig.Hierarchy.HOUSEHOLD;
 import static org.cimsbioko.data.GatewayRegistry.getIndividualGateway;
 import static org.cimsbioko.data.GatewayRegistry.getLocationGateway;
+import static org.cimsbioko.navconfig.KnownFields.ENTITY_EXTID;
 
 public class CensusFormPayloadConsumers {
 
@@ -41,7 +41,7 @@ public class CensusFormPayloadConsumers {
 
         @Override
         public void augmentInstancePayload(Map<String, String> formPayload) {
-            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get("locationExtId"));
+            formPayload.put(ENTITY_EXTID, formPayload.get("locationExtId"));
         }
     }
 

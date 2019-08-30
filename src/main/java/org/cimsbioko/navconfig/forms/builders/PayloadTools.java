@@ -1,7 +1,6 @@
 package org.cimsbioko.navconfig.forms.builders;
 
 import org.cimsbioko.model.core.FieldWorker;
-import org.cimsbioko.navconfig.ProjectFormFields;
 import org.cimsbioko.navconfig.ProjectResources;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 
@@ -9,6 +8,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
+
+import static org.cimsbioko.navconfig.KnownFields.*;
 
 public class PayloadTools {
 
@@ -27,7 +28,7 @@ public class PayloadTools {
      * @param shouldReview true for requiring review, false for no review required
      */
     public static void flagForReview(Map<String, String> formPayload, boolean shouldReview) {
-        formPayload.put(ProjectFormFields.General.NEEDS_REVIEW,
+        formPayload.put(NEEDS_REVIEW,
                 shouldReview ? ProjectResources.General.FORM_NEEDS_REVIEW : ProjectResources.General.FORM_NO_REVIEW_NEEDED);
     }
 
@@ -44,7 +45,7 @@ public class PayloadTools {
      * @throws IOException
      */
     public static boolean requiresApproval(Map<String, String> formPayload) {
-        return ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(formPayload.get(ProjectFormFields.General.NEEDS_REVIEW));
+        return ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(formPayload.get(NEEDS_REVIEW));
     }
 
     /**
@@ -57,9 +58,9 @@ public class PayloadTools {
      */
     public static void addMinimalFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
         FieldWorker fieldWorker = ctx.getCurrentFieldWorker();
-        formPayload.put(ProjectFormFields.General.FIELD_WORKER_EXTID, fieldWorker.getExtId());
-        formPayload.put(ProjectFormFields.General.FIELD_WORKER_UUID, fieldWorker.getUuid());
-        formPayload.put(ProjectFormFields.General.COLLECTION_DATE_TIME, formatTime(Calendar.getInstance()));
+        formPayload.put(FIELD_WORKER_EXTID, fieldWorker.getExtId());
+        formPayload.put(FIELD_WORKER_UUID, fieldWorker.getUuid());
+        formPayload.put(COLLECTION_DATE_TIME, formatTime(Calendar.getInstance()));
     }
 
     public static String formatTime(Calendar cal) {

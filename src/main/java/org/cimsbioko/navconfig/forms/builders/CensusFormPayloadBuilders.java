@@ -4,7 +4,6 @@ import org.cimsbioko.model.core.*;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.cimsbioko.data.DataWrapper;
-import org.cimsbioko.navconfig.ProjectFormFields;
 import org.cimsbioko.utilities.IdHelper;
 import org.cimsbioko.utilities.StringUtils;
 
@@ -13,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.cimsbioko.navconfig.Hierarchy.*;
+import static org.cimsbioko.navconfig.KnownFields.ENTITY_EXTID;
+import static org.cimsbioko.navconfig.KnownFields.ENTITY_UUID;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatBuilding;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatFloor;
 import static org.cimsbioko.data.GatewayRegistry.getIndividualGateway;
@@ -24,7 +25,7 @@ public class CensusFormPayloadBuilders {
         List<DataWrapper> hierPath = ctx.getHierarchyPath().getPath();
         int pathLen = hierPath.size();
         DataWrapper sector = hierPath.get(pathLen - 1), map = hierPath.get(pathLen - 2);
-        formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
+        formPayload.put(ENTITY_UUID, IdHelper.generateEntityUuid());
         int nextBuildingNumber = getLocationGateway().nextBuildingNumberInSector(map.getName(), sector.getName());
         formPayload.put("locationBuildingNumber", formatBuilding(nextBuildingNumber, false));
         formPayload.put("hierarchyExtId", sector.getExtId());
@@ -41,8 +42,8 @@ public class CensusFormPayloadBuilders {
         formPayload.put("individualExtId", individualExtId);
         formPayload.put("householdUuid", navigateActivity.getCurrentSelection().getUuid());
         formPayload.put("householdExtId", navigateActivity.getCurrentSelection().getExtId());
-        formPayload.put(ProjectFormFields.General.ENTITY_EXTID, individualExtId);
-        formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
+        formPayload.put(ENTITY_EXTID, individualExtId);
+        formPayload.put(ENTITY_UUID, IdHelper.generateEntityUuid());
     }
 
     @UsedByJSConfig
@@ -63,8 +64,8 @@ public class CensusFormPayloadBuilders {
             Map<String, String> formPayload = new HashMap<>();
             Location household = getLocationGateway().findById(ctx.getHierarchyPath().get(HOUSEHOLD).getUuid()).getFirst();
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
-            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
-            formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
+            formPayload.put(ENTITY_EXTID, household.getExtId());
+            formPayload.put(ENTITY_UUID, household.getUuid());
             formPayload.put("description", household.getDescription());
             return formPayload;
         }
