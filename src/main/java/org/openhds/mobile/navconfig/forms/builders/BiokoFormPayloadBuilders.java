@@ -220,6 +220,19 @@ public class BiokoFormPayloadBuilders {
     }
 
     @UsedByJSConfig
+    public static class Respar implements FormPayloadBuilder {
+        @Override
+        public Map<String, String> buildPayload(LaunchContext ctx) {
+            Map<String,String> formPayload = new HashMap<>();
+            PayloadTools.addMinimalFormPayload(formPayload, ctx);
+            DataWrapper entity = ctx.getCurrentSelection();
+            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, entity.getExtId());
+            formPayload.put(ProjectFormFields.General.ENTITY_UUID, entity.getUuid());
+            return formPayload;
+        }
+    }
+
+    @UsedByJSConfig
     public static class Minimal implements FormPayloadBuilder {
         @Override
         public Map<String, String> buildPayload(LaunchContext ctx) {
