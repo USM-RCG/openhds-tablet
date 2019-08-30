@@ -10,7 +10,8 @@ const navmods = [
   'spraying',
   'netreg',
   'mis',
-  'entomology'
+  'entomology',
+  'egmvi'
 ];
 
 navmods.map(name => require(name).module).forEach(module => config.addModule(module));
