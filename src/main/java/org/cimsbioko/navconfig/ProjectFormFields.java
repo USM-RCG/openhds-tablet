@@ -1,9 +1,5 @@
 package org.cimsbioko.navconfig;
 
-import org.cimsbioko.App;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ProjectFormFields {
 
@@ -38,29 +34,6 @@ public class ProjectFormFields {
         public static final String DESCRIPTION = "description";
         public static final String LONGITUDE = "longitude";
         public static final String LATITUDE = "latitude";
-
-        private static Map<String, String> columnsToFieldNames = new HashMap<>();
-
-        static {
-            columnsToFieldNames.put(App.Locations.COLUMN_LOCATION_HIERARCHY_UUID, HIERARCHY_UUID);
-            columnsToFieldNames.put(App.Locations.COLUMN_LOCATION_EXTID, LOCATION_EXTID);
-            columnsToFieldNames.put(App.Locations.COLUMN_LOCATION_NAME, LOCATION_NAME);
-            columnsToFieldNames.put(App.Locations.COLUMN_LOCATION_MAP_AREA_NAME, MAP_AREA_NAME);
-            columnsToFieldNames.put(App.Locations.COLUMN_LOCATION_SECTOR_NAME, SECTOR_NAME);
-            columnsToFieldNames.put(App.Locations.COLUMN_LOCATION_BUILDING_NUMBER, BUILDING_NUMBER);
-            columnsToFieldNames.put(App.Locations.COLUMN_LOCATION_DESCRIPTION, DESCRIPTION);
-            columnsToFieldNames.put(App.Locations.COLUMN_LOCATION_LONGITUDE, LONGITUDE);
-            columnsToFieldNames.put(App.Locations.COLUMN_LOCATION_LATITUDE, LATITUDE);
-            columnsToFieldNames.put(App.Locations.COLUMN_LOCATION_UUID, General.ENTITY_UUID);
-        }
-
-        public static String getFieldNameFromColumn(String column) {
-            if (columnsToFieldNames.containsKey(column)) {
-                return columnsToFieldNames.get(column);
-            } else {
-                return null;
-            }
-        }
     }
 
     public static final class Individuals {
@@ -86,36 +59,6 @@ public class ProjectFormFields {
 
         public static final String HOUSEHOLD_UUID = "householdUuid";
         public static final String HOUSEHOLD_EXTID = General.HOUSEHOLD_STATE_FIELD_NAME;
-
-        private static Map<String, String> columnsToFieldNames = new HashMap<>();
-
-        static {
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_EXTID, INDIVIDUAL_EXTID);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME, FIRST_NAME);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_LAST_NAME, LAST_NAME);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES, OTHER_NAMES);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_DOB, DATE_OF_BIRTH);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_GENDER, GENDER);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER, PHONE_NUMBER);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER, OTHER_PHONE_NUMBER);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME, POINT_OF_CONTACT_NAME);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER, POINT_OF_CONTACT_PHONE_NUMBER);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE, LANGUAGE_PREFERENCE);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_OTHER_ID, DIP);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, HOUSEHOLD_UUID);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_STATUS, STATUS);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_NATIONALITY, NATIONALITY);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_UUID, General.ENTITY_UUID);
-            columnsToFieldNames.put(App.Individuals.COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD, RELATIONSHIP_TO_HEAD);
-        }
-
-        public static String getFieldNameFromColumn(String column) {
-            if (columnsToFieldNames.containsKey(column)) {
-                return columnsToFieldNames.get(column);
-            } else {
-                return null;
-            }
-        }
     }
 
     public static final class BedNet {
