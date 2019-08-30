@@ -43,7 +43,7 @@ public class PayloadTools {
      * @return true if the form contains an element named 'needsReview' with text value of '0git ll', false otherwise
      * @throws IOException
      */
-    public static boolean requiresApproval(Map<String, String> formPayload) throws IOException {
+    public static boolean requiresApproval(Map<String, String> formPayload) {
         return ProjectResources.General.FORM_NEEDS_REVIEW.equalsIgnoreCase(formPayload.get(ProjectFormFields.General.NEEDS_REVIEW));
     }
 
