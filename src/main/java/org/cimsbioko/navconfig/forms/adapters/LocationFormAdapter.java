@@ -5,22 +5,21 @@ import org.cimsbioko.model.core.Location;
 import java.util.Map;
 
 import static org.cimsbioko.navconfig.ProjectFormFields.General.ENTITY_UUID;
-import static org.cimsbioko.navconfig.ProjectFormFields.Locations.*;
 
 public class LocationFormAdapter {
 
     public static Location fromForm(Map<String, String> data) {
         Location l = new Location();
         l.setUuid(data.get(ENTITY_UUID));
-        l.setExtId(data.get(LOCATION_EXTID));
-        l.setName(data.get(LOCATION_NAME));
-        l.setHierarchyUuid(data.get(HIERARCHY_UUID));
-        l.setSectorName(data.get(SECTOR_NAME));
-        l.setMapAreaName(data.get(MAP_AREA_NAME));
-        l.setBuildingNumber(Integer.parseInt(data.get(BUILDING_NUMBER)));
-        l.setDescription(data.get(DESCRIPTION));
-        l.setLongitude(data.get(LONGITUDE));
-        l.setLatitude(data.get(LATITUDE));
+        l.setExtId(data.get("locationExtId"));
+        l.setName(data.get("locationName"));
+        l.setHierarchyUuid(data.get("hierarchyUuid"));
+        l.setSectorName(data.get("sectorName"));
+        l.setMapAreaName(data.get("mapAreaName"));
+        l.setBuildingNumber(Integer.parseInt(data.get("locationBuildingNumber")));
+        l.setDescription(data.get("description"));
+        l.setLongitude(data.get("longitude"));
+        l.setLatitude(data.get("latitude"));
         return l;
     }
 }

@@ -41,7 +41,7 @@ public class CensusFormPayloadConsumers {
 
         @Override
         public void augmentInstancePayload(Map<String, String> formPayload) {
-            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get(ProjectFormFields.Locations.LOCATION_EXTID));
+            formPayload.put(ProjectFormFields.General.ENTITY_EXTID, formPayload.get("locationExtId"));
         }
     }
 
@@ -79,7 +79,7 @@ public class CensusFormPayloadConsumers {
         @Override
         public void augmentInstancePayload(Map<String, String> formPayload) {
             // head of the household is always "self" to the head of household
-            formPayload.put(ProjectFormFields.Individuals.RELATIONSHIP_TO_HEAD, "1");
+            formPayload.put("individualRelationshipToHeadOfHousehold", "1");
         }
     }
 }

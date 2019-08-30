@@ -26,21 +26,21 @@ public class CensusFormPayloadBuilders {
         DataWrapper sector = hierPath.get(pathLen - 1), map = hierPath.get(pathLen - 2);
         formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
         int nextBuildingNumber = getLocationGateway().nextBuildingNumberInSector(map.getName(), sector.getName());
-        formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, formatBuilding(nextBuildingNumber, false));
-        formPayload.put(ProjectFormFields.Locations.HIERARCHY_EXTID, sector.getExtId());
-        formPayload.put(ProjectFormFields.Locations.HIERARCHY_UUID, sector.getUuid());
-        formPayload.put(ProjectFormFields.Locations.HIERARCHY_PARENT_UUID, map.getUuid());
-        formPayload.put(ProjectFormFields.Locations.SECTOR_NAME, sector.getName());
-        formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, formatFloor(1, false));
-        formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, map.getName());
+        formPayload.put("locationBuildingNumber", formatBuilding(nextBuildingNumber, false));
+        formPayload.put("hierarchyExtId", sector.getExtId());
+        formPayload.put("hierarchyUuid", sector.getUuid());
+        formPayload.put("hierarchyParentUuid", map.getUuid());
+        formPayload.put("sectorName", sector.getName());
+        formPayload.put("locationFloorNumber", formatFloor(1, false));
+        formPayload.put("mapAreaName", map.getName());
     }
 
     private static void addNewIndividualPayload(Map<String, String> formPayload, LaunchContext navigateActivity) {
         DataWrapper locationDataWrapper = navigateActivity.getHierarchyPath().get(HOUSEHOLD);
         String individualExtId = IdHelper.generateIndividualExtId(locationDataWrapper);
-        formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, individualExtId);
-        formPayload.put(ProjectFormFields.Individuals.HOUSEHOLD_UUID, navigateActivity.getCurrentSelection().getUuid());
-        formPayload.put(ProjectFormFields.Individuals.HOUSEHOLD_EXTID, navigateActivity.getCurrentSelection().getExtId());
+        formPayload.put("individualExtId", individualExtId);
+        formPayload.put("householdUuid", navigateActivity.getCurrentSelection().getUuid());
+        formPayload.put("householdExtId", navigateActivity.getCurrentSelection().getExtId());
         formPayload.put(ProjectFormFields.General.ENTITY_EXTID, individualExtId);
         formPayload.put(ProjectFormFields.General.ENTITY_UUID, IdHelper.generateEntityUuid());
     }
@@ -65,7 +65,7 @@ public class CensusFormPayloadBuilders {
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, household.getExtId());
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
-            formPayload.put(ProjectFormFields.Locations.DESCRIPTION, household.getDescription());
+            formPayload.put("description", household.getDescription());
             return formPayload;
         }
     }
@@ -87,15 +87,15 @@ public class CensusFormPayloadBuilders {
             // pre-fill contact name and number as best we can without household role info
             if (residents.size() == 1) {
                 Individual head = residents.get(0);
-                formPayload.put(ProjectFormFields.Individuals.POINT_OF_CONTACT_NAME, Individual.getFullName(head));
-                formPayload.put(ProjectFormFields.Individuals.POINT_OF_CONTACT_PHONE_NUMBER, head.getPhoneNumber());
+                formPayload.put("individualPointOfContactName", Individual.getFullName(head));
+                formPayload.put("individualPointOfContactPhoneNumber", head.getPhoneNumber());
             } else {
                 for (Individual resident : residents) {
                     String contactName = resident.getPointOfContactName(),
                             contactNumber = resident.getPointOfContactPhoneNumber();
                     if (!StringUtils.isEmpty(contactName) && !StringUtils.isEmpty(contactNumber)) {
-                        formPayload.put(ProjectFormFields.Individuals.POINT_OF_CONTACT_NAME, contactName);
-                        formPayload.put(ProjectFormFields.Individuals.POINT_OF_CONTACT_PHONE_NUMBER, contactNumber);
+                        formPayload.put("individualPointOfContactName", contactName);
+                        formPayload.put("individualPointOfContactPhoneNumber", contactNumber);
                         break;
                     }
                 }
@@ -112,7 +112,7 @@ public class CensusFormPayloadBuilders {
             Map<String,String> formPayload = new HashMap<>();
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             addNewIndividualPayload(formPayload, ctx);
-            formPayload.put(ProjectFormFields.Individuals.HEAD_PREFILLED_FLAG, "true");
+            formPayload.put("headPrefilledFlag", "true");
             return formPayload;
         }
     }
@@ -124,7 +124,7 @@ public class CensusFormPayloadBuilders {
             Map<String,String> formPayload = new HashMap<>();
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             DataWrapper individual = ctx.getHierarchyPath().get(INDIVIDUAL);
-            formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_UUID, individual.getUuid());
+            formPayload.put("individualUuid", individual.getUuid());
             return formPayload;
         }
     }

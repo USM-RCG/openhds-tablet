@@ -40,14 +40,14 @@ public class BiokoFormPayloadBuilders {
 
             // Re-use the collection time to be the bednet's distribution datetime
             String distributionDateTime = formPayload.get(ProjectFormFields.General.COLLECTION_DATE_TIME);
-            formPayload.put(ProjectFormFields.General.DISTRIBUTION_DATE_TIME, distributionDateTime);
+            formPayload.put("distributionDateTime", distributionDateTime);
 
             DataWrapper location = ctx.getHierarchyPath().get(HOUSEHOLD);
             String locationExtId = location.getExtId();
             String locationUuid = location.getUuid();
 
-            formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
-            formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
+            formPayload.put("locationExtId", locationExtId);
+            formPayload.put("locationUuid", locationUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, locationUuid);
 
@@ -80,8 +80,8 @@ public class BiokoFormPayloadBuilders {
             Map<String, String> formPayload = new HashMap<>();
             PayloadTools.addMinimalFormPayload(formPayload, ctx);
             DataWrapper household = ctx.getHierarchyPath().get(HOUSEHOLD);
-            formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, household.getExtId());
-            formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, household.getUuid());
+            formPayload.put("locationExtId", household.getExtId());
+            formPayload.put("locationUuid", household.getUuid());
             return formPayload;
         }
     }
@@ -103,8 +103,8 @@ public class BiokoFormPayloadBuilders {
 
             String locationExtId = ctx.getHierarchyPath().get(HOUSEHOLD).getExtId();
             String locationUuid = ctx.getHierarchyPath().get(HOUSEHOLD).getUuid();
-            formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
-            formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
+            formPayload.put("locationExtId", locationExtId);
+            formPayload.put("locationUuid", locationUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, locationUuid);
 
@@ -136,15 +136,15 @@ public class BiokoFormPayloadBuilders {
             Location existing = locationGateway.findById(locationUuid).getFirst();
             int nextBuildingNumber = locationGateway.nextBuildingNumberInSector(map.getName(), sector.getName());
 
-            formPayload.put(ProjectFormFields.Locations.MAP_AREA_NAME, map.getName());
-            formPayload.put(ProjectFormFields.Locations.SECTOR_NAME, sector.getName());
-            formPayload.put(ProjectFormFields.Locations.BUILDING_NUMBER, formatBuilding(nextBuildingNumber, true));
-            formPayload.put(ProjectFormFields.Locations.FLOOR_NUMBER, formatFloor(1, true));
-            formPayload.put(ProjectFormFields.Locations.LOCATION_EXTID, locationExtId);
-            formPayload.put(ProjectFormFields.Locations.LOCATION_UUID, locationUuid);
+            formPayload.put("mapAreaName", map.getName());
+            formPayload.put("sectorName", sector.getName());
+            formPayload.put("locationBuildingNumber", formatBuilding(nextBuildingNumber, true));
+            formPayload.put("locationFloorNumber", formatFloor(1, true));
+            formPayload.put("locationExtId", locationExtId);
+            formPayload.put("locationUuid", locationUuid);
             formPayload.put(ProjectFormFields.General.ENTITY_EXTID, locationExtId);
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, locationUuid);
-            formPayload.put(ProjectFormFields.Locations.DESCRIPTION, existing.getDescription());
+            formPayload.put("description", existing.getDescription());
 
             return formPayload;
         }
@@ -209,8 +209,8 @@ public class BiokoFormPayloadBuilders {
             formPayload.put(ProjectFormFields.General.ENTITY_UUID, household.getUuid());
 
             if (individual != null) {
-                formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_EXTID, individual.getExtId());
-                formPayload.put(ProjectFormFields.Individuals.INDIVIDUAL_UUID, individual.getUuid());
+                formPayload.put("individualExtId", individual.getExtId());
+                formPayload.put("individualUuid", individual.getUuid());
             }
 
             return formPayload;
