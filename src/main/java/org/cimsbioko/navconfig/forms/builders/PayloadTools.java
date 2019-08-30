@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
-import static org.cimsbioko.navconfig.KnownFields.*;
+import static org.cimsbioko.navconfig.forms.KnownFields.*;
 
 public class PayloadTools {
 

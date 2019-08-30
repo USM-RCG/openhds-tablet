@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.cimsbioko.navconfig.Hierarchy.*;
-import static org.cimsbioko.navconfig.KnownFields.*;
+import static org.cimsbioko.navconfig.forms.KnownFields.*;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatBuilding;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatDate;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatFloor;

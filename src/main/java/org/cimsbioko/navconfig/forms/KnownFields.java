@@ -1,4 +1,4 @@
-package org.cimsbioko.navconfig;
+package org.cimsbioko.navconfig.forms;
 
 
 public class KnownFields {

@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.cimsbioko.navconfig.Hierarchy.HOUSEHOLD;
 import static org.cimsbioko.data.GatewayRegistry.getIndividualGateway;
 import static org.cimsbioko.data.GatewayRegistry.getLocationGateway;
-import static org.cimsbioko.navconfig.KnownFields.ENTITY_EXTID;
+import static org.cimsbioko.navconfig.forms.KnownFields.ENTITY_EXTID;
 
 public class CensusFormPayloadConsumers {
 

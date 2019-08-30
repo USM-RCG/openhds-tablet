@@ -4,7 +4,7 @@ import org.cimsbioko.model.core.Individual;
 
 import java.util.Map;
 
-import static org.cimsbioko.navconfig.KnownFields.ENTITY_UUID;
+import static org.cimsbioko.navconfig.forms.KnownFields.ENTITY_UUID;
 
 public class IndividualFormAdapter {
 

@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.cimsbioko.navconfig.Hierarchy.*;
-import static org.cimsbioko.navconfig.KnownFields.ENTITY_EXTID;
-import static org.cimsbioko.navconfig.KnownFields.ENTITY_UUID;
+import static org.cimsbioko.navconfig.forms.KnownFields.ENTITY_EXTID;
+import static org.cimsbioko.navconfig.forms.KnownFields.ENTITY_UUID;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatBuilding;
 import static org.cimsbioko.navconfig.forms.builders.PayloadTools.formatFloor;
 import static org.cimsbioko.data.GatewayRegistry.getIndividualGateway;
