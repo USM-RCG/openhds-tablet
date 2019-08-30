@@ -9,25 +9,25 @@ import static org.cimsbioko.navconfig.ProjectFormFields.Individuals.getFieldName
 
 public class IndividualFormAdapter {
 
-    public static Individual fromForm(Map<String, String> formInstanceData) {
-        Individual individual = new Individual();
-        individual.setUuid(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_UUID)));
-        individual.setExtId(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_EXTID)));
-        individual.setFirstName(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_FIRST_NAME)));
-        individual.setLastName(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_LAST_NAME)));
-        individual.setDob(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_DOB)));
-        individual.setGender(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_GENDER)));
-        individual.setCurrentResidenceUuid(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID)));
-        individual.setOtherId(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_OTHER_ID)));
-        individual.setOtherNames(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_OTHER_NAMES)));
-        individual.setPhoneNumber(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_PHONE_NUMBER)));
-        individual.setOtherPhoneNumber(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER)));
-        individual.setPointOfContactName(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME)));
-        individual.setPointOfContactPhoneNumber(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER)));
-        individual.setLanguagePreference(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE)));
-        individual.setStatus(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_STATUS)));
-        individual.setNationality(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_NATIONALITY)));
-        individual.setRelationshipToHead(formInstanceData.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD)));
-        return individual;
+    public static Individual fromForm(Map<String, String> data) {
+        Individual i = new Individual();
+        i.setUuid(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_UUID)));
+        i.setExtId(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_EXTID)));
+        i.setFirstName(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_FIRST_NAME)));
+        i.setLastName(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_LAST_NAME)));
+        i.setDob(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_DOB)));
+        i.setGender(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_GENDER)));
+        i.setCurrentResidenceUuid(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID)));
+        i.setOtherId(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_OTHER_ID)));
+        i.setOtherNames(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_OTHER_NAMES)));
+        i.setPhoneNumber(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_PHONE_NUMBER)));
+        i.setOtherPhoneNumber(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER)));
+        i.setPointOfContactName(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME)));
+        i.setPointOfContactPhoneNumber(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER)));
+        i.setLanguagePreference(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE)));
+        i.setStatus(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_STATUS)));
+        i.setNationality(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_NATIONALITY)));
+        i.setRelationshipToHead(data.get(getFieldNameFromColumn(COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD)));
+        return i;
     }
 }

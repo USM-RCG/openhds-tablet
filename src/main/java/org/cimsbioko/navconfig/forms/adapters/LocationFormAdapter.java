@@ -9,18 +9,18 @@ import static org.cimsbioko.navconfig.ProjectFormFields.Locations.getFieldNameFr
 
 public class LocationFormAdapter {
 
-    public static Location fromForm(Map<String, String> formInstanceData) {
-        Location location = new Location();
-        location.setUuid(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_UUID)));
-        location.setExtId(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_EXTID)));
-        location.setName(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_NAME)));
-        location.setHierarchyUuid(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_HIERARCHY_UUID)));
-        location.setSectorName(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_SECTOR_NAME)));
-        location.setMapAreaName(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_MAP_AREA_NAME)));
-        location.setBuildingNumber(Integer.parseInt(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_BUILDING_NUMBER))));
-        location.setDescription(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_DESCRIPTION)));
-        location.setLongitude(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_LONGITUDE)));
-        location.setLatitude(formInstanceData.get(getFieldNameFromColumn(COLUMN_LOCATION_LATITUDE)));
-        return location;
+    public static Location fromForm(Map<String, String> data) {
+        Location l = new Location();
+        l.setUuid(data.get(getFieldNameFromColumn(COLUMN_LOCATION_UUID)));
+        l.setExtId(data.get(getFieldNameFromColumn(COLUMN_LOCATION_EXTID)));
+        l.setName(data.get(getFieldNameFromColumn(COLUMN_LOCATION_NAME)));
+        l.setHierarchyUuid(data.get(getFieldNameFromColumn(COLUMN_LOCATION_HIERARCHY_UUID)));
+        l.setSectorName(data.get(getFieldNameFromColumn(COLUMN_LOCATION_SECTOR_NAME)));
+        l.setMapAreaName(data.get(getFieldNameFromColumn(COLUMN_LOCATION_MAP_AREA_NAME)));
+        l.setBuildingNumber(Integer.parseInt(data.get(getFieldNameFromColumn(COLUMN_LOCATION_BUILDING_NUMBER))));
+        l.setDescription(data.get(getFieldNameFromColumn(COLUMN_LOCATION_DESCRIPTION)));
+        l.setLongitude(data.get(getFieldNameFromColumn(COLUMN_LOCATION_LONGITUDE)));
+        l.setLatitude(data.get(getFieldNameFromColumn(COLUMN_LOCATION_LATITUDE)));
+        return l;
     }
 }
