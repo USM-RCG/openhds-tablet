@@ -13,8 +13,6 @@ public class ProjectFormFields {
         public static final String FIELD_WORKER_EXTID = "fieldWorkerExtId";
 
         public static final String DISTRIBUTION_DATE_TIME = "distributionDateTime";
-
-        public static final String HOUSEHOLD_STATE_FIELD_NAME = "householdExtId";
     }
 
     public static final class Locations {
@@ -58,7 +56,7 @@ public class ProjectFormFields {
         public static final String STATUS = "individualMemberStatus";
 
         public static final String HOUSEHOLD_UUID = "householdUuid";
-        public static final String HOUSEHOLD_EXTID = General.HOUSEHOLD_STATE_FIELD_NAME;
+        public static final String HOUSEHOLD_EXTID = "householdExtId";
     }
 
     public static final class BedNet {
