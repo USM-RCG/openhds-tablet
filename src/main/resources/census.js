@@ -49,17 +49,21 @@ m.launcher({
 
 m.launcher({ level: 'household', label: 'census.locationEvaluationLabel', bind: 'location_evaluation' });
 
+function housePopulated(uuid) {
+    return db.individuals.findByResidency(uuid).exists();
+}
+
 m.launcher({
     level: 'household',
     label: 'census.headOfHouseholdLabel',
     bind: 'household_head',
-    filter: new ji.CensusFormFilters.AddHeadOfHousehold() });
+    relevant: ctx => !housePopulated(ctx.hierarchyPath.get('household').uuid) });
 
 m.launcher({
     level: 'household',
     label: 'census.householdMemberLabel',
     bind: 'household_member',
-    filter: ji.InvertedFilter.invert(new ji.CensusFormFilters.AddHeadOfHousehold()) });
+    relevant: ctx => housePopulated(ctx.hierarchyPath.get('household').uuid) });
 
 m.launcher({ level: 'household', label: 'census.bednetsLabel', bind: 'bed_net' });
 

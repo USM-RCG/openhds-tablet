@@ -28,7 +28,7 @@ Builder.prototype.launcher = function(l) {
     this.launchers[level] = this.launchers[level] || [];
     this.launchers[level].push(new ji.Launcher({
         getLabel() { return l.label? config.getString(l.label) : 'Label'; },
-        relevantFor(ctx) { return l.filter? l.filter.shouldDisplay(ctx) : true; },
+        relevantFor(ctx) { return l.relevant? l.relevant(ctx) : true; },
         getBinding() { return builder.binds[l.bind]; }
     }));
     return builder;

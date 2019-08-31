@@ -5,6 +5,7 @@ import org.cimsbioko.navconfig.forms.Binding;
 import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.LazilyLoadedCtor;
+import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.commonjs.module.Require;
 import org.mozilla.javascript.commonjs.module.RequireBuilder;
@@ -16,8 +17,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static java.util.ResourceBundle.getBundle;
+import static org.cimsbioko.data.GatewayRegistry.*;
 import static org.mozilla.javascript.Context.VERSION_ES6;
 
 
@@ -80,6 +83,7 @@ public class NavigatorConfig {
                 Require require = rb.createRequire(ctx, scope);
                 require.install(scope);
                 scope.put("config", scope, this);
+                scope.put("db", scope, new Gateways());
                 Log.i(TAG, "loading init module");
                 require.requireMain(ctx, INIT_MODULE);
             } finally {
@@ -219,4 +223,97 @@ public class NavigatorConfig {
     public Binding getBinding(String name) {
         return bindings.get(name);
     }
+}
+
+
+class Gateways implements Scriptable {
+
+    private final String [] PROP_NAMES = {"individuals", "locations", "hierarchy", "fieldworkers"};
+    private final Set<String> PROP_SET = Collections.unmodifiableSet(new HashSet<>(asList(PROP_NAMES)));
+
+    @Override
+    public String getClassName() {
+        return Gateways.class.getSimpleName();
+    }
+
+    @Override
+    public Object get(String name, Scriptable start) {
+        switch (name) {
+            case "individuals":
+                return getIndividualGateway();
+            case "locations":
+                return getLocationGateway();
+            case "hierarchy":
+                return getLocationHierarchyGateway();
+            case "fieldworkers":
+                return getFieldWorkerGateway();
+            default:
+                return NOT_FOUND;
+        }
+    }
+
+    @Override
+    public Object get(int index, Scriptable start) {
+        return NOT_FOUND;
+    }
+
+    @Override
+    public boolean has(String name, Scriptable start) {
+        return PROP_SET.contains(name);
+    }
+
+    @Override
+    public boolean has(int index, Scriptable start) {
+        return false;
+    }
+
+    @Override
+    public void put(String name, Scriptable start, Object value) {
+    }
+
+    @Override
+    public void put(int index, Scriptable start, Object value) {
+    }
+
+    @Override
+    public void delete(String name) {
+    }
+
+    @Override
+    public void delete(int index) {
+    }
+
+    @Override
+    public Scriptable getPrototype() {
+        return null;
+    }
+
+    @Override
+    public void setPrototype(Scriptable prototype) {
+    }
+
+    @Override
+    public Scriptable getParentScope() {
+        return null;
+    }
+
+    @Override
+    public void setParentScope(Scriptable parent) {
+    }
+
+    @Override
+    public Object[] getIds() {
+        return PROP_NAMES;
+    }
+
+    @Override
+    public Object getDefaultValue(Class<?> hint) {
+        return null;
+    }
+
+    @Override
+    public boolean hasInstance(Scriptable instance) {
+        return false;
+    }
+
 }
