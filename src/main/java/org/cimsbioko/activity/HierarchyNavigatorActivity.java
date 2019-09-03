@@ -34,7 +34,7 @@ import org.cimsbioko.navconfig.db.QueryHelper;
 import org.cimsbioko.navconfig.forms.Binding;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.Launcher;
-import org.cimsbioko.navconfig.forms.consumers.FormPayloadConsumer;
+import org.cimsbioko.navconfig.forms.FormPayloadConsumer;
 import org.cimsbioko.provider.DatabaseAdapter;
 import org.cimsbioko.data.DataWrapper;
 import org.cimsbioko.utilities.ConfigUtils;

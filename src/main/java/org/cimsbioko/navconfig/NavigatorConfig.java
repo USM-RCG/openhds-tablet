@@ -49,6 +49,7 @@ public class NavigatorConfig {
         init();
     }
 
+    @UsedByJSConfig
     public void setHierarchy(Hierarchy hierarchy) {
         this.hierarchy = hierarchy;
     }
@@ -75,6 +76,7 @@ public class NavigatorConfig {
                 ScriptableObject scope = ctx.initSafeStandardObjects();
                 new LazilyLoadedCtor(scope, "JavaImporter", "org.mozilla.javascript.ImporterTopLevel", false);
                 new LazilyLoadedCtor(scope, "org", "org.mozilla.javascript.NativeJavaTopPackage", false);
+                new LazilyLoadedCtor(scope, "java", "org.mozilla.javascript.NativeJavaTopPackage", false);
                 RequireBuilder rb = new RequireBuilder()
                         .setSandboxed(true)
                         .setModuleScriptProvider(
@@ -83,7 +85,7 @@ public class NavigatorConfig {
                 Require require = rb.createRequire(ctx, scope);
                 require.install(scope);
                 scope.put("config", scope, this);
-                scope.put("db", scope, new Gateways());
+                scope.put("db", scope, new Gateways(scope));
                 Log.i(TAG, "loading init module");
                 require.requireMain(ctx, INIT_MODULE);
             } finally {
@@ -228,8 +230,13 @@ public class NavigatorConfig {
 
 class Gateways implements Scriptable {
 
-    private final String [] PROP_NAMES = {"individuals", "locations", "hierarchy", "fieldworkers"};
-    private final Set<String> PROP_SET = Collections.unmodifiableSet(new HashSet<>(asList(PROP_NAMES)));
+    private static final String [] PROP_NAMES = {"individuals", "locations", "hierarchy", "fieldworkers"};
+    private static final Set<String> PROP_SET = Collections.unmodifiableSet(new HashSet<>(asList(PROP_NAMES)));
+    private final Scriptable scope;
+
+    public Gateways(Scriptable scope) {
+        this.scope = scope;
+    }
 
     @Override
     public String getClassName() {
@@ -238,18 +245,26 @@ class Gateways implements Scriptable {
 
     @Override
     public Object get(String name, Scriptable start) {
+        Object result;
         switch (name) {
             case "individuals":
-                return getIndividualGateway();
+                result = getIndividualGateway();
+                break;
             case "locations":
-                return getLocationGateway();
+                result = getLocationGateway();
+                break;
             case "hierarchy":
-                return getLocationHierarchyGateway();
+                result = getLocationHierarchyGateway();
+                break;
             case "fieldworkers":
-                return getFieldWorkerGateway();
+                result = getFieldWorkerGateway();
+                break;
             default:
                 return NOT_FOUND;
         }
+        Context ctx = Context.getCurrentContext();
+        Scriptable scope = ScriptableObject.getTopLevelScope(start);
+        return ctx.getWrapFactory().wrap(ctx, scope, result, null);
     }
 
     @Override
@@ -294,7 +309,7 @@ class Gateways implements Scriptable {
 
     @Override
     public Scriptable getParentScope() {
-        return null;
+        return scope;
     }
 
     @Override

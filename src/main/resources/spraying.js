@@ -1,16 +1,16 @@
-const ji = JavaImporter(org.cimsbioko.navconfig.forms.builders);
-const navmod = require('navmod');
-const m = new navmod.Builder();
+const builders = require('builders'),
+    navmod = require('navmod'),
+    m = new navmod.Builder();
 
 m.bind({
     form: 'irs_sp1_r26',
     label: 'sprayingFormLabel',
-    builder: new ji.BiokoFormPayloadBuilders.DefaultHousehold() });
+    builder: builders.household });
 
 m.bind({
     form: 'super_ojo',
     label: 'superOjoFormLabel',
-    builder: new ji.BiokoFormPayloadBuilders.SuperOjo() });
+    builder: builders.superojo });
 
 m.launcher({ level: 'household', label: 'spraying.sprayingLabel', bind: 'irs_sp1_r26' });
 m.launcher({ level: 'household', label: 'spraying.superOjoLabel', bind: 'super_ojo' });

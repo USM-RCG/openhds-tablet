@@ -1,8 +1,6 @@
 "use strict";
 
-const hierarchy = require('hierarchy').hierarchy;
-
-config.setHierarchy(hierarchy);
+config.hierarchy = require('hierarchy').hierarchy;
 
 const navmods = [
   'gisops',

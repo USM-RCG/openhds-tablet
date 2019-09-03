@@ -1,9 +1,9 @@
 const ji = JavaImporter(
     org.cimsbioko.navconfig,
     org.cimsbioko.navconfig.forms,
-    org.cimsbioko.navconfig.forms.consumers,
     org.cimsbioko.fragment.navigate.detail
 );
+const defaultConsumer = require('consumers').default;
 
 function Builder() {
     this.binds = {};
@@ -18,7 +18,7 @@ Builder.prototype.bind = function(b) {
         getForm() { return b.form; },
         getLabel() { return config.getString(b.label); },
         getBuilder() { return b.builder; },
-        getConsumer() { return b.consumer || new ji.DefaultConsumer(); }
+        getConsumer() { return b.consumer || defaultConsumer }
     });
     return this;
 };

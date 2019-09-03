@@ -1,6 +1,4 @@
-package org.cimsbioko.navconfig.forms.consumers;
-
-import org.cimsbioko.navconfig.forms.LaunchContext;
+package org.cimsbioko.navconfig.forms;
 
 import java.util.Map;
 

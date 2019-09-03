@@ -25,7 +25,7 @@ import java.util.List;
 
 import static org.cimsbioko.navconfig.forms.KnownFields.NEEDS_REVIEW;
 import static org.cimsbioko.navconfig.forms.KnownValues.FORM_NO_REVIEW_NEEDED;
-import static org.cimsbioko.navconfig.forms.builders.PayloadTools.requiresApproval;
+import static org.cimsbioko.navconfig.forms.PayloadTools.requiresApproval;
 import static org.cimsbioko.utilities.FormUtils.updateFormElement;
 import static org.cimsbioko.utilities.FormsHelper.deleteFormInstances;
 

@@ -1,11 +1,11 @@
-const ji = JavaImporter(org.cimsbioko.navconfig.forms.builders);
-const navmod = require('navmod');
-const m = new navmod.Builder();
+const builders = require('builders'),
+    navmod = require('navmod'),
+    m = new navmod.Builder();
 
 m.bind({
     form: 'malaria_indicator_survey',
     label: 'mis.formLabel',
-    builder: new ji.BiokoFormPayloadBuilders.MalariaIndicatorSurvey() });
+    builder: builders.mis });
 
 m.launcher({ level: 'household', label: 'mis.formLabel', bind: 'malaria_indicator_survey' });
 

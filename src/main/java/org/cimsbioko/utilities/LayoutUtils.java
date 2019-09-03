@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static org.cimsbioko.model.form.FormInstance.getBinding;
 import static org.cimsbioko.navconfig.forms.KnownFields.*;
-import static org.cimsbioko.navconfig.forms.builders.PayloadTools.requiresApproval;
+import static org.cimsbioko.navconfig.forms.PayloadTools.requiresApproval;
 
 public class LayoutUtils {
 

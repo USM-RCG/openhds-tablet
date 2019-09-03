@@ -1,11 +1,11 @@
-const ji = JavaImporter(org.cimsbioko.navconfig.forms.builders);
-const navmod = require('navmod');
-const m = new navmod.Builder();
+const builders = require('builders'),
+    navmod = require('navmod'),
+    m = new navmod.Builder();
 
 m.bind({
     form: 'net_register',
     label: 'netRegFormLabel',
-    builder: new ji.BiokoFormPayloadBuilders.Minimal()});
+    builder: builders.minimal });
 
 m.launcher({ label: 'netRegFormLabel', bind: 'net_register' });
 

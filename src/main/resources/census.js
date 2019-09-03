@@ -1,46 +1,43 @@
-const ji = JavaImporter(
-    org.cimsbioko.navconfig.forms.filters,
-    org.cimsbioko.navconfig.forms.builders,
-    org.cimsbioko.navconfig.forms.consumers
-);
-const navmod = require('navmod');
-const m = new navmod.Builder();
+const consumers = require('consumers'),
+    builders = require('builders'),
+    navmod = require('navmod'),
+    m = new navmod.Builder();
 
 m.bind({
     name: 'household',
     form: 'location',
     label: 'householdFormLabel',
-    builder: new ji.CensusFormPayloadBuilders.AddLocation(),
-    consumer: new ji.CensusFormPayloadConsumers.AddLocation() });
+    builder: builders.location,
+    consumer: consumers.location });
 
 m.bind({
     form: 'location_evaluation',
     label: 'locationEvaluationFormLabel',
-    builder: new ji.CensusFormPayloadBuilders.LocationEvaluation() });
+    builder: builders.locationEval });
 
 m.bind({
     form: 'bed_net',
     label: 'bedNetFormLabel',
-    builder: new ji.BiokoFormPayloadBuilders.DistributeBednets() });
+    builder: builders.bednet });
 
 m.bind({
     name: 'household_head',
     form: 'individual',
     label: 'individualFormLabel',
-    builder: new ji.CensusFormPayloadBuilders.AddHeadOfHousehold(),
-    consumer: new ji.CensusFormPayloadConsumers.AddHeadOfHousehold() });
+    builder: builders.householdHead,
+    consumer: consumers.householdHead });
 
 m.bind({
     name: 'household_member',
     form: 'individual',
     label: 'individualFormLabel',
-    builder: new ji.CensusFormPayloadBuilders.AddMemberOfHousehold(),
-    consumer: new ji.CensusFormPayloadConsumers.AddMemberOfHousehold() });
+    builder: builders.householdMember,
+    consumer: consumers.householdMember });
 
 m.bind({
     form: 'fingerprints',
     label: 'fingerprintsFormLabel',
-    builder: new ji.CensusFormPayloadBuilders.Fingerprints() });
+    builder: builders.fingerprints });
 
 m.launcher({
     level: 'sector',

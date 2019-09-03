@@ -1,11 +1,11 @@
-const ji = JavaImporter(org.cimsbioko.navconfig.forms.builders);
-const navmod = require('navmod');
-const m = new navmod.Builder();
+const builders = require('builders'),
+    navmod = require('navmod'),
+    m = new navmod.Builder();
 
 m.bind({
     form: 'eg_respar',
     label: 'resparLabel',
-    builder: new ji.BiokoFormPayloadBuilders.Respar()});
+    builder: builders.respar });
 
 m.launcher({ level: 'household', label: 'resparLabel', bind: 'eg_respar' });
 

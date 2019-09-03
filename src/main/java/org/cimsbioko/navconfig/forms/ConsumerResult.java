@@ -1,4 +1,4 @@
-package org.cimsbioko.navconfig.forms.consumers;
+package org.cimsbioko.navconfig.forms;
 
 /**
  * Represents the result of consuming a form.

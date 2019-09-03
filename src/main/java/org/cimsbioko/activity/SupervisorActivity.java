@@ -19,7 +19,7 @@ import org.cimsbioko.utilities.FormsHelper;
 import java.io.IOException;
 import java.util.List;
 
-import static org.cimsbioko.navconfig.forms.builders.PayloadTools.requiresApproval;
+import static org.cimsbioko.navconfig.forms.PayloadTools.requiresApproval;
 import static org.cimsbioko.utilities.MessageUtils.showShortToast;
 
 public class SupervisorActivity extends AppCompatActivity implements SupervisorActionFragment.ActionListener {

@@ -1,4 +1,4 @@
-package org.cimsbioko.navconfig.forms.builders;
+package org.cimsbioko.navconfig.forms;
 
 import org.cimsbioko.navconfig.forms.LaunchContext;
 
