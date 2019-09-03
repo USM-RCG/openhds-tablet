@@ -19,7 +19,7 @@ public class SupervisorActionFragment extends Fragment implements View.OnClickLi
 
     private static final String TAG = SupervisorActionFragment.class.getSimpleName();
 
-    private Button sendFormsButton, deleteFormsButton, approveFormsButton, rebuildIndicesButton;
+    private Button deleteFormsButton, approveFormsButton, rebuildIndicesButton;
 
     private ActionListener listener;
 
@@ -27,12 +27,11 @@ public class SupervisorActionFragment extends Fragment implements View.OnClickLi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.supervisor_action_fragment, container, false);
-        sendFormsButton = view.findViewById(R.id.send_forms);
         deleteFormsButton = view.findViewById(R.id.delete_forms);
         approveFormsButton = view.findViewById(R.id.approve_forms);
         rebuildIndicesButton = view.findViewById(R.id.rebuild_search_indices);
         rebuildIndicesButton.setVisibility(isSearchEnabled(getContext()) ? View.VISIBLE : View.GONE);
-        for (Button button : asList(sendFormsButton, deleteFormsButton, approveFormsButton, rebuildIndicesButton)) {
+        for (Button button : asList(deleteFormsButton, approveFormsButton, rebuildIndicesButton)) {
             button.setOnClickListener(this);
         }
         return view;
@@ -45,9 +44,7 @@ public class SupervisorActionFragment extends Fragment implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (listener != null) {
-            if (v == sendFormsButton) {
-                listener.onSendForms();
-            } else if (v == deleteFormsButton) {
+            if (v == deleteFormsButton) {
                 listener.onDeleteForms();
             } else if (v == approveFormsButton) {
                 listener.onApproveForms();
@@ -60,7 +57,6 @@ public class SupervisorActionFragment extends Fragment implements View.OnClickLi
     }
 
     public interface ActionListener {
-        void onSendForms();
         void onDeleteForms();
         void onApproveForms();
         void onRebuildIndices();

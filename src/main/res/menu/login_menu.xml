@@ -7,6 +7,11 @@
 		android:title="@string/settings"
 		app:showAsAction="ifRoom|withText" />
 	<item
+		android:id="@+id/send_forms"
+		android:icon="@drawable/ic_send"
+		android:title="@string/send_forms"
+		app:showAsAction="ifRoom|withText" />
+	<item
 		android:id="@+id/show_supervisor"
 		android:icon="@drawable/ic_supervisor_account"
 		android:title="@string/supervisor"

@@ -3,7 +3,9 @@ package org.cimsbioko.activity;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -15,13 +17,22 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import org.cimsbioko.R;
+import org.cimsbioko.model.form.FormInstance;
+import org.cimsbioko.utilities.FormsHelper;
+
+import java.io.IOException;
+import java.util.List;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static org.cimsbioko.navconfig.forms.PayloadTools.requiresApproval;
 import static org.cimsbioko.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.cimsbioko.utilities.ConfigUtils.getAppFullName;
+import static org.cimsbioko.utilities.MessageUtils.showShortToast;
 
 public class LoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private final String TAG = LoginActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +69,29 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
             case R.id.configure_server:
                 startActivity(new Intent(this, PreferenceActivity.class));
                 return true;
+            case R.id.send_forms:
+                sendApprovedForms();
+                return true;
             case R.id.show_supervisor:
                 startActivity(new Intent(this, SupervisorActivity.class));
                 return true;
             default:
                 return false;
         }
+    }
+
+    private void sendApprovedForms() {
+        List<FormInstance> allFormInstances = FormsHelper.getAllUnsentFormInstances();
+        for (FormInstance instance : allFormInstances) {
+            try {
+                if (requiresApproval(instance.load())) {
+                    FormsHelper.setStatusIncomplete(Uri.parse(instance.getUriString()));
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "failure sending approved forms, form: " + instance.getFilePath(), e);
+            }
+        }
+        showShortToast(this, R.string.launching_form);
+        startActivity(new Intent(Intent.ACTION_EDIT));
     }
 }

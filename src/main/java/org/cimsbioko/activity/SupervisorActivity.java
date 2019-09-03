@@ -50,11 +50,6 @@ public class SupervisorActivity extends AppCompatActivity implements SupervisorA
     }
 
     @Override
-    public void onSendForms() {
-        sendApprovedForms();
-    }
-
-    @Override
     public void onDeleteForms() {
         checklistFragment.setMode(ChecklistFragment.DELETE_MODE);
     }
@@ -69,19 +64,5 @@ public class SupervisorActivity extends AppCompatActivity implements SupervisorA
         IndexingService.queueFullReindex(SupervisorActivity.this);
     }
 
-    public void sendApprovedForms() {
-        ContentResolver resolver = getContentResolver();
-        List<FormInstance> allFormInstances = FormsHelper.getAllUnsentFormInstances();
-        for (FormInstance instance : allFormInstances) {
-            try {
-                if (requiresApproval(instance.load())) {
-                    FormsHelper.setStatusIncomplete(Uri.parse(instance.getUriString()));
-                }
-            } catch (IOException e) {
-                Log.e(TAG, "failure sending approved forms, form: " + instance.getFilePath(), e);
-            }
-        }
-        showShortToast(this, R.string.launching_form);
-        startActivity(new Intent(Intent.ACTION_EDIT));
-    }
+
 }

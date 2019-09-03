@@ -6,11 +6,6 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/send_forms"
-        style="@style/SupervisorButton"
-        android:text="@string/send_forms" />
-
-    <Button
         android:id="@+id/delete_forms"
         style="@style/SupervisorButton"
         android:text="@string/delete_forms" />
