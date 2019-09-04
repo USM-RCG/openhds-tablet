@@ -83,18 +83,8 @@ public class DeviceAuthenticatorActivity extends AppCompatActivity implements Lo
         usernameEditText.setOnKeyListener(this);
         passwordEditText.setOnKeyListener(this);
 
-        findViewById(R.id.loginButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submit();
-            }
-        });
-        findViewById(R.id.scanButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scan();
-            }
-        });
+        findViewById(R.id.loginButton).setOnClickListener(v -> submit());
+        findViewById(R.id.scanButton).setOnClickListener(v -> scan());
 
         String accountName = getIntent().getStringExtra(KEY_ACCOUNT_NAME);
 
@@ -133,13 +123,10 @@ public class DeviceAuthenticatorActivity extends AppCompatActivity implements Lo
                     new AlertDialog.Builder(this)
                             .setTitle(R.string.update_server_title)
                             .setMessage(getString(R.string.update_server_msg, url))
-                            .setPositiveButton(R.string.yes_btn, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Context ctx = DeviceAuthenticatorActivity.this;
-                                    setServerUrl(ctx, url);
-                                    showLongToast(ctx, R.string.server_updated_msg);
-                                }
+                            .setPositiveButton(R.string.yes_btn, (dialog, which) -> {
+                                Context ctx = DeviceAuthenticatorActivity.this;
+                                setServerUrl(ctx, url);
+                                showLongToast(ctx, R.string.server_updated_msg);
                             })
                             .setNegativeButton(R.string.no_btn, null)
                             .show();

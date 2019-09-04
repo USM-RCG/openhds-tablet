@@ -125,7 +125,7 @@ public class DatabaseAdapter {
             db.beginTransaction();
             try {
                 String where = String.format("%s in (%s)", KEY_FORM_PATH, makePlaceholders(formPaths.size()));
-                String[] whereArgs = formPaths.toArray(new String[formPaths.size()]);
+                String[] whereArgs = formPaths.toArray(new String[]{});
                 db.delete(FORM_PATH_TABLE_NAME, where, whereArgs);
                 db.setTransactionSuccessful();
             } finally {

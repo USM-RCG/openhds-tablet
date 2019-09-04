@@ -33,7 +33,7 @@ import java.util.List;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.cimsbioko.activity.FieldWorkerActivity.ACTIVITY_MODULE_EXTRA;
 import static org.cimsbioko.activity.HierarchyNavigatorActivity.HIERARCHY_PATH_KEY;
 import static org.cimsbioko.utilities.ConfigUtils.getActiveModuleForBinding;
@@ -55,7 +55,7 @@ public class FormListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Activity activity = getActivity();
-        adapter = new FormInstanceAdapter(activity, R.id.form_instance_list_item, new ArrayList<FormInstance>());
+        adapter = new FormInstanceAdapter(activity, R.id.form_instance_list_item, new ArrayList<>());
         View layout = inflater.inflate(R.layout.form_list_fragment, container, false);
         headerView = layout.findViewById(R.id.form_list_header);
         listView = layout.findViewById(R.id.form_list);
@@ -112,7 +112,7 @@ public class FormListFragment extends Fragment {
 
     private void removeForm(FormInstance selected) {
         Context ctx = getActivity();
-        if (deleteFormInstances(asList(selected)) == 1) {
+        if (deleteFormInstances(singletonList(selected)) == 1) {
             adapter.remove(selected);
             showShortToast(ctx, R.string.deleted);
         }
@@ -156,12 +156,7 @@ public class FormListFragment extends Fragment {
         new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.delete_forms_dialog_warning)
                 .setTitle(R.string.delete_dialog_warning_title)
-                .setPositiveButton(R.string.delete_forms, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        removeForm(selected);
-                    }
-                })
+                .setPositiveButton(R.string.delete_forms, (dialogInterface, i) -> removeForm(selected))
                 .setNegativeButton(R.string.cancel_label, null)
                 .create()
                 .show();

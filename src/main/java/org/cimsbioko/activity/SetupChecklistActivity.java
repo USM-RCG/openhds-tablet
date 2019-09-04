@@ -103,44 +103,19 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
         // configure button
         if (!hasPerms) {
             setupButton.setText(R.string.fix_permissions);
-            setupButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SetupUtils.askForPermissions(SetupChecklistActivity.this, 1);
-                }
-            });
+            setupButton.setOnClickListener(v -> SetupUtils.askForPermissions(SetupChecklistActivity.this, 1));
         } else if (!hasApps) {
             setupButton.setText(R.string.install_apps);
-            setupButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SetupUtils.promptFormsAppInstall(SetupChecklistActivity.this);
-                }
-            });
+            setupButton.setOnClickListener(v -> SetupUtils.promptFormsAppInstall(SetupChecklistActivity.this));
         } else if (!isConnected) {
             setupButton.setText(R.string.attach_to_server);
-            setupButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SetupUtils.getToken(SetupChecklistActivity.this);
-                }
-            });
+            setupButton.setOnClickListener(v -> SetupUtils.getToken(SetupChecklistActivity.this));
         } else if (!hasData) {
             setupButton.setText(R.string.download_data);
-            setupButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SyncUtils.checkForUpdate(SetupChecklistActivity.this);
-                }
-            });
+            setupButton.setOnClickListener(v -> SyncUtils.checkForUpdate(SetupChecklistActivity.this));
         } else {
             setupButton.setText(R.string.next);
-            setupButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startApp(SetupChecklistActivity.this);
-                }
-            });
+            setupButton.setOnClickListener(v -> startApp(SetupChecklistActivity.this));
         }
     }
 

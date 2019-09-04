@@ -239,7 +239,7 @@ public class SearchableActivity extends AppCompatActivity {
             executeQuery(addLevelClause(parseLuceneQuery(advancedQuery.getText().toString())));
         } catch (QueryNodeException e) {
             Log.e(TAG, "bad query", e);
-            listView.setAdapter(new ResultsAdapter(this, new ArrayList<DataWrapper>()));
+            listView.setAdapter(new ResultsAdapter(this, new ArrayList<>()));
         }
     }
 
@@ -484,22 +484,12 @@ public class SearchableActivity extends AppCompatActivity {
 
         @Override
         protected void postResult() {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    handleSearchResults(items);
-                }
-            });
+            handler.post(() -> handleSearchResults(items));
         }
 
         @Override
         public void handleException(Exception e) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    showLoading(false);
-                }
-            });
+            handler.post(() -> showLoading(false));
             super.handleException(e);
         }
     }

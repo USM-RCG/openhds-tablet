@@ -8,6 +8,7 @@ import org.cimsbioko.R;
 import java.util.HashSet;
 import java.util.Set;
 
+import static java.util.Arrays.asList;
 import static org.cimsbioko.utilities.ConfigUtils.getSharedPrefs;
 
 public class Utils {
@@ -16,11 +17,7 @@ public class Utils {
     private static final JaroWinklerDistance jwd = new JaroWinklerDistance();
 
     static Set<String> extractUniquePhones(String phoneValue) {
-        Set<String> phones = new HashSet<>();
-        for (String phone : phoneValue.trim().split("\\s+")) {
-            phones.add(phone);
-        }
-        return phones;
+        return new HashSet<>(asList(phoneValue.trim().split("\\s+")));
     }
 
     static Set<String> extractDissimilarNames(String nameValue) {

@@ -523,12 +523,9 @@ public class SyncUtils {
 
         // automatically install database if it's the first time
         if (!downloadedContentBefore) {
-            installUpdate(ctx, new DatabaseInstallationListener() {
-                @Override
-                public void installed() {
-                    broadcastManager.sendBroadcast(new Intent(DATA_INSTALLED_ACTION));
-                    notificationManager.cancel(SYNC_NOTIFICATION_ID);
-                }
+            installUpdate(ctx, () -> {
+                broadcastManager.sendBroadcast(new Intent(DATA_INSTALLED_ACTION));
+                notificationManager.cancel(SYNC_NOTIFICATION_ID);
             });
         }
 

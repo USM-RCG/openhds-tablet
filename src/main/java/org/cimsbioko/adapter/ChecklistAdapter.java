@@ -58,24 +58,16 @@ public class ChecklistAdapter extends ArrayAdapter<FormInstance> {
         // add callback when the form instance info is pressed
         ViewGroup itemArea = convertView.findViewById(R.id.form_instance_item_area);
         itemArea.setTag(instance);
-        itemArea.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FormInstance selected = (FormInstance) v.getTag();
-                Uri uri = Uri.parse(selected.getUriString());
-                showShortToast(getContext(), R.string.launching_form);
-                ((Activity) getContext()).startActivityForResult(editIntent(uri), 0);
-            }
+        itemArea.setOnClickListener(v -> {
+            FormInstance selected = (FormInstance) v.getTag();
+            Uri uri = Uri.parse(selected.getUriString());
+            showShortToast(getContext(), R.string.launching_form);
+            ((Activity) getContext()).startActivityForResult(editIntent(uri), 0);
         });
 
         // add callback when the checkbox is checked
         CheckBox checkBoxView = convertView.findViewById(R.id.form_instance_check_box);
-        checkBoxView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                checkStates.set(position, isChecked);
-            }
-        });
+        checkBoxView.setOnCheckedChangeListener((buttonView, isChecked) -> checkStates.set(position, isChecked));
         checkBoxView.setChecked(checkStates.get(position));
 
         return convertView;

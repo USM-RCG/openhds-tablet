@@ -104,12 +104,9 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 		}
 
 		// Scroll to the bottom when the buttons overflow
-		scrollView.post(new Runnable() {
-			@Override
-			public void run() {
-				if (scrollView.canScrollVertically(1)) {
-					scrollView.fullScroll(View.FOCUS_DOWN);
-				}
+		scrollView.post(() -> {
+			if (scrollView.canScrollVertically(1)) {
+				scrollView.fullScroll(View.FOCUS_DOWN);
 			}
 		});
 	}
@@ -136,12 +133,9 @@ public class HierarchyButtonFragment extends Fragment implements OnClickListener
 		final RelativeLayout layout = levelViews.get(level);
 		if (layout != null) {
 			// Defer setting pressed state so it isn't overwritten when run within a click handler
-			new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					layout.setClickable(!highlighted);
-					layout.setPressed(highlighted);
-				}
+			new Handler(Looper.getMainLooper()).postDelayed(() -> {
+				layout.setClickable(!highlighted);
+				layout.setPressed(highlighted);
 			}, 100);
 		}
 	}

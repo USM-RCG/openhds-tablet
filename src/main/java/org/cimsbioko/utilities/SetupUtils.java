@@ -100,12 +100,7 @@ public class SetupUtils {
             }
         };
 
-        DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                activity.finish();
-            }
-        };
+        DialogInterface.OnCancelListener cancelListener = dialog -> activity.finish();
 
         new AlertDialog.Builder(activity)
                 .setTitle(R.string.forms_app_required)
@@ -121,15 +116,12 @@ public class SetupUtils {
         AccountManager
                 .get(activity.getBaseContext())
                 .getAuthTokenByFeatures(ACCOUNT_TYPE, AUTHTOKEN_TYPE_DEVICE, null, activity, null, null,
-                        new AccountManagerCallback<Bundle>() {
-                            @Override
-                            public void run(AccountManagerFuture<Bundle> future) {
-                                try {
-                                    Bundle result = future.getResult();
-                                    result.getString(AccountManager.KEY_AUTHTOKEN);
-                                } catch (Exception e) {
-                                    Log.e(TAG, "failed to retrieve token", e);
-                                }
+                        future -> {
+                            try {
+                                Bundle result = future.getResult();
+                                result.getString(AccountManager.KEY_AUTHTOKEN);
+                            } catch (Exception e) {
+                                Log.e(TAG, "failed to retrieve token", e);
                             }
                         }, null);
     }
