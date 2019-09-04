@@ -3,6 +3,7 @@ package org.cimsbioko.data;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
+import org.cimsbioko.navconfig.UsedByJSConfig;
 
 import static org.cimsbioko.App.getApp;
 import static org.cimsbioko.data.WhereUtils.EQUALS;
@@ -24,6 +25,7 @@ public abstract class Gateway<T> {
     }
 
     // true if entity was inserted, false if updated
+    @UsedByJSConfig
     public boolean insertOrUpdate(T entity) {
         ContentResolver resolver = getApp().getContentResolver();
         ContentValues contentValues = getContentValuesConverter().toContentValues(entity);

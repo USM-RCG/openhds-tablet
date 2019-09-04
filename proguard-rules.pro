@@ -8,11 +8,9 @@
 -keep class org.cimsbioko.R$* { *; }
 
 # app's scriptable classes
--keep class org.cimsbioko.data.** { *; }
--keep class org.cimsbioko.model.core.** { *; }
--keep class org.cimsbioko.utilities.** { *; }
--keep class org.cimsbioko.navconfig.forms.** { *; }
--keep class org.cimsbioko.navconfig.NavigatorConfig { *; }
+-keepclassmembers class * {
+    @org.cimsbioko.navconfig.UsedByJSConfig *;
+}
 -keep class * extends org.cimsbioko.fragment.navigate.detail.DetailFragment { *; }
 
 # jdom (xml)

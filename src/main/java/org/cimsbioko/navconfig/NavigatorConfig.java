@@ -2,7 +2,6 @@ package org.cimsbioko.navconfig;
 
 import android.util.Log;
 import org.cimsbioko.navconfig.forms.Binding;
-import org.cimsbioko.navconfig.forms.UsedByJSConfig;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.LazilyLoadedCtor;
 import org.mozilla.javascript.Scriptable;

@@ -1,6 +1,7 @@
 package org.cimsbioko.navconfig.forms;
 
 import org.cimsbioko.model.core.FieldWorker;
+import org.cimsbioko.navconfig.UsedByJSConfig;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -56,6 +57,7 @@ public class PayloadTools {
      * @param formPayload the payload to populate
      * @param ctx the launch context from which the form was launched
      */
+    @UsedByJSConfig
     public static void addMinimalFormPayload(Map<String, String> formPayload, LaunchContext ctx) {
         FieldWorker fieldWorker = ctx.getCurrentFieldWorker();
         formPayload.put(FIELD_WORKER_EXTID, fieldWorker.getExtId());
@@ -67,14 +69,17 @@ public class PayloadTools {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cal.getTime());
     }
 
+    @UsedByJSConfig
     public static String formatDate(Calendar cal) {
         return new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
     }
 
+    @UsedByJSConfig
     public static String formatBuilding(int building, boolean includePrefix) {
         return String.format("%s%03d", includePrefix? "E" : "", building);
     }
 
+    @UsedByJSConfig
     public static String formatFloor(int floor, boolean includePrefix) {
         return String.format("%s%02d", includePrefix? "P" : "", floor);
     }

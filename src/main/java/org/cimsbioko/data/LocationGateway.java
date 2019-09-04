@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import org.cimsbioko.App;
 import org.cimsbioko.R;
 import org.cimsbioko.model.core.Location;
+import org.cimsbioko.navconfig.UsedByJSConfig;
 import org.cimsbioko.provider.ContentProvider;
 
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_ATTRS;
@@ -51,6 +52,7 @@ public class LocationGateway extends Gateway<Location> {
      * @param sector sector name
      * @return the next sequential building number to use for a new location in the given sector
      */
+    @UsedByJSConfig
     public int nextBuildingNumberInSector(String mapArea, String sector) {
         SQLiteDatabase db = ContentProvider.getDatabaseHelper(App.getApp().getApplicationContext()).getReadableDatabase();
         String query = String.format("select max(%s) + 1 from %s where %s = ? and %s = ?",

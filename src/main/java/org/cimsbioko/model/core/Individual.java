@@ -1,5 +1,7 @@
 package org.cimsbioko.model.core;
 
+import org.cimsbioko.navconfig.UsedByJSConfig;
+
 import java.io.Serializable;
 
 public class Individual implements Serializable {
@@ -153,6 +155,7 @@ public class Individual implements Serializable {
 		this.languagePreference = languagePreference;
 	}
 
+	@UsedByJSConfig
 	public static String getFullName(Individual individual) {
 		return individual.getFirstName() + " " + individual.getLastName();
 	}

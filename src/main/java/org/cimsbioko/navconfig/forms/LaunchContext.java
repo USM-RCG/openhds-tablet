@@ -4,6 +4,7 @@ import org.cimsbioko.activity.HierarchyNavigatorActivity;
 import org.cimsbioko.navconfig.HierarchyPath;
 import org.cimsbioko.model.core.FieldWorker;
 import org.cimsbioko.data.DataWrapper;
+import org.cimsbioko.navconfig.UsedByJSConfig;
 
 /**
  * This is the formal contract currently required to build a payload and launch a form. Currently,
@@ -13,5 +14,6 @@ import org.cimsbioko.data.DataWrapper;
 public interface LaunchContext {
     FieldWorker getCurrentFieldWorker();
     DataWrapper getCurrentSelection();
+    @UsedByJSConfig
     HierarchyPath getHierarchyPath();
 }
