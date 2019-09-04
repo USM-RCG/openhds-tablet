@@ -27,7 +27,7 @@ public abstract class SearchJob implements Runnable {
     @Override
     public void run() {
         if (isActive()) {
-            SearchIndex index = SearchIndex.getInstance(ctx);
+            SearchIndex index = SearchIndex.getInstance();
             try {
                 IndexSearcher searcher = index.acquire();
                 try {

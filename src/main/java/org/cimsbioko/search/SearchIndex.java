@@ -1,7 +1,5 @@
 package org.cimsbioko.search;
 
-import android.content.Context;
-
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
@@ -11,28 +9,28 @@ import org.apache.lucene.store.FSDirectory;
 import java.io.File;
 import java.io.IOException;
 
+import static org.cimsbioko.App.getApp;
+
 
 public class SearchIndex {
 
     private static SearchIndex INSTANCE;
 
-    private Context ctx;
     private SearcherManager searcherManager;
 
-    private SearchIndex(Context ctx) {
-        this.ctx = ctx;
+    private SearchIndex() {
     }
 
-    public static SearchIndex getInstance(Context ctx) {
+    public static SearchIndex getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new SearchIndex(ctx.getApplicationContext());
+            INSTANCE = new SearchIndex();
         }
         return INSTANCE;
     }
 
     public IndexSearcher acquire() throws IOException {
         if (searcherManager == null) {
-            File indexFile = new File(ctx.getFilesDir(), "search-index");
+            File indexFile = new File(getApp().getApplicationContext().getFilesDir(), "search-index");
             Directory indexDir = FSDirectory.open(indexFile);
             searcherManager = new SearcherManager(indexDir, new SearcherFactory());
         } else if (!searcherManager.isSearcherCurrent()) {

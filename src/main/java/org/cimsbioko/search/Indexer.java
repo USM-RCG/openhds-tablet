@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import static org.apache.lucene.index.IndexWriterConfig.OpenMode.CREATE_OR_APPEND;
 import static org.apache.lucene.util.Version.LUCENE_47;
+import static org.cimsbioko.App.getApp;
 import static org.cimsbioko.navconfig.Hierarchy.*;
 import static org.cimsbioko.provider.ContentProvider.getDatabaseHelper;
 import static org.cimsbioko.utilities.NotificationUtils.*;
@@ -30,7 +31,7 @@ import static org.cimsbioko.utilities.SyncUtils.close;
 
 public class Indexer {
 
-    public static final String INDIVIDUAL_INDEX_QUERY = String.format("select %s, '%s' as level, %s," +
+    private static final String INDIVIDUAL_INDEX_QUERY = String.format("select %s, '%s' as level, %s," +
                     " ifnull(%s,'') || ' ' || ifnull(%s,'') || ' ' || ifnull(%s,'') as name," +
                     " ifnull(%s,'') || ' ' || ifnull(%s,'') || ' ' || ifnull(%s,'') as phone" +
                     " from %s", App.Individuals.COLUMN_INDIVIDUAL_UUID, INDIVIDUAL,
@@ -39,22 +40,22 @@ public class Indexer {
             App.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER, App.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER,
             App.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER, App.Individuals.TABLE_NAME);
 
-    public static final String INDIVIDUAL_UPDATE_QUERY = String.format(INDIVIDUAL_INDEX_QUERY + " where %s = ?",
+    private static final String INDIVIDUAL_UPDATE_QUERY = String.format(INDIVIDUAL_INDEX_QUERY + " where %s = ?",
             App.Individuals.COLUMN_INDIVIDUAL_UUID);
 
-    public static final String LOCATION_INDEX_QUERY = String.format("select %s, '%s' as level, %s, %s from %s",
+    private static final String LOCATION_INDEX_QUERY = String.format("select %s, '%s' as level, %s, %s from %s",
             App.Locations.COLUMN_LOCATION_UUID, HOUSEHOLD, App.Locations.COLUMN_LOCATION_EXTID,
             App.Locations.COLUMN_LOCATION_NAME, App.Locations.TABLE_NAME);
 
-    public static final String LOCATION_UPDATE_QUERY = String.format(LOCATION_INDEX_QUERY + " where %s = ?",
+    private static final String LOCATION_UPDATE_QUERY = String.format(LOCATION_INDEX_QUERY + " where %s = ?",
             App.Locations.COLUMN_LOCATION_UUID);
 
-    public static final String HIERARCHY_INDEX_QUERY = String.format("select %s, %s as level, %s, %s from %s",
+    private static final String HIERARCHY_INDEX_QUERY = String.format("select %s, %s as level, %s, %s from %s",
             App.HierarchyItems.COLUMN_HIERARCHY_UUID, App.HierarchyItems.COLUMN_HIERARCHY_LEVEL,
             App.HierarchyItems.COLUMN_HIERARCHY_EXTID, App.HierarchyItems.COLUMN_HIERARCHY_NAME,
             App.HierarchyItems.TABLE_NAME);
 
-    public static final String HIERARCHY_UPDATE_QUERY = String.format(HIERARCHY_INDEX_QUERY + " where %s = ?",
+    private static final String HIERARCHY_UPDATE_QUERY = String.format(HIERARCHY_INDEX_QUERY + " where %s = ?",
             App.HierarchyItems.COLUMN_HIERARCHY_UUID);
 
     private static final int NOTIFICATION_ID = 13;
@@ -63,23 +64,20 @@ public class Indexer {
 
     private static Indexer instance;
 
-    private Context ctx;
-
     private File indexFile;
     private IndexWriter writer;
 
-    protected Indexer(Context ctx) {
-        this.ctx = ctx;
-        indexFile = new File(ctx.getFilesDir(), "search-index");
+    private Indexer() {
+        indexFile = new File(getApp().getApplicationContext().getFilesDir(), "search-index");
     }
 
     private SQLiteDatabase getDatabase() {
-        return getDatabaseHelper(ctx).getReadableDatabase();
+        return getDatabaseHelper(getApp().getApplicationContext()).getReadableDatabase();
     }
 
-    public static Indexer getInstance(Context ctx) {
+    public static Indexer getInstance() {
         if (instance == null) {
-            instance = new Indexer(ctx.getApplicationContext());
+            instance = new Indexer();
         }
         return instance;
     }
@@ -99,7 +97,7 @@ public class Indexer {
         return writer;
     }
 
-    public void reindexAll() {
+    void reindexAll() {
         try {
             IndexWriter indexWriter = getWriter(false);
             try {
@@ -120,7 +118,7 @@ public class Indexer {
         bulkIndex(R.string.indexing_hierarchy_items, new SimpleCursorDocumentSource(c), writer);
     }
 
-    public void reindexHierarchy(String uuid) throws IOException {
+    void reindexHierarchy(String uuid) throws IOException {
         IndexWriter writer = getWriter(false);
         try {
             Cursor c = getDatabase().rawQuery(HIERARCHY_UPDATE_QUERY, new String[]{uuid});
@@ -135,7 +133,7 @@ public class Indexer {
         bulkIndex(R.string.indexing_locations, new SimpleCursorDocumentSource(c), writer);
     }
 
-    public void reindexLocation(String uuid) throws IOException {
+    void reindexLocation(String uuid) throws IOException {
         IndexWriter writer = getWriter(false);
         try {
             Cursor c = getDatabase().rawQuery(LOCATION_UPDATE_QUERY, new String[]{uuid});
@@ -150,7 +148,7 @@ public class Indexer {
         bulkIndex(R.string.indexing_individuals, new IndividualCursorDocumentSource(c, "name", "phone"), writer);
     }
 
-    public void reindexIndividual(String uuid) throws IOException {
+    void reindexIndividual(String uuid) throws IOException {
         IndexWriter writer = getWriter(false);
         try {
             Cursor c = getDatabase().rawQuery(INDIVIDUAL_UPDATE_QUERY, new String[]{uuid});
@@ -161,6 +159,8 @@ public class Indexer {
     }
 
     private void bulkIndex(int label, DocumentSource source, IndexWriter writer) throws IOException {
+
+        Context ctx = getApp().getApplicationContext();
 
         NotificationManager notificationManager = NotificationUtils.getNotificationManager(ctx);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)

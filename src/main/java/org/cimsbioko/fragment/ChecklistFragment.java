@@ -1,6 +1,5 @@
 package org.cimsbioko.fragment;
 
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;

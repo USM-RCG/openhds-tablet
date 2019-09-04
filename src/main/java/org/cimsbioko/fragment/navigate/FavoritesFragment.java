@@ -31,6 +31,7 @@ import java.util.List;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static org.cimsbioko.App.getApp;
 import static org.cimsbioko.activity.FieldWorkerActivity.ACTIVITY_MODULE_EXTRA;
 import static org.cimsbioko.activity.HierarchyNavigatorActivity.HIERARCHY_PATH_KEY;
 import static org.cimsbioko.utilities.LayoutUtils.configureTextWithPayload;
@@ -71,6 +72,12 @@ public class FavoritesFragment extends Fragment {
     }
 
     @Override
+    public void onDestroy() {
+        loader.detach();
+        super.onDestroy();
+    }
+
+    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         Activity activity = getActivity();
         if (v.getId() == R.id.favorites_list) {
@@ -93,7 +100,7 @@ public class FavoritesFragment extends Fragment {
                 selected = getItem(info.position);
                 if (selected != null) {
                     Context ctx = getActivity();
-                    DatabaseAdapter.getInstance(ctx).removeFavorite(selected);
+                    DatabaseAdapter.getInstance().removeFavorite(selected);
                     MessageUtils.showShortToast(ctx, R.string.removed_favorite);
                     loadData();
                 }
@@ -107,7 +114,7 @@ public class FavoritesFragment extends Fragment {
     }
 
     private void selectFavorite(DataWrapper selected) {
-        Context ctx = getActivity();
+        Context ctx = getApp().getApplicationContext();
         HierarchyPath path = HierarchyPath.fromString(selected.getHierarchyId());
         if (path != null) {
             Collection<NavigatorModule> activeModules = ConfigUtils.getActiveModules(ctx);
@@ -129,7 +136,7 @@ public class FavoritesFragment extends Fragment {
     }
 
     private void loadData() {
-        loader = new FavoriteLoader();
+        loader = new FavoriteLoader(this);
         loader.execute();
     }
 
@@ -171,24 +178,33 @@ public class FavoritesFragment extends Fragment {
         }
     }
 
-    private class FavoriteLoader extends AsyncTask<Void, Void, List<DataWrapper>> {
+    private static class FavoriteLoader extends AsyncTask<Void, Void, List<DataWrapper>> {
+
+        private FavoritesFragment host;
+
+        private FavoriteLoader(FavoritesFragment fragment) {
+            this.host = fragment;
+        }
 
         @Override
         protected void onPreExecute() {
-            showLoading(true);
-            dataAdapter.clear();
+            if (host != null) {
+                host.showLoading(true);
+                host.dataAdapter.clear();
+            }
         }
 
         @Override
         protected void onCancelled() {
-            showLoading(false);
+            if (host != null) {
+                host.showLoading(false);
+            }
             super.onCancelled();
         }
 
         @Override
         protected List<DataWrapper> doInBackground(Void... params) {
-            Context ctx = getActivity();
-            DatabaseAdapter db = DatabaseAdapter.getInstance(ctx);
+            DatabaseAdapter db = DatabaseAdapter.getInstance();
             List<String> favoriteIds = db.getFavoriteIds();
             List<DataWrapper> hydratedFavorites = new ArrayList<>(favoriteIds.size());
             for (int i = 0; !isCancelled() && i < favoriteIds.size(); i++) {
@@ -203,11 +219,18 @@ public class FavoritesFragment extends Fragment {
             return hydratedFavorites;
         }
 
+        void detach() {
+            host = null;
+            cancel(true);
+        }
+
         @Override
         protected void onPostExecute(List<DataWrapper> dataWrappers) {
-            dataAdapter.addAll(dataWrappers);
-            list.setAdapter(dataAdapter);
-            showLoading(false);
+            if (host != null) {
+                host.dataAdapter.addAll(dataWrappers);
+                host.list.setAdapter(host.dataAdapter);
+                host.showLoading(false);
+            }
         }
     }
 }

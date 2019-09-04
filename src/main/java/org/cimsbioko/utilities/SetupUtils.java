@@ -1,8 +1,6 @@
 package org.cimsbioko.utilities;
 
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;

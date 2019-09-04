@@ -104,7 +104,7 @@ public class DataWrapper implements Parcelable {
         final List<Integer> stringIds = new ArrayList<>();
         parcel.readList(stringIds, null);
 
-        final Bundle stringsPayloadBundle = parcel.readBundle();
+        final Bundle stringsPayloadBundle = parcel.readBundle(DataWrapper.class.getClassLoader());
         stringsPayload = new HashMap<>();
         for (Integer key : stringIds) {
             stringsPayload.put(key, stringsPayloadBundle.getString(key.toString()));
@@ -115,7 +115,7 @@ public class DataWrapper implements Parcelable {
         final List<Integer> moreStringIds = new ArrayList<>();
         parcel.readList(moreStringIds, null);
 
-        final Bundle stringIdsPayloadBundle = parcel.readBundle();
+        final Bundle stringIdsPayloadBundle = parcel.readBundle(DataWrapper.class.getClassLoader());
         stringIdsPayload = new HashMap<>();
         for (Integer key : moreStringIds) {
             stringIdsPayload.put(key, stringIdsPayloadBundle.getInt(key.toString()));

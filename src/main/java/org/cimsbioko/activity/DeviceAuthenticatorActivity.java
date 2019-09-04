@@ -4,7 +4,6 @@ import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,6 +31,7 @@ import static android.content.ContentResolver.setIsSyncable;
 import static android.content.ContentResolver.setSyncAutomatically;
 import static android.widget.Toast.LENGTH_SHORT;
 import static org.cimsbioko.App.AUTHORITY;
+import static org.cimsbioko.App.getApp;
 import static org.cimsbioko.syncadpt.AuthUtils.register;
 import static org.cimsbioko.utilities.MessageUtils.showLongToast;
 import static org.cimsbioko.utilities.UrlUtils.setServerUrl;
@@ -141,7 +141,7 @@ public class DeviceAuthenticatorActivity extends AppCompatActivity implements Lo
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         String accountType = getIntent().getStringExtra(KEY_ACCOUNT_TYPE);
-        task = new LoginTask(getApplicationContext(), username, password, accountType, this);
+        task = new LoginTask(username, password, accountType, this);
         task.execute();
     }
 
@@ -220,14 +220,12 @@ interface LoginTaskListener {
 
 class LoginTask extends AsyncTask<Void, Void, Intent> {
 
-    private final Context ctx;
     private final String username;
     private final String password;
     private final String accountType;
     private LoginTaskListener listener;
 
-    public LoginTask(Context ctx, String username, String password, String accountType, LoginTaskListener listener) {
-        this.ctx = ctx;
+    public LoginTask(String username, String password, String accountType, LoginTaskListener listener) {
         this.username = username;
         this.password = password;
         this.accountType = accountType;
@@ -240,7 +238,7 @@ class LoginTask extends AsyncTask<Void, Void, Intent> {
         Bundle data = new Bundle();
 
         try {
-            JSONObject result = register(ctx, username, password);
+            JSONObject result = register(getApp().getApplicationContext(), username, password);
             data.putString(KEY_ACCOUNT_NAME, username);
             data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
             data.putString(AccountManager.KEY_AUTHTOKEN, result.getString("access_token"));

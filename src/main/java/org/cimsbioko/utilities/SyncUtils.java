@@ -377,7 +377,7 @@ public class SyncUtils {
 
         String existingFingerprint = loadFirstLine(getFingerprintFile(dbTempFile.exists() ? dbTempFile : dbFile));
 
-        DatabaseAdapter db = DatabaseAdapter.getInstance(ctx);
+        DatabaseAdapter db = DatabaseAdapter.getInstance();
 
         String fingerprint = "?";
 

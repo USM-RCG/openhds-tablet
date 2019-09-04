@@ -147,7 +147,7 @@ public class ContentProvider extends android.content.ContentProvider {
 
     @Override
     public int bulkInsert(Uri uri, ContentValues[] values) {
-        int inserted = -1;
+        int inserted;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {

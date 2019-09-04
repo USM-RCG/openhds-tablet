@@ -26,7 +26,7 @@ public class IndexingService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Indexer indexer = Indexer.getInstance(getApplicationContext());
+        Indexer indexer = Indexer.getInstance();
         if (intent.hasExtra(ENTITY_UUID)) {
             EntityType type = EntityType.valueOf(intent.getStringExtra(ENTITY_TYPE));
             String uuid = intent.getStringExtra(ENTITY_UUID);

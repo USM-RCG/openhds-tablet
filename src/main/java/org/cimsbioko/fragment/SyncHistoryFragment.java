@@ -33,7 +33,7 @@ public class SyncHistoryFragment extends Fragment {
 
         XYPlot plot = graphView.findViewById(R.id.sync_history_plot);
 
-        DatabaseAdapter db = DatabaseAdapter.getInstance(getActivity());
+        DatabaseAdapter db = DatabaseAdapter.getInstance();
 
         XYSeries series = new SimpleXYSeries(SimpleXYSeries.ArrayFormat.XY_VALS_INTERLEAVED, "", db.getSyncResults());
 

@@ -280,7 +280,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
         FormInstance instance = lookup(data.getData());
         String formPath = instance.getFilePath();
         if (formPath != null) {
-            DatabaseAdapter.getInstance(this).attachFormToHierarchy(hierarchyPath.toString(), formPath);
+            DatabaseAdapter.getInstance().attachFormToHierarchy(hierarchyPath.toString(), formPath);
         }
         try {
             Map<String, String> formData = instance.load();
@@ -478,7 +478,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
     private void updateForms() {
         List<FormInstance> unsentForms = new ArrayList<>();
         List<String> sentFormPaths = new ArrayList<>();
-        DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance(this);
+        DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance();
         Collection<String> attachedPaths = dbAdapter.findFormsForHierarchy(hierarchyPath.toString());
         for (FormInstance attachedForm : FormsHelper.getByPaths(attachedPaths)) {
             if (attachedForm.isSubmitted()) {

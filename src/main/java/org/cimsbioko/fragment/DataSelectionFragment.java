@@ -83,7 +83,7 @@ public class DataSelectionFragment extends Fragment {
                 DataWrapper selected = getItem(info.position);
                 if (selected != null) {
                     Context ctx = getActivity();
-                    DatabaseAdapter.getInstance(ctx).addFavorite(selected);
+                    DatabaseAdapter.getInstance().addFavorite(selected);
                     MessageUtils.showShortToast(ctx, R.string.saved_favorite);
                 }
                 return true;

@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.cimsbioko.App.getApp;
 import static org.cimsbioko.utilities.SQLUtils.makePlaceholders;
 
 public class DatabaseAdapter {
@@ -54,17 +55,17 @@ public class DatabaseAdapter {
 
     private static DatabaseAdapter instance;
 
-    public static synchronized DatabaseAdapter getInstance(Context ctx) {
+    public static synchronized DatabaseAdapter getInstance() {
         if (instance == null) {
-            instance = new DatabaseAdapter(ctx);
+            instance = new DatabaseAdapter();
         }
         return instance;
     }
 
     private DatabaseHelper helper;
 
-    protected DatabaseAdapter(Context context) {
-        helper = new DatabaseHelper(context);
+    protected DatabaseAdapter() {
+        helper = new DatabaseHelper(getApp().getApplicationContext());
     }
 
     public long attachFormToHierarchy(String hierarchyPath, String formPath) {
