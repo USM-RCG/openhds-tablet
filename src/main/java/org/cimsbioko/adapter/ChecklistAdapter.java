@@ -28,7 +28,6 @@ public class ChecklistAdapter extends ArrayAdapter<FormInstance> {
     private List<Boolean> checkStates;
     private LayoutInflater inflater;
 
-    @SuppressWarnings("unchecked")
     public ChecklistAdapter(Context context, int checklistItemId, List<FormInstance> formInstances) {
         super(context, checklistItemId, formInstances);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
