@@ -18,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import org.cimsbioko.R;
 import org.cimsbioko.model.form.FormInstance;
+import org.cimsbioko.search.IndexingService;
 import org.cimsbioko.utilities.FormsHelper;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.util.List;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.cimsbioko.navconfig.forms.PayloadTools.requiresApproval;
+import static org.cimsbioko.search.Utils.isSearchEnabled;
 import static org.cimsbioko.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.cimsbioko.utilities.ConfigUtils.getAppFullName;
 import static org.cimsbioko.utilities.MessageUtils.showShortToast;
@@ -34,13 +36,15 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
 
     private final String TAG = LoginActivity.class.getSimpleName();
 
+    private NavigationView navView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         Toolbar toolbar = findViewById(R.id.login_toolbar);
         DrawerLayout drawerLayout = findViewById(R.id.login_drawer_layout);
-        NavigationView navView = findViewById(R.id.login_navigation_view);
+        navView = findViewById(R.id.login_navigation_view);
         navView.setNavigationItemSelectedListener(this);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -64,6 +68,12 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        navView.getMenu().findItem(R.id.rebuild_search_indices).setVisible(isSearchEnabled(this));
+    }
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.configure_server:
@@ -71,6 +81,9 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                 return true;
             case R.id.send_forms:
                 sendApprovedForms();
+                return true;
+            case R.id.rebuild_search_indices:
+                IndexingService.queueFullReindex(this);
                 return true;
             case R.id.show_supervisor:
                 startActivity(new Intent(this, SupervisorActivity.class));

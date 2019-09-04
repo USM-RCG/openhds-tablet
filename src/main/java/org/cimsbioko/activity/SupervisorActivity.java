@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentManager;
 import org.cimsbioko.R;
 import org.cimsbioko.fragment.ChecklistFragment;
 import org.cimsbioko.fragment.SupervisorActionFragment;
-import org.cimsbioko.search.IndexingService;
 
 
 public class SupervisorActivity extends AppCompatActivity implements SupervisorActionFragment.ActionListener {
@@ -45,11 +44,4 @@ public class SupervisorActivity extends AppCompatActivity implements SupervisorA
     public void onApproveForms() {
         checklistFragment.setMode(ChecklistFragment.APPROVE_MODE);
     }
-
-    @Override
-    public void onRebuildIndices() {
-        IndexingService.queueFullReindex(SupervisorActivity.this);
-    }
-
-
 }

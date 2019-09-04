@@ -13,13 +13,12 @@ import android.widget.Button;
 import org.cimsbioko.R;
 
 import static java.util.Arrays.asList;
-import static org.cimsbioko.search.Utils.isSearchEnabled;
 
 public class SupervisorActionFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = SupervisorActionFragment.class.getSimpleName();
 
-    private Button deleteFormsButton, approveFormsButton, rebuildIndicesButton;
+    private Button deleteFormsButton, approveFormsButton;
 
     private ActionListener listener;
 
@@ -29,9 +28,7 @@ public class SupervisorActionFragment extends Fragment implements View.OnClickLi
         View view = inflater.inflate(R.layout.supervisor_action_fragment, container, false);
         deleteFormsButton = view.findViewById(R.id.delete_forms);
         approveFormsButton = view.findViewById(R.id.approve_forms);
-        rebuildIndicesButton = view.findViewById(R.id.rebuild_search_indices);
-        rebuildIndicesButton.setVisibility(isSearchEnabled(getContext()) ? View.VISIBLE : View.GONE);
-        for (Button button : asList(deleteFormsButton, approveFormsButton, rebuildIndicesButton)) {
+        for (Button button : asList(deleteFormsButton, approveFormsButton)) {
             button.setOnClickListener(this);
         }
         return view;
@@ -48,8 +45,6 @@ public class SupervisorActionFragment extends Fragment implements View.OnClickLi
                 listener.onDeleteForms();
             } else if (v == approveFormsButton) {
                 listener.onApproveForms();
-            } else if (v == rebuildIndicesButton) {
-                listener.onRebuildIndices();
             } else {
                 Log.w(TAG, "unable to handle click, unknown view");
             }
@@ -59,6 +54,5 @@ public class SupervisorActionFragment extends Fragment implements View.OnClickLi
     public interface ActionListener {
         void onDeleteForms();
         void onApproveForms();
-        void onRebuildIndices();
     }
 }

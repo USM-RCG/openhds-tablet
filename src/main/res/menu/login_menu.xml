@@ -12,6 +12,12 @@
 		android:title="@string/send_forms"
 		app:showAsAction="ifRoom|withText" />
 	<item
+		android:id="@+id/rebuild_search_indices"
+		android:icon="@drawable/ic_search_document"
+		android:title="@string/rebuild_search_indices"
+		app:showAsAction="ifRoom|withText"
+		android:visible="false"/>
+	<item
 		android:id="@+id/show_supervisor"
 		android:icon="@drawable/ic_supervisor_account"
 		android:title="@string/supervisor"
