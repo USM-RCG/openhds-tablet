@@ -1,10 +1,6 @@
 package org.cimsbioko.activity;
 
-import android.content.ContentResolver;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -12,19 +8,10 @@ import androidx.fragment.app.FragmentManager;
 import org.cimsbioko.R;
 import org.cimsbioko.fragment.ChecklistFragment;
 import org.cimsbioko.fragment.SupervisorActionFragment;
-import org.cimsbioko.model.form.FormInstance;
 import org.cimsbioko.search.IndexingService;
-import org.cimsbioko.utilities.FormsHelper;
 
-import java.io.IOException;
-import java.util.List;
-
-import static org.cimsbioko.navconfig.forms.PayloadTools.requiresApproval;
-import static org.cimsbioko.utilities.MessageUtils.showShortToast;
 
 public class SupervisorActivity extends AppCompatActivity implements SupervisorActionFragment.ActionListener {
-
-    private static final String TAG = SupervisorActivity.class.getSimpleName();
 
     private ChecklistFragment checklistFragment;
 
