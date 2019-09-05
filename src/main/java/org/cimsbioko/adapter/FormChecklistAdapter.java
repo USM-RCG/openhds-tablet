@@ -21,13 +21,13 @@ import static org.cimsbioko.utilities.FormUtils.editIntent;
 import static org.cimsbioko.utilities.MessageUtils.showShortToast;
 
 
-public class ChecklistAdapter extends ArrayAdapter<FormInstance> {
+public class FormChecklistAdapter extends ArrayAdapter<FormInstance> {
 
     private final List<FormInstance> instances;
     private List<Boolean> checkStates;
     private LayoutInflater inflater;
 
-    public ChecklistAdapter(Context context, int checklistItemId, List<FormInstance> formInstances) {
+    public FormChecklistAdapter(Context context, int checklistItemId, List<FormInstance> formInstances) {
         super(context, checklistItemId, formInstances);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         instances = formInstances;
@@ -80,10 +80,6 @@ public class ChecklistAdapter extends ArrayAdapter<FormInstance> {
             }
         }
         return unmodifiableList(checkedForms);
-    }
-    
-    public List<FormInstance> getInstances() {
-        return unmodifiableList(instances);
     }
 
     public boolean removeAll(List<FormInstance> instances) {

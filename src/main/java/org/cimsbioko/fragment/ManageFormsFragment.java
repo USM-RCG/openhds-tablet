@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.cimsbioko.R;
-import org.cimsbioko.adapter.ChecklistAdapter;
+import org.cimsbioko.adapter.FormChecklistAdapter;
 import org.cimsbioko.model.form.FormInstance;
 import org.cimsbioko.utilities.FormsHelper;
 
@@ -25,7 +25,7 @@ public class ManageFormsFragment extends Fragment {
 
     private final String TAG = ManageFormsFragment.class.getSimpleName();
 
-    private ChecklistAdapter adapter;
+    private FormChecklistAdapter adapter;
 
     private AlertDialog deleteConfirmDialog;
 
@@ -36,7 +36,7 @@ public class ManageFormsFragment extends Fragment {
         ListView listView = fragmentLayout.findViewById(R.id.manage_forms_fragment_listview);
         List<FormInstance> formInstances = FormsHelper.getAllUnsentFormInstances();
 
-        adapter = new ChecklistAdapter(getActivity(), R.id.form_instance_check_item_orange, formInstances);
+        adapter = new FormChecklistAdapter(getActivity(), R.id.form_instance_check_item_orange, formInstances);
         listView.setAdapter(adapter);
 
         TextView headerView = fragmentLayout.findViewById(R.id.manage_forms_fragment_listview_header);
