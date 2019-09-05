@@ -183,4 +183,6 @@
     <string name="sync_db_title">Descargar Datos</string>
     <string name="manage_forms">Gestionar Formularios</string>
 
+    <string name="pref_campaign_title">Campaña</string>
+
 </resources>

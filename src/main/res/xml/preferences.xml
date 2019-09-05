@@ -9,6 +9,14 @@
         android:defaultValue="@string/default_server_url"
         />
 
+    <androidx.preference.PreferenceCategory android:title="@string/pref_campaign_title">
+
+        <androidx.preference.MultiSelectListPreference
+                android:key="@string/active_modules_key"
+                android:title="@string/active_modules"/>
+
+    </androidx.preference.PreferenceCategory>
+
     <androidx.preference.PreferenceCategory android:title="@string/pref_sync_title">
 
         <androidx.preference.SwitchPreferenceCompat
@@ -72,9 +80,5 @@
             />
 
     </androidx.preference.PreferenceCategory>
-
-    <androidx.preference.MultiSelectListPreference
-        android:key="@string/active_modules_key"
-        android:title="@string/active_modules"/>
 
 </androidx.preference.PreferenceScreen>

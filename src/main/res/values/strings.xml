@@ -208,4 +208,6 @@
     <string name="sync_db_title">Download Data</string>
     <string name="manage_forms">Manage Forms</string>
 
+    <string name="pref_campaign_title">Campaign</string>
+
 </resources>
