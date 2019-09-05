@@ -51,12 +51,6 @@
         <item name="android:layout_weight">5</item>
         <item name="android:background">@drawable/gray_middle_column</item>
     </style>
-    <style name="SupervisorSideColumn" parent="FieldworkerSideColumn">
-        <item name="android:layout_weight">3</item>
-    </style>
-    <style name="SupervisorMiddleColumn" parent="FieldworkerMiddleColumn">
-        <item name="android:layout_weight">3</item>
-    </style>
     <style name="FormText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

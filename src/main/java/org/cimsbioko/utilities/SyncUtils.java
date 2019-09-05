@@ -16,7 +16,7 @@ import com.github.batkinson.jrsync.zsync.RangeRequest;
 import com.github.batkinson.jrsync.zsync.RangeRequestFactory;
 import org.cimsbioko.App;
 import org.cimsbioko.R;
-import org.cimsbioko.activity.SupervisorActivity;
+import org.cimsbioko.activity.SyncDbActivity;
 import org.cimsbioko.provider.ContentProvider;
 import org.cimsbioko.provider.DatabaseAdapter;
 import org.cimsbioko.syncadpt.SyncCancelReceiver;
@@ -488,11 +488,10 @@ public class SyncUtils {
                         store(fingerprintFile, fingerprint);  // install fingerprint after downloaded finishes
                         Log.i(TAG, "database downloaded");
                         db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "success");
-                        Intent intent = new Intent(ctx, SupervisorActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                        Intent intent = new Intent(ctx, SyncDbActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                         PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                         notificationManager.notify(SYNC_NOTIFICATION_ID, builder
                                 .setSmallIcon(getNotificationIcon())
-                                .setContentText(ctx.getString(R.string.sync_database_new_data_instructions))
                                 .setContentIntent(pending)
                                 .setProgress(0, 0, false)
                                 .setOngoing(false)
@@ -636,13 +635,12 @@ public class SyncUtils {
 
             ctx.getContentResolver().notifyChange(App.CONTENT_BASE_URI, null, false);
 
-            Intent intent = new Intent(ctx, SupervisorActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+            Intent intent = new Intent(ctx, SyncDbActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
             PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             final NotificationManager manager = NotificationUtils.getNotificationManager(ctx);
             manager.notify(SYNC_NOTIFICATION_ID, new NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)
                     .setSmallIcon(getNotificationIcon())
                     .setContentTitle(ctx.getString(R.string.sync_database_new_data))
-                    .setContentText(ctx.getString(R.string.sync_database_new_data_instructions))
                     .setProgress(0, 0, false)
                     .setContentIntent(pending)
                     .setOngoing(false)

@@ -70,7 +70,6 @@
     <string name="sync_database_new_data">New data available</string>
     <string name="sync_database_in_progress">Download in progress</string>
     <string name="sync_database_failed">Download failed</string>
-    <string name="sync_database_new_data_instructions">Login as supervisor to apply the update</string>
     <string name="sync_database_button_check">Check</string>
     <string name="sync_database_button_update">Update</string>
     <string name="sync_database_no_fingerprint" translatable="false">-</string>
@@ -111,7 +110,6 @@
 
     <string name="unsent_forms">Unsent Forms</string>
     <string name="field_worker_home">Fieldworker Home</string>
-    <string name="supervisor_home">Supervisor Home</string>
     <string name="logout">Logout</string>
     <string name="forms_awaiting_approval">Forms awaiting approval</string>
 
@@ -192,7 +190,6 @@
     <string name="wifi_sync_enabled">Sync on Wi-Fi only</string>
     <string name="wifi_sync_disabled">Sync on any network</string>
     <string name="field_worker_none_exist">No fieldworkers, please sync.</string>
-    <string name="supervisor">Supervisor</string>
     <string name="sync_notifications_channel_name">Synchronization</string>
     <string name="cims_setup">CIMS Setup</string>
     <string name="fix_permissions">Fix Permissions</string>

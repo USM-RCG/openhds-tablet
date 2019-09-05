@@ -7,7 +7,6 @@
     <string name="login_username">Nombre de Usuario</string>
     <string name="login_password">Contraseña</string>
     <string name="fieldworker_login">Inicio de sesión de trabajador</string>
-    <string name="supervisor">Supervisor</string>
     <string name="settings">Ajustes</string>
     <string name="malformed_url">URL malformada</string>
     <string name="malformed_url_msg">El valor introducido no es una URL válida.</string>
@@ -75,7 +74,6 @@
 
     <!-- UpdateActivity Labels -->
     <string name="field_worker_home">Trabajador de campo Inicio</string>
-    <string name="supervisor_home">Supervisor Inicio</string>
     <string name="logout">Terminar Sesión</string>
     <string name="unsent_forms">Formularios no enviado</string>
     <string name="forms_awaiting_approval">Formularios en espera de aprobación</string>
@@ -96,7 +94,6 @@
     <string name="sync_database_updated_never">Nunca</string>
     <string name="sync_database_updated">Base de datos actualizada</string>
     <string name="sync_database_new_data">Los nuevos datos disponibles</string>
-    <string name="sync_database_new_data_instructions">Inicio de sesión como supervisor de aplicar la actualización</string>
     <string name="sync_database_button_update">Actualizar</string>
     <string name="sync_database_column_updated">Última Actualización</string>
     <string name="sync_database_column_fingerprint">Huella Digital</string>
