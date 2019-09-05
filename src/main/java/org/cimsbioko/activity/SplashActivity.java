@@ -14,7 +14,6 @@ import static org.cimsbioko.utilities.SetupUtils.startApp;
  */
 public class SplashActivity extends AppCompatActivity {
 
-    private static final String TAG = SplashActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
