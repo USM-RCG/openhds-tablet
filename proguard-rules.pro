@@ -8,7 +8,7 @@
 -keep class org.cimsbioko.R$* { *; }
 
 # app's scriptable classes
--keepclassmembers class * {
+-keep class * {
     @org.cimsbioko.navconfig.UsedByJSConfig *;
 }
 -keep class * extends org.cimsbioko.fragment.navigate.detail.DetailFragment { *; }
