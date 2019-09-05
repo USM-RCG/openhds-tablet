@@ -89,7 +89,8 @@
             </intent-filter>
             <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
         </activity>
-        <activity android:name=".activity.DeviceAuthenticatorActivity" />
+        <activity android:name=".activity.DeviceAuthenticatorActivity"
+                  android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activity.SetupChecklistActivity" />
         <activity android:name=".activity.SyncDbActivity"
                   android:parentActivityName=".activity.FieldWorkerLoginActivity">
