@@ -19,7 +19,6 @@ import java.util.Map;
 
 import static org.cimsbioko.model.form.FormInstance.getBinding;
 import static org.cimsbioko.navconfig.forms.KnownFields.*;
-import static org.cimsbioko.navconfig.forms.PayloadTools.requiresApproval;
 
 public class LayoutUtils {
 
@@ -177,9 +176,7 @@ public class LayoutUtils {
 
             Map<String, String> data = instance.load();
 
-            if (requiresApproval(data)) {
-                view.setBackgroundResource(R.drawable.form_list_yellow);
-            } else if (instance.isComplete()) {
+            if (instance.isComplete()) {
                 if (instance.canEdit()) {
                     view.setBackgroundResource(R.drawable.form_list);
                 } else {

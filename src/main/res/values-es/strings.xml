@@ -76,9 +76,6 @@
     <string name="field_worker_home">Trabajador de campo Inicio</string>
     <string name="logout">Terminar Sesión</string>
     <string name="unsent_forms">Formularios no enviado</string>
-    <string name="forms_awaiting_approval">Formularios en espera de aprobación</string>
-    <string name="supervisor_approve_all">Aprobar Todo</string>
-    <string name="supervisor_approve_selected">Aprobar Seleccionado</string>
     <string name="launching_form">Iniciando Formulario…</string>
     <string name="delete_button_label">Eliminar</string>
     <string name="find_label">Encontrar</string>
@@ -89,7 +86,6 @@
     <string name="cancel_label">Cancelar</string>
     <string name="delete_dialog_warning_title">¡Aviso!</string>
     <string name="delete_forms">Eliminar Formularios</string>
-    <string name="approve_forms">Aprobar Formularios</string>
     <string name="uuid">UUID</string>
     <string name="sync_database_updated_never">Nunca</string>
     <string name="sync_database_updated">Base de datos actualizada</string>

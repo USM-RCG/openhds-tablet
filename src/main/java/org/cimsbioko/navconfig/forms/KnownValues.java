@@ -7,9 +7,6 @@ import org.cimsbioko.R;
 
 public class KnownValues {
 
-    public static final String FORM_NEEDS_REVIEW = "1";
-    public static final String FORM_NO_REVIEW_NEEDED = "0";
-
     public static final class Individual {
 
         static final Map<String, Integer> valueLabels = new HashMap<>();

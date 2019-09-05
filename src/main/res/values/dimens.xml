@@ -26,8 +26,6 @@
     <dimen name="list_divider_height">5dp</dimen>
     <dimen name="button_list_divider_height">10dp</dimen>
 
-    <dimen name="approval_button_spacing">5dp</dimen>
-
     <dimen name="progress_caption_spacing">4dp</dimen>
 
     <dimen name="search_results_spacing">5dp</dimen>
@@ -43,7 +41,5 @@
     <dimen name="instance_checkbox_padding">5dp</dimen>
 
     <dimen name="toggle_fragment_spacing">10dp</dimen>
-
-    <dimen name="supervisor_button_spacing">10dp</dimen>
 
 </resources>

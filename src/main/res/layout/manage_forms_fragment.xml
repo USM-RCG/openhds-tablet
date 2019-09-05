@@ -18,31 +18,11 @@
         android:layout_marginBottom="@dimen/heading_spacing" />
 
     <Button
-        android:id="@+id/manage_forms_fragment_secondary_button"
-        style="@style/ApprovalButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/manage_forms_fragment_primary_button"
-        android:layout_toEndOf="@+id/view"
-        android:layout_toRightOf="@+id/view"
-        tools:text="Primary Button" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="@dimen/approval_button_spacing"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-    <Button
         android:id="@+id/manage_forms_fragment_primary_button"
-        style="@style/ApprovalButton"
+        style="@style/Button"
+        android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/view"
-        android:layout_toStartOf="@+id/view"
-        tools:text="Secondary Button" />
+        android:layout_centerHorizontal="true"
+        tools:text="Delete Button" />
 
 </RelativeLayout>
