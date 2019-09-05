@@ -31,14 +31,12 @@ public class SettingsProvider extends android.content.ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        switch (sUriMatcher.match(uri)) {
-            case ODK_API_URI:
-                MatrixCursor c = new MatrixCursor(new String[]{"ODK_API_URI"});
-                c.addRow(new Object[]{buildServerUrl(getContext(), "/api/odk")});
-                return c;
-            default:
-                throw new IllegalArgumentException("Unknown URI " + uri);
+        if (sUriMatcher.match(uri) == ODK_API_URI) {
+            MatrixCursor c = new MatrixCursor(new String[]{"ODK_API_URI"});
+            c.addRow(new Object[]{buildServerUrl(getContext(), "/api/odk")});
+            return c;
         }
+        throw new IllegalArgumentException("Unknown URI " + uri);
     }
 
     @Nullable

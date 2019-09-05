@@ -77,16 +77,15 @@ public class DataSelectionFragment extends Fragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.save_favorite:
-                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                DataWrapper selected = getItem(info.position);
-                if (selected != null) {
-                    Context ctx = getActivity();
-                    DatabaseAdapter.getInstance().addFavorite(selected);
-                    MessageUtils.showShortToast(ctx, R.string.saved_favorite);
-                }
-                return true;
+        if (item.getItemId() == R.id.save_favorite) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            DataWrapper selected = getItem(info.position);
+            if (selected != null) {
+                Context ctx = getActivity();
+                DatabaseAdapter.getInstance().addFavorite(selected);
+                MessageUtils.showShortToast(ctx, R.string.saved_favorite);
+            }
+            return true;
         }
         return super.onContextItemSelected(item);
     }

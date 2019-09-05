@@ -55,10 +55,9 @@ public class FieldWorkerLoginFragment extends Fragment implements OnClickListene
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_ENTER:
-                    authenticateFieldWorker();
-                    return true;
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                authenticateFieldWorker();
+                return true;
             }
         }
         return false;

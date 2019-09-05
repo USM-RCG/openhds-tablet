@@ -293,10 +293,9 @@ public class SearchableActivity extends AppCompatActivity {
         @Override
         public boolean onKey(View v, int keyCode, KeyEvent event) {
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                switch (keyCode) {
-                    case KeyEvent.KEYCODE_ENTER:
-                        searchButton.performClick();
-                        return true;
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    searchButton.performClick();
+                    return true;
                 }
             }
             return false;

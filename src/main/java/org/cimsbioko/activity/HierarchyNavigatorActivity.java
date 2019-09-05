@@ -226,21 +226,19 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent();
-        switch (item.getItemId()) {
-            case R.id.logout_menu_button:
-                getLogin(FieldWorker.class).logout(this, true);
-                break;
-            default:
-                String menuModule = menuItemTags.get(item);
-                if (menuModule != null) {
-                    intent.setClass(this, HierarchyNavigatorActivity.class);
-                    intent.putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, menuModule);
-                    intent.putExtra(HIERARCHY_PATH_KEY, hierarchyPath);
-                    intent.putParcelableArrayListExtra(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
-                    startActivity(intent);
-                } else {
-                    return super.onOptionsItemSelected(item);
-                }
+        if (item.getItemId() == R.id.logout_menu_button) {
+            getLogin(FieldWorker.class).logout(this, true);
+        } else {
+            String menuModule = menuItemTags.get(item);
+            if (menuModule != null) {
+                intent.setClass(this, HierarchyNavigatorActivity.class);
+                intent.putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, menuModule);
+                intent.putExtra(HIERARCHY_PATH_KEY, hierarchyPath);
+                intent.putParcelableArrayListExtra(CURRENT_RESULTS_KEY, (ArrayList<DataWrapper>) currentResults);
+                startActivity(intent);
+            } else {
+                return super.onOptionsItemSelected(item);
+            }
         }
 
         return true;
@@ -264,11 +262,9 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case FORM_ACTIVITY_REQUEST_CODE:
-                    handleFormResult(data);
-                    updateAfterResult = true;
-                    break;
+            if (requestCode == FORM_ACTIVITY_REQUEST_CODE) {
+                handleFormResult(data);
+                updateAfterResult = true;
             }
         }
     }

@@ -91,13 +91,11 @@ public class FieldWorkerActivity extends AppCompatActivity implements OnClickLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.logout_menu_button:
-                getLogin(FieldWorker.class).logout(this, true);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.logout_menu_button) {
+            getLogin(FieldWorker.class).logout(this, true);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
