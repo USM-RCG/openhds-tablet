@@ -2,14 +2,14 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:android="http://schemas.android.com/apk/res/android" >
 	<item
-		android:id="@+id/configure_server"
-		android:icon="@drawable/ic_settings_applications"
-		android:title="@string/settings"
+		android:id="@+id/send_forms"
+		android:icon="@drawable/ic_upload"
+		android:title="@string/send_forms"
 		app:showAsAction="ifRoom|withText" />
 	<item
-		android:id="@+id/send_forms"
-		android:icon="@drawable/ic_send"
-		android:title="@string/send_forms"
+		android:id="@+id/download_data"
+		android:icon="@drawable/ic_download"
+		android:title="@string/download_data"
 		app:showAsAction="ifRoom|withText" />
 	<item
 		android:id="@+id/rebuild_search_indices"
@@ -18,9 +18,9 @@
 		app:showAsAction="ifRoom|withText"
 		android:visible="false"/>
 	<item
-		android:id="@+id/show_supervisor"
-		android:icon="@drawable/ic_supervisor_account"
-		android:title="@string/supervisor"
+		android:id="@+id/configure_server"
+		android:icon="@drawable/ic_settings_applications"
+		android:title="@string/settings"
 		app:showAsAction="ifRoom|withText" />
 </menu>
 

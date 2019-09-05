@@ -95,6 +95,12 @@
         </activity>
         <activity android:name=".activity.DeviceAuthenticatorActivity" />
         <activity android:name=".activity.SetupChecklistActivity" />
+        <activity android:name=".activity.SyncDbActivity"
+                  android:parentActivityName=".activity.LoginActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".activity.LoginActivity" />
+        </activity>
         <meta-data
             android:name="android.app.default_searchable"
             android:value=".activity.SearchableActivity" />

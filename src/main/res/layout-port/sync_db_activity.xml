@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:baselineAligned="false">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/sync_db_toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"/>
+
+    <fragment
+            android:id="@+id/sync_db_fragment"
+            android:name="org.cimsbioko.fragment.SyncDatabaseFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sync_history_spacing"
+            android:layout_marginLeft="@dimen/sync_history_spacing"
+            android:layout_marginStart="@dimen/sync_history_spacing"
+            android:layout_marginRight="@dimen/sync_history_spacing"
+            android:layout_marginEnd="@dimen/sync_history_spacing"/>
+
+    <fragment
+            android:id="@+id/sync_history_fragment"
+            android:name="org.cimsbioko.fragment.SyncHistoryFragment"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/sync_history_spacing"/>
+
+</LinearLayout>

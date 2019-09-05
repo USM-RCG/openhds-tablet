@@ -187,5 +187,6 @@
     <string name="no_btn">No</string>
     <string name="server_updated_msg">El servidor fue actualizado</string>
     <string name="result_invalid_path">Selección no válida: ruta de jerarquía incorrecta</string>
+    <string name="sync_db_title">Descargar Datos</string>
 
 </resources>

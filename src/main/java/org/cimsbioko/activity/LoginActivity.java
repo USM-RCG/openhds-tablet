@@ -82,11 +82,11 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
             case R.id.send_forms:
                 sendApprovedForms();
                 return true;
+            case R.id.download_data:
+                startActivity(new Intent(this, SyncDbActivity.class));
+                return true;
             case R.id.rebuild_search_indices:
                 IndexingService.queueFullReindex(this);
-                return true;
-            case R.id.show_supervisor:
-                startActivity(new Intent(this, SupervisorActivity.class));
                 return true;
             default:
                 return false;

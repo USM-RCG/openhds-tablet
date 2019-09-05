@@ -212,5 +212,6 @@
     <string name="no_btn">No</string>
     <string name="server_updated_msg">Server updated</string>
     <string name="result_invalid_path">Invalid selection: bad hierarchy path</string>
+    <string name="sync_db_title">Download Data</string>
 
 </resources>
