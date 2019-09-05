@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -42,7 +43,36 @@ public class FieldWorkerLoginActivity extends AppCompatActivity implements Navig
             actionBar.setHomeButtonEnabled(true);
         }
         setTitle(getAppFullName(this));
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0) {
+
+            boolean tryHide = true;
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                tryHide = true;
+                super.onDrawerOpened(drawerView);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                tryHide = true;
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                if (tryHide) {
+                    InputMethodManager inputMgr = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    View focused = getCurrentFocus();
+                    if (focused != null) {
+                        inputMgr.hideSoftInputFromWindow(focused.getWindowToken(), 0);
+                        tryHide = false;
+                    }
+                }
+                super.onDrawerSlide(drawerView, slideOffset);
+            }
+        };
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
