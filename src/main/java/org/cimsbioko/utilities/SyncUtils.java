@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -331,7 +332,7 @@ public class SyncUtils {
             Log.i(TAG, "sync requested manually");
             Bundle extras = new Bundle();
             extras.putBoolean(ctx.getString(R.string.manual_sync_key), true);
-            ctx.getContentResolver().requestSync(accounts[0], AUTHORITY, extras);
+            ContentResolver.requestSync(accounts[0], AUTHORITY, extras);
         } else {
             Log.w(TAG, "sync request ignored, no account");
         }
@@ -342,7 +343,7 @@ public class SyncUtils {
         Account[] accounts = manager.getAccountsByType(ACCOUNT_TYPE);
         if (accounts.length > 0) {
             Log.i(TAG, "sync cancellation requested by user");
-            ctx.getContentResolver().cancelSync(accounts[0], AUTHORITY);
+            ContentResolver.cancelSync(accounts[0], AUTHORITY);
             NotificationUtils.getNotificationManager(ctx).cancel(SYNC_NOTIFICATION_ID);
         } else {
             Log.w(TAG, "sync cancellation ignored, no account");
