@@ -460,7 +460,6 @@ public class SearchableActivity extends AppCompatActivity {
         private int limit;
 
         BoundedSearch(Query query, int limit) {
-            super(SearchableActivity.this);
             this.query = query;
             this.limit = limit;
         }

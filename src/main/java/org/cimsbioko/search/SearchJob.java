@@ -1,6 +1,5 @@
 package org.cimsbioko.search;
 
-import android.content.Context;
 import android.util.Log;
 
 import org.apache.lucene.search.IndexSearcher;
@@ -9,18 +8,13 @@ public abstract class SearchJob implements Runnable {
 
     private static final String TAG = SearchJob.class.getSimpleName();
 
-    protected Context ctx;
-    protected SearchQueue service;
+    private SearchQueue service;
 
-    protected SearchJob(Context ctx) {
-        this.ctx = ctx;
-    }
-
-    public void setQueue(SearchQueue service) {
+    void setQueue(SearchQueue service) {
         this.service = service;
     }
 
-    boolean isActive() {
+    private boolean isActive() {
         return service != null && !service.isShutdown();
     }
 
