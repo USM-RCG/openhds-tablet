@@ -82,7 +82,7 @@ public class FieldWorkerLoginFragment extends Fragment implements OnClickListene
         FieldWorker fieldWorker = fieldWorkerGateway.findByExtId(username).getFirst();
 
         Activity activity = getActivity();
-        LoginUtils.Login login = getLogin(FieldWorker.class);
+        LoginUtils.Login<FieldWorker> login = getLogin(FieldWorker.class);
         if (fieldWorker != null) {
             if (BCrypt.checkpw(password, fieldWorker.getPasswordHash())) {
                 login.setAuthenticatedUser(fieldWorker);

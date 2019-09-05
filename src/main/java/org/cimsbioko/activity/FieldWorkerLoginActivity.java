@@ -23,17 +23,17 @@ import static org.cimsbioko.search.Utils.isSearchEnabled;
 import static org.cimsbioko.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.cimsbioko.utilities.ConfigUtils.getAppFullName;
 
-public class LoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class FieldWorkerLoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private NavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
-        Toolbar toolbar = findViewById(R.id.login_toolbar);
-        DrawerLayout drawerLayout = findViewById(R.id.login_drawer_layout);
-        navView = findViewById(R.id.login_navigation_view);
+        setContentView(R.layout.fieldworker_login_activity);
+        Toolbar toolbar = findViewById(R.id.fieldworker_login_toolbar);
+        DrawerLayout drawerLayout = findViewById(R.id.fieldworker_login_drawer_layout);
+        navView = findViewById(R.id.fieldworker_login_navigation_view);
         navView.setNavigationItemSelectedListener(this);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();

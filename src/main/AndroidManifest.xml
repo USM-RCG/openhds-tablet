@@ -46,7 +46,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.FieldWorkerLoginActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"/>
@@ -54,10 +54,10 @@
             android:name=".activity.PreferenceActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".activity.LoginActivity">
+            android:parentActivityName=".activity.FieldWorkerLoginActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".activity.LoginActivity" />
+                    android:value=".activity.FieldWorkerLoginActivity" />
         </activity>
         <activity
             android:name=".activity.HierarchyNavigatorActivity"
@@ -70,10 +70,10 @@
         <activity
             android:name=".activity.FieldWorkerActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".activity.LoginActivity">
+            android:parentActivityName=".activity.FieldWorkerLoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.LoginActivity" />
+                android:value=".activity.FieldWorkerLoginActivity" />
         </activity>
         <activity android:name=".activity.SearchableActivity">
             <intent-filter>
@@ -88,16 +88,16 @@
         <activity android:name=".activity.DeviceAuthenticatorActivity" />
         <activity android:name=".activity.SetupChecklistActivity" />
         <activity android:name=".activity.SyncDbActivity"
-                  android:parentActivityName=".activity.LoginActivity">
+                  android:parentActivityName=".activity.FieldWorkerLoginActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".activity.LoginActivity" />
+                    android:value=".activity.FieldWorkerLoginActivity" />
         </activity>
         <activity android:name=".activity.ManageFormsActivity"
-                  android:parentActivityName=".activity.LoginActivity">
+                  android:parentActivityName=".activity.FieldWorkerLoginActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".activity.LoginActivity" />
+                    android:value=".activity.FieldWorkerLoginActivity" />
         </activity>
         <meta-data
             android:name="android.app.default_searchable"

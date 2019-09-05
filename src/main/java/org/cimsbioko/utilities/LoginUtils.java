@@ -2,7 +2,7 @@ package org.cimsbioko.utilities;
 
 import android.app.Activity;
 import android.content.Intent;
-import org.cimsbioko.activity.LoginActivity;
+import org.cimsbioko.activity.FieldWorkerLoginActivity;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -47,6 +47,6 @@ public class LoginUtils {
     }
 
     static void launchLogin(Activity ctx) {
-        ctx.startActivity(new Intent(ctx, LoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TASK));
+        ctx.startActivity(new Intent(ctx, FieldWorkerLoginActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TASK));
     }
 }
