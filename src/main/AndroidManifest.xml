@@ -93,6 +93,12 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".activity.LoginActivity" />
         </activity>
+        <activity android:name=".activity.ManageFormsActivity"
+                  android:parentActivityName=".activity.LoginActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".activity.LoginActivity" />
+        </activity>
         <meta-data
             android:name="android.app.default_searchable"
             android:value=".activity.SearchableActivity" />

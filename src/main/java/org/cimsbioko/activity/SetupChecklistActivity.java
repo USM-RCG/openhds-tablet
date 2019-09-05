@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import androidx.annotation.NonNull;
@@ -145,7 +144,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.configure_server) {
+        if (item.getItemId() == R.id.configure_settings) {
             startActivity(new Intent(this, PreferenceActivity.class));
             return true;
         }

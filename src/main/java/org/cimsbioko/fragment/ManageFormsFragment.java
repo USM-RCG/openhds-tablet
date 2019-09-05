@@ -28,9 +28,9 @@ import static org.cimsbioko.navconfig.forms.PayloadTools.requiresApproval;
 import static org.cimsbioko.utilities.FormUtils.updateFormElement;
 import static org.cimsbioko.utilities.FormsHelper.deleteFormInstances;
 
-public class ChecklistFragment extends Fragment {
+public class ManageFormsFragment extends Fragment {
 
-    private final String TAG = ChecklistFragment.class.getSimpleName();
+    private final String TAG = ManageFormsFragment.class.getSimpleName();
 
     private static final String MODE_BUNDLE_KEY = "checklistFragmentMode";
     public static final String DELETE_MODE = "delete";
@@ -51,9 +51,9 @@ public class ChecklistFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fragmentLayout = (RelativeLayout) inflater.inflate(R.layout.checklist_fragment, container, false);
-        listView = fragmentLayout.findViewById(R.id.checklist_fragment_listview);
-        setupApproveMode();
+        fragmentLayout = (RelativeLayout) inflater.inflate(R.layout.manage_forms_fragment, container, false);
+        listView = fragmentLayout.findViewById(R.id.manage_forms_fragment_listview);
+        setupDeleteMode();
         deleteConfirmDialog = new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.delete_forms_dialog_warning)
                 .setTitle(R.string.delete_dialog_warning_title)
@@ -78,25 +78,25 @@ public class ChecklistFragment extends Fragment {
     }
 
     public void setMode(String mode) {
-        if (ChecklistFragment.DELETE_MODE.equals(mode)) {
+        if (ManageFormsFragment.DELETE_MODE.equals(mode)) {
             setupDeleteMode();
-        } else if (ChecklistFragment.APPROVE_MODE.equals(mode)) {
+        } else if (ManageFormsFragment.APPROVE_MODE.equals(mode)) {
             setupApproveMode();
         }
     }
 
     private void setupDeleteMode() {
-        currentMode = ChecklistFragment.DELETE_MODE;
+        currentMode = ManageFormsFragment.DELETE_MODE;
         adapter = setupDeleteAdapter();
         listView.setAdapter(adapter);
 
         if (null == headerView) {
-            headerView = fragmentLayout.findViewById(R.id.checklist_fragment_listview_header);
+            headerView = fragmentLayout.findViewById(R.id.manage_forms_fragment_listview_header);
         }
         headerView.setText(R.string.unsent_forms);
 
         if (null == primaryListButton) {
-            primaryListButton = fragmentLayout.findViewById(R.id.checklist_fragment_primary_button);
+            primaryListButton = fragmentLayout.findViewById(R.id.manage_forms_fragment_primary_button);
             primaryListButton.setOnClickListener(new ButtonListener());
         }
         primaryListButton.setText(R.string.delete_button_label);
@@ -104,7 +104,7 @@ public class ChecklistFragment extends Fragment {
         primaryListButton.setVisibility(View.VISIBLE);
 
         if (null == secondaryListButton) {
-            secondaryListButton = fragmentLayout.findViewById(R.id.checklist_fragment_secondary_button);
+            secondaryListButton = fragmentLayout.findViewById(R.id.manage_forms_fragment_secondary_button);
             secondaryListButton.setOnClickListener(new ButtonListener());
         }
 
@@ -117,18 +117,18 @@ public class ChecklistFragment extends Fragment {
     }
 
     private void setupApproveMode() {
-        currentMode = ChecklistFragment.APPROVE_MODE;
+        currentMode = ManageFormsFragment.APPROVE_MODE;
         adapter = setupApproveAdapter();
         listView.setAdapter(adapter);
 
         if (null == headerView) {
-            headerView = fragmentLayout.findViewById(R.id.checklist_fragment_listview_header);
+            headerView = fragmentLayout.findViewById(R.id.manage_forms_fragment_listview_header);
         }
         headerView.setText(R.string.forms_awaiting_approval);
         headerView.setBackgroundResource(R.drawable.form_list_header);
 
         if (null == primaryListButton) {
-            primaryListButton = fragmentLayout.findViewById(R.id.checklist_fragment_primary_button);
+            primaryListButton = fragmentLayout.findViewById(R.id.manage_forms_fragment_primary_button);
             primaryListButton.setOnClickListener(new ButtonListener());
         }
 
@@ -137,7 +137,7 @@ public class ChecklistFragment extends Fragment {
         primaryListButton.setVisibility(View.VISIBLE);
 
         if (null == secondaryListButton) {
-            secondaryListButton = fragmentLayout.findViewById(R.id.checklist_fragment_secondary_button);
+            secondaryListButton = fragmentLayout.findViewById(R.id.manage_forms_fragment_secondary_button);
             secondaryListButton.setOnClickListener(new ButtonListener());
         }
 

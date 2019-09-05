@@ -34,7 +34,7 @@
 
     <dimen name="list_icon_padding">2dp</dimen>
 
-    <dimen name="sync_history_spacing">10dp</dimen>
+    <dimen name="activity_margin">10dp</dimen>
 
     <dimen name="module_button_spacing">5dp</dimen>
 

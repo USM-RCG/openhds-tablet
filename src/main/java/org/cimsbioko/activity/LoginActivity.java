@@ -76,8 +76,8 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.configure_server:
-                startActivity(new Intent(this, PreferenceActivity.class));
+            case R.id.manage_forms:
+                startActivity(new Intent(this, ManageFormsActivity.class));
                 return true;
             case R.id.send_forms:
                 sendApprovedForms();
@@ -87,6 +87,9 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                 return true;
             case R.id.rebuild_search_indices:
                 IndexingService.queueFullReindex(this);
+                return true;
+            case R.id.configure_settings:
+                startActivity(new Intent(this, PreferenceActivity.class));
                 return true;
             default:
                 return false;

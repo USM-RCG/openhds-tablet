@@ -4,26 +4,26 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/checklist_fragment_listview_header"
+        android:id="@+id/manage_forms_fragment_listview_header"
         style="@style/ListHeader"
         tools:text="Sample Heading" />
 
     <ListView
-        android:id="@+id/checklist_fragment_listview"
+        android:id="@+id/manage_forms_fragment_listview"
         style="@style/FormList"
-        android:layout_above="@+id/checklist_fragment_primary_button"
+        android:layout_above="@+id/manage_forms_fragment_primary_button"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/checklist_fragment_listview_header"
+        android:layout_below="@id/manage_forms_fragment_listview_header"
         android:layout_marginBottom="@dimen/heading_spacing" />
 
     <Button
-        android:id="@+id/checklist_fragment_secondary_button"
+        android:id="@+id/manage_forms_fragment_secondary_button"
         style="@style/ApprovalButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/checklist_fragment_primary_button"
+        android:layout_alignTop="@+id/manage_forms_fragment_primary_button"
         android:layout_toEndOf="@+id/view"
         android:layout_toRightOf="@+id/view"
         tools:text="Primary Button" />
@@ -36,7 +36,7 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:id="@+id/checklist_fragment_primary_button"
+        android:id="@+id/manage_forms_fragment_primary_button"
         style="@style/ApprovalButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"

@@ -25,7 +25,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/sync_history_fragment"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_margin="@dimen/sync_history_spacing"
+            android:layout_margin="@dimen/activity_margin"
     />
 
     <fragment
@@ -37,10 +37,10 @@
             app:layout_constraintStart_toEndOf="@id/sync_db_fragment"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="@dimen/sync_history_spacing"
-            android:layout_marginRight="@dimen/sync_history_spacing"
-            android:layout_marginEnd="@dimen/sync_history_spacing"
-            android:layout_marginBottom="@dimen/sync_history_spacing"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:layout_marginRight="@dimen/activity_margin"
+            android:layout_marginEnd="@dimen/activity_margin"
+            android:layout_marginBottom="@dimen/activity_margin"
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
