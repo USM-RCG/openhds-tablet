@@ -32,12 +32,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/usernameEditText"/>
 
-    <Button
+    <ImageButton
+            android:src="@drawable/ic_camera"
             android:id="@+id/scanButton"
-            style="@style/Button"
-            android:text="@string/scan_btn"
-            app:layout_constraintEnd_toStartOf="@id/loginButton"
-            app:layout_constraintBottom_toBottomOf="@id/loginButton"/>
+            style="@style/ImageButton"
+            android:contentDescription="@string/scan_btn"
+            app:layout_constraintStart_toEndOf="@id/usernameEditText"
+            app:layout_constraintBottom_toBottomOf="@id/usernameEditText" />
 
     <Button
             android:id="@+id/loginButton"
