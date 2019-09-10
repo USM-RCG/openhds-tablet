@@ -35,8 +35,6 @@ import static org.cimsbioko.utilities.FormsHelper.registerInstance;
  */
 public class FormUtils {
 
-    private static final String TAG = FormUtils.class.getSimpleName();
-
     public static final String FILE_EXTENSION = ".xml";
     public static final String HEAD = "head";
     public static final String MODEL = "model";
