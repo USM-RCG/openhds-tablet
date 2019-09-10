@@ -266,20 +266,6 @@ public class FormUtils {
     }
 
     /**
-     * A convenience method: updates a single element in the XML file at the specified path.
-     *
-     * @param name  the name of the element to update
-     * @param value the value of the element
-     * @param path  the filesystem path of the xml document to update
-     * @throws IOException
-     */
-    public static void updateFormElement(String name, String value, String path) throws IOException {
-        Map<String, String> formData = loadInstance(path);
-        formData.put(name, value);
-        updateInstance(formData, path);
-    }
-
-    /**
      * Generates and registers a new XML form with the specified values and registers it with CIMS Forms.
      *
      * @param values   name/value pairs specifying values to merge with the blank form
