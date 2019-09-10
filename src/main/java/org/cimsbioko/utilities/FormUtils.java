@@ -168,23 +168,8 @@ public class FormUtils {
         domToFile(form, location);
     }
 
-    /**
-     * Generates a list of elements descending from root and matching the specified match criteria.
-     */
-    private static List<Element> descendants(Element root, Filter<Element> filter) {
-        List<Element> results = new ArrayList<>();
-        Iterator<Element> itr = root.getDescendants(filter);
-        while (itr.hasNext()) {
-            results.add(itr.next());
-        }
-        return results;
-    }
-
-    /**
-     * Generates list of all elements descending from root.
-     */
-    private static List<Element> descendants(Element root) {
-        return descendants(root, new ElementFilter());
+    private static Iterable<Element> descendants(Element element) {
+        return element.getDescendants(new ElementFilter());
     }
 
     /**
@@ -196,10 +181,28 @@ public class FormUtils {
      */
     private static Document fillInstance(Document blank, Map<String, String> data) {
 
+        Element mainElem = getDataElement(blank);
+
+        // add the binding name as a root-level attribute, if present
+        if (data.containsKey(BINDING_MAP_KEY)) {
+            mainElem.setAttribute(BINDING_ATTR, data.get(BINDING_MAP_KEY));
+        }
+
+        // fill out the form instance elements with supplied values
+        for (Element e : descendants(mainElem)) {
+            String elemNam = e.getName();
+            if (data.containsKey(elemNam) && data.get(elemNam) != null) {
+                e.setText(data.get(elemNam));
+            }
+        }
+
+        return new Document(mainElem);
+    }
+
+    private static Element getDataElement(Document blank) {
         Namespace xformsNs = Namespace.getNamespace("http://www.w3.org/2002/xforms"),
                 xhtmlNs = Namespace.getNamespace("http://www.w3.org/1999/xhtml");
-
-        Element instance = blank
+        return blank
                 .getRootElement()
                 .getChild(HEAD, xhtmlNs)
                 .getChild(MODEL, xformsNs)
@@ -207,21 +210,6 @@ public class FormUtils {
                 .getChildren()
                 .get(0)
                 .detach();
-
-        // add the binding name as a root-level attribute, if present
-        if (data.containsKey(BINDING_MAP_KEY)) {
-            instance.setAttribute(BINDING_ATTR, data.get(BINDING_MAP_KEY));
-        }
-
-        // fill out the form instance elements with supplied values
-        for (Element dataElement : descendants(instance)) {
-            String elementName = dataElement.getName();
-            if (data.containsKey(elementName) && data.get(elementName) != null) {
-                dataElement.setText(data.get(elementName));
-            }
-        }
-
-        return new Document(instance);
     }
 
     /**
