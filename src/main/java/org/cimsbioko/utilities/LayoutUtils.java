@@ -170,7 +170,7 @@ public class LayoutUtils {
     }
 
     // Set up a form list item based on a given form instance.
-    public static void configureFormListItem(Context context, View view, FormInstance instance) {
+    public static void configureFormListItem(View view, FormInstance instance) {
 
         try {
 

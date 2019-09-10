@@ -30,7 +30,7 @@ public class FormInstanceAdapter extends ArrayAdapter<FormInstance> {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.form_instance_list_item, null);
         }
-        configureFormListItem(getContext(), convertView, instances.get(position));
+        configureFormListItem(convertView, instances.get(position));
         return convertView;
     }
 

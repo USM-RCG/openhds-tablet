@@ -52,7 +52,7 @@ public class FormChecklistAdapter extends ArrayAdapter<FormInstance> {
 
         // set up the basics to display the form instance info
         FormInstance instance = getItem(position);
-        LayoutUtils.configureFormListItem(getContext(), convertView, instance);
+        LayoutUtils.configureFormListItem(convertView, instance);
 
         // add callback when the form instance info is pressed
         ViewGroup itemArea = convertView.findViewById(R.id.form_instance_item_area);
