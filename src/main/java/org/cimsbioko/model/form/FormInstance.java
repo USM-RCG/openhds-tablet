@@ -1,20 +1,17 @@
 package org.cimsbioko.model.form;
 
 import android.net.Uri;
-
 import org.cimsbioko.navconfig.NavigatorConfig;
 import org.cimsbioko.navconfig.forms.Binding;
 import org.cimsbioko.provider.InstanceProviderAPI;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
-import static org.cimsbioko.utilities.FormUtils.formFile;
-import static org.cimsbioko.utilities.FormUtils.generateForm;
-import static org.cimsbioko.utilities.FormUtils.loadInstance;
-import static org.cimsbioko.utilities.FormUtils.updateInstance;
+import static org.cimsbioko.utilities.FormUtils.*;
 import static org.cimsbioko.utilities.FormsHelper.getBlankInstance;
 import static org.cimsbioko.utilities.FormsHelper.getInstance;
 
@@ -159,13 +156,17 @@ public class FormInstance implements Serializable {
      * Generates a new {@link FormInstance}.
      *
      * @param binding the binding to use for instance generation
-     * @param data the form data to populate the new instance with
+     * @param data    the form data to populate the new instance with
      * @return the {@link Uri} to a new form instance, registered with Forms
      * @throws IOException
      */
     public static Uri generate(Binding binding, Map<String, String> data) throws IOException {
-        FormInstance template = getBlankInstance(binding.getForm());
-        return generateForm(binding, template, data, formFile(template.getFileName(), new Date()));
+        String formId = binding.getForm();
+        FormInstance template = getBlankInstance(formId);
+        if (template == null) {
+            throw new FileNotFoundException("form " + formId + " not found");
+        }
+        return generateForm(template, data, formFile(template.getFileName(), new Date()));
     }
 
 }

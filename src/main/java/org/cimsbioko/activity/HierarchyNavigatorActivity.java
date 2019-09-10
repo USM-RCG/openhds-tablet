@@ -48,9 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import static org.cimsbioko.model.form.FormInstance.generate;
-import static org.cimsbioko.model.form.FormInstance.getBinding;
-import static org.cimsbioko.model.form.FormInstance.lookup;
+import static org.cimsbioko.model.form.FormInstance.*;
 import static org.cimsbioko.search.Utils.isSearchEnabled;
 import static org.cimsbioko.utilities.FormUtils.editIntent;
 import static org.cimsbioko.utilities.LoginUtils.getLogin;
@@ -256,7 +254,9 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
     }
 
     private Map<String, String> buildPayload(Binding binding) {
-        return binding.getBuilder().buildPayload(this);
+        Map<String, String> data = binding.getBuilder().buildPayload(this);
+        data.put(BINDING_MAP_KEY, binding.getName());
+        return data;
     }
 
     @Override

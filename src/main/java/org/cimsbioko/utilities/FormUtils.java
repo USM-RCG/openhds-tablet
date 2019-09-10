@@ -301,30 +301,20 @@ public class FormUtils {
     /**
      * Generates and registers a new XML form with the specified values and registers it with CIMS Forms.
      *
-     * @param binding  the form binding form the form to generate
      * @param values   name/value pairs specifying values to merge with the blank form
      * @param location the filesystem location to save the generated form to, it must be accessible to CIMS Forms
      * @return the content {@link Uri} of the form registered with CIMS Forms
      * @throws IOException
      */
-    public static Uri generateForm(Binding binding, FormInstance template, Map<String, String> values, File location)
+    public static Uri generateForm(FormInstance template, Map<String, String> values, File location)
             throws IOException {
-        String formName = binding.getForm(), bindName = binding.getName();
-        if (template != null) {
-            String tName = template.getFormName(), tVersion = template.getFormVersion(), tPath = template.getFilePath();
-            File tFile = new File(tPath);
-            try {
-                if (bindName != null) {
-                    // Used to form bindings for saved instances
-                    values.put(BINDING_MAP_KEY, binding.getName());
-                }
-                saveForm(genInstanceDoc(tFile, values), location);
-                return registerInstance(location, location.getName(), tName, tVersion);
-            } catch (JDOMException e) {
-                throw new IOException("failed to fill out form", e);
-            }
-        } else {
-            throw new FileNotFoundException("form " + formName + " not found");
+        String tName = template.getFormName(), tVersion = template.getFormVersion(), tPath = template.getFilePath();
+        File tFile = new File(tPath);
+        try {
+            saveForm(genInstanceDoc(tFile, values), location);
+            return registerInstance(location, location.getName(), tName, tVersion);
+        } catch (JDOMException e) {
+            throw new IOException("failed to fill out form", e);
         }
     }
 
