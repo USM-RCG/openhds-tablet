@@ -5,6 +5,7 @@ import org.cimsbioko.navconfig.NavigatorConfig;
 import org.cimsbioko.navconfig.forms.Binding;
 import org.cimsbioko.provider.InstanceProviderAPI;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
@@ -166,7 +167,8 @@ public class FormInstance implements Serializable {
         if (template == null) {
             throw new FileNotFoundException("form " + formId + " not found");
         }
-        return generateForm(template, data, formFile(template.getFileName(), new Date()));
+        File targetFile = formFile(template.getFileName(), new Date());
+        return generateForm(template, data, targetFile);
     }
 
 }

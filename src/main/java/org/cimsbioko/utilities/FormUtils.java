@@ -13,10 +13,8 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.cimsbioko.model.form.FormInstance;
-import org.cimsbioko.navconfig.forms.Binding;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -192,18 +190,16 @@ public class FormUtils {
     /**
      * Generates a filled-out form instance document by combining a template file with matching answers.
      *
-     * @param templateForm file containing blank form
+     * @param blank file containing blank form
      * @param data         a dictionary of answers to use when generating the completed form
      * @return a {@link Document} object containing the completed form
-     * @throws JDOMException
-     * @throws IOException
      */
-    private static Document genInstanceDoc(File templateForm, Map<String, String> data) throws IOException, JDOMException {
+    private static Document fillInstance(Document blank, Map<String, String> data) {
 
         Namespace xformsNs = Namespace.getNamespace("http://www.w3.org/2002/xforms"),
                 xhtmlNs = Namespace.getNamespace("http://www.w3.org/1999/xhtml");
 
-        Element instance = domFromFile(templateForm)
+        Element instance = blank
                 .getRootElement()
                 .getChild(HEAD, xhtmlNs)
                 .getChild(MODEL, xformsNs)
@@ -311,7 +307,7 @@ public class FormUtils {
         String tName = template.getFormName(), tVersion = template.getFormVersion(), tPath = template.getFilePath();
         File tFile = new File(tPath);
         try {
-            saveForm(genInstanceDoc(tFile, values), location);
+            saveForm(fillInstance(domFromFile(tFile), values), location);
             return registerInstance(location, location.getName(), tName, tVersion);
         } catch (JDOMException e) {
             throw new IOException("failed to fill out form", e);
