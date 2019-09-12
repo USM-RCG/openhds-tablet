@@ -74,6 +74,7 @@ public class ContentProvider extends android.content.ContentProvider {
         individualProjection.put(App.Individuals.COLUMN_INDIVIDUAL_LAST_NAME, App.Individuals.COLUMN_INDIVIDUAL_LAST_NAME);
         individualProjection.put(App.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, App.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID);
         individualProjection.put(App.Individuals.COLUMN_INDIVIDUAL_ATTRS, App.Individuals.COLUMN_INDIVIDUAL_ATTRS);
+        individualProjection.put(App.Individuals.COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD, App.Individuals.COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD);
 
         // extensions for bioko project
         individualProjection.put(App.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES, App.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES);
