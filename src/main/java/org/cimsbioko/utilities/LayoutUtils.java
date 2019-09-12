@@ -13,6 +13,9 @@ import android.widget.TextView;
 
 import org.cimsbioko.R;
 import org.cimsbioko.model.form.FormInstance;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -174,7 +177,7 @@ public class LayoutUtils {
 
         try {
 
-            Map<String, String> data = instance.load();
+            Document dataDoc = instance.load();
 
             if (instance.isComplete()) {
                 if (instance.canEdit()) {
@@ -187,21 +190,23 @@ public class LayoutUtils {
             }
 
             // Set form name based on its embedded binding
-            String formTypeName = getBinding(data) != null? getBinding(data).getLabel() : instance.getFormName();
+            String formTypeName = getBinding(dataDoc) != null? getBinding(dataDoc).getLabel() : instance.getFormName();
             TextView formTypeView = view.findViewById(R.id.form_instance_list_type);
             formTypeView.setText(formTypeName);
 
+            Element data = dataDoc.getRootElement();
+
             // Extract and set values contained within the form instance
-            String entityId = data.get(ENTITY_EXTID);
+            String entityId = data.getChildText(ENTITY_EXTID);
             setText(view.findViewById(R.id.form_instance_list_id), entityId);
 
-            String fieldWorker = data.get(FIELD_WORKER_EXTID);
+            String fieldWorker = data.getChildText(FIELD_WORKER_EXTID);
             setText(view.findViewById(R.id.form_instance_list_fieldworker), fieldWorker);
 
-            String date = data.get(COLLECTION_DATE_TIME);
+            String date = data.getChildText(COLLECTION_DATE_TIME);
             setText(view.findViewById(R.id.form_instance_list_date), date);
 
-        } catch (IOException e) {
+        } catch (IOException | JDOMException e) {
             view.setBackgroundResource(R.drawable.form_list_red);
             Log.w(TAG, e.getMessage());
         }

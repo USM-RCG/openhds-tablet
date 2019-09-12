@@ -34,18 +34,18 @@ import org.cimsbioko.navconfig.db.QueryHelper;
 import org.cimsbioko.navconfig.forms.Binding;
 import org.cimsbioko.navconfig.forms.LaunchContext;
 import org.cimsbioko.navconfig.forms.Launcher;
-import org.cimsbioko.navconfig.forms.FormPayloadConsumer;
 import org.cimsbioko.provider.DatabaseAdapter;
 import org.cimsbioko.data.DataWrapper;
 import org.cimsbioko.utilities.ConfigUtils;
 import org.cimsbioko.utilities.FormsHelper;
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 
 import static org.cimsbioko.model.form.FormInstance.*;
@@ -246,17 +246,11 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
         if (binding != null) {
             try {
                 showShortToast(this, R.string.launching_form);
-                startActivityForResult(editIntent(generate(binding, buildPayload(binding))), FORM_ACTIVITY_REQUEST_CODE);
+                startActivityForResult(editIntent(generate(binding, this)), FORM_ACTIVITY_REQUEST_CODE);
             } catch (Exception e) {
                 showShortToast(this, "failed to launch form: " + e.getMessage());
             }
         }
-    }
-
-    private Map<String, String> buildPayload(Binding binding) {
-        Map<String, String> data = binding.getBuilder().buildPayload(this);
-        data.put(BINDING_MAP_KEY, binding.getName());
-        return data;
     }
 
     @Override
@@ -279,20 +273,19 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
             DatabaseAdapter.getInstance().attachFormToHierarchy(hierarchyPath.toString(), formPath);
         }
         try {
-            Map<String, String> formData = instance.load();
-            Binding binding = getBinding(formData);
+            Document dataDoc = instance.load();
+            Binding binding = getBinding(dataDoc);
             if (instance.isComplete() && binding != null) {
-                FormPayloadConsumer consumer = binding.getConsumer();
-                if (consumer.consumeFormPayload(formData, this).hasInstanceUpdates()) {
-                    consumer.augmentInstancePayload(formData);
+                boolean formModified = binding.getConsumer().consume(dataDoc, this);
+                if (formModified) {
                     try {
-                        instance.store(formData);
+                        instance.store(dataDoc);
                     } catch (IOException ue) {
                         showShortToast(this, "Update failed: " + ue.getMessage());
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | JDOMException e) {
             showShortToast(this, "Read failed: " + e.getMessage());
         }
     }

@@ -12,6 +12,7 @@ import org.cimsbioko.navconfig.UsedByJSConfig;
  * that dependency can be easily identified and, if necessary, decoupled.
  */
 public interface LaunchContext {
+    @UsedByJSConfig
     FieldWorker getCurrentFieldWorker();
     DataWrapper getCurrentSelection();
     @UsedByJSConfig

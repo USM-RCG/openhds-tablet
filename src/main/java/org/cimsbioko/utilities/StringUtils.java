@@ -1,6 +1,8 @@
 package org.cimsbioko.utilities;
 
 
+import org.cimsbioko.navconfig.UsedByJSConfig;
+
 public class StringUtils {
 
     public static String join(String separator, String... strings) {
@@ -16,6 +18,7 @@ public class StringUtils {
         return b.toString();
     }
 
+    @UsedByJSConfig
     public static boolean isEmpty(String value) {
         return value == null || value.isEmpty();
     }

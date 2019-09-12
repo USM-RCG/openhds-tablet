@@ -8,8 +8,8 @@ public interface Binding {
 
     String getLabel();
 
-    FormPayloadBuilder getBuilder();
+    FormBuilder getBuilder();
 
-    FormPayloadConsumer getConsumer();
+    FormConsumer getConsumer();
 
 }

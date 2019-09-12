@@ -12,6 +12,7 @@
     @org.cimsbioko.navconfig.UsedByJSConfig *;
 }
 -keep class * extends org.cimsbioko.fragment.navigate.detail.DetailFragment { *; }
+-keep class org.jdom2.* { *; }
 
 # jdom (xml)
 -dontwarn org.jdom2.xpath.jaxen.**

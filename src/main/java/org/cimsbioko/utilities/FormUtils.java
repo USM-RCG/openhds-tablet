@@ -2,16 +2,14 @@ package org.cimsbioko.utilities;
 
 import android.content.Intent;
 import android.net.Uri;
-import org.jdom2.Attribute;
+import org.cimsbioko.navconfig.UsedByJSConfig;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.Namespace;
-import org.jdom2.filter.ElementFilter;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import org.cimsbioko.model.form.FormInstance;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,21 +17,20 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
-import static org.cimsbioko.model.form.FormInstance.BINDING_ATTR;
-import static org.cimsbioko.model.form.FormInstance.BINDING_MAP_KEY;
-import static org.cimsbioko.utilities.FormsHelper.registerInstance;
 
 /**
  * Dumping grounds for repeated jdom code. It might be possible to eliminate this code entirely, but for now it
  * consolidates the repetition and minimizes the surface area depending on jdom classes.
  */
 public class FormUtils {
+
+    @UsedByJSConfig
+    public static final Namespace XFORMS_NS = Namespace.getNamespace("http://www.w3.org/2002/xforms"),
+            XHTML_NS = Namespace.getNamespace("http://www.w3.org/1999/xhtml"),
+            JR_NS = Namespace.getNamespace("http://openrosa.org/javarosa");
 
     public static final String FILE_EXTENSION = ".xml";
     public static final String HEAD = "head";
@@ -48,7 +45,7 @@ public class FormUtils {
      * @throws JDOMException
      * @throws IOException
      */
-    private static Document domFromFile(File file) throws JDOMException, IOException {
+    public static Document domFromFile(File file) throws JDOMException, IOException {
         return new SAXBuilder().build(file);
     }
 
@@ -59,11 +56,11 @@ public class FormUtils {
      * @param dest the file specifying the target location to save to
      * @throws IOException
      */
-    private static void domToFile(Document doc, File dest) throws IOException {
+    public static void domToFile(Document doc, File dest) throws IOException {
         FileOutputStream out = new FileOutputStream(dest);
         try {
             XMLOutputter xmlOutput = new XMLOutputter();
-            xmlOutput.setFormat(Format.getPrettyFormat());
+            xmlOutput.setFormat(Format.getCompactFormat().setOmitDeclaration(true));
             xmlOutput.output(doc, out);
         } finally {
             out.close();
@@ -158,129 +155,30 @@ public class FormUtils {
      * @param location the file system location to save the form at
      * @throws IOException
      */
-    private static void saveForm(Document form, File location) throws IOException {
+    public static void saveForm(Document form, File location) throws IOException {
         makeDirs(location);
         domToFile(form, location);
     }
 
-    private static Iterable<Element> descendants(Element element) {
-        return element.getDescendants(new ElementFilter());
-    }
-
     /**
-     * Generates a filled-out form instance document by combining a template file with matching answers.
+     * Generates a data document from a template form.
      *
-     * @param blank file containing blank form
-     * @param data         a dictionary of answers to use when generating the completed form
-     * @return a {@link Document} object containing the completed form
+     * @param template dom containing full form to use as template
+     * @return a {@link Document} object containing just a blank main data element from the template
      */
-    private static Document fillInstance(Document blank, Map<String, String> data) {
-
-        Element mainElem = getDataElement(blank);
-
-        // add the binding name as a root-level attribute, if present
-        if (data.containsKey(BINDING_MAP_KEY)) {
-            mainElem.setAttribute(BINDING_ATTR, data.get(BINDING_MAP_KEY));
-        }
-
-        // fill out the form instance elements with supplied values
-        for (Element e : descendants(mainElem)) {
-            String elemNam = e.getName();
-            if (data.containsKey(elemNam) && data.get(elemNam) != null) {
-                e.setText(data.get(elemNam));
-            }
-        }
-
-        return new Document(mainElem);
+    public static Document detachedDataDoc(Document template) {
+        return new Document(getDataElement(template));
     }
 
     private static Element getDataElement(Document blank) {
-        Namespace xformsNs = Namespace.getNamespace("http://www.w3.org/2002/xforms"),
-                xhtmlNs = Namespace.getNamespace("http://www.w3.org/1999/xhtml");
         return blank
                 .getRootElement()
-                .getChild(HEAD, xhtmlNs)
-                .getChild(MODEL, xformsNs)
-                .getChild(INSTANCE, xformsNs)
+                .getChild(HEAD, XHTML_NS)
+                .getChild(MODEL, XFORMS_NS)
+                .getChild(INSTANCE, XFORMS_NS)
                 .getChildren()
                 .get(0)
                 .detach();
-    }
-
-    /**
-     * Updates the XML form at the specified path with the specified values.
-     *
-     * @param values values to update, keys are element names to update, values are values.
-     * @param path   the absolute file system path of the xml file to update.
-     * @throws IOException
-     */
-    public static void updateInstance(Map<String, String> values, String path) throws IOException {
-        try {
-            Document orig = domFromFile(new File(path));
-            for (Element element : descendants(orig.getRootElement())) {
-                String elementName = element.getName();
-                if (values.containsKey(elementName)) {
-                    element.setText(values.get(elementName));
-                }
-            }
-            domToFile(orig, new File(path));
-        } catch (JDOMException e) {
-            throw new IOException("failed to parse form " + path, e);
-        }
-    }
-
-    /**
-     * Retrieves values from the XML form at the specified path.
-     *
-     * @param path the filesystem path to the XML document to load
-     * @return a map of values from the document, keys are element name, values are the associated values
-     * @throws IOException
-     */
-    public static Map<String, String> loadInstance(String path) throws IOException {
-        Map<String, String> formValues = new HashMap<>();
-        if (path != null) {
-            try {
-                Document formDoc = domFromFile(new File(path));
-                Element root = formDoc.getRootElement();
-
-                // add the instance binding name (an abnormal value)
-                Attribute bindingAttr = root.getAttribute(BINDING_ATTR);
-                if (bindingAttr != null) {
-                    formValues.put(BINDING_MAP_KEY, bindingAttr.getValue());
-                }
-
-                // add the instance elements
-                for (Element dataElement : descendants(root)) {
-                    List<Element> children = dataElement.getChildren();
-                    if (children == null || children.isEmpty()) {
-                        formValues.put(dataElement.getName(), dataElement.getText());
-                    }
-                }
-            } catch (JDOMException e) {
-                throw new IOException("failed to parse form " + path, e);
-            }
-        }
-        return formValues;
-    }
-
-    /**
-     * Generates and registers a new XML form with the specified values and registers it with CIMS Forms.
-     *
-     * @param values   name/value pairs specifying values to merge with the blank form
-     * @param location the filesystem location to save the generated form to, it must be accessible to CIMS Forms
-     * @return the content {@link Uri} of the form registered with CIMS Forms
-     * @throws IOException
-     */
-    public static Uri generateForm(FormInstance template, Map<String, String> values, File location)
-            throws IOException {
-        String tName = template.getFormName(), tVersion = template.getFormVersion(), tPath = template.getFilePath();
-        File tFile = new File(tPath);
-        try {
-            saveForm(fillInstance(domFromFile(tFile), values), location);
-            return registerInstance(location, location.getName(), tName, tVersion);
-        } catch (JDOMException e) {
-            throw new IOException("failed to fill out form", e);
-        }
     }
 
     /**

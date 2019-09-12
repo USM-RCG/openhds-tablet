@@ -5,22 +5,20 @@ const ji = JavaImporter(
     org.cimsbioko.navconfig.forms
 );
 
-function newConsumer(consume, augment) {
-    return new ji.FormPayloadConsumer({
-        consumeFormPayload: consume,
-        augmentInstancePayload: augment || (() => false)
-    });
+function consumer(fn) {
+    return new ji.FormConsumer({ consume: fn });
 }
 
-function map(data) {
+function map(d) {
 
-    const hierGateway = db.hierarchy,
-        localityUuid = data.get('localityUuid'),
-        mapName = data.get('mapName'),
+    const e = d.rootElement,
+        hierGateway = db.hierarchy,
+        localityUuid = e.getChildText('localityUuid'),
+        mapName = e.getChildText('mapName'),
         locality = hierGateway.findById(localityUuid).first,
         m = new ji.LocationHierarchy();
 
-    m.uuid = data.get('mapUuid');
+    m.uuid = e.getChildText('mapUuid');
     m.extId = mapName + '/' + locality.name;
     m.name = mapName;
     m.parentUuid = localityUuid;
@@ -28,19 +26,20 @@ function map(data) {
 
     hierGateway.insertOrUpdate(m);
 
-    return new ji.ConsumerResult(false);
+    return false;
 }
 
-function sector(data) {
+function sector(d) {
 
-    const hierGateway = db.hierarchy,
-        mapUuid = data.get('mapUuid'),
-        sectorName = data.get('sectorName'),
+    const e = d.rootElement,
+        hierGateway = db.hierarchy,
+        mapUuid = e.getChildText('mapUuid'),
+        sectorName = e.getChildText('sectorName'),
         map = hierGateway.findById(mapUuid).first,
         locality = hierGateway.findById(map.parentUuid).first,
         s = new ji.LocationHierarchy();
 
-    s.uuid = data.get('sectorUuid');
+    s.uuid = e.getChildText('sectorUuid');
     s.extId = map.name + sectorName + '/' + locality.name;
     s.name = sectorName;
     s.parentUuid = mapUuid;
@@ -48,55 +47,55 @@ function sector(data) {
 
     hierGateway.insertOrUpdate(s);
 
-    return new ji.ConsumerResult(false);
+    return false;
 }
 
-function formToLocation(data) {
+function formToLocation(e) {
     const l = new ji.Location();
-    l.uuid = data.get('entityUuid');
-    l.extId = data.get('locationExtId');
-    l.name = data.get('locationName');
-    l.hierarchyUuid = data.get('hierarchyUuid');
-    l.sectorName = data.get('sectorName');
-    l.mapAreaName = data.get('mapAreaName');
-    l.buildingNumber = ji.Integer.parseInt(data.get('locationBuildingNumber'));
-    l.description = data.get('description');
-    l.longitude = data.get('longitude');
-    l.latitude = data.get('latitude');
+    l.uuid = e.getChildText('entityUuid');
+    l.extId = e.getChildText('locationExtId');
+    l.name = e.getChildText('locationName');
+    l.hierarchyUuid = e.getChildText('hierarchyUuid');
+    l.sectorName = e.getChildText('sectorName');
+    l.mapAreaName = e.getChildText('mapAreaName');
+    l.buildingNumber = ji.Integer.parseInt(e.getChildText('locationBuildingNumber'));
+    l.description = e.getChildText('description');
+    l.longitude = e.getChildText('longitude');
+    l.latitude = e.getChildText('latitude');
     return l;
 }
 
-function formToIndividual(data) {
+function formToIndividual(e) {
     const i = new ji.Individual();
-    i.uuid = data.get('entityUuid');
-    i.extId = data.get('individualExtId');
-    i.firstName = data.get('individualFirstName');
-    i.lastName = data.get('individualLastName');
-    i.dob = data.get('individualDateOfBirth');
-    i.gender = data.get('individualGender');
-    i.currentResidenceUuid = data.get('householdUuid');
-    i.otherId = data.get('individualDip');
-    i.otherNames = data.get('individualOtherNames');
-    i.phoneNumber = data.get('individualPhoneNumber');
-    i.otherPhoneNumber = data.get('individualOtherPhoneNumber');
-    i.pointOfContactName = data.get('individualPointOfContactName');
-    i.pointOfContactPhoneNumber = data.get('individualPointOfContactPhoneNumber');
-    i.languagePreference = data.get('individualLanguagePreference');
-    i.status = data.get('individualMemberStatus');
-    i.nationality = data.get('individualNationality');
-    i.relationshipToHead = data.get('individualRelationshipToHeadOfHousehold');
+    i.uuid = e.getChildText('entityUuid');
+    i.extId = e.getChildText('individualExtId');
+    i.firstName = e.getChildText('individualFirstName');
+    i.lastName = e.getChildText('individualLastName');
+    i.dob = e.getChildText('individualDateOfBirth');
+    i.gender = e.getChildText('individualGender');
+    i.currentResidenceUuid = e.getChildText('householdUuid');
+    i.otherId = e.getChildText('individualDip');
+    i.otherNames = e.getChildText('individualOtherNames');
+    i.phoneNumber = e.getChildText('individualPhoneNumber');
+    i.otherPhoneNumber = e.getChildText('individualOtherPhoneNumber');
+    i.pointOfContactName = e.getChildText('individualPointOfContactName');
+    i.pointOfContactPhoneNumber = e.getChildText('individualPointOfContactPhoneNumber');
+    i.languagePreference = e.getChildText('individualLanguagePreference');
+    i.status = e.getChildText('individualMemberStatus');
+    i.nationality = e.getChildText('individualNationality');
+    i.relationshipToHead = e.getChildText('individualRelationshipToHeadOfHousehold') || '1';
     return i;
 }
 
-function insertOrUpdateIndividual(data) {
-    const i = formToIndividual(data);
+function insertOrUpdateIndividual(e) {
+    const i = formToIndividual(e);
     db.individuals.insertOrUpdate(i);
     return i;
 }
 
-function householdMember(data) {
-    insertOrUpdateIndividual(data);
-    return ji.ConsumerResult(false);
+function householdMember(d) {
+    insertOrUpdateIndividual(d.rootElement);
+    return false;
 }
 
 function insertOrUpdateLocation(data) {
@@ -105,15 +104,18 @@ function insertOrUpdateLocation(data) {
     return l;
 }
 
-function location(data) {
-    insertOrUpdateLocation(data);
-    return new ji.ConsumerResult(true);
+function location(d) {
+    const e = d.rootElement;
+    insertOrUpdateLocation(e);
+    e.getChild('entityExtId').text = e.getChildText('locationExtId');
+    return true;
 }
 
-function householdHead(data, ctx) {
+function householdHead(d, ctx) {
 
-    const locationGateway = db.locations,
-        individual = insertOrUpdateIndividual(data),
+    const e = d.rootElement,
+        locationGateway = db.locations,
+        individual = insertOrUpdateIndividual(e),
         selectedLocation = ctx.hierarchyPath.get('household'),
         location = locationGateway.findById(selectedLocation.uuid).first,
         locationName = individual.lastName;
@@ -122,12 +124,25 @@ function householdHead(data, ctx) {
     selectedLocation.name = locationName;
     locationGateway.insertOrUpdate(location);
 
-    return new ji.ConsumerResult(true);
+    return true;
 }
 
-exports.default = newConsumer(() => new ji.ConsumerResult(false));
-exports.householdHead = newConsumer(householdHead, d => d.put('individualRelationshipToHeadOfHousehold', '1'));
-exports.householdMember = newConsumer(householdMember);
-exports.location = newConsumer(location, d => d.put('entityExtId', d.get('locationExtId')));
-exports.map = newConsumer(map);
-exports.sector = newConsumer(sector);
+function nested(d) {
+    const e = d.rootElement, idvs = e.getChildren('individuals');
+    for (let idx = 0; idx < idvs.size(); idx++) {
+        let i = idvs.get(idx), idb = db.individuals.findById(i.getChildText('uuid')).first;
+        idb.firstName = i.getChildText('firstName');
+        idb.lastName = i.getChildText('lastName');
+        idb.extId = i.getChildText('extId');
+        db.individuals.insertOrUpdate(idb);
+    }
+    return false;
+}
+
+exports.default = consumer(() => false);
+exports.householdHead = consumer(householdHead);
+exports.householdMember = consumer(householdMember);
+exports.location = consumer(location);
+exports.map = consumer(map);
+exports.nested = consumer(nested);
+exports.sector = consumer(sector);

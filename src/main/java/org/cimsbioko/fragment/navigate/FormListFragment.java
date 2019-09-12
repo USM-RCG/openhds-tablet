@@ -24,6 +24,7 @@ import org.cimsbioko.navconfig.HierarchyPath;
 import org.cimsbioko.navconfig.NavigatorModule;
 import org.cimsbioko.navconfig.forms.Binding;
 import org.cimsbioko.provider.DatabaseAdapter;
+import org.jdom2.JDOMException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -143,7 +144,7 @@ public class FormListFragment extends Fragment {
                     showShortToast(ctx, R.string.no_active_modules);
                 }
 
-            } catch (IOException e) {
+            } catch (IOException | JDOMException e) {
                 showShortToast(ctx, R.string.form_load_failed);
             }
         } else {

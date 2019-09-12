@@ -4,18 +4,15 @@ const ji = JavaImporter(
     org.cimsbioko.navconfig.forms
 );
 
-function newMap() {
-    return new java.util.HashMap();
+function builder(fn) {
+    return new ji.FormBuilder({ build: fn });
 }
 
-function newBuilder(fn) {
-    return new ji.FormPayloadBuilder({ buildPayload: fn });
-}
-
-function minData(ctx) {
-    const d = newMap();
-    ji.PayloadTools.addMinimalFormPayload(d, ctx);
-    return d;
+function minData(d, ctx) {
+    const fw = ctx.currentFieldWorker, e = d.rootElement;
+    e.getChild('fieldWorkerUuid').text = fw.uuid;
+    e.getChild('fieldWorkerExtId').text = fw.extId;
+    e.getChild('collectionDateTime').text = ji.PayloadTools.formatTime(java.util.Calendar.getInstance());
 }
 
 function newId() {
@@ -26,26 +23,27 @@ function newLocationData(d, ctx) {
     const hierPath = ctx.hierarchyPath,
         sector = ctx.currentSelection,
         map = hierPath.get('mapArea'),
-        nextBuildingNumber = db.locations.nextBuildingNumberInSector(map.name, sector.name);
-    d.put('entityUuid', newId());
-    d.put('locationBuildingNumber', ji.PayloadTools.formatBuilding(nextBuildingNumber, false));
-    d.put('hierarchyExtId', sector.extId);
-    d.put('hierarchyUuid', sector.uuid);
-    d.put('hierarchyParentUuid', map.uuid);
-    d.put('sectorName', sector.name);
-    d.put('locationFloorNumber', ji.PayloadTools.formatFloor(1, false));
-    d.put('mapAreaName', map.name);
-    return d;
+        nextBuildingNumber = db.locations.nextBuildingNumberInSector(map.name, sector.name),
+        e = d.rootElement;
+    e.getChild('entityUuid').text = newId();
+    e.getChild('locationBuildingNumber').text = ji.PayloadTools.formatBuilding(nextBuildingNumber, false);
+    e.getChild('hierarchyExtId').text = sector.extId;
+    e.getChild('hierarchyUuid').text = sector.uuid;
+    e.getChild('hierarchyParentUuid').text = map.uuid;
+    e.getChild('sectorName').text = sector.name;
+    e.getChild('locationFloorNumber').text = ji.PayloadTools.formatFloor(1, false);
+    e.getChild('mapAreaName').text = map.name;
 }
 
 function newIndividualData(d, ctx) {
-    const location = ctx.currentSelection, individualExtId = ji.IdHelper.generateIndividualExtId(location);
-    d.put('individualExtId', individualExtId);
-    d.put('householdUuid', location.uuid);
-    d.put('householdExtId', location.extId);
-    d.put('entityExtId', individualExtId);
-    d.put('entityUuid', newId());
-    return d;
+    const location = ctx.currentSelection,
+        individualExtId = ji.IdHelper.generateIndividualExtId(location),
+        e = d.rootElement;
+    e.getChild('individualExtId').text = individualExtId;
+    e.getChild('householdUuid').text = location.uuid;
+    e.getChild('householdExtId').text = location.extId;
+    e.getChild('entityExtId').text = individualExtId;
+    e.getChild('entityUuid').text = newId();
 }
 
 function generateNetCode(ctx) {
@@ -58,169 +56,175 @@ function generateNetCode(ctx) {
     return java.lang.String.format('%s/%s%sE%03.0f', year, map.name, sector.name, household.buildingNumber);
 }
 
-function bednet(ctx) {
-    const d = minData(ctx),
-        distributionDateTime = d.get('collectionDateTime'),
-        e = ctx.currentSelection,
-        locationExtId = e.extId,
-        locationUuid = e.uuid,
-        individuals = db.individuals.findByResidency(locationUuid).list;
-    d.put('distributionDateTime', distributionDateTime);
-    d.put('locationExtId', locationExtId);
-    d.put('locationUuid', locationUuid);
-    d.put('entityExtId', locationExtId);
-    d.put('entityUuid', locationUuid);
-    d.put('netCode', generateNetCode(ctx));
-    d.put('householdSize', java.lang.Integer.toString(individuals.size()));
-    return d;
+function bednet(d, ctx) {
+    const cs = ctx.currentSelection,
+        locationExtId = cs.extId,
+        locationUuid = cs.uuid,
+        individuals = db.individuals.findByResidency(locationUuid).list,
+        e = d.rootElement,
+        distributionDateTime = e.getChildText('collectionDateTime');
+    minData(d, ctx);
+    e.getChild('distributionDateTime').text = distributionDateTime;
+    e.getChild('locationExtId').text = locationExtId;
+    e.getChild('locationUuid').text = locationUuid;
+    e.getChild('entityExtId').text = locationExtId;
+    e.getChild('entityUuid').text = locationUuid;
+    e.getChild('netCode').text = generateNetCode(ctx);
+    e.getChild('householdSize').text = java.lang.Integer.toString(individuals.size());
 }
 
-function duploc(ctx) {
-    const d = minData(ctx),
-        path = ctx.hierarchyPath,
-        e = ctx.currentSelection,
-        sector = path.get('sector'),
-        map = path.get('mapArea'),
-        locationExtId = e.extId,
-        locationUuid = e.uuid,
-        existing = db.locations.findById(locationUuid).first,
-        nextBuildingNumber = db.locations.nextBuildingNumberInSector(map.name, sector.name);
-    d.put('mapAreaName', map.name);
-    d.put('sectorName', sector.name);
-    d.put('locationBuildingNumber', ji.PayloadTools.formatBuilding(nextBuildingNumber, true));
-    d.put('locationFloorNumber', ji.PayloadTools.formatFloor(1, true));
-    d.put('locationExtId', locationExtId);
-    d.put('locationUuid', locationUuid);
-    d.put('entityExtId', locationExtId);
-    d.put('entityUuid', locationUuid);
-    d.put('description', existing.description);
-    return d;
+function duploc(d, ctx) {
+    const path = ctx.hierarchyPath, cs = ctx.currentSelection,
+        sector = path.get('sector'), map = path.get('mapArea'),
+        existing = db.locations.findById(cs.uuid).first,
+        nextBuildingNumber = db.locations.nextBuildingNumberInSector(map.name, sector.name),
+        e = d.rootElement;
+    minData(d, ctx);
+    e.getChild('mapAreaName').text = map.name;
+    e.getChild('sectorName').text = sector.name;
+    e.getChild('locationBuildingNumber').text = ji.PayloadTools.formatBuilding(nextBuildingNumber, true);
+    e.getChild('locationFloorNumber').text = ji.PayloadTools.formatFloor(1, true);
+    e.getChild('entityExtId').text = cs.extId;
+    e.getChild('entityUuid').text = cs.uuid;
+    e.getChild('description').text = existing.description;
 }
 
-function fingerprints(ctx) {
-    const d = minData(ctx);
-    d.put('individualUuid', ctx.currentSelection.uuid);
-    return d;
+function fingerprints(d, ctx) {
+    minData(d, ctx);
+    d.rootElement.getChild('individualUuid').text = ctx.currentSelection.uuid;
 }
 
-function householdHead(ctx) {
-    const d = newIndividualData(minData(ctx), ctx);
-    d.put('headPrefilledFlag', 'true');
-    return d;
+function householdHead(d, ctx) {
+    minData(d, ctx);
+    newIndividualData(d, ctx);
+    d.rootElement.getChild('headPrefilledFlag').text = 'true';
 }
 
-function householdMember(ctx) {
-    const d = newIndividualData(minData(ctx), ctx), e = ctx.currentSelection,
-        residents = db.individuals.findByResidency(e.uuid).list;
+function householdMember(d, ctx) {
+    const cs = ctx.currentSelection, residents = db.individuals.findByResidency(cs.uuid).list, e = d.rootElement;
+    minData(d, ctx);
+    newIndividualData(d, ctx);
     if (residents.size() === 1) {
         const head = residents.get(0);
-        d.put('individualPointOfContactName', ji.Individual.getFullName(head));
-        d.put('individualPointOfContactPhoneNumber', head.phoneNumber);
+        e.getChild('individualPointOfContactName').text = ji.Individual.getFullName(head);
+        e.getChild('individualPointOfContactPhoneNumber').text = head.phoneNumber;
     } else {
         for (let i=0; i<residents.size(); i++) {
             const r = residents.get(i);
             const name = r.pointOfContactName, number = r.pointOfContactPhoneNumber;
             if (!ji.StringUtils.isEmpty(name) && !ji.StringUtils.isEmpty(number)) {
-                d.put('individualPointOfContactName', name);
-                d.put('individualPointOfContactPhoneNumber', number);
+                e.getChild('individualPointOfContactName').text = name;
+                e.getChild('individualPointOfContactPhoneNumber').text = number;
                 break;
             }
         }
     }
-    return d;
 }
 
-function household(ctx) {
-    const d = minData(ctx), h = ctx.currentSelection;
-    d.put('locationExtId', h.extId);
-    d.put('locationUuid', h.uuid);
-    return d;
+function household(d, ctx) {
+    const cs = ctx.currentSelection, e = d.rootElement;
+    minData(d, ctx);
+    e.getChild('locationExtId').text = cs.extId;
+    e.getChild('locationUuid').text = cs.uuid;
 }
 
-function location(ctx) {
-    return newLocationData(minData(ctx), ctx);
+function location(d, ctx) {
+    minData(d, ctx);
+    return newLocationData(d, ctx);
 }
 
-function locationEval(ctx) {
-    const d = minData(ctx), e = db.locations.findById(ctx.currentSelection.uuid).first;
-    d.put('entityExtId', e.extId);
-    d.put('entityUuid', e.uuid);
-    d.put('description', e.description);
-    return d;
+function locationEval(d, ctx) {
+    const l = db.locations.findById(ctx.currentSelection.uuid).first, e = d.rootElement;
+    minData(d, ctx);
+    e.getChild('entityExtId').text = l.extId;
+    e.getChild('entityUuid').text = l.uuid;
+    e.getChild('description').text = l.description;
 }
 
-function map(ctx) {
-    const d = minData(ctx), e = ctx.currentSelection;
-    d.put('localityUuid', e.uuid);
-    d.put('mapUuid', newId());
-    return d;
+function map(d, ctx) {
+    const cs = ctx.currentSelection, e = d.rootElement;
+    minData(d, ctx);
+    e.getChild('localityUuid').text = cs.uuid;
+    e.getChild('mapUuid').text = newId();
 }
 
-function minimal(ctx) {
-    return minData(ctx);
+function minimal(d, ctx) {
+    minData(d, ctx);
 }
 
-function mis(ctx) {
-    const d = minData(ctx), e = ctx.currentSelection;
-    d.put('entityExtId', e.extId);
-    d.put('entityUuid', e.uuid);
-    d.put('survey_date', ji.PayloadTools.formatDate(java.util.Calendar.getInstance()));
-    return d;
+function mis(d, ctx) {
+    const cs = ctx.currentSelection, e = d.rootElement;
+    minData(d, ctx);
+    e.getChild('entityExtId').text = cs.extId;
+    e.getChild('entityUuid').text = cs.uuid;
+    e.getChild('survey_date').text = ji.PayloadTools.formatDate(java.util.Calendar.getInstance());
 }
 
-function respar(ctx) {
-    const d = minData(ctx), e = ctx.currentSelection;
-    d.put('entityExtId', e.extId);
-    d.put('entityUuid', e.uuid);
-    return d;
-}
-
-function sbcc(ctx) {
-    const d = minData(ctx),
-        path = ctx.hierarchyPath,
-        h = path.get('household'),
-        i = path.get('individual');
-    d.put('entityExtId', h.extId);
-    d.put('entityUuid', h.uuid);
-    if (i) {
-        d.put('individualExtId', i.extId);
-        d.put('individualUuid', i.uuid);
+function nested(d, ctx) {
+    const cs = ctx.currentSelection, e = d.rootElement,
+        residents = db.individuals.findByResidency(cs.uuid).list,
+        template = e.getChild('individuals').clone();
+    template.removeAttribute('template', ji.FormUtils.JR_NS);
+    for (let ridx = 0; ridx<residents.size(); ridx++) {
+        let r = residents.get(ridx), re = template.clone();
+        re.getChild('uuid').text = r.uuid;
+        re.getChild('extId').text = r.extId;
+        re.getChild('firstName').text = r.firstName;
+        re.getChild('lastName').text = r.lastName;
+        e.addContent(re);
     }
-    return d;
 }
 
-function sector(ctx) {
-    const d = minData(ctx), e = ctx.currentSelection;
-    d.put('mapUuid', e.uuid);
-    d.put('sectorUuid', newId());
-    return d;
+function respar(d, ctx) {
+    const cs = ctx.currentSelection, e = d.rootElement;
+    minData(d, ctx);
+    e.getChild('entityExtId').text = cs.extId;
+    e.getChild('entityUuid').text = cs.uuid;
 }
 
-function superojo(ctx) {
-    const d = minData(ctx), fw = ctx.currentFieldWorker, entity = ctx.currentSelection,
-        locationExtId = entity.extId, locationUuid = entity.uuid;
-    d.put('supervisorExtId', fw.extId);
-    d.put('ojo_date', ji.PayloadTools.formatTime(java.util.Calendar.getInstance()));
-    d.put('locationExtId', locationExtId);
-    d.put('locationUuid', locationUuid);
-    d.put('entityExtId', locationExtId);
-    d.put('entityUuid', locationUuid);
-    return d;
+function sbcc(d, ctx) {
+    const path = ctx.hierarchyPath, h = path.get('household'), i = path.get('individual'), e = d.rootElement;
+    minData(d, ctx);
+    e.getChild('entityExtId').text = h.extId;
+    e.getChild('entityUuid').text = h.uuid;
+    if (i) {
+        e.getChild('individualExtId').text = i.extId;
+        e.getChild('individualUuid').text = i.uuid;
+    }
+}
+
+function sector(d, ctx) {
+    const cs = ctx.currentSelection, e = d.rootElement;
+    minData(d, ctx);
+    e.getChild('mapUuid').text = cs.uuid;
+    e.getChild('sectorUuid').text = newId();
+}
+
+function superojo(d, ctx) {
+    const fw = ctx.currentFieldWorker, cs = ctx.currentSelection, extId = cs.extId, uuid = cs.uuid, e = d.rootElement;
+    minData(d, ctx);
+    e.getChild('supervisorExtId').text = fw.extId;
+    e.getChild('ojo_date').text = ji.PayloadTools.formatTime(java.util.Calendar.getInstance());
+    e.getChild('locationExtId').text = extId;
+    e.getChild('locationUuid').text = uuid;
+    e.getChild('entityExtId').text = extId;
+    e.getChild('entityUuid').text = uuid;
 }
 
 
-exports.bednet = newBuilder(bednet);
-exports.duploc = newBuilder(duploc);
-exports.fingerprints = newBuilder(fingerprints);
-exports.household = newBuilder(household);
-exports.householdHead = newBuilder(householdHead);
-exports.householdMember = newBuilder(householdMember);
-exports.location = newBuilder(location);
-exports.locationEval = newBuilder(locationEval);
-exports.map = newBuilder(map);
-exports.minimal = newBuilder(minimal);
-exports.mis = newBuilder(mis);
-exports.respar = newBuilder(respar);
-exports.sbcc = newBuilder(sbcc);
-exports.sector = newBuilder(sector);
-exports.superojo = newBuilder(superojo);
+exports.bednet = builder(bednet);
+exports.duploc = builder(duploc);
+exports.fingerprints = builder(fingerprints);
+exports.household = builder(household);
+exports.householdHead = builder(householdHead);
+exports.householdMember = builder(householdMember);
+exports.location = builder(location);
+exports.locationEval = builder(locationEval);
+exports.map = builder(map);
+exports.minimal = builder(minimal);
+exports.mis = builder(mis);
+exports.nested = builder(nested);
+exports.respar = builder(respar);
+exports.sbcc = builder(sbcc);
+exports.sector = builder(sector);
+exports.superojo = builder(superojo);
