@@ -94,6 +94,13 @@ function fingerprints(d, ctx) {
     d.rootElement.getChild('individualUuid').text = ctx.currentSelection.uuid;
 }
 
+function household(d, ctx) {
+    const cs = ctx.currentSelection, e = d.rootElement;
+    minData(d, ctx);
+    e.getChild('locationExtId').text = cs.extId;
+    e.getChild('locationUuid').text = cs.uuid;
+}
+
 function householdHead(d, ctx) {
     minData(d, ctx);
     newIndividualData(d, ctx);
@@ -119,13 +126,6 @@ function householdMember(d, ctx) {
             }
         }
     }
-}
-
-function household(d, ctx) {
-    const cs = ctx.currentSelection, e = d.rootElement;
-    minData(d, ctx);
-    e.getChild('locationExtId').text = cs.extId;
-    e.getChild('locationUuid').text = cs.uuid;
 }
 
 function location(d, ctx) {
