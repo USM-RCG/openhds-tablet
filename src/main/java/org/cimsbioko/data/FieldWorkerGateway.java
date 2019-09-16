@@ -66,7 +66,7 @@ class FieldWorkerWrapperConverter implements CursorConverter<DataWrapper> {
     public DataWrapper convert(Cursor c) {
         DataWrapper dataWrapper = new DataWrapper();
         dataWrapper.setExtId(extractString(c, COLUMN_FIELD_WORKER_EXTID));
-        dataWrapper.setName(extractString(c, COLUMN_FIELD_WORKER_FIRST_NAME));
+        dataWrapper.setName(extractString(c, COLUMN_FIELD_WORKER_FIRST_NAME) + " " + extractString(c, COLUMN_FIELD_WORKER_LAST_NAME));
         dataWrapper.setUuid(extractString(c, COLUMN_FIELD_WORKER_UUID));
         dataWrapper.setCategory("fieldworker");
         return dataWrapper;
