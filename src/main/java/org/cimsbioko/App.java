@@ -43,7 +43,6 @@ public class App extends Application {
         // general individual columns
         public static final String COLUMN_INDIVIDUAL_EXTID = "extId";
         public static final String COLUMN_INDIVIDUAL_FIRST_NAME = "firstName";
-        public static final String COLUMN_INDIVIDUAL_FULL_NAME = "fullName";
         public static final String COLUMN_INDIVIDUAL_LAST_NAME = "lastName";
         public static final String COLUMN_INDIVIDUAL_DOB = "dob";
         public static final String COLUMN_INDIVIDUAL_GENDER = "gender";
