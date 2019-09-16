@@ -60,8 +60,8 @@ public class LocationGateway extends Gateway<Location> {
         String[] args = {mapArea, sector};
         Cursor c = db.rawQuery(query, args);
         try {
-            if (c.moveToFirst()) {
-                return c.isNull(0)? 1 : c.getInt(0);
+            if (c.moveToFirst() && !c.isNull(0)) {
+                return c.getInt(0);
             }
             return 1;
         } finally {
