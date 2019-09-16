@@ -4,7 +4,6 @@ import android.util.Log;
 import org.cimsbioko.navconfig.forms.Binding;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.LazilyLoadedCtor;
-import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.commonjs.module.Require;
 import org.mozilla.javascript.commonjs.module.RequireBuilder;
@@ -16,10 +15,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static java.util.ResourceBundle.getBundle;
-import static org.cimsbioko.data.GatewayRegistry.*;
 import static org.mozilla.javascript.Context.VERSION_ES6;
 
 
@@ -76,6 +73,7 @@ public class NavigatorConfig {
                 new LazilyLoadedCtor(scope, "JavaImporter", "org.mozilla.javascript.ImporterTopLevel", false);
                 new LazilyLoadedCtor(scope, "org", "org.mozilla.javascript.NativeJavaTopPackage", false);
                 new LazilyLoadedCtor(scope, "java", "org.mozilla.javascript.NativeJavaTopPackage", false);
+                scope.putConst("db", scope, Gateways.getInstance());
                 RequireBuilder rb = new RequireBuilder()
                         .setSandboxed(true)
                         .setModuleScriptProvider(
@@ -84,7 +82,6 @@ public class NavigatorConfig {
                 Require require = rb.createRequire(ctx, scope);
                 require.install(scope);
                 scope.put("config", scope, this);
-                scope.put("db", scope, new Gateways(scope));
                 Log.i(TAG, "loading init module");
                 require.requireMain(ctx, INIT_MODULE);
             } finally {
@@ -226,108 +223,3 @@ public class NavigatorConfig {
     }
 }
 
-
-class Gateways implements Scriptable {
-
-    private static final String [] PROP_NAMES = {"individuals", "locations", "hierarchy", "fieldworkers"};
-    private static final Set<String> PROP_SET = Collections.unmodifiableSet(new HashSet<>(asList(PROP_NAMES)));
-    private final Scriptable scope;
-
-    public Gateways(Scriptable scope) {
-        this.scope = scope;
-    }
-
-    @Override
-    public String getClassName() {
-        return Gateways.class.getSimpleName();
-    }
-
-    @Override
-    public Object get(String name, Scriptable start) {
-        Object result;
-        switch (name) {
-            case "individuals":
-                result = getIndividualGateway();
-                break;
-            case "locations":
-                result = getLocationGateway();
-                break;
-            case "hierarchy":
-                result = getLocationHierarchyGateway();
-                break;
-            case "fieldworkers":
-                result = getFieldWorkerGateway();
-                break;
-            default:
-                return NOT_FOUND;
-        }
-        Context ctx = Context.getCurrentContext();
-        Scriptable scope = ScriptableObject.getTopLevelScope(start);
-        return ctx.getWrapFactory().wrap(ctx, scope, result, null);
-    }
-
-    @Override
-    public Object get(int index, Scriptable start) {
-        return NOT_FOUND;
-    }
-
-    @Override
-    public boolean has(String name, Scriptable start) {
-        return PROP_SET.contains(name);
-    }
-
-    @Override
-    public boolean has(int index, Scriptable start) {
-        return false;
-    }
-
-    @Override
-    public void put(String name, Scriptable start, Object value) {
-    }
-
-    @Override
-    public void put(int index, Scriptable start, Object value) {
-    }
-
-    @Override
-    public void delete(String name) {
-    }
-
-    @Override
-    public void delete(int index) {
-    }
-
-    @Override
-    public Scriptable getPrototype() {
-        return null;
-    }
-
-    @Override
-    public void setPrototype(Scriptable prototype) {
-    }
-
-    @Override
-    public Scriptable getParentScope() {
-        return scope;
-    }
-
-    @Override
-    public void setParentScope(Scriptable parent) {
-    }
-
-    @Override
-    public Object[] getIds() {
-        return PROP_NAMES;
-    }
-
-    @Override
-    public Object getDefaultValue(Class<?> hint) {
-        return null;
-    }
-
-    @Override
-    public boolean hasInstance(Scriptable instance) {
-        return false;
-    }
-
-}
