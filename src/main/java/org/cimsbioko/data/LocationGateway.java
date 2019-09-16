@@ -61,7 +61,7 @@ public class LocationGateway extends Gateway<Location> {
         Cursor c = db.rawQuery(query, args);
         try {
             if (c.moveToFirst()) {
-                return c.getInt(0);
+                return c.isNull(0)? 1 : c.getInt(0);
             }
             return 1;
         } finally {
