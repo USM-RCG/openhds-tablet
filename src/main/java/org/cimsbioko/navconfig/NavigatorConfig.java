@@ -81,7 +81,7 @@ public class NavigatorConfig {
                                         new UrlModuleSourceProvider(getJsModulePath(), null)));
                 Require require = rb.createRequire(ctx, scope);
                 require.install(scope);
-                scope.put("config", scope, this);
+                scope.putConst("config", scope, this);
                 Log.i(TAG, "loading init module");
                 require.requireMain(ctx, INIT_MODULE);
             } finally {
