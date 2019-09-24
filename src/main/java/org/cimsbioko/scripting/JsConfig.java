@@ -123,15 +123,15 @@ public class JsConfig {
     }
 
     @SafeVarargs
-    private final void installDetailFragments(ScriptableObject scope, Class<? extends DetailFragment>... classes) {
+    private static void installDetailFragments(ScriptableObject scope, Class<? extends DetailFragment>... classes) {
         putClasses(scope, classes);
     }
 
-    private void installDomainClasses(ScriptableObject scope) {
+    private static void installDomainClasses(ScriptableObject scope) {
         putClasses(scope, LocationHierarchy.class, Location.class, Individual.class);
     }
 
-    private void installInterfaces(ScriptableObject scope) {
+    private static void installInterfaces(ScriptableObject scope) {
         putClasses(scope, Hierarchy.class, NavigatorModule.class, FormBuilder.class, FormConsumer.class, Binding.class,
                 Launcher.class);
     }
