@@ -3,7 +3,12 @@ package org.cimsbioko.navconfig;
 import android.util.Log;
 import org.cimsbioko.navconfig.forms.Binding;
 import org.cimsbioko.scripting.JsConfig;
+import org.cimsbioko.utilities.SyncUtils;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.*;
 
 import static java.util.Collections.*;
@@ -41,13 +46,28 @@ public class NavigatorConfig {
         consolidateFormBindings();
     }
 
+    private File getExternalCampaignFile() {
+        return new File(SyncUtils.getExternalDir(), "campaign.zip");
+    }
+
+    private ClassLoader getLoader() throws MalformedURLException {
+        File campaignFile = getExternalCampaignFile();
+        URL[] urls = {campaignFile.toURI().toURL()};
+        if (campaignFile.canRead()) {
+            Log.i(TAG, "loading external campaign from " + campaignFile);
+            return URLClassLoader.newInstance(urls);
+        }
+        Log.i(TAG, "loading internal campaign");
+        return NavigatorConfig.class.getClassLoader();
+    }
+
     /*
      * Define the navigation modules. They will show up in the interface in the order specified.
      */
     private void loadConfig() {
         modules = new LinkedHashMap<>();
         try {
-            config = new JsConfig().load();
+            config = new JsConfig(getLoader()).load();
             hierarchy = config.getHierarchy();
             for (NavigatorModule module : config.getNavigatorModules()) {
                 modules.put(module.getName(), module);

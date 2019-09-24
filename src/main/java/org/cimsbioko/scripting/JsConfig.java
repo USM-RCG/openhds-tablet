@@ -52,7 +52,7 @@ public class JsConfig {
         this(null);
     }
 
-    private JsConfig(ClassLoader loader) {
+    public JsConfig(ClassLoader loader) {
         if (loader != null) {
             this.loader = loader;
         } else {
