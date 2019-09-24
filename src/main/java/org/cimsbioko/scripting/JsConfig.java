@@ -47,7 +47,6 @@ public class JsConfig {
     private final ClassLoader loader;
     private Hierarchy hierarchy = new StubHierarchy();
     private NavigatorModule[] navigatorModules = {};
-    private ResourceBundle bundle = new StubResourceBundle();
 
     public JsConfig() {
         this(null);
@@ -64,7 +63,6 @@ public class JsConfig {
     public JsConfig load() throws URISyntaxException {
         Context ctx = Context.enter();
         try {
-            bundle = ResourceBundle.getBundle(BUNDLE_NAME, Locale.getDefault(), loader);
             ScriptableObject scope = buildScope(ctx);
             installConstants(scope);
             Require require = enableJsModules(ctx, scope);
@@ -84,10 +82,6 @@ public class JsConfig {
 
     public NavigatorModule[] getNavigatorModules() {
         return navigatorModules;
-    }
-
-    public ResourceBundle getBundle() {
-        return bundle;
     }
 
     private static ScriptableObject buildScope(Context ctx) {
@@ -112,7 +106,12 @@ public class JsConfig {
     }
 
     public String getString(String key) {
+        ResourceBundle bundle = getBundle();
         return bundle.containsKey(key)? bundle.getString(key) : String.format("{%s}", key);
+    }
+
+    private ResourceBundle getBundle() {
+        return ResourceBundle.getBundle(BUNDLE_NAME, Locale.getDefault(), loader);
     }
 
     private static void putConst(ScriptableObject scope, String name, Object object) {
