@@ -1,17 +1,17 @@
 "use strict";
 
 if (!String.prototype.padStart) {
-  String.prototype.padStart = function padStart(targetLen, padStr) {
-    targetLen = targetLen >> 0; // truncate if number, or convert non-number to 0;
-    padStr = String(typeof padStr !== 'undefined' ? padStr : ' ');
-    if (this.length >= targetLen) {
+  String.prototype.padStart = function padStart(len, pad) {
+    len = len >> 0; // truncate if number, non-number to 0
+    pad = String(typeof pad !== 'undefined' ? pad : ' ');
+    if (this.length >= len) {
       return String(this);
     } else {
-      targetLen = targetLen - this.length;
-      if (targetLen > padStr.length) {
-        padStr += padStr.repeat(targetLen / padStr.length); // append to original to ensure we are longer than needed
+      len = len - this.length;
+      if (len > pad.length) {
+        pad += pad.repeat(len / pad.length);
       }
-      return padStr.slice(0, targetLen) + String(this);
+      return pad.slice(0, len) + String(this);
     }
   };
 }
