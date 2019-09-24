@@ -3,6 +3,7 @@ package org.cimsbioko;
 import android.app.Application;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import org.cimsbioko.scripting.ContextFactory;
 
 public class App extends Application {
 
@@ -17,6 +18,7 @@ public class App extends Application {
     public void onCreate() {
         singleton = this;
         super.onCreate();
+        ContextFactory.register();
     }
 
     public static App getApp() {

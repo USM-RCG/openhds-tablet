@@ -35,7 +35,6 @@ import java.util.ResourceBundle;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.mozilla.javascript.Context.VERSION_ES6;
 
 public class JsConfig {
 
@@ -63,7 +62,7 @@ public class JsConfig {
     }
 
     public JsConfig load() throws URISyntaxException {
-        Context ctx = buildContext();
+        Context ctx = Context.enter();
         try {
             bundle = ResourceBundle.getBundle(BUNDLE_NAME, Locale.getDefault(), loader);
             ScriptableObject scope = buildScope(ctx);
@@ -89,13 +88,6 @@ public class JsConfig {
 
     public ResourceBundle getBundle() {
         return bundle;
-    }
-
-    private static Context buildContext() {
-        Context ctx = Context.enter();
-        ctx.setOptimizationLevel(-1);
-        ctx.setLanguageVersion(VERSION_ES6);
-        return ctx;
     }
 
     private static ScriptableObject buildScope(Context ctx) {
