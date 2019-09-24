@@ -6,7 +6,7 @@ function consumer(fn) {
 function map(d) {
 
     const e = d.rootElement,
-        hierGateway = db.hierarchy,
+        hierGateway = $db.hierarchy,
         localityUuid = e.getChildText('localityUuid'),
         mapName = e.getChildText('mapName'),
         locality = hierGateway.findById(localityUuid).first,
@@ -26,7 +26,7 @@ function map(d) {
 function sector(d) {
 
     const e = d.rootElement,
-        hierGateway = db.hierarchy,
+        hierGateway = $db.hierarchy,
         mapUuid = e.getChildText('mapUuid'),
         sectorName = e.getChildText('sectorName'),
         map = hierGateway.findById(mapUuid).first,
@@ -83,7 +83,7 @@ function formToIndividual(e) {
 
 function insertOrUpdateIndividual(e) {
     const i = formToIndividual(e);
-    db.individuals.insertOrUpdate(i);
+    $db.individuals.insertOrUpdate(i);
     return i;
 }
 
@@ -94,7 +94,7 @@ function householdMember(d) {
 
 function insertOrUpdateLocation(data) {
     const l = formToLocation(data);
-    db.locations.insertOrUpdate(l);
+    $db.locations.insertOrUpdate(l);
     return l;
 }
 
@@ -108,7 +108,7 @@ function location(d) {
 function householdHead(d, ctx) {
 
     const e = d.rootElement,
-        locationGateway = db.locations,
+        locationGateway = $db.locations,
         individual = insertOrUpdateIndividual(e),
         selectedLocation = ctx.hierarchyPath.get('household'),
         location = locationGateway.findById(selectedLocation.uuid).first,
@@ -124,11 +124,11 @@ function householdHead(d, ctx) {
 function nested(d) {
     const e = d.rootElement, idvs = e.getChildren('individuals');
     for (let idx = 0; idx < idvs.size(); idx++) {
-        let i = idvs.get(idx), idb = db.individuals.findById(i.getChildText('uuid')).first;
+        let i = idvs.get(idx), idb = $db.individuals.findById(i.getChildText('uuid')).first;
         idb.firstName = i.getChildText('firstName');
         idb.lastName = i.getChildText('lastName');
         idb.extId = i.getChildText('extId');
-        db.individuals.insertOrUpdate(idb);
+        $db.individuals.insertOrUpdate(idb);
     }
     return false;
 }

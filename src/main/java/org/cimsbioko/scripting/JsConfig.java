@@ -109,11 +109,11 @@ public class JsConfig {
     }
 
     private void installDbService(ScriptableObject scope) {
-        putConst(scope, "db", Gateways.getInstance());
+        putConst(scope, "$db", Gateways.getInstance());
     }
 
     private void installTranslationService(ScriptableObject scope) {
-        putConst(scope, "msg", new MessagesScriptable(this));
+        putConst(scope, "$msg", new MessagesScriptable(this));
     }
 
     public String getString(String key) {

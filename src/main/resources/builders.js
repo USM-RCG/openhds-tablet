@@ -18,7 +18,6 @@ function formatBuilding(building, includePrefix) {
     return (includePrefix? "E" : "") + ("" + building).padStart(3,'0');
 }
 
-
 function formatFloor(floor, includePrefix) {
     return (includePrefix? "P" : "") + ("" + floor).padStart(2,'0');
 }
@@ -27,7 +26,7 @@ function newLocationData(d, ctx) {
     const hierPath = ctx.hierarchyPath,
         sector = ctx.currentSelection,
         map = hierPath.get('mapArea'),
-        nextBuildingNumber = db.locations.nextBuildingNumberInSector(map.name, sector.name),
+        nextBuildingNumber = $db.locations.nextBuildingNumberInSector(map.name, sector.name),
         e = d.rootElement;
     e.getChild('entityUuid').text = newId();
     e.getChild('locationBuildingNumber').text = formatBuilding(nextBuildingNumber, false);
@@ -40,7 +39,7 @@ function newLocationData(d, ctx) {
 }
 
 function generateIndividualExtId(l) {
-    const suffix = db.individuals.findByResidency(l.uuid).list.size() + 1;
+    const suffix = $db.individuals.findByResidency(l.uuid).list.size() + 1;
     return l.extId + "-" + ("" + suffix).padStart(3,'0');
 }
 
@@ -60,7 +59,7 @@ function generateNetCode(ctx) {
         e = hierPath.get('household'),
         sector = hierPath.get('sector'),
         map = hierPath.get('mapArea'),
-        household = db.locations.findById(e.uuid).first,
+        household = $db.locations.findById(e.uuid).first,
         year = ('' + new Date().getFullYear()).slice(2,4);
     return year + '/' + map.name + sector.name + ('' + household.buildingNumber).padStart(3,'0');
 }
@@ -69,7 +68,7 @@ function bednet(d, ctx) {
     const cs = ctx.currentSelection,
         locationExtId = cs.extId,
         locationUuid = cs.uuid,
-        individuals = db.individuals.findByResidency(locationUuid).list,
+        individuals = $db.individuals.findByResidency(locationUuid).list,
         e = d.rootElement,
         distributionDateTime = e.getChildText('collectionDateTime');
     minData(d, ctx);
@@ -85,8 +84,8 @@ function bednet(d, ctx) {
 function duploc(d, ctx) {
     const path = ctx.hierarchyPath, cs = ctx.currentSelection,
         sector = path.get('sector'), map = path.get('mapArea'),
-        existing = db.locations.findById(cs.uuid).first,
-        nextBuildingNumber = db.locations.nextBuildingNumberInSector(map.name, sector.name),
+        existing = $db.locations.findById(cs.uuid).first,
+        nextBuildingNumber = $db.locations.nextBuildingNumberInSector(map.name, sector.name),
         e = d.rootElement;
     minData(d, ctx);
     e.getChild('mapAreaName').text = map.name;
@@ -117,7 +116,7 @@ function householdHead(d, ctx) {
 }
 
 function householdMember(d, ctx) {
-    const cs = ctx.currentSelection, residents = db.individuals.findByResidency(cs.uuid).list, e = d.rootElement;
+    const cs = ctx.currentSelection, residents = $db.individuals.findByResidency(cs.uuid).list, e = d.rootElement;
     minData(d, ctx);
     newIndividualData(d, ctx);
     if (residents.size() === 1) {
@@ -143,7 +142,7 @@ function location(d, ctx) {
 }
 
 function locationEval(d, ctx) {
-    const l = db.locations.findById(ctx.currentSelection.uuid).first, e = d.rootElement;
+    const l = $db.locations.findById(ctx.currentSelection.uuid).first, e = d.rootElement;
     minData(d, ctx);
     e.getChild('entityExtId').text = l.extId;
     e.getChild('entityUuid').text = l.uuid;
@@ -171,7 +170,7 @@ function mis(d, ctx) {
 
 function nested(d, ctx) {
     const cs = ctx.currentSelection, e = d.rootElement,
-        residents = db.individuals.findByResidency(cs.uuid).list,
+        residents = $db.individuals.findByResidency(cs.uuid).list,
         template = e.getChild('individuals').clone();
     template.removeAttribute('template', FormUtils.JR_NS);
     for (let ridx = 0; ridx<residents.size(); ridx++) {

@@ -47,7 +47,7 @@ m.launcher({
 m.launcher({ level: 'household', label: 'census.locationEvaluationLabel', bind: 'location_evaluation' });
 
 function housePopulated(uuid) {
-    return db.individuals.findByResidency(uuid).exists();
+    return $db.individuals.findByResidency(uuid).exists();
 }
 
 m.launcher({
