@@ -42,6 +42,9 @@ public class JsConfig {
     private static final String TAG = JsConfig.class.getSimpleName();
     private static final String INIT_MODULE = "init", BUNDLE_NAME = "strings";
 
+    private static final String DB_NAME = "$db";
+    private static final String MSG_NAME = "$msg";
+
     private final ClassLoader loader;
     private Hierarchy hierarchy = new StubHierarchy();
     private NavigatorModule[] navigatorModules = {};
@@ -109,11 +112,11 @@ public class JsConfig {
     }
 
     private void installDbService(ScriptableObject scope) {
-        putConst(scope, "$db", Gateways.getInstance());
+        putConst(scope, DB_NAME, Gateways.getInstance());
     }
 
     private void installTranslationService(ScriptableObject scope) {
-        putConst(scope, "$msg", new MessagesScriptable(this));
+        putConst(scope, MSG_NAME, new MessagesScriptable(this));
     }
 
     public String getString(String key) {
