@@ -2,22 +2,11 @@ package org.cimsbioko.navconfig;
 
 import android.util.Log;
 import org.cimsbioko.navconfig.forms.Binding;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.LazilyLoadedCtor;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.commonjs.module.Require;
-import org.mozilla.javascript.commonjs.module.RequireBuilder;
-import org.mozilla.javascript.commonjs.module.provider.SoftCachingModuleScriptProvider;
-import org.mozilla.javascript.commonjs.module.provider.UrlModuleSourceProvider;
+import org.cimsbioko.scripting.JsConfig;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.*;
 
 import static java.util.Collections.*;
-import static java.util.ResourceBundle.getBundle;
-import static org.mozilla.javascript.Context.VERSION_ES6;
 
 
 /**
@@ -30,24 +19,17 @@ import static org.mozilla.javascript.Context.VERSION_ES6;
 public class NavigatorConfig {
 
     private static final String TAG = NavigatorConfig.class.getSimpleName();
-    private static final String INIT_MODULE = "init";
-    private static final String BUNDLE_NAME = "strings";
 
     private static NavigatorConfig instance;
 
-    private ClassLoader moduleLoader = NavigatorConfig.class.getClassLoader();
     private Hierarchy hierarchy;
     private Map<String, NavigatorModule> modules = emptyMap();
     private Map<String, Binding> bindings = emptyMap();
+    private JsConfig config;
 
 
     protected NavigatorConfig() {
         init();
-    }
-
-    @UsedByJSConfig
-    public void setHierarchy(Hierarchy hierarchy) {
-        this.hierarchy = hierarchy;
     }
 
     public Hierarchy getHierarchy() {
@@ -55,50 +37,24 @@ public class NavigatorConfig {
     }
 
     private void init() {
-        loadModules();
+        loadConfig();
         consolidateFormBindings();
     }
 
     /*
      * Define the navigation modules. They will show up in the interface in the order specified.
      */
-    private void loadModules() {
+    private void loadConfig() {
         modules = new LinkedHashMap<>();
         try {
-            Context ctx = Context.enter();
-            ctx.setOptimizationLevel(-1);
-            ctx.setLanguageVersion(VERSION_ES6);
-            try {
-                ScriptableObject scope = ctx.initSafeStandardObjects();
-                new LazilyLoadedCtor(scope, "JavaImporter", "org.mozilla.javascript.ImporterTopLevel", false);
-                new LazilyLoadedCtor(scope, "org", "org.mozilla.javascript.NativeJavaTopPackage", false);
-                new LazilyLoadedCtor(scope, "java", "org.mozilla.javascript.NativeJavaTopPackage", false);
-                scope.putConst("db", scope, Gateways.getInstance());
-                RequireBuilder rb = new RequireBuilder()
-                        .setSandboxed(true)
-                        .setModuleScriptProvider(
-                                new SoftCachingModuleScriptProvider(
-                                        new UrlModuleSourceProvider(getJsModulePath(), null)));
-                Require require = rb.createRequire(ctx, scope);
-                require.install(scope);
-                scope.putConst("config", scope, this);
-                Log.i(TAG, "loading init module");
-                require.requireMain(ctx, INIT_MODULE);
-            } finally {
-                Context.exit();
+            config = new JsConfig().load();
+            hierarchy = config.getHierarchy();
+            for (NavigatorModule module : config.getNavigatorModules()) {
+                modules.put(module.getName(), module);
             }
         } catch (Exception e) {
-            Log.e(TAG, "failure initializing modules", e);
+            Log.e(TAG, "failure initializing js config", e);
         }
-    }
-
-    private List<URI> getJsModulePath() throws URISyntaxException {
-        List<URI> uris = new ArrayList<>();
-        URL root = moduleLoader.getResource(INIT_MODULE + ".js");
-        if (root != null) {
-            uris.add(root.toURI());
-        }
-        return uris;
     }
 
     /**
@@ -109,11 +65,6 @@ public class NavigatorConfig {
         for (NavigatorModule module : modules.values()) {
             bindings.putAll(module.getBindings());
         }
-    }
-
-    @UsedByJSConfig
-    public void addModule(NavigatorModule module) {
-        modules.put(module.getName(), module);
     }
 
     public static synchronized NavigatorConfig getInstance() {
@@ -139,16 +90,6 @@ public class NavigatorConfig {
      */
     public Set<String> getModuleNames() {
         return unmodifiableSet(modules.keySet());
-    }
-
-    /**
-     * Get a localized string from the modular {@link java.util.ResourceBundle}.
-     *
-     * @param key the resource key for a localized string
-     * @return the string, localized for the current {@link java.util.Locale}
-     */
-    public String getString(String key) {
-        return getBundle(BUNDLE_NAME, Locale.getDefault(), moduleLoader).getString(key);
     }
 
     /**
@@ -220,6 +161,16 @@ public class NavigatorConfig {
      */
     public Binding getBinding(String name) {
         return bindings.get(name);
+    }
+
+    /**
+     * Get a localized string from the {@link JsConfig}'s {@link java.util.ResourceBundle}.
+     *
+     * @param key the resource key for a localized string
+     * @return the string, localized for the current {@link java.util.Locale}
+     */
+    public String getString(String key) {
+        return config.getString(key);
     }
 }
 

@@ -1,12 +1,6 @@
-const ji = JavaImporter(
-    java.lang,
-    org.cimsbioko.utilities,
-    org.cimsbioko.model.core,
-    org.cimsbioko.navconfig.forms
-);
 
 function consumer(fn) {
-    return new ji.FormConsumer({ consume: fn });
+    return new FormConsumer({ consume: fn });
 }
 
 function map(d) {
@@ -16,7 +10,7 @@ function map(d) {
         localityUuid = e.getChildText('localityUuid'),
         mapName = e.getChildText('mapName'),
         locality = hierGateway.findById(localityUuid).first,
-        m = new ji.LocationHierarchy();
+        m = new LocationHierarchy();
 
     m.uuid = e.getChildText('mapUuid');
     m.extId = mapName + '/' + locality.name;
@@ -37,7 +31,7 @@ function sector(d) {
         sectorName = e.getChildText('sectorName'),
         map = hierGateway.findById(mapUuid).first,
         locality = hierGateway.findById(map.parentUuid).first,
-        s = new ji.LocationHierarchy();
+        s = new LocationHierarchy();
 
     s.uuid = e.getChildText('sectorUuid');
     s.extId = map.name + sectorName + '/' + locality.name;
@@ -51,14 +45,14 @@ function sector(d) {
 }
 
 function formToLocation(e) {
-    const l = new ji.Location();
+    const l = new Location();
     l.uuid = e.getChildText('entityUuid');
     l.extId = e.getChildText('locationExtId');
     l.name = e.getChildText('locationName');
     l.hierarchyUuid = e.getChildText('hierarchyUuid');
     l.sectorName = e.getChildText('sectorName');
     l.mapAreaName = e.getChildText('mapAreaName');
-    l.buildingNumber = ji.Integer.parseInt(e.getChildText('locationBuildingNumber'));
+    l.buildingNumber = e.getChildText('locationBuildingNumber');
     l.description = e.getChildText('description');
     l.longitude = e.getChildText('longitude');
     l.latitude = e.getChildText('latitude');
@@ -66,7 +60,7 @@ function formToLocation(e) {
 }
 
 function formToIndividual(e) {
-    const i = new ji.Individual();
+    const i = new Individual();
     i.uuid = e.getChildText('entityUuid');
     i.extId = e.getChildText('individualExtId');
     i.firstName = e.getChildText('individualFirstName');

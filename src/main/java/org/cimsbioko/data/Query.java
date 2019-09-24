@@ -2,6 +2,7 @@ package org.cimsbioko.data;
 
 import android.database.Cursor;
 import android.net.Uri;
+import org.cimsbioko.navconfig.UsedByJSConfig;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class Query<T> {
     }
 
     // get all results from a query as a list
+    @UsedByJSConfig
     public List<T> getList() {
         return CursorConvert.list(select(), gateway.getEntityConverter());
     }

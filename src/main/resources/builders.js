@@ -1,22 +1,26 @@
-const ji = JavaImporter(
-    org.cimsbioko.utilities,
-    org.cimsbioko.model.core,
-    org.cimsbioko.navconfig.forms
-);
 
 function builder(fn) {
-    return new ji.FormBuilder({ build: fn });
+    return new FormBuilder({ build: fn });
 }
 
 function minData(d, ctx) {
     const fw = ctx.currentFieldWorker, e = d.rootElement;
     e.getChild('fieldWorkerUuid').text = fw.uuid;
     e.getChild('fieldWorkerExtId').text = fw.extId;
-    e.getChild('collectionDateTime').text = ji.PayloadTools.formatTime(java.util.Calendar.getInstance());
+    e.getChild('collectionDateTime').text = DateUtils.formatTime(new Date());
 }
 
 function newId() {
-    return ji.IdHelper.generateEntityUuid();
+    return IdHelper.generateEntityUuid();
+}
+
+function formatBuilding(building, includePrefix) {
+    return (includePrefix? "E" : "") + ("" + building).padStart(3,'0');
+}
+
+
+function formatFloor(floor, includePrefix) {
+    return (includePrefix? "P" : "") + ("" + floor).padStart(2,'0');
 }
 
 function newLocationData(d, ctx) {
@@ -26,18 +30,23 @@ function newLocationData(d, ctx) {
         nextBuildingNumber = db.locations.nextBuildingNumberInSector(map.name, sector.name),
         e = d.rootElement;
     e.getChild('entityUuid').text = newId();
-    e.getChild('locationBuildingNumber').text = ji.PayloadTools.formatBuilding(nextBuildingNumber, false);
+    e.getChild('locationBuildingNumber').text = formatBuilding(nextBuildingNumber, false);
     e.getChild('hierarchyExtId').text = sector.extId;
     e.getChild('hierarchyUuid').text = sector.uuid;
     e.getChild('hierarchyParentUuid').text = map.uuid;
     e.getChild('sectorName').text = sector.name;
-    e.getChild('locationFloorNumber').text = ji.PayloadTools.formatFloor(1, false);
+    e.getChild('locationFloorNumber').text = formatFloor(1, false);
     e.getChild('mapAreaName').text = map.name;
+}
+
+function generateIndividualExtId(l) {
+    const suffix = db.individuals.findByResidency(l.uuid).list.size() + 1;
+    return l.extId + "-" + ("" + suffix).padStart(3,'0');
 }
 
 function newIndividualData(d, ctx) {
     const location = ctx.currentSelection,
-        individualExtId = ji.IdHelper.generateIndividualExtId(location),
+        individualExtId = generateIndividualExtId(location),
         e = d.rootElement;
     e.getChild('individualExtId').text = individualExtId;
     e.getChild('householdUuid').text = location.uuid;
@@ -52,8 +61,8 @@ function generateNetCode(ctx) {
         sector = hierPath.get('sector'),
         map = hierPath.get('mapArea'),
         household = db.locations.findById(e.uuid).first,
-        year = new java.text.SimpleDateFormat('yy').format(new java.util.Date());
-    return java.lang.String.format('%s/%s%sE%03.0f', year, map.name, sector.name, household.buildingNumber);
+        year = ('' + new Date().getFullYear()).slice(2,4);
+    return year + '/' + map.name + sector.name + ('' + household.buildingNumber).padStart(3,'0');
 }
 
 function bednet(d, ctx) {
@@ -70,7 +79,7 @@ function bednet(d, ctx) {
     e.getChild('entityExtId').text = locationExtId;
     e.getChild('entityUuid').text = locationUuid;
     e.getChild('netCode').text = generateNetCode(ctx);
-    e.getChild('householdSize').text = java.lang.Integer.toString(individuals.size());
+    e.getChild('householdSize').text = individuals.size();
 }
 
 function duploc(d, ctx) {
@@ -82,8 +91,8 @@ function duploc(d, ctx) {
     minData(d, ctx);
     e.getChild('mapAreaName').text = map.name;
     e.getChild('sectorName').text = sector.name;
-    e.getChild('locationBuildingNumber').text = ji.PayloadTools.formatBuilding(nextBuildingNumber, true);
-    e.getChild('locationFloorNumber').text = ji.PayloadTools.formatFloor(1, true);
+    e.getChild('locationBuildingNumber').text = formatBuilding(nextBuildingNumber, true);
+    e.getChild('locationFloorNumber').text = formatFloor(1, true);
     e.getChild('entityExtId').text = cs.extId;
     e.getChild('entityUuid').text = cs.uuid;
     e.getChild('description').text = existing.description;
@@ -113,13 +122,13 @@ function householdMember(d, ctx) {
     newIndividualData(d, ctx);
     if (residents.size() === 1) {
         const head = residents.get(0);
-        e.getChild('individualPointOfContactName').text = ji.Individual.getFullName(head);
+        e.getChild('individualPointOfContactName').text = Individual.getFullName(head);
         e.getChild('individualPointOfContactPhoneNumber').text = head.phoneNumber;
     } else {
         for (let i=0; i<residents.size(); i++) {
             const r = residents.get(i);
             const name = r.pointOfContactName, number = r.pointOfContactPhoneNumber;
-            if (!ji.StringUtils.isEmpty(name) && !ji.StringUtils.isEmpty(number)) {
+            if (!StringUtils.isEmpty(name) && !StringUtils.isEmpty(number)) {
                 e.getChild('individualPointOfContactName').text = name;
                 e.getChild('individualPointOfContactPhoneNumber').text = number;
                 break;
@@ -157,14 +166,14 @@ function mis(d, ctx) {
     minData(d, ctx);
     e.getChild('entityExtId').text = cs.extId;
     e.getChild('entityUuid').text = cs.uuid;
-    e.getChild('survey_date').text = ji.PayloadTools.formatDate(java.util.Calendar.getInstance());
+    e.getChild('survey_date').text = DateUtils.formatDate(new Date());
 }
 
 function nested(d, ctx) {
     const cs = ctx.currentSelection, e = d.rootElement,
         residents = db.individuals.findByResidency(cs.uuid).list,
         template = e.getChild('individuals').clone();
-    template.removeAttribute('template', ji.FormUtils.JR_NS);
+    template.removeAttribute('template', FormUtils.JR_NS);
     for (let ridx = 0; ridx<residents.size(); ridx++) {
         let r = residents.get(ridx), re = template.clone();
         re.getChild('uuid').text = r.uuid;
@@ -204,7 +213,7 @@ function superojo(d, ctx) {
     const fw = ctx.currentFieldWorker, cs = ctx.currentSelection, extId = cs.extId, uuid = cs.uuid, e = d.rootElement;
     minData(d, ctx);
     e.getChild('supervisorExtId').text = fw.extId;
-    e.getChild('ojo_date').text = ji.PayloadTools.formatTime(java.util.Calendar.getInstance());
+    e.getChild('ojo_date').text = DateUtils.formatTime(new Date());
     e.getChild('locationExtId').text = extId;
     e.getChild('locationUuid').text = uuid;
     e.getChild('entityExtId').text = extId;

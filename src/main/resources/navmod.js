@@ -1,8 +1,3 @@
-const ji = JavaImporter(
-    org.cimsbioko.navconfig,
-    org.cimsbioko.navconfig.forms,
-    org.cimsbioko.fragment.navigate.detail
-);
 const defaultConsumer = require('consumers').default;
 
 function Builder() {
@@ -13,10 +8,10 @@ function Builder() {
 
 Builder.prototype.bind = function(b) {
     const bind_name = b.name || b.form;
-    this.binds[bind_name] = new ji.Binding({
+    this.binds[bind_name] = new Binding({
         getName() { return bind_name; },
         getForm() { return b.form; },
-        getLabel() { return config.getString(b.label); },
+        getLabel() { return msg[b.label]; },
         getBuilder() { return b.builder; },
         getConsumer() { return b.consumer || defaultConsumer }
     });
@@ -26,8 +21,8 @@ Builder.prototype.bind = function(b) {
 Builder.prototype.launcher = function(l) {
     const builder = this, level = l.level || 'root';
     this.launchers[level] = this.launchers[level] || [];
-    this.launchers[level].push(new ji.Launcher({
-        getLabel() { return l.label? config.getString(l.label) : 'Label'; },
+    this.launchers[level].push(new Launcher({
+        getLabel() { return l.label? msg[l.label] : 'Label'; },
         relevantFor(ctx) { return l.relevant? l.relevant(ctx) : true; },
         getBinding() { return builder.binds[l.bind]; }
     }));
@@ -35,7 +30,7 @@ Builder.prototype.launcher = function(l) {
 };
 
 const defaultDetails = {
-    individual: new ji.IndividualDetailFragment()
+    individual: new IndividualDetailFragment()
 };
 
 Builder.prototype.detail = function(d) {
@@ -45,11 +40,11 @@ Builder.prototype.detail = function(d) {
 
 Builder.prototype.build = function(m) {
     const builder = this;
-    return new ji.NavigatorModule({
+    return new NavigatorModule({
         getName() { return m.name || 'name'; },
-        getActivityTitle() { return m.title? config.getString(m.title) : 'Title'; },
-        getLaunchLabel() { return m.launchLabel? config.getString(m.launchLabel) : 'Launch Label'; },
-        getLaunchDescription() { return m.launchDescription? config.getString(m.launchDescription) : 'Launch Description'; },
+        getActivityTitle() { return m.title? msg[m.title] : 'Title'; },
+        getLaunchLabel() { return m.launchLabel? msg[m.launchLabel] : 'Launch Label'; },
+        getLaunchDescription() { return m.launchDescription? msg[m.launchDescription] : 'Launch Description'; },
         getBindings() { return builder.binds; },
         getLaunchers(level) { return builder.launchers[level] || []; },
         getDetailFragment(level) { return (builder.details || defaultDetails)[level] || null; }
