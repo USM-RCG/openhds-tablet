@@ -65,18 +65,6 @@ public class FormsHelper {
         return formInstance;
     }
 
-    public static void setStatusIncomplete(Uri uri) {
-        ContentValues cv = new ContentValues();
-        cv.put(InstanceProviderAPI.InstanceColumns.STATUS, InstanceProviderAPI.STATUS_INCOMPLETE);
-        getContentResolver().update(uri, cv, null, null);
-    }
-
-    public static void setStatusComplete(Uri uri) {
-        ContentValues cv = new ContentValues();
-        cv.put(InstanceProviderAPI.InstanceColumns.STATUS, InstanceProviderAPI.STATUS_COMPLETE);
-        getContentResolver().update(uri, cv, null, null);
-    }
-
     public static List<FormInstance> getByPaths(Collection<String> formPaths) {
         ArrayList<FormInstance> formInstances = new ArrayList<>();
         if (!formPaths.isEmpty()) {
