@@ -1,3 +1,8 @@
+
+/*
+  A default hierarchy definition, the bioko hierarchy. Provided here only as a fallback.
+ */
+
 const levels = [
     { name: 'region', label: 'hier.region' },
     { name: 'province', label: 'hier.province' },
