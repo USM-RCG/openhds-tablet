@@ -26,8 +26,8 @@ import static org.apache.lucene.util.Version.LUCENE_47;
 import static org.cimsbioko.App.getApp;
 import static org.cimsbioko.navconfig.Hierarchy.*;
 import static org.cimsbioko.provider.ContentProvider.getDatabaseHelper;
+import static org.cimsbioko.utilities.IOUtils.close;
 import static org.cimsbioko.utilities.NotificationUtils.*;
-import static org.cimsbioko.utilities.SyncUtils.close;
 
 public class Indexer {
 

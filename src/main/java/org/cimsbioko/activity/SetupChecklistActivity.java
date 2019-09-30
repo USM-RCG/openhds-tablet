@@ -22,6 +22,7 @@ import org.cimsbioko.utilities.MessageUtils;
 import org.cimsbioko.utilities.SetupUtils;
 import org.cimsbioko.utilities.SyncUtils;
 
+import static org.cimsbioko.utilities.SetupUtils.CAMPAIGN_DOWNLOADED_ACTION;
 import static org.cimsbioko.utilities.SetupUtils.startApp;
 import static org.cimsbioko.utilities.SyncUtils.DATA_INSTALLED_ACTION;
 
@@ -29,7 +30,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
 
     private static final int STORAGE_PERMISSION_REQUEST = 1;
 
-    private CheckBox permissionsCheckbox, appsCheckbox, connectCheckbox, dataCheckbox;
+    private CheckBox permissionsCheckbox, appsCheckbox, connectCheckbox, configCheckbox, dataCheckbox;
     private Button setupButton;
     private BroadcastReceiver broadcastReceiver;
 
@@ -47,6 +48,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
         permissionsCheckbox = findViewById(R.id.grantPermsCheckbox);
         appsCheckbox = findViewById(R.id.installAppsCheckbox);
         connectCheckbox = findViewById(R.id.serverConnectCheckbox);
+        configCheckbox = findViewById(R.id.configDownloadCheckbox);
         dataCheckbox = findViewById(R.id.dataDownloadCheckbox);
         setupButton = findViewById(R.id.setup_button);
 
@@ -69,6 +71,9 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
                 if (DATA_INSTALLED_ACTION.equals(intent.getAction())) {
                     MessageUtils.showShortToast(SetupChecklistActivity.this, R.string.sync_database_updated);
                     updateState();
+                } else if (CAMPAIGN_DOWNLOADED_ACTION.equals(intent.getAction())) {
+                    MessageUtils.showShortToast(SetupChecklistActivity.this, "Campaign downloaded");
+                    updateState();
                 }
             }
         };
@@ -85,18 +90,21 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
     protected void onResume() {
         super.onResume();
         updateState();
-        LocalBroadcastManager.getInstance(this)
-                .registerReceiver(broadcastReceiver, new IntentFilter(DATA_INSTALLED_ACTION));
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.registerReceiver(broadcastReceiver, new IntentFilter(DATA_INSTALLED_ACTION));
+        lbm.registerReceiver(broadcastReceiver, new IntentFilter(CAMPAIGN_DOWNLOADED_ACTION));
     }
 
     private void updateState() {
 
-        final boolean hasPerms = hasPermissions(), hasApps = hasApps(), isConnected = isConnected(), hasData = hasData();
+        final boolean hasPerms = hasPermissions(), hasApps = hasApps(), isConnected = isConnected(),
+                hasData = hasData(), hasConfig = hasConfig();
 
         // update checkboxes
         permissionsCheckbox.setChecked(hasPerms);
         appsCheckbox.setChecked(hasApps);
         connectCheckbox.setChecked(isConnected);
+        configCheckbox.setChecked(hasConfig);
         dataCheckbox.setChecked(hasData);
 
         // configure button
@@ -108,8 +116,12 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
             setupButton.setOnClickListener(v -> SetupUtils.promptFormsAppInstall(SetupChecklistActivity.this));
         } else if (!isConnected) {
             setupButton.setText(R.string.attach_to_server);
-            setupButton.setOnClickListener(v -> SetupUtils.getToken(SetupChecklistActivity.this));
-        } else if (!hasData) {
+            setupButton.setOnClickListener(v -> SetupUtils.getToken(SetupChecklistActivity.this, null));
+        } else if (!hasConfig) {
+            setupButton.setText(R.string.download_campaign);
+            setupButton.setOnClickListener(v -> SetupUtils.downloadConfig(SetupChecklistActivity.this));
+        }
+        else if (!hasData) {
             setupButton.setText(R.string.download_data);
             setupButton.setOnClickListener(v -> SyncUtils.checkForUpdate(SetupChecklistActivity.this));
         } else {
@@ -121,6 +133,8 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
     private boolean hasData() {
         return SetupUtils.isDataAvailable(this);
     }
+
+    private boolean hasConfig() { return SetupUtils.isConfigAvailable(); }
 
     private boolean isConnected() {
         return SetupUtils.isAccountInstalled(this);

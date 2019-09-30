@@ -1,22 +1,15 @@
 package org.cimsbioko.task.http;
 
 import android.os.AsyncTask;
-
 import org.cimsbioko.utilities.HttpUtils;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.*;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
-import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
-import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
-import static java.net.HttpURLConnection.HTTP_NOT_MODIFIED;
-import static java.net.HttpURLConnection.HTTP_OK;
-import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
-import static org.cimsbioko.utilities.SyncUtils.streamToFile;
+import static java.net.HttpURLConnection.*;
+import static org.cimsbioko.utilities.IOUtils.streamToFile;
+import static org.cimsbioko.utilities.IOUtils.streamToStream;
 
 /**
  * Carry out an HttpTaskRequest.
@@ -71,16 +64,20 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
         if (HTTP_OK == statusCode) {
             String eTag = conn.getHeaderField("ETag"), contentType = conn.getContentType();
             File saveFile = req.getFile();
-            if (saveFile != null) {
-                try {
-                    responseStream = conn.getInputStream();
+            try {
+                responseStream = conn.getInputStream();
+                if (saveFile != null) {
                     streamToFile(responseStream, saveFile);
                     responseStream = new BufferedInputStream(new FileInputStream(saveFile));
-                } catch (InterruptedException | IOException e) {
-                    return new HttpTaskResponse(false, Result.STREAM_FAILURE, statusCode, responseStream, eTag, contentType);
+                } else {
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    streamToStream(responseStream, out, null);
+                    responseStream = new ByteArrayInputStream(out.toByteArray());
                 }
+                return new HttpTaskResponse(true, Result.SUCCESS, statusCode, responseStream, eTag, contentType);
+            } catch (InterruptedException | IOException e) {
+                return new HttpTaskResponse(false, Result.STREAM_FAILURE, statusCode, responseStream, eTag, contentType);
             }
-            return new HttpTaskResponse(true, Result.SUCCESS, statusCode, responseStream, eTag, contentType);
         }
 
         if (HTTP_NOT_MODIFIED == statusCode) {

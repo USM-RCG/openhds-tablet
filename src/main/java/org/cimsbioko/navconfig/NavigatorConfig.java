@@ -12,6 +12,8 @@ import java.net.URLClassLoader;
 import java.util.*;
 
 import static java.util.Collections.*;
+import static org.cimsbioko.App.getApp;
+import static org.cimsbioko.utilities.SetupUtils.CAMPAIGN_FILENAME;
 
 
 /**
@@ -47,16 +49,27 @@ public class NavigatorConfig {
     }
 
     private File getExternalCampaignFile() {
-        return new File(SyncUtils.getExternalDir(), "campaign.zip");
+        return new File(SyncUtils.getExternalDir(), CAMPAIGN_FILENAME);
     }
 
+    private File getDownloadedCampaignFile() {
+        return getApp().getFileStreamPath(CAMPAIGN_FILENAME);
+    }
+
+    /**
+     * Chooses the {@link ClassLoader} that the application should use to load its configuration from. It selects the
+     * first existing, readable configuration in order: external storage, downloaded (app files), apk (compiled-in).
+     *
+     * @return the loader to use to load campaign configuration
+     * @throws MalformedURLException
+     */
     private ClassLoader getLoader() throws MalformedURLException {
-        File campaignFile = getExternalCampaignFile();
-        URL[] urls = {campaignFile.toURI().toURL()};
-        if (campaignFile.canRead()) {
-            Log.i(TAG, "loading external campaign from " + campaignFile);
-            return URLClassLoader.newInstance(urls);
-        }
+        File[] possible = {getExternalCampaignFile(), getDownloadedCampaignFile()};
+        for (File file : possible)
+            if (file.canRead()) {
+                Log.i(TAG, "loading campaign from " + file);
+                return URLClassLoader.newInstance(new URL[]{file.toURI().toURL()});
+            }
         Log.i(TAG, "loading internal campaign");
         return NavigatorConfig.class.getClassLoader();
     }

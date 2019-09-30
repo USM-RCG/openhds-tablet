@@ -167,6 +167,7 @@
     <string name="install_apps">Instalar Aplicaciones</string>
     <string name="attach_to_server">Adjuntar al Servidor</string>
     <string name="download_data">Descargar Datos</string>
+    <string name="download_campaign">Descargar Campaña</string>
     <string name="next">Siguiente</string>
     <string name="device_login">Inicio de sesión del dispositivo</string>
     <string name="cims_logo">CIMS Logo</string>

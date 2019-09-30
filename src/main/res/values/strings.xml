@@ -192,6 +192,7 @@
     <string name="install_apps">Install Apps</string>
     <string name="attach_to_server">Attach to Server</string>
     <string name="download_data">Download Data</string>
+    <string name="download_campaign">Download Campaign</string>
     <string name="next">Next</string>
     <string name="device_login">Device Login</string>
     <string name="cims_logo">CIMS Logo</string>

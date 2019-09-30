@@ -13,9 +13,10 @@ import java.net.URL;
 
 import static android.os.Build.*;
 import static android.os.Build.VERSION.RELEASE;
-import static com.github.batkinson.jrsync.zsync.IOUtil.close;
 import static java.util.Arrays.asList;
 import static org.cimsbioko.utilities.HttpUtils.encodeBasicCreds;
+import static org.cimsbioko.utilities.IOUtils.close;
+import static org.cimsbioko.utilities.IOUtils.copy;
 import static org.cimsbioko.utilities.UrlUtils.buildServerUrl;
 
 public class AuthUtils {
@@ -88,23 +89,6 @@ public class AuthUtils {
         } finally {
             close(in);
             urlConn.disconnect();
-        }
-    }
-
-    /**
-     * Copies the contents from one stream to another.
-     *
-     * @param source the {@link InputStream} to copy bytes from
-     * @param target the {@link OutputStream} to copy bytes to
-     * @throws IOException if any error occurs reading or writing
-     */
-    private static void copy(InputStream source, OutputStream target) throws IOException {
-        byte[] buffer = new byte[4096];
-        while (true) {
-            int bytesRead = source.read(buffer);
-            if (bytesRead == -1)
-                break;
-            target.write(buffer, 0, bytesRead);
         }
     }
 
