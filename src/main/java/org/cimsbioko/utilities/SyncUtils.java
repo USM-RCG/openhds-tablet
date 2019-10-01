@@ -31,7 +31,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
-import static android.os.Environment.getExternalStorageDirectory;
 import static com.github.batkinson.jrsync.zsync.ZSync.sync;
 import static java.net.HttpURLConnection.*;
 import static org.cimsbioko.App.AUTHORITY;
@@ -39,6 +38,7 @@ import static org.cimsbioko.provider.ContentProvider.DATABASE_NAME;
 import static org.cimsbioko.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.cimsbioko.utilities.ConfigUtils.getPreferenceBool;
 import static org.cimsbioko.utilities.ConfigUtils.getPreferenceString;
+import static org.cimsbioko.utilities.EncodingUtils.toHex;
 import static org.cimsbioko.utilities.HttpUtils.encodeBearerCreds;
 import static org.cimsbioko.utilities.HttpUtils.get;
 import static org.cimsbioko.utilities.IOUtils.*;
@@ -517,24 +517,6 @@ public class SyncUtils {
         store(getFingerprintFile(dst), toHex(digest.digest()));
     }
 
-    private final static char[] hexArray = "0123456789abcdef".toCharArray();
-
-    /**
-     * Converts the given byte array to its hexadecimal equivalent.
-     *
-     * @param bytes the array to convert
-     * @return the array contents encoded as a base-16 string
-     */
-    private static String toHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
-
     /**
      * Determines whether an offline database file exists on external storage (user put it there).
      *
@@ -551,15 +533,6 @@ public class SyncUtils {
      */
     private static File getOfflineDbFile() {
         return new File(getExternalDir(), DATABASE_NAME);
-    }
-
-    /**
-     * Returns the dedicated directory for cims-exclusive data on external storage.
-     *
-     * @return a {@link File} indicating where cims-specific (public) files are/can be stored
-     */
-    public static File getExternalDir() {
-        return new File(getExternalStorageDirectory(), "cims");
     }
 
     /**

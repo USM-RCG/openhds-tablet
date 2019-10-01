@@ -20,6 +20,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import static org.cimsbioko.utilities.IOUtils.getExternalDir;
+
 
 /**
  * Dumping grounds for repeated jdom code. It might be possible to eliminate this code entirely, but for now it
@@ -102,7 +104,7 @@ public class FormUtils {
     }
 
     private static File getFormsDir() {
-        return SyncUtils.getExternalDir();
+        return getExternalDir();
     }
 
     public static File getInstancesDir() {

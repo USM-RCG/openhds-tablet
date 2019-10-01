@@ -5,10 +5,21 @@ import android.util.Log;
 import java.io.*;
 import java.nio.channels.FileChannel;
 
+import static android.os.Environment.getExternalStorageDirectory;
+
 public class IOUtils {
 
     private static final String TAG = IOUtils.class.getSimpleName();
     private static final int BUFFER_SIZE = 8192;
+
+    /**
+     * Returns the dedicated directory for cims-exclusive data on external storage.
+     *
+     * @return a {@link File} indicating where cims-specific (public) files are/can be stored
+     */
+    public static File getExternalDir() {
+        return new File(getExternalStorageDirectory(), "cims");
+    }
 
     /**
      * Copies the contents from one stream to another.

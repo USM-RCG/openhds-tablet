@@ -3,7 +3,6 @@ package org.cimsbioko.navconfig;
 import android.util.Log;
 import org.cimsbioko.navconfig.forms.Binding;
 import org.cimsbioko.scripting.JsConfig;
-import org.cimsbioko.utilities.SyncUtils;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -13,6 +12,7 @@ import java.util.*;
 
 import static java.util.Collections.*;
 import static org.cimsbioko.App.getApp;
+import static org.cimsbioko.utilities.IOUtils.getExternalDir;
 import static org.cimsbioko.utilities.SetupUtils.CAMPAIGN_FILENAME;
 
 
@@ -49,7 +49,7 @@ public class NavigatorConfig {
     }
 
     private File getExternalCampaignFile() {
-        return new File(SyncUtils.getExternalDir(), CAMPAIGN_FILENAME);
+        return new File(getExternalDir(), CAMPAIGN_FILENAME);
     }
 
     private File getDownloadedCampaignFile() {
