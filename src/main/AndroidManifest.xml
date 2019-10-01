@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <permission android:name="org.cimsbioko.permission.READ_SETTINGS" android:protectionLevel="signature"/>
     <permission android:name="org.cimsbioko.permission.AUTH" android:protectionLevel="signature"/>
@@ -130,11 +131,13 @@
         </service>
         <service
             android:name=".search.IndexingService"
-            android:exported="false">
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE">
         </service>
         <service
             android:name=".offlinedb.OfflineDbService"
-            android:exported="false"/>
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <receiver
             android:name=".syncadpt.SyncCancelReceiver"
             android:permission="org.cimsbioko.permission.SYNC_CANCEL">

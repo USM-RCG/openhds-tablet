@@ -1,13 +1,14 @@
 package org.cimsbioko.search;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.core.app.JobIntentService;
 
 import java.io.IOException;
 
-public class IndexingService extends IntentService {
+public class IndexingService extends JobIntentService {
 
     private static final String TAG = IndexingService.class.getSimpleName();
 
@@ -20,12 +21,8 @@ public class IndexingService extends IntentService {
         INDIVIDUAL
     }
 
-    public IndexingService() {
-        super("indexer");
-    }
-
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(@NonNull Intent intent) {
         Indexer indexer = Indexer.getInstance();
         if (intent.hasExtra(ENTITY_UUID)) {
             EntityType type = EntityType.valueOf(intent.getStringExtra(ENTITY_TYPE));
