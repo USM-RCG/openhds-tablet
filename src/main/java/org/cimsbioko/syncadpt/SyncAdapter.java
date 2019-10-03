@@ -8,8 +8,6 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
@@ -23,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.cimsbioko.utilities.ConfigUtils.getPreferenceBool;
+import static org.cimsbioko.utilities.NetUtils.isWiFiConnected;
 import static org.cimsbioko.utilities.SyncUtils.downloadUpdate;
 import static org.cimsbioko.utilities.SyncUtils.getSyncEndpoint;
 
@@ -45,17 +44,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         boolean sidecarEnabled = getPreferenceBool(ctx, ctx.getString(R.string.use_sidecar_key), false);
         boolean wifiOnlyEnabled = getPreferenceBool(ctx, ctx.getString(R.string.wifi_sync_key), true);
 
-        if (wifiOnlyEnabled) {
-            ConnectivityManager connMgr = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-            if (connMgr == null) {
-                return;
-            } else {
-                NetworkInfo activeNetwork = connMgr.getActiveNetworkInfo();
-                if (activeNetwork == null || activeNetwork.getType() != ConnectivityManager.TYPE_WIFI || !activeNetwork.isConnected()) {
-                    Log.w(TAG, "user settings require wi-fi, not syncing");
-                    return;
-                }
-            }
+        if (wifiOnlyEnabled && !isWiFiConnected()) {
+            Log.w(TAG, "user settings require wi-fi, not syncing");
+            return;
         }
 
         if (autoSyncEnabled || manualSyncRequested) {

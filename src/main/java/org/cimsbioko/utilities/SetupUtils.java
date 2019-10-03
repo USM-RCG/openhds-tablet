@@ -29,11 +29,13 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 import static org.cimsbioko.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.cimsbioko.syncadpt.Constants.AUTHTOKEN_TYPE_DEVICE;
+import static org.cimsbioko.utilities.CampaignUtils.*;
+import static org.cimsbioko.utilities.FileUtils.getFingerprintFile;
 import static org.cimsbioko.utilities.HttpUtils.encodeBearerCreds;
 import static org.cimsbioko.utilities.IOUtils.close;
+import static org.cimsbioko.utilities.IOUtils.store;
 import static org.cimsbioko.utilities.LoginUtils.launchLogin;
 import static org.cimsbioko.utilities.SyncUtils.downloadedContentBefore;
-import static org.cimsbioko.utilities.UrlUtils.buildServerUrl;
 
 public class SetupUtils {
 
@@ -44,7 +46,7 @@ public class SetupUtils {
     public static boolean setupRequirementsMet(Context ctx) {
         return hasRequiredPermissions(ctx)
                 && isFormsAppInstalled(ctx.getPackageManager())
-                && isAccountInstalled(ctx)
+                && isAccountInstalled()
                 && isConfigAvailable()
                 && isDataAvailable(ctx);
     }
@@ -78,19 +80,15 @@ public class SetupUtils {
     }
 
     public static boolean isConfigAvailable() {
-        return getCampaignFile().canRead();
-    }
-
-    private static File getCampaignFile() {
-        return App.getApp().getFileStreamPath(CAMPAIGN_FILENAME);
+        return downloadedCampaignExists();
     }
 
     public static boolean isDataAvailable(Context ctx) {
         return downloadedContentBefore(ctx);
     }
 
-    public static boolean isAccountInstalled(Context ctx) {
-        return AccountManager.get(ctx).getAccountsByType(ACCOUNT_TYPE).length > 0;
+    public static boolean isAccountInstalled() {
+        return AccountUtils.getFirstAccount() != null;
     }
 
     public static boolean isFormsAppInstalled(PackageManager manager) {
@@ -140,7 +138,7 @@ public class SetupUtils {
         getToken(activity, future -> {
             String token;
             Context ctx = activity.getApplicationContext();
-            String url = buildServerUrl(ctx, "/api/rest/campaign");
+            String url = getCampaignUrl();
 
             // Extract the auth token for the active account
             try {
@@ -151,17 +149,25 @@ public class SetupUtils {
                 return;
             }
 
+            File targetFile = getDownloadedCampaignFile();
+
             // Download the campaign file and send a local broadcast message when it finishes
             new HttpTask(rsp -> {
                 if (rsp.isSuccess()) {
                     close(rsp.getInputStream());
+                    String etag = rsp.getETag();
+                    if (etag != null) {
+                        store(getFingerprintFile(targetFile), etag);
+                    }
                     LocalBroadcastManager
                             .getInstance(ctx)
                             .sendBroadcast(new Intent(CAMPAIGN_DOWNLOADED_ACTION));
                 } else {
                     MessageUtils.showLongToast(ctx, "Download failed: " + rsp.getResult());
                 }
-            }).execute(new HttpTaskRequest(url, null, encodeBearerCreds(token), null, getCampaignFile()));
+            }).execute(new HttpTaskRequest(url, null, encodeBearerCreds(token), null, targetFile));
         });
     }
+
+
 }

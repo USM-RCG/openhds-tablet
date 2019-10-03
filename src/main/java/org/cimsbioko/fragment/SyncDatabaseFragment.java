@@ -16,6 +16,7 @@ import android.widget.TextView;
 import org.cimsbioko.App;
 import org.cimsbioko.R;
 import org.cimsbioko.offlinedb.OfflineDbService;
+import org.cimsbioko.utilities.FileUtils;
 import org.cimsbioko.utilities.MessageUtils;
 import org.cimsbioko.utilities.NotificationUtils;
 import org.cimsbioko.utilities.SyncUtils;
@@ -25,10 +26,10 @@ import java.io.File;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
 import static org.cimsbioko.search.IndexingService.queueFullReindex;
 import static org.cimsbioko.search.Utils.isAutoReindexingEnabled;
+import static org.cimsbioko.utilities.FileUtils.getDatabaseFile;
 import static org.cimsbioko.utilities.SyncUtils.SYNC_NOTIFICATION_ID;
 import static org.cimsbioko.utilities.SyncUtils.canUpdateDatabase;
 import static org.cimsbioko.utilities.SyncUtils.checkForUpdate;
-import static org.cimsbioko.utilities.SyncUtils.getDatabaseFile;
 import static org.cimsbioko.utilities.SyncUtils.getDatabaseFingerprint;
 import static org.cimsbioko.utilities.SyncUtils.installUpdate;
 
@@ -84,7 +85,7 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
     }
 
     private File getFingerprintFile() {
-        return SyncUtils.getFingerprintFile(getDatabaseFile(getActivity()));
+        return FileUtils.getFingerprintFile(getDatabaseFile(App.getApp()));
     }
 
     private CharSequence getLastUpdated() {

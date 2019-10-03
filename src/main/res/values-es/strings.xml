@@ -185,5 +185,7 @@
     <string name="manage_forms">Gestionar Formularios</string>
 
     <string name="pref_campaign_title">Campaña</string>
+    <string name="campaign_update_title">Actualización de campaña disponible</string>
+    <string name="campaign_update_msg">Una actualización de campaña está disponible. Instalarlo ahora?</string>
 
 </resources>

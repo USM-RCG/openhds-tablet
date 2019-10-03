@@ -210,5 +210,7 @@
     <string name="manage_forms">Manage Forms</string>
 
     <string name="pref_campaign_title">Campaign</string>
+    <string name="campaign_update_title">Campaign update available</string>
+    <string name="campaign_update_msg">A campaign update is available. Install it now?</string>
 
 </resources>

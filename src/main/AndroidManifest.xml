@@ -132,10 +132,13 @@
         <service
             android:name=".search.IndexingService"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE">
-        </service>
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service
             android:name=".offlinedb.OfflineDbService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service
+            android:name=".campaign.CampaignUpdateService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
         <receiver

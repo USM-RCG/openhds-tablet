@@ -137,7 +137,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
     private boolean hasConfig() { return SetupUtils.isConfigAvailable(); }
 
     private boolean isConnected() {
-        return SetupUtils.isAccountInstalled(this);
+        return SetupUtils.isAccountInstalled();
     }
 
     private boolean hasApps() {

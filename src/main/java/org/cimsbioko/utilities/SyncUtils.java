@@ -39,6 +39,7 @@ import static org.cimsbioko.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.cimsbioko.utilities.ConfigUtils.getPreferenceBool;
 import static org.cimsbioko.utilities.ConfigUtils.getPreferenceString;
 import static org.cimsbioko.utilities.EncodingUtils.toHex;
+import static org.cimsbioko.utilities.FileUtils.*;
 import static org.cimsbioko.utilities.HttpUtils.encodeBearerCreds;
 import static org.cimsbioko.utilities.HttpUtils.get;
 import static org.cimsbioko.utilities.IOUtils.*;
@@ -58,58 +59,6 @@ public class SyncUtils {
     public static final String SQLITE_MIME_TYPE = "application/x-sqlite3";
     public static final String DATA_INSTALLED_ACTION = "DATA_INSTALLED";
     public static final String SYNC_CANCELLED_ACTION = "org.cimsbioko.SYNC_CANCELLED";
-
-    /**
-     * Generates a filename to use for storing the ETag header value for a file. The value generated is deterministic
-     * and will always generate the same name for a specified file.
-     *
-     * @param filename the original file name, without preceding path
-     * @return filename to store the etag value
-     */
-    public static String hashFilename(String filename) {
-        return String.format("%s.etag", filename);
-    }
-
-    /**
-     * Generates a filename to use for storing temporary content, which may replace the content of the original file
-     * specified. The value is deterministic and will always generate the same name for the specified file.
-     *
-     * @param filename the original file name, without preceding path
-     * @return filename to store intermediate content
-     */
-    public static String tempFilename(String filename) {
-        return String.format("%s.tmp", filename);
-    }
-
-    /**
-     * Returns the location of the sqlite database file used to store application data.
-     *
-     * @param ctx application context to use for determining database directory path
-     * @return a {@link File} object corresponding to the application's main sqlite database
-     */
-    public static File getDatabaseFile(Context ctx) {
-        return ctx.getDatabasePath(DATABASE_NAME);
-    }
-
-    /**
-     * Returns the location of the temp file for the specified file.
-     *
-     * @param original {@link File} object corresponding to location of original file
-     * @return {@link File} object corresponding to the temp file location for the original
-     */
-    public static File getTempFile(File original) {
-        return new File(original.getParentFile(), tempFilename(original.getName()));
-    }
-
-    /**
-     * Returns the location of the fingerprint file for the specified file.
-     *
-     * @param original {@link File} object corresponding to the location of the original file
-     * @return {@link File} object corresponding to the fingerprint file for the original
-     */
-    public static File getFingerprintFile(File original) {
-        return new File(original.getParentFile(), hashFilename(original.getName()));
-    }
 
     /**
      * Returns the {@link URL} to use to fetch sqlite database updates from on the server. It is constructed based on

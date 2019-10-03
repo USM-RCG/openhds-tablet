@@ -3,17 +3,10 @@ package org.cimsbioko.navconfig;
 import android.util.Log;
 import org.cimsbioko.navconfig.forms.Binding;
 import org.cimsbioko.scripting.JsConfig;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.*;
 
 import static java.util.Collections.*;
-import static org.cimsbioko.App.getApp;
-import static org.cimsbioko.utilities.IOUtils.getExternalDir;
-import static org.cimsbioko.utilities.SetupUtils.CAMPAIGN_FILENAME;
+import static org.cimsbioko.utilities.CampaignUtils.loadCampaign;
 
 
 /**
@@ -48,30 +41,8 @@ public class NavigatorConfig {
         consolidateFormBindings();
     }
 
-    private File getExternalCampaignFile() {
-        return new File(getExternalDir(), CAMPAIGN_FILENAME);
-    }
-
-    private File getDownloadedCampaignFile() {
-        return getApp().getFileStreamPath(CAMPAIGN_FILENAME);
-    }
-
-    /**
-     * Chooses the {@link ClassLoader} that the application should use to load its configuration from. It selects the
-     * first existing, readable configuration in order: external storage, downloaded (app files), apk (compiled-in).
-     *
-     * @return the loader to use to load campaign configuration
-     * @throws MalformedURLException
-     */
-    private ClassLoader getLoader() throws MalformedURLException {
-        File[] possible = {getExternalCampaignFile(), getDownloadedCampaignFile()};
-        for (File file : possible)
-            if (file.canRead()) {
-                Log.i(TAG, "loading campaign from " + file);
-                return URLClassLoader.newInstance(new URL[]{file.toURI().toURL()});
-            }
-        Log.i(TAG, "loading internal campaign");
-        return NavigatorConfig.class.getClassLoader();
+    public void reload() {
+        init();
     }
 
     /*
@@ -80,7 +51,7 @@ public class NavigatorConfig {
     private void loadConfig() {
         modules = new LinkedHashMap<>();
         try {
-            config = new JsConfig(getLoader()).load();
+            config = loadCampaign();
             hierarchy = config.getHierarchy();
             for (NavigatorModule module : config.getNavigatorModules()) {
                 modules.put(module.getName(), module);

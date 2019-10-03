@@ -2,7 +2,10 @@ package org.cimsbioko.activity;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,22 +14,28 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.android.material.navigation.NavigationView;
 import org.cimsbioko.R;
+import org.cimsbioko.campaign.CampaignUpdateService;
 import org.cimsbioko.search.IndexingService;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static org.cimsbioko.campaign.CampaignUpdateService.CAMPAIGN_UPDATE_AVAILABLE;
 import static org.cimsbioko.search.Utils.isSearchEnabled;
 import static org.cimsbioko.syncadpt.Constants.ACCOUNT_TYPE;
+import static org.cimsbioko.utilities.CampaignUtils.updateCampaign;
 import static org.cimsbioko.utilities.ConfigUtils.getAppFullName;
 
 public class FieldWorkerLoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private NavigationView navView;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,12 +93,36 @@ public class FieldWorkerLoginActivity extends AppCompatActivity implements Navig
             textView.setText(attached ? accounts[0].name : getString(R.string.app_name));
             textView.setVisibility(attached ? VISIBLE : GONE);
         }
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (CAMPAIGN_UPDATE_AVAILABLE.equals(intent.getAction())) {
+                    new AlertDialog.Builder(FieldWorkerLoginActivity.this)
+                            .setTitle(R.string.campaign_update_title)
+                            .setMessage(R.string.campaign_update_msg)
+                            .setNegativeButton(R.string.no_btn, (dialog, which) -> {})
+                            .setPositiveButton(R.string.yes_btn, (dialog, which) -> updateCampaign())
+                            .show();
+                }
+            }
+        };
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this)
+                .unregisterReceiver(broadcastReceiver);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         navView.getMenu().findItem(R.id.rebuild_search_indices).setVisible(isSearchEnabled(this));
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.registerReceiver(broadcastReceiver, new IntentFilter(CAMPAIGN_UPDATE_AVAILABLE));
+        startService(new Intent(this, CampaignUpdateService.class));
     }
 
     @Override
