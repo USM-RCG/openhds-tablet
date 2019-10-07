@@ -41,7 +41,11 @@ public class NavigatorConfig {
         consolidateFormBindings();
     }
 
+    /**
+     * Reloads the configuration, ensuring url resource caching doesn't get in the way.
+     */
     public void reload() {
+        config.close();
         init();
     }
 

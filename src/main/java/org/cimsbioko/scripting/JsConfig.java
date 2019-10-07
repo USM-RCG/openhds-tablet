@@ -26,9 +26,9 @@ import org.mozilla.javascript.commonjs.module.RequireBuilder;
 import org.mozilla.javascript.commonjs.module.provider.SoftCachingModuleScriptProvider;
 import org.mozilla.javascript.commonjs.module.provider.UrlModuleSourceProvider;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.Closeable;
+import java.io.IOException;
+import java.net.*;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
-public class JsConfig {
+public class JsConfig implements Closeable {
 
     private static final String TAG = JsConfig.class.getSimpleName();
     private static final String INIT_MODULE = "init", BUNDLE_NAME = "strings";
@@ -47,10 +47,6 @@ public class JsConfig {
     private final ClassLoader loader;
     private Hierarchy hierarchy = new StubHierarchy();
     private NavigatorModule[] navigatorModules = {};
-
-    public JsConfig() {
-        this(null);
-    }
 
     public JsConfig(ClassLoader loader) {
         if (loader != null) {
@@ -107,11 +103,11 @@ public class JsConfig {
 
     public String getString(String key) {
         ResourceBundle bundle = getBundle();
-        return bundle.containsKey(key)? bundle.getString(key) : String.format("{%s}", key);
+        return bundle.containsKey(key) ? bundle.getString(key) : String.format("{%s}", key);
     }
 
     private ResourceBundle getBundle() {
-        return ResourceBundle.getBundle(BUNDLE_NAME, Locale.getDefault(), loader);
+        return ResourceBundle.getBundle(BUNDLE_NAME, Locale.getDefault(), loader, NonCachingResourceBundleControl.INSTANCE);
     }
 
     private static void putConst(ScriptableObject scope, String name, Object object) {
@@ -151,7 +147,7 @@ public class JsConfig {
                 .setSandboxed(true)
                 .setModuleScriptProvider(
                         new SoftCachingModuleScriptProvider(
-                                new UrlModuleSourceProvider(getJsModulePath(), null)));
+                                new NonCachingModuleSourceProvider(getJsModulePath())));
         Require require = rb.createRequire(ctx, scope);
         require.install(scope);
         return require;
@@ -163,5 +159,34 @@ public class JsConfig {
             return singletonList(root.toURI());
         }
         return emptyList();
+    }
+
+    @Override
+    public void close() {
+        ResourceBundle.clearCache(loader);
+    }
+
+    private static class NonCachingModuleSourceProvider extends UrlModuleSourceProvider {
+        NonCachingModuleSourceProvider(Iterable<URI> privilegedUris) {
+            super(privilegedUris, null);
+        }
+
+        @Override
+        protected URLConnection openUrlConnection(URL url) throws IOException {
+            URLConnection c = super.openUrlConnection(url);
+            c.setUseCaches(false);
+            return c;
+        }
+    }
+
+    private static class NonCachingResourceBundleControl extends ResourceBundle.Control {
+
+        public static final ResourceBundle.Control INSTANCE = new NonCachingResourceBundleControl();
+
+        @Override
+        public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
+                throws IOException, IllegalAccessException, InstantiationException {
+            return super.newBundle(baseName, locale, format, loader, true);
+        }
     }
 }
