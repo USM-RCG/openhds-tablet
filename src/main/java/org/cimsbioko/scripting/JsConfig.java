@@ -39,7 +39,7 @@ import static java.util.Collections.singletonList;
 public class JsConfig implements Closeable {
 
     private static final String TAG = JsConfig.class.getSimpleName();
-    private static final String INIT_MODULE = "init", BUNDLE_NAME = "strings";
+    private static final String MOBILE_INIT_MODULE = "mobile-init", BUNDLE_NAME = "strings";
 
     private static final String DB_NAME = "$db";
     private static final String MSG_NAME = "$msg";
@@ -63,7 +63,7 @@ public class JsConfig implements Closeable {
             installConstants(scope);
             Require require = enableJsModules(ctx, scope);
             Log.i(TAG, "loading init module");
-            Scriptable init = require.requireMain(ctx, INIT_MODULE);
+            Scriptable init = require.requireMain(ctx, MOBILE_INIT_MODULE);
             hierarchy = ScriptableObject.getTypedProperty(init, "hierarchy", Hierarchy.class);
             navigatorModules = ScriptableObject.getTypedProperty(init, "navmods", NavigatorModule[].class);
             return this;
@@ -154,7 +154,7 @@ public class JsConfig implements Closeable {
     }
 
     private List<URI> getJsModulePath() throws URISyntaxException {
-        URL root = loader.getResource(INIT_MODULE + ".js");
+        URL root = loader.getResource(MOBILE_INIT_MODULE + ".js");
         if (root != null) {
             return singletonList(root.toURI());
         }
