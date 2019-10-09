@@ -191,7 +191,7 @@ public class JsConfig implements Closeable {
 
     private static class NonCachingResourceBundleControl extends ResourceBundle.Control {
 
-        public static final ResourceBundle.Control INSTANCE = new NonCachingResourceBundleControl();
+        static final ResourceBundle.Control INSTANCE = new NonCachingResourceBundleControl();
 
         @Override
         public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
