@@ -78,7 +78,9 @@ public class CampaignUtils {
         for (File file : possible)
             if (file.canRead()) {
                 Log.i(TAG, "loading campaign from " + file);
-                return URLClassLoader.newInstance(new URL[]{file.toURI().toURL()});
+                String base = "jar:file:" + file.getPath() + "!/";
+                URL[] urls = {new URL(base + "mobile/"), new URL(base + "shared/")};
+                return URLClassLoader.newInstance(urls);
             }
         Log.i(TAG, "loading internal campaign");
         return CampaignUtils.class.getClassLoader();

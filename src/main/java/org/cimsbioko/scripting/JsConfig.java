@@ -29,17 +29,17 @@ import org.mozilla.javascript.commonjs.module.provider.UrlModuleSourceProvider;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 
 public class JsConfig implements Closeable {
 
     private static final String TAG = JsConfig.class.getSimpleName();
-    private static final String MOBILE_INIT_MODULE = "mobile-init", BUNDLE_NAME = "strings";
+    private static final String MOBILE_INIT_MODULE = "init", BUNDLE_NAME = "strings";
 
     private static final String DB_NAME = "$db";
     private static final String MSG_NAME = "$msg";
@@ -154,9 +154,18 @@ public class JsConfig implements Closeable {
     }
 
     private List<URI> getJsModulePath() throws URISyntaxException {
-        URL root = loader.getResource(MOBILE_INIT_MODULE + ".js");
-        if (root != null) {
-            return singletonList(root.toURI());
+        if (loader instanceof URLClassLoader) {
+            URLClassLoader urlClassLoader = (URLClassLoader) loader;
+            List<URI> uris = new ArrayList<>();
+            for (URL u : urlClassLoader.getURLs()) {
+                uris.add(u.toURI());
+            }
+            return unmodifiableList(uris);
+        } else {
+            URL root = loader.getResource(MOBILE_INIT_MODULE + ".js");
+            if (root != null) {
+                return singletonList(root.toURI());
+            }
         }
         return emptyList();
     }
@@ -167,6 +176,7 @@ public class JsConfig implements Closeable {
     }
 
     private static class NonCachingModuleSourceProvider extends UrlModuleSourceProvider {
+
         NonCachingModuleSourceProvider(Iterable<URI> privilegedUris) {
             super(privilegedUris, null);
         }
