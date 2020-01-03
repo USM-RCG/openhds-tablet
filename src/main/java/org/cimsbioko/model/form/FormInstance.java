@@ -17,12 +17,16 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 
+import static org.cimsbioko.campaign.CampaignUpdateService.CIMS_CAMPAIGN_ID;
+import static org.cimsbioko.utilities.ConfigUtils.getSharedPrefs;
 import static org.cimsbioko.utilities.FormUtils.*;
 import static org.cimsbioko.utilities.FormsHelper.*;
+import static org.cimsbioko.utilities.SetupUtils.getCampaignId;
 
 public class FormInstance implements Serializable {
 
     public static final String BINDING_ATTR = "cims-binding";
+    public static final String CAMPAIGN_ATTR = "cims-campaign";
 
     private static final long serialVersionUID = 1L;
 
@@ -174,7 +178,15 @@ public class FormInstance implements Serializable {
         File sourceFile = new File(template.getFilePath()), targetFile = formFile(template.getFileName(), new Date());
 
         Document formData = newFormData(sourceFile);
-        formData.getRootElement().setAttribute(BINDING_ATTR, binding.getName());
+        Element root = formData.getRootElement();
+
+        root.setAttribute(BINDING_ATTR, binding.getName());
+
+        String campaignId = getCampaignId();
+        if (campaignId != null) {
+            root.setAttribute(CAMPAIGN_ATTR, campaignId);
+        }
+
         binding.getBuilder().build(formData, ctx);
 
         saveForm(formData, targetFile);

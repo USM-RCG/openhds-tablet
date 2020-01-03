@@ -62,7 +62,6 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
         }
 
         if (HTTP_OK == statusCode) {
-            String eTag = conn.getHeaderField("ETag"), contentType = conn.getContentType();
             File saveFile = req.getFile();
             try {
                 responseStream = conn.getInputStream();
@@ -74,9 +73,9 @@ public class HttpTask extends AsyncTask<HttpTaskRequest, Void, HttpTaskResponse>
                     streamToStream(responseStream, out, null);
                     responseStream = new ByteArrayInputStream(out.toByteArray());
                 }
-                return new HttpTaskResponse(true, Result.SUCCESS, statusCode, responseStream, eTag, contentType);
+                return new HttpTaskResponse(true, Result.SUCCESS, statusCode, responseStream, conn.getHeaderFields());
             } catch (InterruptedException | IOException e) {
-                return new HttpTaskResponse(false, Result.STREAM_FAILURE, statusCode, responseStream, eTag, contentType);
+                return new HttpTaskResponse(false, Result.STREAM_FAILURE, statusCode);
             }
         }
 

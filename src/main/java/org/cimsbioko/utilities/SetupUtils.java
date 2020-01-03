@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -27,11 +28,14 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.accounts.AccountManager.KEY_AUTHTOKEN;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
+import static org.cimsbioko.campaign.CampaignUpdateService.CIMS_CAMPAIGN_ID;
 import static org.cimsbioko.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.cimsbioko.syncadpt.Constants.AUTHTOKEN_TYPE_DEVICE;
 import static org.cimsbioko.utilities.CampaignUtils.*;
+import static org.cimsbioko.utilities.ConfigUtils.getSharedPrefs;
 import static org.cimsbioko.utilities.FileUtils.getFingerprintFile;
 import static org.cimsbioko.utilities.HttpUtils.encodeBearerCreds;
+import static org.cimsbioko.utilities.HttpUtils.get;
 import static org.cimsbioko.utilities.IOUtils.close;
 import static org.cimsbioko.utilities.IOUtils.store;
 import static org.cimsbioko.utilities.LoginUtils.launchLogin;
@@ -39,6 +43,7 @@ import static org.cimsbioko.utilities.SyncUtils.downloadedContentBefore;
 
 public class SetupUtils {
 
+    private static final String TAG = SetupUtils.class.getSimpleName();
     private static final String[] REQUIRED_PERMISSIONS = new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE};
     public static final String CAMPAIGN_DOWNLOADED_ACTION = "CAMPAIGN_DOWNLOADED";
     public static final String CAMPAIGN_FILENAME = "campaign.zip";
@@ -155,13 +160,15 @@ public class SetupUtils {
             new HttpTask(rsp -> {
                 if (rsp.isSuccess()) {
                     close(rsp.getInputStream());
-                    String etag = rsp.getETag();
+                    String etag = rsp.getETag(), campaignId = rsp.getHeader(CIMS_CAMPAIGN_ID);
                     if (etag != null) {
                         store(getFingerprintFile(targetFile), etag);
                     }
+                    Intent intent = new Intent(CAMPAIGN_DOWNLOADED_ACTION);
+                    setCampaignId(campaignId);
                     LocalBroadcastManager
                             .getInstance(ctx)
-                            .sendBroadcast(new Intent(CAMPAIGN_DOWNLOADED_ACTION));
+                            .sendBroadcast(intent);
                 } else {
                     MessageUtils.showLongToast(ctx, "Download failed: " + rsp.getResult());
                 }
@@ -169,5 +176,12 @@ public class SetupUtils {
         });
     }
 
+    public static void setCampaignId(String campaignId) {
+        Log.i(TAG, "campaign id set to '" + campaignId + "'");
+        getSharedPrefs(App.getApp()).edit().putString(CIMS_CAMPAIGN_ID, campaignId).apply();
+    }
 
+    public static String getCampaignId() {
+        return getSharedPrefs(App.getApp()).getString(CIMS_CAMPAIGN_ID, null);
+    }
 }

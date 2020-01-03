@@ -26,11 +26,13 @@ import static org.cimsbioko.utilities.IOUtils.store;
 import static org.cimsbioko.utilities.IOUtils.streamToFile;
 import static org.cimsbioko.utilities.NetUtils.isConnected;
 import static org.cimsbioko.utilities.NetUtils.isWiFiConnected;
+import static org.cimsbioko.utilities.SetupUtils.setCampaignId;
 
 public class CampaignUpdateService extends JobIntentService {
 
     private static final String TAG = CampaignUpdateService.class.getSimpleName();
     public static final String CAMPAIGN_UPDATE_AVAILABLE = "CAMPAIGN_UPDATE_AVAILABLE";
+    public static final String CIMS_CAMPAIGN_ID = "cims-campaign-id";
 
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
@@ -55,10 +57,11 @@ public class CampaignUpdateService extends JobIntentService {
                         try {
                             File newFile = getCampaignTempFile(), newFingerprintFile = getCampaignTempFingerprintFile();
                             streamToFile(c.getInputStream(), newFile);
-                            String etag = c.getHeaderField("ETag");
+                            String etag = c.getHeaderField("ETag"), campaignId = c.getHeaderField(CIMS_CAMPAIGN_ID);
                             if (etag != null) {
                                 store(newFingerprintFile, etag);
                             }
+                            setCampaignId(campaignId);
                             LocalBroadcastManager
                                     .getInstance(getApplicationContext())
                                     .sendBroadcast(new Intent(CAMPAIGN_UPDATE_AVAILABLE));
