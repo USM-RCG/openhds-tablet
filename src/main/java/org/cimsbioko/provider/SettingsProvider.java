@@ -8,6 +8,7 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import static org.cimsbioko.utilities.SetupUtils.getCampaignId;
 import static org.cimsbioko.utilities.UrlUtils.buildServerUrl;
 
 public class SettingsProvider extends android.content.ContentProvider {
@@ -17,10 +18,12 @@ public class SettingsProvider extends android.content.ContentProvider {
     private static final String AUTHORITY = "org.cimsbioko.settings";
 
     private static final int ODK_API_URI = 2;
+    private static final int CURRENT_CAMPAIGN = 3;
 
     static {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         sUriMatcher.addURI(AUTHORITY, "/odkApiUri", ODK_API_URI);
+        sUriMatcher.addURI(AUTHORITY, "/currentCampaign", CURRENT_CAMPAIGN);
     }
 
     @Override
@@ -34,6 +37,10 @@ public class SettingsProvider extends android.content.ContentProvider {
         if (sUriMatcher.match(uri) == ODK_API_URI) {
             MatrixCursor c = new MatrixCursor(new String[]{"ODK_API_URI"});
             c.addRow(new Object[]{buildServerUrl(getContext(), "/api/odk")});
+            return c;
+        } else if (sUriMatcher.match(uri) == CURRENT_CAMPAIGN) {
+            MatrixCursor c = new MatrixCursor(new String[]{"CURRENT_CAMPAIGN"});
+            c.addRow(new Object[]{getCampaignId()});
             return c;
         }
         throw new IllegalArgumentException("Unknown URI " + uri);
