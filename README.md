@@ -1,6 +1,6 @@
-# CIMS Tablet 
+# CIMS Mobile 
 
-The tablet application providing the primary user interface used by CIMS tablet
+The tablet application providing the primary user interface used by CIMS mobile
 users. It is used both by supervisors and field workers to and perform
 administrative tasks and form data entry respectively. The application is
 essentially a convenient interface for launching forms in CIMS Forms,
