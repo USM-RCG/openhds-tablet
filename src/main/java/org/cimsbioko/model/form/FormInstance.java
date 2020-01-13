@@ -17,8 +17,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 
-import static org.cimsbioko.campaign.CampaignUpdateService.CIMS_CAMPAIGN_ID;
-import static org.cimsbioko.utilities.ConfigUtils.getSharedPrefs;
 import static org.cimsbioko.utilities.FormUtils.*;
 import static org.cimsbioko.utilities.FormsHelper.*;
 import static org.cimsbioko.utilities.SetupUtils.getCampaignId;
