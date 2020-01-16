@@ -44,6 +44,7 @@ import static org.cimsbioko.utilities.HttpUtils.encodeBearerCreds;
 import static org.cimsbioko.utilities.HttpUtils.get;
 import static org.cimsbioko.utilities.IOUtils.*;
 import static org.cimsbioko.utilities.NotificationUtils.*;
+import static org.cimsbioko.utilities.SetupUtils.getCampaignId;
 import static org.cimsbioko.utilities.StringUtils.join;
 import static org.cimsbioko.utilities.UrlUtils.buildServerUrl;
 
@@ -62,14 +63,16 @@ public class SyncUtils {
 
     /**
      * Returns the {@link URL} to use to fetch sqlite database updates from on the server. It is constructed based on
-     * the application's configured server endpoint.
+     * the application's configured server endpoint and current campaign.
      *
      * @param ctx application context to use for relevant config values
      * @return a {@link URL} object corresponding to the sync endpoint for fetching app sqlite db updates
      * @throws MalformedURLException when the constructed value is not a valid URL
      */
     public static URL getSyncEndpoint(Context ctx) throws MalformedURLException {
-        return new URL(buildServerUrl(ctx, ctx.getString(R.string.sync_database_path)));
+        String baseUrl = buildServerUrl(ctx, ctx.getString(R.string.sync_database_path));
+        String campaign = getCampaignId();
+        return new URL(campaign == null? baseUrl : baseUrl + "/" + campaign);
     }
 
     /**
