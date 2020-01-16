@@ -18,6 +18,7 @@ target/
 # Android
 gen
 bin
+release/
 
 # Gradle
 local.properties
