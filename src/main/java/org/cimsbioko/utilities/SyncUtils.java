@@ -297,15 +297,18 @@ public class SyncUtils {
                         db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "success");
                         Intent intent = new Intent(ctx, SyncDbActivity.class).setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                         PendingIntent pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        builder.mActions.clear();
                         notificationManager.notify(SYNC_NOTIFICATION_ID, builder
                                 .setSmallIcon(getNotificationIcon())
                                 .setContentIntent(pending)
+                                .setContentText(ctx.getString(R.string.sync_database_success))
                                 .setProgress(0, 0, false)
                                 .setOngoing(false)
                                 .build());
                     } catch (IOException | NoSuchAlgorithmException e) {
                         Log.e(TAG, "sync io failure", e);
                         db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "error: " + httpResult);
+                        builder.mActions.clear();
                         notificationManager.notify(SYNC_NOTIFICATION_ID, builder
                                 .setSmallIcon(getNotificationIcon())
                                 .setContentText(ctx.getString(R.string.sync_database_failed))

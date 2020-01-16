@@ -187,5 +187,6 @@
     <string name="pref_campaign_title">Campaña</string>
     <string name="campaign_update_title">Actualización de campaña disponible</string>
     <string name="campaign_update_msg">Una actualización de campaña está disponible. Instalarlo ahora?</string>
+    <string name="sync_database_success">Descarga completa. Actualización lista para instalar.</string>
 
 </resources>
