@@ -105,7 +105,7 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if (v == checkButton) {
-            checkForUpdate(getActivity());
+            checkForUpdate();
         } else if (v == updateButton) {
             installUpdate(getActivity(), this);
         }

@@ -4,17 +4,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
+import android.util.Log;
+import org.cimsbioko.App;
 import org.cimsbioko.R;
 import org.cimsbioko.navconfig.NavigatorConfig;
 import org.cimsbioko.navconfig.NavigatorModule;
 import org.cimsbioko.navconfig.forms.Binding;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ConfigUtils {
+
+    public static String TAG = ConfigUtils.class.getSimpleName();
 
     public static String getResourceString(Context context, int id) {
         return context.getString(id);
@@ -47,14 +48,19 @@ public class ConfigUtils {
     public static Collection<NavigatorModule> getActiveModules(Context ctx) {
         NavigatorConfig cfg = NavigatorConfig.getInstance();
         List<NavigatorModule> actives = new ArrayList<>();
-        Set<String> activeModuleNames = getMultiSelectPreference(ctx,
-                ctx.getString(R.string.active_modules_key), cfg.getModuleNames());
+        Set<String> activeModuleNames = getMultiSelectPreference(ctx, ctx.getString(R.string.active_modules_key), cfg.getModuleNames());
         for (NavigatorModule module : cfg.getModules()) {
             if (activeModuleNames.contains(module.getName())) {
                 actives.add(module);
             }
         }
         return actives;
+    }
+
+    public static void clearActiveModules() {
+        Context ctx = App.getApp();
+        getSharedPrefs(ctx).edit().remove(ctx.getString(R.string.active_modules_key)).apply();
+        Log.i(TAG, "cleared active modules from preferences");
     }
 
     public static Collection<NavigatorModule> getActiveModuleForBinding(Context ctx, Binding binding) {

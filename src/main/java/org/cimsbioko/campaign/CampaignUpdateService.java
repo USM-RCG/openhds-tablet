@@ -10,6 +10,9 @@ import androidx.core.app.JobIntentService;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import org.cimsbioko.R;
 import org.cimsbioko.utilities.HttpUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +29,7 @@ import static org.cimsbioko.utilities.IOUtils.store;
 import static org.cimsbioko.utilities.IOUtils.streamToFile;
 import static org.cimsbioko.utilities.NetUtils.isConnected;
 import static org.cimsbioko.utilities.NetUtils.isWiFiConnected;
+import static org.cimsbioko.utilities.SetupUtils.getCampaignId;
 import static org.cimsbioko.utilities.SetupUtils.setCampaignId;
 
 public class CampaignUpdateService extends JobIntentService {
@@ -47,35 +51,50 @@ public class CampaignUpdateService extends JobIntentService {
 
         if (isConnected() && downloadedCampaignExists()) {
             try {
-                String token = getToken(), hash = getCampaignHash();
-                URL url = new URL(getCampaignUrl());
-                HttpURLConnection c = HttpUtils.get(url, null, encodeBearerCreds(token), hash);
-                int response = c.getResponseCode();
-                switch (response) {
-                    case HTTP_OK:
-                        Log.i(TAG, "campaign update available");
-                        try {
-                            File newFile = getCampaignTempFile(), newFingerprintFile = getCampaignTempFingerprintFile();
-                            streamToFile(c.getInputStream(), newFile);
-                            String etag = c.getHeaderField("ETag"), campaignId = c.getHeaderField(CIMS_CAMPAIGN_ID);
-                            if (etag != null) {
-                                store(newFingerprintFile, etag);
+                String token = getToken(), hash = getCampaignHash(), existingCampaignId = getCampaignId();
+                JSONArray campaigns = getCampaigns(token);
+                if (campaigns.length() > 0) {
+                    JSONObject firstCampaign = campaigns.getJSONObject(0);
+                    String newCampaignId = firstCampaign.getString("uuid"), newCampaignName = firstCampaign.getString("name");
+                    boolean campaignChanged = !existingCampaignId.equals(newCampaignId);
+                    if (campaignChanged) {
+                        Log.i(TAG, "campaign changed, old = " + existingCampaignId + ", new = " +
+                                newCampaignId + " (" + newCampaignName + ")");
+                    }
+                    URL campaignUrl = new URL(getCampaignUrl(newCampaignId));
+                    String existingEtag = campaignChanged ? null : hash;
+                    HttpURLConnection c = HttpUtils.get(campaignUrl, null, encodeBearerCreds(token), existingEtag);
+                    int response = c.getResponseCode();
+                    switch (response) {
+                        case HTTP_OK:
+                            Log.i(TAG, "campaign update available");
+                            try {
+                                File newFile = getCampaignTempFile(), newFingerprintFile = getCampaignTempFingerprintFile();
+                                streamToFile(c.getInputStream(), newFile);
+                                String newEtag = c.getHeaderField("ETag"), campaignId = c.getHeaderField(CIMS_CAMPAIGN_ID);
+                                if (newEtag != null) {
+                                    store(newFingerprintFile, newEtag);
+                                }
+                                Intent updateMsg = new Intent(CAMPAIGN_UPDATE_AVAILABLE);
+                                updateMsg.putExtra("campaignChanged", campaignChanged);
+                                updateMsg.putExtra("campaignId", campaignId);
+                                LocalBroadcastManager
+                                        .getInstance(getApplicationContext())
+                                        .sendBroadcast(updateMsg);
+                            } catch (InterruptedException e) {
+                                Log.w(TAG, "campaign download interrupted");
                             }
-                            setCampaignId(campaignId);
-                            LocalBroadcastManager
-                                    .getInstance(getApplicationContext())
-                                    .sendBroadcast(new Intent(CAMPAIGN_UPDATE_AVAILABLE));
-                        } catch (InterruptedException e) {
-                            Log.w(TAG, "campaign download interrupted");
-                        }
-                        break;
-                    case HTTP_NOT_MODIFIED:
-                        Log.i(TAG, "campaign is latest available");
-                        break;
-                    default:
-                        Log.e(TAG, "unexpected http response: " + response);
+                            break;
+                        case HTTP_NOT_MODIFIED:
+                            Log.i(TAG, "campaign is up-to-date");
+                            break;
+                        default:
+                            Log.e(TAG, "unexpected http response: " + response);
+                    }
+                } else {
+                    Log.i(TAG, "no campaign assigned to device");
                 }
-            } catch (AuthenticatorException | OperationCanceledException | IOException e) {
+            } catch (AuthenticatorException | OperationCanceledException | IOException | JSONException e) {
                 Log.d(TAG, "aborting campaign update request, failed to get token: " + e.getMessage());
             }
         }

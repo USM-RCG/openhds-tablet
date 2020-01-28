@@ -16,10 +16,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import org.cimsbioko.App;
 import org.cimsbioko.R;
 import org.cimsbioko.provider.FormsProviderAPI;
-import org.cimsbioko.task.http.HttpTask;
-import org.cimsbioko.task.http.HttpTaskRequest;
+import org.cimsbioko.task.campaign.CampaignTask;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -34,10 +32,7 @@ import static org.cimsbioko.syncadpt.Constants.AUTHTOKEN_TYPE_DEVICE;
 import static org.cimsbioko.utilities.CampaignUtils.*;
 import static org.cimsbioko.utilities.ConfigUtils.getSharedPrefs;
 import static org.cimsbioko.utilities.FileUtils.getFingerprintFile;
-import static org.cimsbioko.utilities.HttpUtils.encodeBearerCreds;
-import static org.cimsbioko.utilities.HttpUtils.get;
-import static org.cimsbioko.utilities.IOUtils.close;
-import static org.cimsbioko.utilities.IOUtils.store;
+import static org.cimsbioko.utilities.IOUtils.*;
 import static org.cimsbioko.utilities.LoginUtils.launchLogin;
 import static org.cimsbioko.utilities.SyncUtils.downloadedContentBefore;
 
@@ -143,7 +138,6 @@ public class SetupUtils {
         getToken(activity, future -> {
             String token;
             Context ctx = activity.getApplicationContext();
-            String url = getCampaignUrl();
 
             // Extract the auth token for the active account
             try {
@@ -154,25 +148,25 @@ public class SetupUtils {
                 return;
             }
 
-            File targetFile = getDownloadedCampaignFile();
-
             // Download the campaign file and send a local broadcast message when it finishes
-            new HttpTask(rsp -> {
-                if (rsp.isSuccess()) {
-                    close(rsp.getInputStream());
-                    String etag = rsp.getETag(), campaignId = rsp.getHeader(CIMS_CAMPAIGN_ID);
-                    if (etag != null) {
-                        store(getFingerprintFile(targetFile), etag);
+            new CampaignTask() {
+                @Override
+                protected void onPostExecute(CampaignDownloadResult campaignDownloadResult) {
+                    if (campaignDownloadResult.wasError()) {
+                        MessageUtils.showLongToast(ctx, campaignDownloadResult.getError());
+                    } else {
+                        String etag = campaignDownloadResult.getEtag(), campaign = campaignDownloadResult.getCampaign();
+                        if (etag != null) {
+                            store(getFingerprintFile(campaignDownloadResult.getDownloadedFile()), etag);
+                        }
+                        Intent intent = new Intent(CAMPAIGN_DOWNLOADED_ACTION);
+                        setCampaignId(campaign);
+                        LocalBroadcastManager
+                                .getInstance(ctx)
+                                .sendBroadcast(intent);
                     }
-                    Intent intent = new Intent(CAMPAIGN_DOWNLOADED_ACTION);
-                    setCampaignId(campaignId);
-                    LocalBroadcastManager
-                            .getInstance(ctx)
-                            .sendBroadcast(intent);
-                } else {
-                    MessageUtils.showLongToast(ctx, "Download failed: " + rsp.getResult());
                 }
-            }).execute(new HttpTaskRequest(url, null, encodeBearerCreds(token), null, targetFile));
+            }.execute(token);
         });
     }
 

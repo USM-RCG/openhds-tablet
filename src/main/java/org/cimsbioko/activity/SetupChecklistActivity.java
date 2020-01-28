@@ -123,7 +123,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
         }
         else if (!hasData) {
             setupButton.setText(R.string.download_data);
-            setupButton.setOnClickListener(v -> SyncUtils.checkForUpdate(SetupChecklistActivity.this));
+            setupButton.setOnClickListener(v -> SyncUtils.checkForUpdate());
         } else {
             setupButton.setText(R.string.next);
             setupButton.setOnClickListener(v -> startApp(SetupChecklistActivity.this));

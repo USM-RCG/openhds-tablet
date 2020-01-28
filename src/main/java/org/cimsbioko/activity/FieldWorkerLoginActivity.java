@@ -31,6 +31,7 @@ import static org.cimsbioko.search.Utils.isSearchEnabled;
 import static org.cimsbioko.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.cimsbioko.utilities.CampaignUtils.updateCampaign;
 import static org.cimsbioko.utilities.ConfigUtils.getAppFullName;
+import static org.cimsbioko.utilities.SetupUtils.setCampaignId;
 
 public class FieldWorkerLoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -98,11 +99,13 @@ public class FieldWorkerLoginActivity extends AppCompatActivity implements Navig
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (CAMPAIGN_UPDATE_AVAILABLE.equals(intent.getAction())) {
+                    boolean campaignChanged = intent.getBooleanExtra("campaignChanged", false);
+                    String campaignId = intent.getStringExtra("campaignId");
                     new AlertDialog.Builder(FieldWorkerLoginActivity.this)
                             .setTitle(R.string.campaign_update_title)
                             .setMessage(R.string.campaign_update_msg)
                             .setNegativeButton(R.string.no_btn, (dialog, which) -> {})
-                            .setPositiveButton(R.string.yes_btn, (dialog, which) -> updateCampaign())
+                            .setPositiveButton(R.string.yes_btn, (dialog, which) -> updateCampaign(campaignId, campaignChanged))
                             .show();
                 }
             }

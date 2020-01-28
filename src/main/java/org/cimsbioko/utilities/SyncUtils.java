@@ -127,11 +127,9 @@ public class SyncUtils {
 
     /**
      * Requests a database synchronization occur for the CIMS account.
-     *
-     * @param ctx used to gain access to {@link android.content.ContentProvider} and {@link AccountManager} required to
-     *            make sync request.
      */
-    public static void checkForUpdate(Context ctx) {
+    public static void checkForUpdate() {
+        Context ctx = App.getApp();
         AccountManager manager = AccountManager.get(ctx);
         Account[] accounts = manager.getAccountsByType(ACCOUNT_TYPE);
         if (accounts.length > 0) {
