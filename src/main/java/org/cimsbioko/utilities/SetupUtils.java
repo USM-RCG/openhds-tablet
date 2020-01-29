@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import org.cimsbioko.App;
 import org.cimsbioko.R;
+import org.cimsbioko.navconfig.NavigatorConfig;
 import org.cimsbioko.provider.FormsProviderAPI;
 import org.cimsbioko.task.campaign.CampaignTask;
 
@@ -30,6 +31,7 @@ import static org.cimsbioko.campaign.CampaignUpdateService.CIMS_CAMPAIGN_ID;
 import static org.cimsbioko.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.cimsbioko.syncadpt.Constants.AUTHTOKEN_TYPE_DEVICE;
 import static org.cimsbioko.utilities.CampaignUtils.*;
+import static org.cimsbioko.utilities.ConfigUtils.clearActiveModules;
 import static org.cimsbioko.utilities.ConfigUtils.getSharedPrefs;
 import static org.cimsbioko.utilities.FileUtils.getFingerprintFile;
 import static org.cimsbioko.utilities.IOUtils.*;
@@ -160,7 +162,9 @@ public class SetupUtils {
                             store(getFingerprintFile(campaignDownloadResult.getDownloadedFile()), etag);
                         }
                         Intent intent = new Intent(CAMPAIGN_DOWNLOADED_ACTION);
+                        clearActiveModules();
                         setCampaignId(campaign);
+                        NavigatorConfig.getInstance().reload();
                         LocalBroadcastManager
                                 .getInstance(ctx)
                                 .sendBroadcast(intent);
