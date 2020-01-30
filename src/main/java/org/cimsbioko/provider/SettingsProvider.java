@@ -22,8 +22,8 @@ public class SettingsProvider extends android.content.ContentProvider {
 
     static {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        sUriMatcher.addURI(AUTHORITY, "/odkApiUri", ODK_API_URI);
-        sUriMatcher.addURI(AUTHORITY, "/currentCampaign", CURRENT_CAMPAIGN);
+        sUriMatcher.addURI(AUTHORITY, "odkApiUri", ODK_API_URI);
+        sUriMatcher.addURI(AUTHORITY, "currentCampaign", CURRENT_CAMPAIGN);
     }
 
     @Override
