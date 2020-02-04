@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.core.app.NotificationCompat;
@@ -66,13 +67,26 @@ public class SyncUtils {
      * the application's configured server endpoint and current campaign.
      *
      * @param ctx application context to use for relevant config values
-     * @return a {@link URL} object corresponding to the sync endpoint for fetching app sqlite db updates
+     * @return a {@link URL} to use for fetching app sqlite db update for the current campaign
      * @throws MalformedURLException when the constructed value is not a valid URL
      */
-    public static URL getSyncEndpoint(Context ctx) throws MalformedURLException {
+    public static URL getRemoteSyncEndpoint(Context ctx) throws MalformedURLException {
         String baseUrl = buildServerUrl(ctx, ctx.getString(R.string.sync_database_path));
         String campaign = getCampaignId();
         return new URL(campaign == null? baseUrl : baseUrl + "/" + campaign);
+    }
+
+    /**
+     * Returns the {@link URL} to use to fetch sqlite database updates from a sidecar device on the local network. It
+     * is constructed based on the resolved network service discovery object and the current campaign.
+     *
+     * @param ctx application context to use for base url resource lookup
+     * @param info the resolved network service discovery information for a sidecar service on local network
+     * @return a {@link URL} to use for fetching app sqlite db update for the current campaign
+     * @throws MalformedURLException
+     */
+    public static URL getLocalSyncEndpoint(Context ctx, NsdServiceInfo info) throws MalformedURLException {
+        return new URL("http", info.getHost().getHostName(), info.getPort(), ctx.getString(R.string.sync_database_path) + "/" + getCampaignId());
     }
 
     /**

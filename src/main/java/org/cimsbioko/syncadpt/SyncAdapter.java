@@ -22,8 +22,7 @@ import java.net.URL;
 
 import static org.cimsbioko.utilities.ConfigUtils.getPreferenceBool;
 import static org.cimsbioko.utilities.NetUtils.isWiFiConnected;
-import static org.cimsbioko.utilities.SyncUtils.downloadUpdate;
-import static org.cimsbioko.utilities.SyncUtils.getSyncEndpoint;
+import static org.cimsbioko.utilities.SyncUtils.*;
 
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
@@ -53,11 +52,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             try {
                 if (wifiOnlyEnabled && sidecarEnabled) {
                     NsdServiceInfo info = Sidecar.discover((NsdManager) ctx.getSystemService(Context.NSD_SERVICE), 30);
-                    URL endpoint = new URL("http", info.getHost().getHostName(), info.getPort(), ctx.getString(R.string.sync_database_path));
+                    URL endpoint = getLocalSyncEndpoint(ctx, info);
                     Log.i(TAG, "local sync " + endpoint);
                     downloadUpdate(ctx, endpoint, null);
                 } else {
-                    URL endpoint = getSyncEndpoint(ctx);
+                    URL endpoint = getRemoteSyncEndpoint(ctx);
                     Log.i(TAG, "remote sync " + endpoint);
                     String token = AccountManager.get(ctx).blockingGetAuthToken(account, Constants.AUTHTOKEN_TYPE_DEVICE, true);
                     downloadUpdate(ctx, endpoint, token);
