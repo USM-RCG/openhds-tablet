@@ -47,6 +47,7 @@ public class JsConfig implements Closeable {
     private final ClassLoader loader;
     private Hierarchy hierarchy = new StubHierarchy();
     private NavigatorModule[] navigatorModules = {};
+    private String adminSecret;
 
     public JsConfig(ClassLoader loader) {
         if (loader != null) {
@@ -66,6 +67,7 @@ public class JsConfig implements Closeable {
             Scriptable init = require.requireMain(ctx, MOBILE_INIT_MODULE);
             hierarchy = ScriptableObject.getTypedProperty(init, "hierarchy", Hierarchy.class);
             navigatorModules = ScriptableObject.getTypedProperty(init, "navmods", NavigatorModule[].class);
+            adminSecret = ScriptableObject.getTypedProperty(init, "adminSecret", String.class);
             return this;
         } finally {
             Context.exit();
@@ -78,6 +80,10 @@ public class JsConfig implements Closeable {
 
     public NavigatorModule[] getNavigatorModules() {
         return navigatorModules;
+    }
+
+    public String getAdminSecret() {
+        return adminSecret;
     }
 
     private static ScriptableObject buildScope(Context ctx) {

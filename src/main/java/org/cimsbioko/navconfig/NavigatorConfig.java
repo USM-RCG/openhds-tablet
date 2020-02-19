@@ -22,6 +22,7 @@ public class NavigatorConfig {
 
     private static NavigatorConfig instance;
 
+    private String adminSecret;
     private Hierarchy hierarchy;
     private Map<String, NavigatorModule> modules = emptyMap();
     private Map<String, Binding> bindings = emptyMap();
@@ -30,6 +31,10 @@ public class NavigatorConfig {
 
     protected NavigatorConfig() {
         init();
+    }
+
+    public String getAdminSecret() {
+        return adminSecret;
     }
 
     public Hierarchy getHierarchy() {
@@ -57,6 +62,7 @@ public class NavigatorConfig {
         try {
             config = loadCampaign();
             hierarchy = config.getHierarchy();
+            adminSecret = config.getAdminSecret();
             for (NavigatorModule module : config.getNavigatorModules()) {
                 modules.put(module.getName(), module);
             }

@@ -189,4 +189,7 @@
     <string name="campaign_update_msg">Una actualización de campaña está disponible. Instalarlo ahora?</string>
     <string name="sync_database_success">Descarga completa. Actualización lista para instalar.</string>
 
+    <string name="admin_access">Acceso de administrador</string>
+    <string name="invalid_admin_password">Contraseña de administrador inválida</string>
+
 </resources>

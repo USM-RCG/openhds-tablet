@@ -214,4 +214,7 @@
     <string name="campaign_update_title">Campaign update available</string>
     <string name="campaign_update_msg">A campaign update is available. Install it now?</string>
 
+    <string name="admin_access">Admin access</string>
+    <string name="invalid_admin_password">Invalid admin password</string>
+
 </resources>

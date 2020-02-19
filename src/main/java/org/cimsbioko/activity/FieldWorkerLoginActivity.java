@@ -22,7 +22,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.android.material.navigation.NavigationView;
 import org.cimsbioko.R;
 import org.cimsbioko.campaign.CampaignUpdateService;
+import org.cimsbioko.fragment.AdminSecretFragment;
+import org.cimsbioko.navconfig.NavigatorConfig;
 import org.cimsbioko.search.IndexingService;
+import org.cimsbioko.utilities.MessageUtils;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -33,7 +36,8 @@ import static org.cimsbioko.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.cimsbioko.utilities.CampaignUtils.updateCampaign;
 import static org.cimsbioko.utilities.ConfigUtils.getAppFullName;
 
-public class FieldWorkerLoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class FieldWorkerLoginActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, AdminSecretFragment.Listener {
 
     private NavigationView navView;
     private BroadcastReceiver broadcastReceiver;
@@ -135,7 +139,11 @@ public class FieldWorkerLoginActivity extends AppCompatActivity implements Navig
                 startActivity(new Intent(this, ManageFormsActivity.class));
                 return true;
             case R.id.send_forms:
-                startActivity(new Intent(Intent.ACTION_EDIT));
+                if (NavigatorConfig.getInstance().getAdminSecret() != null) {
+                    new AdminSecretFragment().show(getSupportFragmentManager(), "AdminSecretFragment");
+                } else {
+                    launchSendForms();
+                }
                 return true;
             case R.id.download_data:
                 startActivity(new Intent(this, SyncDbActivity.class));
@@ -149,5 +157,22 @@ public class FieldWorkerLoginActivity extends AppCompatActivity implements Navig
             default:
                 return false;
         }
+    }
+
+    private void launchSendForms() {
+        startActivity(new Intent(Intent.ACTION_EDIT));
+    }
+
+    @Override
+    public void onAdminSecretDialogOk(String secret) {
+        if (secret.equals(NavigatorConfig.getInstance().getAdminSecret())) {
+            launchSendForms();
+        } else {
+            MessageUtils.showShortToast(this, R.string.invalid_admin_password);
+        }
+    }
+
+    @Override
+    public void onAdminSecretDialogCancel() {
     }
 }
