@@ -245,7 +245,7 @@ public class SyncUtils {
                     try {
                         notificationManager.cancel(SYNC_NOTIFICATION_ID);
                         File fingerprintFile = getFingerprintFile(dbTempFile);
-                        fingerprint = httpConn.getHeaderField("ETag");
+                        fingerprint = getEtag(httpConn);
                         Log.i(TAG, "update " + fingerprint + " found, fetching");
                         if (fingerprintFile.exists()) {
                             if (!fingerprintFile.delete()) {
@@ -352,6 +352,17 @@ public class SyncUtils {
         }
 
         ctx.getContentResolver().notifyChange(App.CONTENT_BASE_URI, null, false);
+    }
+
+    /**
+     * Extracts the etag header in a way that works with AWS ELBs, which lowercase all headers to conform with HTTP/2.
+     *
+     * @param httpConn the connection to extract the header from.
+     * @return the etag header value or null, if none found
+     */
+    private static String getEtag(HttpURLConnection httpConn) {
+        String value = httpConn.getHeaderField("etag");
+        return value == null ? httpConn.getHeaderField("ETag") : value;
     }
 
     /**
