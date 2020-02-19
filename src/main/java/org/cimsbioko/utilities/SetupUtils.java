@@ -63,11 +63,10 @@ public class SetupUtils {
     }
 
     public static void startApp(final Activity source) {
-        createNotificationChannels(source);
         launchLogin(source);
     }
 
-    private static void createNotificationChannels(Context ctx) {
+    public static void createNotificationChannels(Context ctx) {
         NotificationUtils.createChannels(ctx.getApplicationContext());
     }
 

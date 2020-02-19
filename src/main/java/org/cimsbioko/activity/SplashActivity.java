@@ -4,8 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
-import static org.cimsbioko.utilities.SetupUtils.setupRequirementsMet;
-import static org.cimsbioko.utilities.SetupUtils.startApp;
+import static org.cimsbioko.utilities.SetupUtils.*;
 
 /**
  * This activity simply forwards to the actual opening activity for the application, showing an image by its style
@@ -13,11 +12,10 @@ import static org.cimsbioko.utilities.SetupUtils.startApp;
  * actual opening activity is available as soon as it is ready.
  */
 public class SplashActivity extends AppCompatActivity {
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createNotificationChannels(this);
         if (setupRequirementsMet(this)) {
             startApp(this);
         } else {
@@ -26,5 +24,4 @@ public class SplashActivity extends AppCompatActivity {
             finish();
         }
     }
-
 }
