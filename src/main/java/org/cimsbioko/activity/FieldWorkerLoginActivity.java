@@ -27,11 +27,11 @@ import org.cimsbioko.search.IndexingService;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.cimsbioko.campaign.CampaignUpdateService.CAMPAIGN_UPDATE_AVAILABLE;
+import static org.cimsbioko.campaign.CampaignUpdateService.enqueueWork;
 import static org.cimsbioko.search.Utils.isSearchEnabled;
 import static org.cimsbioko.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.cimsbioko.utilities.CampaignUtils.updateCampaign;
 import static org.cimsbioko.utilities.ConfigUtils.getAppFullName;
-import static org.cimsbioko.utilities.SetupUtils.setCampaignId;
 
 public class FieldWorkerLoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -125,7 +125,7 @@ public class FieldWorkerLoginActivity extends AppCompatActivity implements Navig
         navView.getMenu().findItem(R.id.rebuild_search_indices).setVisible(isSearchEnabled(this));
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.registerReceiver(broadcastReceiver, new IntentFilter(CAMPAIGN_UPDATE_AVAILABLE));
-        startService(new Intent(this, CampaignUpdateService.class));
+        enqueueWork(getApplicationContext(), new Intent(this, CampaignUpdateService.class));
     }
 
     @Override

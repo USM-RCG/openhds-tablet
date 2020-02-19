@@ -67,7 +67,7 @@ public class SyncDatabaseFragment extends Fragment implements View.OnClickListen
             }
         };
         ctx.getContentResolver().registerContentObserver(App.CONTENT_BASE_URI, false, observer);
-        ctx.startService(new Intent(ctx, OfflineDbService.class));
+        OfflineDbService.enqueueWork(ctx.getApplicationContext(), new Intent(ctx, OfflineDbService.class));
     }
 
     @Override

@@ -30,13 +30,18 @@ import static org.cimsbioko.utilities.IOUtils.streamToFile;
 import static org.cimsbioko.utilities.NetUtils.isConnected;
 import static org.cimsbioko.utilities.NetUtils.isWiFiConnected;
 import static org.cimsbioko.utilities.SetupUtils.getCampaignId;
-import static org.cimsbioko.utilities.SetupUtils.setCampaignId;
 
 public class CampaignUpdateService extends JobIntentService {
 
     private static final String TAG = CampaignUpdateService.class.getSimpleName();
     public static final String CAMPAIGN_UPDATE_AVAILABLE = "CAMPAIGN_UPDATE_AVAILABLE";
     public static final String CIMS_CAMPAIGN_ID = "cims-campaign-id";
+
+    private static final int JOB_ID = 0xFA;
+
+    public static void enqueueWork(Context context, Intent intent) {
+        enqueueWork(context, CampaignUpdateService.class, JOB_ID, intent);
+    }
 
     @Override
     protected void onHandleWork(@NonNull Intent intent) {

@@ -15,6 +15,12 @@ public class IndexingService extends JobIntentService {
     private static final String ENTITY_TYPE = "entityType";
     private static final String ENTITY_UUID = "entityUuid";
 
+    private static final int JOB_ID = 0xFB;
+
+    public static void enqueueWork(Context context, Intent intent) {
+        enqueueWork(context, IndexingService.class, JOB_ID, intent);
+    }
+
     public enum EntityType {
         HIERARCHY,
         LOCATION,
@@ -50,14 +56,14 @@ public class IndexingService extends JobIntentService {
     }
 
     public static void queueFullReindex(Context ctx) {
-        ctx.startService(new Intent(ctx, IndexingService.class));
+        IndexingService.enqueueWork(ctx.getApplicationContext(), new Intent(ctx, IndexingService.class));
     }
 
     public static void queueReindex(Context ctx, EntityType type, String uuid) {
         Intent intent = new Intent(ctx, IndexingService.class);
         intent.putExtra(ENTITY_TYPE, type.toString());
         intent.putExtra(ENTITY_UUID, uuid);
-        ctx.startService(intent);
+        IndexingService.enqueueWork(ctx.getApplicationContext(), intent);
     }
 }
 

@@ -196,6 +196,8 @@ public class SyncUtils {
 
         String existingFingerprint = loadFirstLine(getFingerprintFile(dbTempFile.exists() ? dbTempFile : dbFile));
 
+        Log.d(TAG, "attempting to update content, fingerprint: " + existingFingerprint);
+
         DatabaseAdapter db = DatabaseAdapter.getInstance();
 
         String fingerprint = "?";
@@ -211,7 +213,6 @@ public class SyncUtils {
         }
 
         try {
-
             long startTime = System.currentTimeMillis();
             String creds = accessToken != null? encodeBearerCreds(accessToken) : null;
             HttpURLConnection httpConn = get(endpoint, accept, creds, existingFingerprint);
