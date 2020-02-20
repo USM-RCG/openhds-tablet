@@ -29,7 +29,7 @@ import static org.cimsbioko.search.Utils.isSearchEnabled;
 public class ContentProvider extends android.content.ContentProvider {
 
     public static final String DATABASE_NAME = "cims.db";
-    public static final int DATABASE_VERSION = 14;
+    public static final int DATABASE_VERSION = 15;
 
     private static final String TAG = "ContentProvider";
 
@@ -95,9 +95,6 @@ public class ContentProvider extends android.content.ContentProvider {
         locationProjection.put(App.Locations.COLUMN_LOCATION_LATITUDE, App.Locations.COLUMN_LOCATION_LATITUDE);
         locationProjection.put(App.Locations.COLUMN_LOCATION_LONGITUDE, App.Locations.COLUMN_LOCATION_LONGITUDE);
         locationProjection.put(App.Locations.COLUMN_LOCATION_NAME, App.Locations.COLUMN_LOCATION_NAME);
-        locationProjection.put(App.Locations.COLUMN_LOCATION_MAP_AREA_NAME, App.Locations.COLUMN_LOCATION_MAP_AREA_NAME);
-        locationProjection.put(App.Locations.COLUMN_LOCATION_SECTOR_NAME, App.Locations.COLUMN_LOCATION_SECTOR_NAME);
-        locationProjection.put(App.Locations.COLUMN_LOCATION_BUILDING_NUMBER, App.Locations.COLUMN_LOCATION_BUILDING_NUMBER);
         locationProjection.put(App.Locations.COLUMN_LOCATION_DESCRIPTION, App.Locations.COLUMN_LOCATION_DESCRIPTION);
         locationProjection.put(App.Locations.COLUMN_LOCATION_ATTRS, App.Locations.COLUMN_LOCATION_ATTRS);
 
@@ -502,9 +499,6 @@ public class ContentProvider extends android.content.ContentProvider {
                     + App.Locations.COLUMN_LOCATION_HIERARCHY_UUID + " TEXT NOT NULL,"
                     + App.Locations.COLUMN_LOCATION_LATITUDE + " TEXT,"
                     + App.Locations.COLUMN_LOCATION_LONGITUDE + " TEXT,"
-                    + App.Locations.COLUMN_LOCATION_MAP_AREA_NAME + " TEXT,"
-                    + App.Locations.COLUMN_LOCATION_SECTOR_NAME + " INT,"
-                    + App.Locations.COLUMN_LOCATION_BUILDING_NUMBER + " INT,"
                     + App.Locations.COLUMN_LOCATION_DESCRIPTION + " TEXT,"
                     + App.Locations.COLUMN_LOCATION_NAME + " TEXT NOT NULL,"
                     + App.Locations.COLUMN_LOCATION_ATTRS + " TEXT);");
@@ -562,7 +556,7 @@ public class ContentProvider extends android.content.ContentProvider {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            if (oldVersion < 14) {
+            if (oldVersion < 15) {
                 throw new SQLiteException("Can't upgrade database from version " + oldVersion + " to " + newVersion);
             } else {
                 Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);

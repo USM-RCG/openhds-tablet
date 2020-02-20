@@ -9,8 +9,6 @@ const levels = [
     { name: 'district', label: 'hier.district' },
     { name: 'subDistrict', label: 'hier.subDistrict' },
     { name: 'locality', label: 'hier.locality' },
-    { name: 'mapArea', label: 'hier.mapArea' },
-    { name: 'sector', label: 'hier.sector' },
     { name: 'household', label: 'hier.household', builtIn: true },
     { name: 'individual', label: 'hier.individual', builtIn: true }
 ];

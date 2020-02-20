@@ -12,9 +12,6 @@ public class Location implements Serializable {
 	private String latitude;
 	private String longitude;
 	private String hierarchyUuid;
-    private String mapAreaName;
-    private String sectorName;
-    private int buildingNumber;
     private String description;
     private String attrs;
 
@@ -32,14 +29,6 @@ public class Location implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public int getBuildingNumber() {
-        return buildingNumber;
-    }
-
-    public void setBuildingNumber(int buildingNumber) {
-        this.buildingNumber = buildingNumber;
     }
 
     public String getExtId() {
@@ -80,22 +69,6 @@ public class Location implements Serializable {
 
 	public void setHierarchyUuid(String hierarchyUuid) {
 		this.hierarchyUuid = hierarchyUuid;
-	}
-
-    public String getSectorName() {
-        return sectorName;
-    }
-
-    public void setSectorName(String sectorName) {
-        this.sectorName = sectorName;
-    }
-
-	public String getMapAreaName() {
-		return mapAreaName;
-	}
-
-	public void setMapAreaName(String mapAreaName) {
-		this.mapAreaName = mapAreaName;
 	}
 
     public String getAttrs() {

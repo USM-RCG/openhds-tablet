@@ -83,9 +83,6 @@ public class App extends Application {
         public static final String COLUMN_LOCATION_LATITUDE = "latitude";
         public static final String COLUMN_LOCATION_LONGITUDE = "longitude";
         public static final String COLUMN_LOCATION_HIERARCHY_UUID = "hierarchyUuid";
-        public static final String COLUMN_LOCATION_MAP_AREA_NAME = "mapAreaName";
-        public static final String COLUMN_LOCATION_SECTOR_NAME = "sectorName";
-        public static final String COLUMN_LOCATION_BUILDING_NUMBER = "buildingNumber";
         public static final String COLUMN_LOCATION_DESCRIPTION = "description";
         public static final String COLUMN_LOCATION_ATTRS = "attrs";
     }

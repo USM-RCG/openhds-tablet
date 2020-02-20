@@ -2,28 +2,20 @@ package org.cimsbioko.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import org.cimsbioko.App;
 import org.cimsbioko.R;
 import org.cimsbioko.model.core.Location;
-import org.cimsbioko.navconfig.UsedByJSConfig;
-import org.cimsbioko.provider.ContentProvider;
 
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_ATTRS;
-import static org.cimsbioko.App.Locations.COLUMN_LOCATION_BUILDING_NUMBER;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_DESCRIPTION;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_EXTID;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_HIERARCHY_UUID;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_LATITUDE;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_LONGITUDE;
-import static org.cimsbioko.App.Locations.COLUMN_LOCATION_MAP_AREA_NAME;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_NAME;
-import static org.cimsbioko.App.Locations.COLUMN_LOCATION_SECTOR_NAME;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_UUID;
-import static org.cimsbioko.App.Locations.TABLE_NAME;
 import static org.cimsbioko.navconfig.Hierarchy.HOUSEHOLD;
-import static org.cimsbioko.data.CursorConvert.extractInt;
 import static org.cimsbioko.data.CursorConvert.extractString;
 
 /**
@@ -41,32 +33,6 @@ public class LocationGateway extends Gateway<Location> {
 
     public Query<Location> findByHierarchy(String hierarchyId) {
         return new Query<>(this, tableUri, COLUMN_LOCATION_HIERARCHY_UUID, hierarchyId, COLUMN_LOCATION_EXTID);
-    }
-
-    /**
-     * Calculates the next sequential building number for the given sector. This considers all locations with the same
-     * map and sector name and not just locations referencing the same parent sector node. This is necessary since
-     * multiple sector nodes are created when a sector spans multiple localities.
-     *
-     * @param mapArea map name for sector
-     * @param sector sector name
-     * @return the next sequential building number to use for a new location in the given sector
-     */
-    @UsedByJSConfig
-    public int nextBuildingNumberInSector(String mapArea, String sector) {
-        SQLiteDatabase db = ContentProvider.getDatabaseHelper(App.getApp().getApplicationContext()).getReadableDatabase();
-        String query = String.format("select max(%s) + 1 from %s where %s = ? and %s = ?",
-                COLUMN_LOCATION_BUILDING_NUMBER, TABLE_NAME, COLUMN_LOCATION_MAP_AREA_NAME, COLUMN_LOCATION_SECTOR_NAME);
-        String[] args = {mapArea, sector};
-        Cursor c = db.rawQuery(query, args);
-        try {
-            if (c.moveToFirst() && !c.isNull(0)) {
-                return c.getInt(0);
-            }
-            return 1;
-        } finally {
-            c.close();
-        }
     }
 
     @Override
@@ -100,9 +66,6 @@ class LocationEntityConverter implements CursorConverter<Location> {
         location.setLatitude(extractString(c, COLUMN_LOCATION_LATITUDE));
         location.setLongitude(extractString(c, COLUMN_LOCATION_LONGITUDE));
         location.setName(extractString(c, COLUMN_LOCATION_NAME));
-        location.setSectorName(extractString(c, COLUMN_LOCATION_SECTOR_NAME));
-        location.setMapAreaName(extractString(c, COLUMN_LOCATION_MAP_AREA_NAME));
-        location.setBuildingNumber(extractInt(c, COLUMN_LOCATION_BUILDING_NUMBER));
         location.setDescription(extractString(c, COLUMN_LOCATION_DESCRIPTION));
         location.setLongitude(extractString(c, COLUMN_LOCATION_LONGITUDE));
         location.setLatitude(extractString(c, COLUMN_LOCATION_LATITUDE));
@@ -135,9 +98,6 @@ class LocationContentValuesConverter implements ContentValuesConverter<Location>
         contentValues.put(COLUMN_LOCATION_LATITUDE, location.getLatitude());
         contentValues.put(COLUMN_LOCATION_LONGITUDE, location.getLongitude());
         contentValues.put(COLUMN_LOCATION_NAME, location.getName());
-        contentValues.put(COLUMN_LOCATION_SECTOR_NAME, location.getSectorName());
-        contentValues.put(COLUMN_LOCATION_MAP_AREA_NAME, location.getMapAreaName());
-        contentValues.put(COLUMN_LOCATION_BUILDING_NUMBER, location.getBuildingNumber());
         contentValues.put(COLUMN_LOCATION_DESCRIPTION, location.getDescription());
         contentValues.put(COLUMN_LOCATION_LONGITUDE, location.getLongitude());
         contentValues.put(COLUMN_LOCATION_LATITUDE, location.getLatitude());
