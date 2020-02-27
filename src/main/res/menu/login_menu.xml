@@ -17,6 +17,11 @@
 		android:title="@string/download_data"
 		app:showAsAction="ifRoom|withText" />
 	<item
+		android:id="@+id/download_forms"
+		android:icon="@drawable/download_form"
+		android:title="@string/download_forms"
+		app:showAsAction="ifRoom|withText" />
+	<item
 		android:id="@+id/rebuild_search_indices"
 		android:icon="@drawable/ic_search_document"
 		android:title="@string/rebuild_search_indices"

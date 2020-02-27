@@ -151,6 +151,9 @@ public class FieldWorkerLoginActivity extends AppCompatActivity
             case R.id.rebuild_search_indices:
                 IndexingService.queueFullReindex(this);
                 return true;
+            case R.id.download_forms:
+                launchDownloadForms();
+                return true;
             case R.id.configure_settings:
                 startActivity(new Intent(this, PreferenceActivity.class));
                 return true;
@@ -161,6 +164,12 @@ public class FieldWorkerLoginActivity extends AppCompatActivity
 
     private void launchSendForms() {
         startActivity(new Intent(Intent.ACTION_EDIT));
+    }
+
+    private void launchDownloadForms() {
+        Intent i = new Intent("org.cimsbioko.forms.FORM_DOWNLOAD");
+        i.setType("vnd.android.cursor.dir/vnd.cimsforms.form");
+        startActivity(i);
     }
 
     @Override

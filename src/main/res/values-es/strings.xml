@@ -191,5 +191,6 @@
 
     <string name="admin_access">Acceso de administrador</string>
     <string name="invalid_admin_password">Contraseña de administrador inválida</string>
+    <string name="download_forms">Descargar Formularios</string>
 
 </resources>
