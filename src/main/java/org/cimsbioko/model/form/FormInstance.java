@@ -12,7 +12,6 @@ import org.jdom2.Namespace;
 import org.jdom2.filter.Filters;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
@@ -171,7 +170,7 @@ public class FormInstance implements Serializable {
      */
     public static Uri generate(Binding binding, LaunchContext ctx) throws IOException, JDOMException {
 
-        FormInstance template = getTemplate(binding);
+        Form template = Form.lookup(binding);
 
         File sourceFile = new File(template.getFilePath()), targetFile = formFile(template.getFileName(), new Date());
 
@@ -189,7 +188,7 @@ public class FormInstance implements Serializable {
 
         saveForm(formData, targetFile);
 
-        return registerInstance(targetFile, targetFile.getName(), template.getFormName(), template.getFormVersion());
+        return registerInstance(targetFile, targetFile.getName(), template.getFormId(), template.getFormVersion());
     }
 
     private static Document newFormData(File templateFile) throws JDOMException, IOException {
@@ -205,14 +204,5 @@ public class FormInstance implements Serializable {
             }
         }
         return document;
-    }
-
-    private static FormInstance getTemplate(Binding binding) throws FileNotFoundException {
-        String formId = binding.getForm();
-        FormInstance template = getBlankInstance(formId);
-        if (template == null) {
-            throw new FileNotFoundException("form " + formId + " not found");
-        }
-        return template;
     }
 }

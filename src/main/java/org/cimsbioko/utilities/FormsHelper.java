@@ -4,8 +4,8 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-
 import org.cimsbioko.App;
+import org.cimsbioko.model.form.Form;
 import org.cimsbioko.model.form.FormInstance;
 import org.cimsbioko.provider.FormsProviderAPI;
 import org.cimsbioko.provider.InstanceProviderAPI;
@@ -103,17 +103,19 @@ public class FormsHelper {
     }
 
     /**
-     * Retrieves metadata for the blank form identified by the specified form id.
+     * Retrieves metadata for the form identified by the specified form id.
      *
      * @param formId   the form id as specified on the form's data instance element
      * @return a {@link FormInstance} object containing the matching form's metadata or null if none was found.
      */
-    public static FormInstance getBlankInstance(String formId) {
-        FormInstance metadata = null;
-        final String[] columns = {FormsProviderAPI.FormsColumns.JR_FORM_ID,
-                FormsProviderAPI.FormsColumns.FORM_FILE_PATH,
+    public static Form getForm(String formId) {
+        Form metadata = null;
+        final String[] columns = {
+                FormsProviderAPI.FormsColumns._ID,
+                FormsProviderAPI.FormsColumns.JR_FORM_ID,
                 FormsProviderAPI.FormsColumns.JR_VERSION,
-                FormsProviderAPI.FormsColumns.DISPLAY_NAME
+                FormsProviderAPI.FormsColumns.DISPLAY_NAME,
+                FormsProviderAPI.FormsColumns.FORM_FILE_PATH
         };
         final String where = FormsProviderAPI.FormsColumns.JR_FORM_ID + " = ?";
         final String[] whereArgs = {formId};
@@ -121,11 +123,8 @@ public class FormsHelper {
         if (cursor != null) {
             try {
                 if (cursor.moveToFirst()) {
-                    metadata = new FormInstance();
-                    metadata.setFormName(cursor.getString(0));
-                    metadata.setFilePath(cursor.getString(1));
-                    metadata.setFormVersion(cursor.getString(2));
-                    metadata.setFileName(cursor.getString(3));
+                    metadata = new Form(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3),
+                            cursor.getString(4));
                 }
             } finally {
                 cursor.close();
