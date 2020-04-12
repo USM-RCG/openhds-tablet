@@ -114,8 +114,7 @@ public class FormsHelper {
                 FormsProviderAPI.FormsColumns._ID,
                 FormsProviderAPI.FormsColumns.JR_FORM_ID,
                 FormsProviderAPI.FormsColumns.JR_VERSION,
-                FormsProviderAPI.FormsColumns.DISPLAY_NAME,
-                FormsProviderAPI.FormsColumns.FORM_FILE_PATH
+                FormsProviderAPI.FormsColumns.DISPLAY_NAME
         };
         final String where = FormsProviderAPI.FormsColumns.JR_FORM_ID + " = ?";
         final String[] whereArgs = {formId};
@@ -123,8 +122,7 @@ public class FormsHelper {
         if (cursor != null) {
             try {
                 if (cursor.moveToFirst()) {
-                    metadata = new Form(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3),
-                            cursor.getString(4));
+                    metadata = new Form(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3));
                 }
             } finally {
                 cursor.close();

@@ -171,10 +171,7 @@ public class FormInstance implements Serializable {
     public static Uri generate(Binding binding, LaunchContext ctx) throws IOException, JDOMException {
 
         Form template = Form.lookup(binding);
-
-        File sourceFile = new File(template.getFilePath()), targetFile = formFile(template.getFileName(), new Date());
-
-        Document formData = newFormData(sourceFile);
+        Document formData = newFormData(template);
         Element root = formData.getRootElement();
 
         root.setAttribute(BINDING_ATTR, binding.getName());
@@ -186,13 +183,14 @@ public class FormInstance implements Serializable {
 
         binding.getBuilder().build(formData, ctx);
 
+        File targetFile = formFile(template.getFileName(), new Date());
         saveForm(formData, targetFile);
 
         return registerInstance(targetFile, targetFile.getName(), template.getFormId(), template.getFormVersion());
     }
 
-    private static Document newFormData(File templateFile) throws JDOMException, IOException {
-        return clearDeclaredNs(detachedDataDoc(domFromFile(templateFile)));
+    private static Document newFormData(Form template) throws JDOMException, IOException {
+        return clearDeclaredNs(detachedDataDoc(domFromStream(template.getInputStream())));
     }
 
     private static Document clearDeclaredNs(Document document) {

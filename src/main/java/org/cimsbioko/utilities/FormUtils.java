@@ -14,6 +14,7 @@ import org.jdom2.output.XMLOutputter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,6 +51,23 @@ public class FormUtils {
     public static Document domFromFile(File file) throws JDOMException, IOException {
         return new SAXBuilder().build(file);
     }
+
+    /**
+     * Loads the specified XML {@link java.io.InputStream} into a jdom2 {@link Document} object.
+     *
+     * @param stream the stream of the XML file to load
+     * @return the jdom2 {@link Document} object, containing the contents of stream
+     * @throws JDOMException
+     * @throws IOException
+     */
+    public static Document domFromStream(InputStream stream) throws JDOMException, IOException {
+        try {
+            return new SAXBuilder().build(stream);
+        } finally {
+            stream.close();
+        }
+    }
+
 
     /**
      * Saves the specified {@link Document} object to the specified file.
