@@ -11,10 +11,7 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -83,6 +80,23 @@ public class FormUtils {
             xmlOutput.output(doc, out);
         } finally {
             out.close();
+        }
+    }
+
+    /**
+     * Saves the specified {@link Document} object to the specified {@link java.io.OutputStream}.
+     *
+     * @param doc  the jdom2 {@link Document} to save
+     * @param stream the stream to save the document content to
+     * @throws IOException
+     */
+    public static void domToStream(Document doc, OutputStream stream) throws IOException {
+        try {
+            XMLOutputter xmlOutput = new XMLOutputter();
+            xmlOutput.setFormat(Format.getCompactFormat().setOmitDeclaration(true));
+            xmlOutput.output(doc, stream);
+        } finally {
+            stream.close();
         }
     }
 

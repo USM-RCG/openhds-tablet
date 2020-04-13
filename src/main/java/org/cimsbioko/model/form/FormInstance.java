@@ -96,7 +96,7 @@ public class FormInstance implements Serializable {
      * @throws IOException
      */
     public void store(Document data) throws IOException {
-        domToFile(data, new File(filePath));
+        domToStream(data, getOutputStream());
     }
 
     /**
@@ -109,9 +109,12 @@ public class FormInstance implements Serializable {
         return domFromStream(getInputStream());
     }
 
+    private OutputStream getOutputStream() throws FileNotFoundException {
+        return App.getApp().getContentResolver().openOutputStream(getUri());
+    }
+
     private InputStream getInputStream() throws FileNotFoundException {
-        Uri formUri = getUri();
-        return App.getApp().getContentResolver().openInputStream(formUri);
+        return App.getApp().getContentResolver().openInputStream(getUri());
     }
 
     public Uri getUri() {
