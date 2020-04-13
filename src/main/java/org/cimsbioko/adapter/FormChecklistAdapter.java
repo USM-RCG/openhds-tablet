@@ -59,9 +59,8 @@ public class FormChecklistAdapter extends ArrayAdapter<FormInstance> {
         itemArea.setTag(instance);
         itemArea.setOnClickListener(v -> {
             FormInstance selected = (FormInstance) v.getTag();
-            Uri uri = Uri.parse(selected.getUriString());
             showShortToast(getContext(), R.string.launching_form);
-            ((Activity) getContext()).startActivityForResult(editIntent(uri), 0);
+            ((Activity) getContext()).startActivityForResult(editIntent(selected.getUri()), 0);
         });
 
         // add callback when the checkbox is checked

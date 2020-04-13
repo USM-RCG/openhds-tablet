@@ -25,6 +25,7 @@ public class FormsHelper {
             InstanceProviderAPI.InstanceColumns._ID,
             InstanceProviderAPI.InstanceColumns.JR_FORM_ID,
             InstanceProviderAPI.InstanceColumns.DISPLAY_NAME,
+            InstanceProviderAPI.InstanceColumns.JR_VERSION,
             InstanceProviderAPI.InstanceColumns.STATUS,
             InstanceProviderAPI.InstanceColumns.CAN_EDIT_WHEN_COMPLETE};
 
@@ -53,16 +54,15 @@ public class FormsHelper {
     }
 
     private static FormInstance instanceFromCursor(Cursor cursor) {
-        FormInstance formInstance = new FormInstance();
-        Uri uri = Uri.withAppendedPath(CONTENT_URI, cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)));
-        formInstance.setUriString(uri.toString());
-        formInstance.setFilePath(cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH)));
-        formInstance.setFormName(cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_FORM_ID)));
-        formInstance.setFileName(cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME)));
-        formInstance.setStatus(cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS)));
-        formInstance.setCanEditWhenComplete(Boolean.parseBoolean(
-                        cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.CAN_EDIT_WHEN_COMPLETE))));
-        return formInstance;
+        return new FormInstance(
+                cursor.getLong(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)),
+                cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_FORM_ID)),
+                cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH)),
+                cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME)),
+                cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_VERSION)),
+                cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS)),
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.CAN_EDIT_WHEN_COMPLETE)))
+        );
     }
 
     public static List<FormInstance> getByPaths(Collection<String> formPaths) {
@@ -122,7 +122,7 @@ public class FormsHelper {
         if (cursor != null) {
             try {
                 if (cursor.moveToFirst()) {
-                    metadata = new Form(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3));
+                    metadata = new Form(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3));
                 }
             } finally {
                 cursor.close();

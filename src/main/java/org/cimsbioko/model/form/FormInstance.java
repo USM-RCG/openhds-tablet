@@ -1,6 +1,8 @@
 package org.cimsbioko.model.form;
 
+import android.content.ContentUris;
 import android.net.Uri;
+import org.cimsbioko.App;
 import org.cimsbioko.navconfig.NavigatorConfig;
 import org.cimsbioko.navconfig.forms.Binding;
 import org.cimsbioko.navconfig.forms.LaunchContext;
@@ -11,9 +13,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.Namespace;
 import org.jdom2.filter.Filters;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.Date;
 
 import static org.cimsbioko.utilities.FormUtils.*;
@@ -27,60 +27,46 @@ public class FormInstance implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private Long id;
     private String formName;
     private String filePath;
     private String fileName;
-    private String uriString;
     private String formVersion;
     private String status;
     private boolean canEditWhenComplete;
 
-    public String getFormVersion() {
-        return formVersion;
+    public FormInstance(Long id, String formName, String filePath, String fileName, String formVersion, String status, boolean canEditWhenComplete) {
+        this.id = id;
+        this.formName = formName;
+        this.filePath = filePath;
+        this.fileName = fileName;
+        this.formVersion = formVersion;
+        this.status = status;
+        this.canEditWhenComplete = canEditWhenComplete;
     }
 
-    public void setFormVersion(String formVersion) {
-        this.formVersion = formVersion;
+    public Long getId() {
+        return id;
+    }
+
+    public String getFormVersion() {
+        return formVersion;
     }
 
     public String getFileName() {
         return fileName;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
     public String getFormName() {
         return formName;
-    }
-
-    public void setFormName(String formName) {
-        this.formName = formName;
     }
 
     public String getFilePath() {
         return filePath;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public String getUriString() {
-        return uriString;
-    }
-
-    public void setUriString(String uriString) {
-        this.uriString = uriString;
-    }
-
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public boolean isComplete() {
@@ -97,10 +83,6 @@ public class FormInstance implements Serializable {
 
     public boolean isCanEditWhenComplete() {
         return canEditWhenComplete;
-    }
-
-    public void setCanEditWhenComplete(boolean canEditWhenComplete) {
-        this.canEditWhenComplete = canEditWhenComplete;
     }
 
     public boolean canEdit() {
@@ -124,10 +106,16 @@ public class FormInstance implements Serializable {
      * @throws IOException
      */
     public Document load() throws IOException, JDOMException {
-        if (filePath == null) {
-            throw new RuntimeException("failed to load form, path was null");
-        }
-        return domFromFile(new File(filePath));
+        return domFromStream(getInputStream());
+    }
+
+    private InputStream getInputStream() throws FileNotFoundException {
+        Uri formUri = getUri();
+        return App.getApp().getContentResolver().openInputStream(formUri);
+    }
+
+    public Uri getUri() {
+        return ContentUris.withAppendedId(InstanceProviderAPI.InstanceColumns.CONTENT_URI, id);
     }
 
     /**

@@ -14,12 +14,12 @@ import static org.cimsbioko.utilities.FormsHelper.getForm;
 
 public class Form implements Serializable {
 
-    private final Integer id;
+    private final Long id;
     private final String formId;
     private final String formVersion;
     private final String fileName;
 
-    public Form(Integer id, String formId, String formVersion, String fileName) {
+    public Form(Long id, String formId, String formVersion, String fileName) {
         this.id = id;
         this.formId = formId;
         this.formVersion = formVersion;
@@ -35,7 +35,7 @@ public class Form implements Serializable {
         return template;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

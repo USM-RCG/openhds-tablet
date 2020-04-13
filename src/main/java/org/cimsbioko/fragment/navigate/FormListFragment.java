@@ -102,9 +102,8 @@ public class FormListFragment extends Fragment {
 
     private void editForm(FormInstance selected) {
         if (selected.canEdit()) {
-            Uri uri = Uri.parse(selected.getUriString());
             showShortToast(getActivity(), R.string.launching_form);
-            startActivityForResult(editIntent(uri), 0);
+            startActivityForResult(editIntent(selected.getUri()), 0);
         } else {
             showShortToast(getActivity(), R.string.form_not_editable);
         }
