@@ -2,9 +2,8 @@ package org.cimsbioko.activity;
 
 import android.app.SearchManager;
 import android.app.SearchableInfo;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
+import android.content.*;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -25,6 +24,7 @@ import org.cimsbioko.fragment.navigate.HierarchyButtonFragment;
 import org.cimsbioko.fragment.navigate.detail.DefaultDetailFragment;
 import org.cimsbioko.fragment.navigate.detail.DetailFragment;
 import org.cimsbioko.model.core.FieldWorker;
+import org.cimsbioko.model.form.Form;
 import org.cimsbioko.model.form.FormInstance;
 import org.cimsbioko.navconfig.HierarchyPath;
 import org.cimsbioko.navconfig.NavigatorConfig;
@@ -246,7 +246,13 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
         if (binding != null) {
             try {
                 showShortToast(this, R.string.launching_form);
-                startActivityForResult(editIntent(generate(binding, this)), FORM_ACTIVITY_REQUEST_CODE);
+                Form form = Form.lookup(binding);
+                Uri instanceUri = generate(form, binding, this);
+                Intent intent = editIntent(form.getUri());
+                ClipData clipData = new ClipData("generated form instance", new String[] {"application/xml"}, new ClipData.Item(instanceUri));
+                intent.setClipData(clipData);
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivityForResult(intent, FORM_ACTIVITY_REQUEST_CODE);
             } catch (Exception e) {
                 showShortToast(this, "failed to launch form: " + e.getMessage());
             }

@@ -52,7 +52,10 @@ public class Form implements Serializable {
     }
 
     public InputStream getInputStream() throws FileNotFoundException {
-        Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, id);
-        return App.getApp().getContentResolver().openInputStream(formUri);
+        return App.getApp().getContentResolver().openInputStream(getUri());
+    }
+
+    public Uri getUri() {
+        return ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, id);
     }
 }

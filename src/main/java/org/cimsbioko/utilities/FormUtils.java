@@ -2,6 +2,7 @@ package org.cimsbioko.utilities;
 
 import android.content.Intent;
 import android.net.Uri;
+import org.cimsbioko.App;
 import org.cimsbioko.navconfig.UsedByJSConfig;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -12,13 +13,6 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import java.io.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-
-import static org.cimsbioko.utilities.IOUtils.getExternalDir;
 
 
 /**
@@ -36,18 +30,6 @@ public class FormUtils {
     public static final String HEAD = "head";
     public static final String MODEL = "model";
     public static final String INSTANCE = "instance";
-
-    /**
-     * Loads the specified XML file into a jdom2 {@link Document} object.
-     *
-     * @param file the object specifying the location of the XML file to load
-     * @return the jdom2 {@link Document} object, containing the contents of file
-     * @throws JDOMException
-     * @throws IOException
-     */
-    public static Document domFromFile(File file) throws JDOMException, IOException {
-        return new SAXBuilder().build(file);
-    }
 
     /**
      * Loads the specified XML {@link java.io.InputStream} into a jdom2 {@link Document} object.
@@ -101,68 +83,14 @@ public class FormUtils {
     }
 
     /**
-     * Formats the specified {@link Date} object for use in form file names.
-     *
-     * @param time the time of form creation
-     * @return a formatted {@link String} acceptable for use in a form file name
-     */
-    private static String formatTime(Date time) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss", Locale.getDefault());
-        df.setTimeZone(TimeZone.getDefault());
-        return df.format(time);
-    }
-
-    /**
-     * Constructs the base name for a form. This is used to construct file and directory names.
-     *
-     * @param name the form id of the form
-     * @param time the creation time of the form
-     * @return the common base name used in file/dir name construction
-     */
-    private static String formBaseName(String name, Date time) {
-        return String.format("%s_%s", name, formatTime(time));
-    }
-
-    /**
-     * Constructs the filename for a form.
-     *
-     * @param name the form instance id
-     * @param time the form creation time
-     * @return the formatted file name to use for the form
-     */
-    private static String formFilename(String name, Date time) {
-        return String.format("%s%s", formBaseName(name, time), FILE_EXTENSION);
-    }
-
-    private static File getFormsDir() {
-        return getExternalDir();
-    }
-
-    public static File getInstancesDir() {
-        return new File(getFormsDir(), "instances");
-    }
-
-    /**
-     * Constructs the location to store form instances for the given form name, by convention. It generates locations
-     * on external storage since CIMS Forms and this application communicate through the file system. Both applications
-     * must be able to read and write to the location.
-     *
-     * @param name the form name to use as a subdirectory
-     * @return the filesystem location to store instances of the named form at
-     */
-    public static File formDir(String name, Date time) {
-        return new File(getInstancesDir(), formBaseName(name, time));
-    }
-
-    /**
      * Constructs a {@link File} object specifying the location to store a form.
      *
-     * @param name the form instance id (or form name)
-     * @param time the creation time of the form
      * @return the filesystem location to save/load the form
      */
-    public static File formFile(String name, Date time) {
-        return new File(formDir(name, time), formFilename(name, time));
+    public static File formFile() throws IOException {
+        File genDir = new File(App.getApp().getCacheDir(), "generated_instances");
+        boolean created = genDir.mkdir();
+        return File.createTempFile("starter", FILE_EXTENSION, genDir);
     }
 
     /**

@@ -2,6 +2,7 @@ package org.cimsbioko.model.form;
 
 import android.content.ContentUris;
 import android.net.Uri;
+import androidx.core.content.FileProvider;
 import org.cimsbioko.App;
 import org.cimsbioko.navconfig.NavigatorConfig;
 import org.cimsbioko.navconfig.forms.Binding;
@@ -14,7 +15,6 @@ import org.jdom2.Namespace;
 import org.jdom2.filter.Filters;
 
 import java.io.*;
-import java.util.Date;
 
 import static org.cimsbioko.utilities.FormUtils.*;
 import static org.cimsbioko.utilities.FormsHelper.*;
@@ -154,14 +154,15 @@ public class FormInstance implements Serializable {
     /**
      * Generates a new {@link FormInstance} using the given binding and launch context.
      *
-     * @param binding the binding to use for instance generation
+     * @param template the form to use as a starter template for the instance
+     * @param binding the binding to use to build the instance from the template
      * @param ctx the launch context to use while generating the form
      * @return the {@link Uri} to a new form instance, registered with Forms
      * @throws IOException
      */
-    public static Uri generate(Binding binding, LaunchContext ctx) throws IOException, JDOMException {
+    public static Uri generate(Form template, Binding binding, LaunchContext ctx)
+            throws IOException, JDOMException {
 
-        Form template = Form.lookup(binding);
         Document formData = newFormData(template);
         Element root = formData.getRootElement();
 
@@ -174,10 +175,10 @@ public class FormInstance implements Serializable {
 
         binding.getBuilder().build(formData, ctx);
 
-        File targetFile = formFile(template.getFileName(), new Date());
+        File targetFile = formFile();
         saveForm(formData, targetFile);
 
-        return registerInstance(targetFile, targetFile.getName(), template.getFormId(), template.getFormVersion());
+        return FileProvider.getUriForFile(App.getApp(), "org.cimsbioko.files", targetFile);
     }
 
     private static Document newFormData(Form template) throws JDOMException, IOException {
