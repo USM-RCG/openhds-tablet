@@ -267,6 +267,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
                 updateAfterResult = true;
             }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
