@@ -1,6 +1,7 @@
 package org.cimsbioko.utilities;
 
 import android.util.Log;
+import org.cimsbioko.App;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
@@ -18,7 +19,7 @@ public class IOUtils {
      * @return a {@link File} indicating where cims-specific (public) files are/can be stored
      */
     public static File getExternalDir() {
-        return new File(getExternalStorageDirectory(), "cims");
+        return new File(App.getApp().getExternalFilesDir(null), "cims");
     }
 
     /**
