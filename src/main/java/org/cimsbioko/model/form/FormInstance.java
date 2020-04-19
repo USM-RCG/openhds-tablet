@@ -27,18 +27,16 @@ public class FormInstance implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
-    private String formName;
-    private String filePath;
-    private String fileName;
-    private String formVersion;
-    private String status;
-    private boolean canEditWhenComplete;
+    private final Long id;
+    private final String formName;
+    private final String fileName;
+    private final String formVersion;
+    private final String status;
+    private final boolean canEditWhenComplete;
 
-    public FormInstance(Long id, String formName, String filePath, String fileName, String formVersion, String status, boolean canEditWhenComplete) {
+    public FormInstance(Long id, String formName, String fileName, String formVersion, String status, boolean canEditWhenComplete) {
         this.id = id;
         this.formName = formName;
-        this.filePath = filePath;
         this.fileName = fileName;
         this.formVersion = formVersion;
         this.status = status;
@@ -59,10 +57,6 @@ public class FormInstance implements Serializable {
 
     public String getFormName() {
         return formName;
-    }
-
-    public String getFilePath() {
-        return filePath;
     }
 
     public String getStatus() {

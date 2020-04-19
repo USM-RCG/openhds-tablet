@@ -13,6 +13,7 @@ import org.cimsbioko.provider.InstanceProviderAPI;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.cimsbioko.provider.InstanceProviderAPI.InstanceColumns.CONTENT_URI;
@@ -21,7 +22,6 @@ import static org.cimsbioko.utilities.SQLUtils.makePlaceholders;
 public class FormsHelper {
 
     private static final String[] INSTANCE_COLUMNS = {
-            InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH,
             InstanceProviderAPI.InstanceColumns._ID,
             InstanceProviderAPI.InstanceColumns.JR_FORM_ID,
             InstanceProviderAPI.InstanceColumns.DISPLAY_NAME,
@@ -57,7 +57,6 @@ public class FormsHelper {
         return new FormInstance(
                 cursor.getLong(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)),
                 cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_FORM_ID)),
-                cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH)),
                 cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME)),
                 cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_VERSION)),
                 cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS)),
@@ -65,12 +64,15 @@ public class FormsHelper {
         );
     }
 
-    public static List<FormInstance> getByPaths(Collection<String> formPaths) {
+    public static List<FormInstance> getByIds(Collection<Long> ids) {
         ArrayList<FormInstance> formInstances = new ArrayList<>();
-        if (!formPaths.isEmpty()) {
-            String where = String.format("%s IN (%s)", InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, makePlaceholders(formPaths.size()));
-            String[] whereArgs = formPaths.toArray(new String[0]);
-            Cursor cursor = getContentResolver().query(CONTENT_URI, INSTANCE_COLUMNS, where, whereArgs, null);
+        if (!ids.isEmpty()) {
+            String where = String.format("%s IN (%s)", InstanceProviderAPI.InstanceColumns._ID, makePlaceholders(ids.size()));
+            List<String> idStrings = new ArrayList<>(ids.size());
+            for (Long id : ids) {
+                idStrings.add(id == null ? null : id.toString());
+            }
+            Cursor cursor = getContentResolver().query(CONTENT_URI, INSTANCE_COLUMNS, where, idStrings.toArray(new String[]{}), null);
             if (cursor != null) {
                 try {
                     while (cursor.moveToNext()) {
@@ -153,17 +155,17 @@ public class FormsHelper {
     }
 
     /**
-     * Converts a collection of {@link FormInstance}s to an array of file system paths. This is often handy when working
+     * Converts a collection of {@link FormInstance}s to an array of their ids. This is often handy when working
      * with CIMS Forms's instance content provider.
      *
      * @param forms list of forms
-     * @return array of file system paths in order of the provided forms
+     * @return array of form instance ids in order of the provided forms
      */
-    public static String[] formPaths(Collection<FormInstance> forms) {
+    public static String[] formIds(Collection<FormInstance> forms) {
         String[] paths = new String[forms.size()];
         int index = 0;
         for (FormInstance form : forms)
-            paths[index++] = form.getFilePath();
+            paths[index++] = form.getId().toString();
         return paths;
     }
 
@@ -175,7 +177,7 @@ public class FormsHelper {
      * @return the number of forms removed
      */
     public static int deleteFormInstances(Collection<FormInstance> forms) {
-        String where = String.format("%s IN (%s)", InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, makePlaceholders(forms.size()));
-        return getContentResolver().delete(CONTENT_URI, where, formPaths(forms));
+        String where = String.format("%s IN (%s)", InstanceProviderAPI.InstanceColumns._ID, makePlaceholders(forms.size()));
+        return getContentResolver().delete(CONTENT_URI, where, formIds(forms));
     }
 }

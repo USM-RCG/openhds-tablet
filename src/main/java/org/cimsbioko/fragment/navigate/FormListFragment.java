@@ -119,7 +119,7 @@ public class FormListFragment extends Fragment {
 
     private void findForm(FormInstance selected) {
         Context ctx = getActivity();
-        String pathStr = DatabaseAdapter.getInstance().findHierarchyForForm(selected.getFilePath());
+        String pathStr = DatabaseAdapter.getInstance().findHierarchyForForm(selected.getId());
         HierarchyPath path = HierarchyPath.fromString(pathStr);
         if (path != null) {
             try {

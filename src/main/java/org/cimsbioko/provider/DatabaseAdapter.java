@@ -15,18 +15,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Collections.singletonList;
 import static org.cimsbioko.App.getApp;
 import static org.cimsbioko.utilities.SQLUtils.makePlaceholders;
 
 public class DatabaseAdapter {
 
     private static final String DATABASE_NAME = "entityData";
-    private static final int DATABASE_VERSION = 18;
+    private static final int DATABASE_VERSION = 19;
 
     private static final String FORM_PATH_TABLE_NAME = "path_to_forms";
     private static final String FORM_PATH_IDX_NAME = "path_id";
     private static final String KEY_HIER_PATH = "hierarchyPath";
-    private static final String KEY_FORM_PATH = "formPath";
+    private static final String KEY_FORM_ID = "form_id";
 
     private static final String SYNC_HISTORY_TABLE_NAME = "sync_history";
     private static final String KEY_FINGERPRINT = "fingerprint";
@@ -37,8 +38,7 @@ public class DatabaseAdapter {
 
     private static final String FORM_PATH_CREATE = "CREATE TABLE IF NOT EXISTS " + FORM_PATH_TABLE_NAME + " ("
             + KEY_HIER_PATH + " TEXT, "
-            + KEY_FORM_PATH + " TEXT, CONSTRAINT "
-            + FORM_PATH_IDX_NAME + " UNIQUE (" + KEY_HIER_PATH + ", " + KEY_FORM_PATH + " ) )";
+            + KEY_FORM_ID + " TEXT, CONSTRAINT " + FORM_PATH_IDX_NAME + " UNIQUE (" + KEY_FORM_ID + " ) )";
 
     private static final String SYNC_HISTORY_CREATE = "CREATE TABLE IF NOT EXISTS " + SYNC_HISTORY_TABLE_NAME + " ("
             + KEY_FINGERPRINT + " TEXT NOT NULL, "
@@ -68,13 +68,17 @@ public class DatabaseAdapter {
         helper = new DatabaseHelper(getApp().getApplicationContext());
     }
 
-    public long attachFormToHierarchy(String hierarchyPath, String formPath) {
+    public long attachFormToHierarchy(String hierarchyPath, Long formId) {
         SQLiteDatabase db = helper.getWritableDatabase();
         db.beginTransaction();
+        String currentAttachment = findHierarchyForForm(formId);
+        if (currentAttachment != null) {
+            detachFromHierarchy(singletonList(formId));
+        }
         try {
             ContentValues cv = new ContentValues();
             cv.put(KEY_HIER_PATH, hierarchyPath);
-            cv.put(KEY_FORM_PATH, formPath);
+            cv.put(KEY_FORM_ID, formId.toString());
             long id = db.replaceOrThrow(FORM_PATH_TABLE_NAME, null, cv);
             db.setTransactionSuccessful();
             return id;
@@ -83,51 +87,57 @@ public class DatabaseAdapter {
         }
     }
 
-    public String findHierarchyForForm(String filePath) {
-        SQLiteDatabase db = helper.getReadableDatabase();
-        String[] columns = {KEY_HIER_PATH};
-        String where = String.format("%s = ?", KEY_FORM_PATH);
-        String[] whereArgs = {filePath};
-        Cursor cursor = db.query(FORM_PATH_TABLE_NAME, columns, where, whereArgs, null, null, null);
-        if (cursor != null) {
-            try {
-                if (cursor.moveToNext()) {
-                    return cursor.getString(cursor.getColumnIndex(KEY_HIER_PATH));
+    public String findHierarchyForForm(Long id) {
+        if (id != null) {
+            SQLiteDatabase db = helper.getReadableDatabase();
+            String[] columns = {KEY_HIER_PATH};
+            String where = String.format("%s = ?", KEY_FORM_ID);
+            String[] whereArgs = {id.toString()};
+            Cursor cursor = db.query(FORM_PATH_TABLE_NAME, columns, where, whereArgs, null, null, null);
+            if (cursor != null) {
+                try {
+                    if (cursor.moveToNext()) {
+                        return cursor.getString(cursor.getColumnIndex(KEY_HIER_PATH));
+                    }
+                } finally {
+                    cursor.close();
                 }
-            } finally {
-                cursor.close();
             }
         }
         return null;
     }
 
-    public Collection<String> findFormsForHierarchy(String hierarchyPath) {
+    public Collection<Long> findFormsForHierarchy(String hierarchyPath) {
         SQLiteDatabase db = helper.getReadableDatabase();
-        Set<String> formPaths = new HashSet<>();
-        String[] columns = {KEY_FORM_PATH};
+        Set<Long> formIds = new HashSet<>();
+        String[] columns = {KEY_FORM_ID};
         String where = String.format("%s = ?", KEY_HIER_PATH);
         String[] whereArgs = {hierarchyPath};
         Cursor cursor = db.query(FORM_PATH_TABLE_NAME, columns, where, whereArgs, null, null, null);
         if (cursor != null) {
             try {
                 while (cursor.moveToNext()) {
-                    formPaths.add(cursor.getString(cursor.getColumnIndex(KEY_FORM_PATH)));
+                    formIds.add(Long.valueOf(cursor.getString(cursor.getColumnIndex(KEY_FORM_ID))));
                 }
             } finally {
                 cursor.close();
             }
         }
-        return formPaths;
+        return formIds;
     }
 
-    public void detachFromHierarchy(List<String> formPaths) {
-        if (!formPaths.isEmpty()) {
+    public void detachFromHierarchy(List<Long> formIds) {
+        if (!formIds.isEmpty()) {
             SQLiteDatabase db = helper.getWritableDatabase();
             db.beginTransaction();
             try {
-                String where = String.format("%s in (%s)", KEY_FORM_PATH, makePlaceholders(formPaths.size()));
-                String[] whereArgs = formPaths.toArray(new String[]{});
-                db.delete(FORM_PATH_TABLE_NAME, where, whereArgs);
+                String where = String.format("%s in (%s)", KEY_FORM_ID, makePlaceholders(formIds.size()));
+                String[] idStrings = new String[formIds.size()];
+                for (int i=0; i<formIds.size(); i++) {
+                    Long id = formIds.get(i);
+                    idStrings[i] = id == null? null : id.toString();
+                }
+                db.delete(FORM_PATH_TABLE_NAME, where, idStrings);
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
@@ -271,11 +281,18 @@ public class DatabaseAdapter {
             if (oldVersion < 18) {
                 execSQL(db, FAVORITE_CREATE);
             }
+            if (oldVersion < 19) {
+                execSQL(db, "DROP TABLE IF EXISTS " + FORM_PATH_TABLE_NAME);
+                execSQL(db, FORM_PATH_CREATE);
+            }
         }
 
         @Override
         public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.i(TAG, String.format("downgrading db version %s to %s", oldVersion, newVersion));
+            if (newVersion < 19) {
+                execSQL(db, "DROP TABLE IF EXISTS " + FORM_PATH_TABLE_NAME);
+            }
             if (newVersion < 18) {
                 db.execSQL("DROP TABLE IF EXISTS " + FAVORITE_TABLE_NAME);
             }

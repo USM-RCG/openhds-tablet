@@ -42,12 +42,10 @@ import org.jdom2.Document;
 import org.jdom2.JDOMException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.cimsbioko.model.form.FormInstance.*;
 import static org.cimsbioko.search.Utils.isSearchEnabled;
 import static org.cimsbioko.utilities.FormUtils.editIntent;
@@ -275,9 +273,10 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
      */
     private void handleFormResult(Intent data) {
         FormInstance instance = lookup(data.getData());
-        String formPath = instance.getFilePath();
-        if (formPath != null) {
-            DatabaseAdapter.getInstance().attachFormToHierarchy(hierarchyPath.toString(), formPath);
+        Long formId = instance.getId();
+        if (formId != null) {
+            DatabaseAdapter db = DatabaseAdapter.getInstance();
+            db.attachFormToHierarchy(hierarchyPath.toString(), formId);
         }
         try {
             Document dataDoc = instance.load();
@@ -473,17 +472,17 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
      */
     private void updateForms() {
         List<FormInstance> unsentForms = new ArrayList<>();
-        List<String> sentFormPaths = new ArrayList<>();
+        List<Long> sentIds = new ArrayList<>();
         DatabaseAdapter dbAdapter = DatabaseAdapter.getInstance();
-        Collection<String> attachedPaths = dbAdapter.findFormsForHierarchy(hierarchyPath.toString());
-        for (FormInstance attachedForm : FormsHelper.getByPaths(attachedPaths)) {
+        Collection<Long> attachedFormIds = dbAdapter.findFormsForHierarchy(hierarchyPath.toString());
+        for (FormInstance attachedForm : FormsHelper.getByIds(attachedFormIds)) {
             if (attachedForm.isSubmitted()) {
-                sentFormPaths.add(attachedForm.getFilePath());
+                sentIds.add(attachedForm.getId());
             } else {
                 unsentForms.add(attachedForm);
             }
         }
-        dbAdapter.detachFromHierarchy(sentFormPaths);
+        dbAdapter.detachFromHierarchy(sentIds);
         formListFragment.populate(unsentForms);
     }
 }
