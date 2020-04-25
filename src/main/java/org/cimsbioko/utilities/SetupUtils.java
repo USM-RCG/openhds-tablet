@@ -1,6 +1,9 @@
 package org.cimsbioko.utilities;
 
-import android.accounts.*;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.appcompat.app.AlertDialog;
@@ -30,18 +34,18 @@ import static androidx.core.content.ContextCompat.checkSelfPermission;
 import static org.cimsbioko.campaign.CampaignUpdateService.CIMS_CAMPAIGN_ID;
 import static org.cimsbioko.syncadpt.Constants.ACCOUNT_TYPE;
 import static org.cimsbioko.syncadpt.Constants.AUTHTOKEN_TYPE_DEVICE;
-import static org.cimsbioko.utilities.CampaignUtils.*;
+import static org.cimsbioko.utilities.CampaignUtils.downloadedCampaignExists;
 import static org.cimsbioko.utilities.ConfigUtils.clearActiveModules;
 import static org.cimsbioko.utilities.ConfigUtils.getSharedPrefs;
 import static org.cimsbioko.utilities.FileUtils.getFingerprintFile;
-import static org.cimsbioko.utilities.IOUtils.*;
+import static org.cimsbioko.utilities.IOUtils.store;
 import static org.cimsbioko.utilities.LoginUtils.launchLogin;
 import static org.cimsbioko.utilities.SyncUtils.downloadedContentBefore;
 
 public class SetupUtils {
 
     private static final String TAG = SetupUtils.class.getSimpleName();
-    private static final String[] REQUIRED_PERMISSIONS = new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE};
+    private static final String[] REQUIRED_PERMISSIONS = Build.VERSION.SDK_INT >= 19 ? new String[]{} : new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE};
     public static final String CAMPAIGN_DOWNLOADED_ACTION = "CAMPAIGN_DOWNLOADED";
     public static final String CAMPAIGN_FILENAME = "campaign.zip";
 
