@@ -286,18 +286,23 @@ public class SyncUtils {
                             Log.i(TAG, "downloading directly");
                             final int totalSize = httpConn.getContentLength();
                             IOUtils.StreamListener progressListener = new IOUtils.StreamListener() {
+                                long lastUpdate;
                                 int streamed;
                                 int fileProgress;
                                 @Override
                                 public void streamed(int bytes) {
-                                    streamed += bytes;
-                                    int nextValue = totalSize <= 0 ? 100 : (int) ((((double) streamed) / totalSize) * 100);
-                                    if (nextValue != fileProgress) {
-                                        builder.setProgress(totalSize, nextValue, false);
-                                        builder.setContentText(ctx.getString(R.string.sync_downloading));
-                                        notificationManager.notify(SYNC_NOTIFICATION_ID, builder.build());
+                                    final long thisUpdate = System.currentTimeMillis();
+                                    if (thisUpdate - lastUpdate > PROGRESS_NOTIFICATION_RATE_MILLIS) {
+                                        streamed += bytes;
+                                        int nextValue = totalSize <= 0 ? 100 : (int) ((((double) streamed) / totalSize) * 100);
+                                        if (nextValue != fileProgress) {
+                                            builder.setProgress(totalSize, nextValue, false);
+                                            builder.setContentText(ctx.getString(R.string.sync_downloading));
+                                            notificationManager.notify(SYNC_NOTIFICATION_ID, builder.build());
+                                            lastUpdate = thisUpdate;
+                                        }
+                                        fileProgress = nextValue;
                                     }
-                                    fileProgress = nextValue;
                                 }
                             };
                             streamToFile(responseBody, dbTempFile, totalSize == -1? null : progressListener);
@@ -397,16 +402,21 @@ public class SyncUtils {
             throws NoSuchAlgorithmException, IOException, InterruptedException {
         Metadata metadata = readMetadata(responseBody);
         ProgressTracker tracker = new ProgressTracker() {
+            long lastUpdate;
             String text = "";
             int percent = -1;
             @Override
             public void onProgress(Stage stage, int percentComplete) {
-                if (!text.equals(stage.name()) || percent != percentComplete) {
-                    text = stage.name();
-                    percent = percentComplete;
-                    builder.setContentText(getStageLabel(ctx, stage));
-                    builder.setProgress(100, percentComplete, false);
-                    manager.notify(SYNC_NOTIFICATION_ID, builder.build());
+                final long thisUpdate = System.currentTimeMillis();
+                if (thisUpdate - lastUpdate > PROGRESS_NOTIFICATION_RATE_MILLIS) {
+                    if (!text.equals(stage.name()) || percent != percentComplete) {
+                        text = stage.name();
+                        percent = percentComplete;
+                        builder.setContentText(getStageLabel(ctx, stage));
+                        builder.setProgress(100, percentComplete, false);
+                        manager.notify(SYNC_NOTIFICATION_ID, builder.build());
+                        lastUpdate = thisUpdate;
+                    }
                 }
             }
         };

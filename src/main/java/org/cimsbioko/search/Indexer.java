@@ -170,17 +170,22 @@ public class Indexer {
                 .setContentText(ctx.getString(label))
                 .setOngoing(true);
 
+        long lastUpdate = 0;
         try {
             if (source.next()) {
                 int totalCount = source.size(), processed = 0, lastNotified = -1;
                 do {
                     writer.addDocument(source.getDocument());
                     processed++;
-                    int percentFinished = (int) ((processed / (float) totalCount) * 100);
-                    if (lastNotified != percentFinished) {
-                        notificationBuilder.setProgress(totalCount, processed, false);
-                        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-                        lastNotified = percentFinished;
+                    long thisUpdate = System.currentTimeMillis();
+                    if (thisUpdate - lastUpdate > PROGRESS_NOTIFICATION_RATE_MILLIS) {
+                        int percentFinished = (int) ((processed / (float) totalCount) * 100);
+                        if (lastNotified != percentFinished) {
+                            notificationBuilder.setProgress(totalCount, processed, false);
+                            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+                            lastNotified = percentFinished;
+                            lastUpdate = thisUpdate;
+                        }
                     }
                 } while (source.next());
             }

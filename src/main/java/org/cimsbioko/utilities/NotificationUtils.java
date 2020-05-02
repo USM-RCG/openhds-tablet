@@ -12,6 +12,7 @@ import static android.os.Build.VERSION_CODES.O;
 
 public class NotificationUtils {
 
+    public static final long PROGRESS_NOTIFICATION_RATE_MILLIS = 1000;
     public static final String SYNC_CHANNEL_ID = "Sync";
 
     public static int getNotificationIcon() {
