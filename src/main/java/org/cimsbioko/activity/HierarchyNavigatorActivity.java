@@ -249,7 +249,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
                 Intent intent = editIntent(form.getUri());
                 ClipData clipData = new ClipData("generated form instance", new String[] {"application/xml"}, new ClipData.Item(instanceUri));
                 intent.setClipData(clipData);
-                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 startActivityForResult(intent, FORM_ACTIVITY_REQUEST_CODE);
             } catch (Exception e) {
                 showShortToast(this, "failed to launch form: " + e.getMessage());
