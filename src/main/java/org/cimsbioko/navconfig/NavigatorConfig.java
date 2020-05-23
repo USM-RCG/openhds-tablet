@@ -178,6 +178,19 @@ public class NavigatorConfig {
     }
 
     /**
+     * Returns the unique set of form ids bound with the loaded {@link Binding}s.
+     *
+     * @return  set of form ids from the loaded bindings
+     */
+    public Set<String> getFormIds() {
+        Set<String> formIds = new HashSet<>();
+        for (Binding b : bindings.values()) {
+            formIds.add(b.getForm());
+        }
+        return formIds;
+    }
+
+    /**
      * Get a localized string from the {@link JsConfig}'s {@link java.util.ResourceBundle}.
      *
      * @param key the resource key for a localized string

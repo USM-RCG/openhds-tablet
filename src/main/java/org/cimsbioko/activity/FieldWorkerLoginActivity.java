@@ -26,6 +26,7 @@ import org.cimsbioko.fragment.AdminSecretFragment;
 import org.cimsbioko.navconfig.NavigatorConfig;
 import org.cimsbioko.search.IndexingService;
 import org.cimsbioko.utilities.MessageUtils;
+import org.cimsbioko.utilities.SetupUtils;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -167,9 +168,7 @@ public class FieldWorkerLoginActivity extends AppCompatActivity
     }
 
     private void launchDownloadForms() {
-        Intent i = new Intent("org.cimsbioko.forms.FORM_DOWNLOAD");
-        i.setType("vnd.android.cursor.dir/vnd.cimsforms.form");
-        startActivity(i);
+        SetupUtils.downloadForms(this);
     }
 
     @Override

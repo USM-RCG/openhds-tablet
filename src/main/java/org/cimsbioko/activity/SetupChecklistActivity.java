@@ -30,7 +30,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
 
     private static final int STORAGE_PERMISSION_REQUEST = 1;
 
-    private CheckBox permissionsCheckbox, appsCheckbox, connectCheckbox, configCheckbox, dataCheckbox;
+    private CheckBox permissionsCheckbox, appsCheckbox, connectCheckbox, configCheckbox, dataCheckbox, formsCheckbox;
     private Button setupButton;
     private BroadcastReceiver broadcastReceiver;
 
@@ -50,6 +50,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
         connectCheckbox = findViewById(R.id.serverConnectCheckbox);
         configCheckbox = findViewById(R.id.configDownloadCheckbox);
         dataCheckbox = findViewById(R.id.dataDownloadCheckbox);
+        formsCheckbox = findViewById(R.id.formsCheckbox);
         setupButton = findViewById(R.id.setup_button);
 
         setSupportActionBar(toolbar);
@@ -98,7 +99,7 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
     private void updateState() {
 
         final boolean hasPerms = hasPermissions(), hasApps = hasApps(), isConnected = isConnected(),
-                hasData = hasData(), hasConfig = hasConfig();
+                hasData = hasData(), hasConfig = hasConfig(), hasForms = hasForms();
 
         // update checkboxes
         permissionsCheckbox.setChecked(hasPerms);
@@ -106,27 +107,30 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
         connectCheckbox.setChecked(isConnected);
         configCheckbox.setChecked(hasConfig);
         dataCheckbox.setChecked(hasData);
+        formsCheckbox.setChecked(hasForms);
 
         // configure button
         if (!hasPerms) {
             setupButton.setText(R.string.fix_permissions);
-            setupButton.setOnClickListener(v -> SetupUtils.askForPermissions(SetupChecklistActivity.this, 1));
+            setupButton.setOnClickListener(v -> SetupUtils.askForPermissions(this, 1));
         } else if (!hasApps) {
             setupButton.setText(R.string.install_apps);
-            setupButton.setOnClickListener(v -> SetupUtils.promptFormsAppInstall(SetupChecklistActivity.this));
+            setupButton.setOnClickListener(v -> SetupUtils.promptFormsAppInstall(this));
         } else if (!isConnected) {
             setupButton.setText(R.string.attach_to_server);
-            setupButton.setOnClickListener(v -> SetupUtils.getToken(SetupChecklistActivity.this, null));
+            setupButton.setOnClickListener(v -> SetupUtils.getToken(this, null));
         } else if (!hasConfig) {
             setupButton.setText(R.string.download_campaign);
-            setupButton.setOnClickListener(v -> SetupUtils.downloadConfig(SetupChecklistActivity.this));
-        }
-        else if (!hasData) {
+            setupButton.setOnClickListener(v -> SetupUtils.downloadConfig(this));
+        } else if (!hasData) {
             setupButton.setText(R.string.download_data);
             setupButton.setOnClickListener(v -> SyncUtils.checkForUpdate());
+        } else if (!hasForms) {
+            setupButton.setText(R.string.download_forms);
+            setupButton.setOnClickListener(v -> SetupUtils.downloadForms(this));
         } else {
             setupButton.setText(R.string.next);
-            setupButton.setOnClickListener(v -> startApp(SetupChecklistActivity.this));
+            setupButton.setOnClickListener(v -> startApp(this));
         }
     }
 
@@ -146,6 +150,10 @@ public class SetupChecklistActivity extends AppCompatActivity implements Navigat
 
     private boolean hasPermissions() {
         return SetupUtils.hasRequiredPermissions(this);
+    }
+
+    private boolean hasForms() {
+        return SetupUtils.hasCampaignForms();
     }
 
     @Override

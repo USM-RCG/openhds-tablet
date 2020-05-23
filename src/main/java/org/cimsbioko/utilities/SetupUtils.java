@@ -54,7 +54,8 @@ public class SetupUtils {
                 && isFormsAppInstalled(ctx.getPackageManager())
                 && isAccountInstalled()
                 && isConfigAvailable()
-                && isDataAvailable(ctx);
+                && isDataAvailable(ctx)
+                && hasCampaignForms();
     }
 
     public static boolean hasRequiredPermissions(Context ctx) {
@@ -184,5 +185,15 @@ public class SetupUtils {
 
     public static String getCampaignId() {
         return getSharedPrefs(App.getApp()).getString(CIMS_CAMPAIGN_ID, null);
+    }
+
+    public static boolean hasCampaignForms() {
+        return FormsHelper.hasFormsWithIds(NavigatorConfig.getInstance().getFormIds());
+    }
+
+    public static void downloadForms(Context ctx) {
+        Intent i = new Intent("org.cimsbioko.forms.FORM_DOWNLOAD");
+        i.setType("vnd.android.cursor.dir/vnd.cimsforms.form");
+        ctx.startActivity(i);
     }
 }

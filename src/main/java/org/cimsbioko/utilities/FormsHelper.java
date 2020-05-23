@@ -1,7 +1,6 @@
 package org.cimsbioko.utilities;
 
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import org.cimsbioko.App;
@@ -10,11 +9,7 @@ import org.cimsbioko.model.form.FormInstance;
 import org.cimsbioko.provider.FormsProviderAPI;
 import org.cimsbioko.provider.InstanceProviderAPI;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static org.cimsbioko.provider.InstanceProviderAPI.InstanceColumns.CONTENT_URI;
 import static org.cimsbioko.utilities.SQLUtils.makePlaceholders;
@@ -87,27 +82,9 @@ public class FormsHelper {
     }
 
     /**
-     * Registers the given XML file as a form instance with CIMS Forms.
-     *
-     * @param instance
-     * @param name
-     * @param id
-     * @param version
-     * @return the {@link Uri} for the registered form instance
-     */
-    public static Uri registerInstance(File instance, String name, String id, String version) {
-        ContentValues values = new ContentValues();
-        values.put(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH, instance.getAbsolutePath());
-        values.put(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME, name);
-        values.put(InstanceProviderAPI.InstanceColumns.JR_FORM_ID, id);
-        values.put(InstanceProviderAPI.InstanceColumns.JR_VERSION, version);
-        return getContentResolver().insert(InstanceProviderAPI.InstanceColumns.CONTENT_URI, values);
-    }
-
-    /**
      * Retrieves metadata for the form identified by the specified form id.
      *
-     * @param formId   the form id as specified on the form's data instance element
+     * @param formId the form id as specified on the form's data instance element
      * @return a {@link FormInstance} object containing the matching form's metadata or null if none was found.
      */
     public static Form getForm(String formId) {
@@ -173,11 +150,26 @@ public class FormsHelper {
      * Deletes the list of {@link FormInstance}s using CIMS Forms' instance provider. This will delete forms from its db and
      * from the file system.
      *
-     * @param forms    list of forms
+     * @param forms list of forms
      * @return the number of forms removed
      */
     public static int deleteFormInstances(Collection<FormInstance> forms) {
         String where = String.format("%s IN (%s)", InstanceProviderAPI.InstanceColumns._ID, makePlaceholders(forms.size()));
         return getContentResolver().delete(CONTENT_URI, where, formIds(forms));
+    }
+
+    public static boolean hasFormsWithIds(Set<String> formIds) {
+        String[] projection = {FormsProviderAPI.FormsColumns.JR_FORM_ID};
+        String where = String.format("%s IN (%s)", FormsProviderAPI.FormsColumns.JR_FORM_ID, makePlaceholders(formIds.size()));
+        String[] whereArgs = formIds.toArray(new String[]{});
+        Set<String> found = new HashSet<>();
+        try (Cursor c = getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI, projection, where, whereArgs, null)) {
+            if (c != null) {
+                while (c.moveToNext()) {
+                    found.add(c.getString(0));
+                }
+            }
+        }
+        return found.containsAll(formIds);
     }
 }
