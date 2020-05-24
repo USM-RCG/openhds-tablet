@@ -7,109 +7,119 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/setup_toolbar"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:minHeight="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:background="?attr/colorPrimary"/>
 
-        <ImageView
-                android:id="@+id/cims_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/cims_logo"
-                app:srcCompat="@drawable/splash_logo"
-                app:layout_constraintTop_toBottomOf="@id/setup_toolbar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="20dp"/>
+        <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <TextView
-                android:id="@+id/initialSetupText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/initial_setup"
-                android:textSize="20sp"
-                app:layout_constraintTop_toBottomOf="@+id/cims_logo"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="20dp"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-        <CheckBox
-                android:id="@+id/grantPermsCheckbox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/fix_permissions"
-                android:singleLine="true"
-                android:clickable="false"
-                app:layout_constraintTop_toBottomOf="@+id/initialSetupText"
-                app:layout_constraintStart_toStartOf="@+id/cims_logo"
-                android:layout_marginTop="20dp"/>
-        <CheckBox
-                android:id="@+id/installAppsCheckbox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/install_apps"
-                android:singleLine="true"
-                android:clickable="false"
-                app:layout_constraintTop_toBottomOf="@+id/grantPermsCheckbox"
-                app:layout_constraintStart_toStartOf="@+id/grantPermsCheckbox"/>
-        <CheckBox
-                android:id="@+id/serverConnectCheckbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/attach_to_server"
-                android:singleLine="true"
-                android:clickable="false"
-                app:layout_constraintTop_toBottomOf="@+id/installAppsCheckbox"
-                app:layout_constraintStart_toStartOf="@+id/installAppsCheckbox"/>
-        <CheckBox
-                android:id="@+id/configDownloadCheckbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/download_campaign"
-                android:singleLine="true"
-                android:clickable="false"
-                app:layout_constraintTop_toBottomOf="@+id/serverConnectCheckbox"
-                app:layout_constraintStart_toStartOf="@+id/serverConnectCheckbox"/>
-        <CheckBox
-                android:id="@+id/dataDownloadCheckbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/download_data"
-                android:singleLine="true"
-                android:clickable="false"
-                app:layout_constraintTop_toBottomOf="@+id/configDownloadCheckbox"
-                app:layout_constraintStart_toStartOf="@+id/configDownloadCheckbox"/>
-        <CheckBox
-                android:id="@+id/formsCheckbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/download_forms"
-                android:singleLine="true"
-                android:clickable="false"
-                app:layout_constraintTop_toBottomOf="@+id/dataDownloadCheckbox"
-                app:layout_constraintStart_toStartOf="@+id/dataDownloadCheckbox"/>
-        <Button
-                style="@style/Button"
-                android:text="@string/next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/formsCheckbox"
-                android:id="@+id/setup_button"
-                android:layout_marginTop="15dp"/>
+                <ImageView
+                        android:id="@+id/cims_logo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/cims_logo"
+                        app:srcCompat="@drawable/splash_logo"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginTop="20dp"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                        android:id="@+id/initialSetupText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/initial_setup"
+                        android:textSize="20sp"
+                        app:layout_constraintTop_toBottomOf="@+id/cims_logo"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginTop="20dp"/>
+
+                <CheckBox
+                        android:id="@+id/grantPermsCheckbox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fix_permissions"
+                        android:singleLine="true"
+                        android:clickable="false"
+                        app:layout_constraintTop_toBottomOf="@+id/initialSetupText"
+                        app:layout_constraintStart_toStartOf="@+id/cims_logo"
+                        android:layout_marginTop="20dp"/>
+                <CheckBox
+                        android:id="@+id/installAppsCheckbox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/install_apps"
+                        android:singleLine="true"
+                        android:clickable="false"
+                        app:layout_constraintTop_toBottomOf="@+id/grantPermsCheckbox"
+                        app:layout_constraintStart_toStartOf="@+id/grantPermsCheckbox"/>
+                <CheckBox
+                        android:id="@+id/serverConnectCheckbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/attach_to_server"
+                        android:singleLine="true"
+                        android:clickable="false"
+                        app:layout_constraintTop_toBottomOf="@+id/installAppsCheckbox"
+                        app:layout_constraintStart_toStartOf="@+id/installAppsCheckbox"/>
+                <CheckBox
+                        android:id="@+id/configDownloadCheckbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/download_campaign"
+                        android:singleLine="true"
+                        android:clickable="false"
+                        app:layout_constraintTop_toBottomOf="@+id/serverConnectCheckbox"
+                        app:layout_constraintStart_toStartOf="@+id/serverConnectCheckbox"/>
+                <CheckBox
+                        android:id="@+id/dataDownloadCheckbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/download_data"
+                        android:singleLine="true"
+                        android:clickable="false"
+                        app:layout_constraintTop_toBottomOf="@+id/configDownloadCheckbox"
+                        app:layout_constraintStart_toStartOf="@+id/configDownloadCheckbox"/>
+                <CheckBox
+                        android:id="@+id/formsCheckbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/download_forms"
+                        android:singleLine="true"
+                        android:clickable="false"
+                        app:layout_constraintTop_toBottomOf="@+id/dataDownloadCheckbox"
+                        app:layout_constraintStart_toStartOf="@+id/dataDownloadCheckbox"/>
+                <Button
+                        style="@style/Button"
+                        android:text="@string/next"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/formsCheckbox"
+                        android:id="@+id/setup_button"
+                        android:layout_marginTop="15dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
             android:id="@+id/setup_navigation_view"
