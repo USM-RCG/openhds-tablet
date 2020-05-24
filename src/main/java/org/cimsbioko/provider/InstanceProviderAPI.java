@@ -25,33 +25,33 @@ import android.provider.BaseColumns;
  */
 public final class InstanceProviderAPI {
 
-	public static final String AUTHORITY = "org.cimsbioko.forms.provider.odk.instances";
+    public static final String AUTHORITY = "org.cimsbioko.forms.provider.odk.instances";
 
-	// This class cannot be instantiated
-	private InstanceProviderAPI() {
-	}
+    // This class cannot be instantiated
+    private InstanceProviderAPI() {
+    }
 
-	// status for instances
-	public static final String STATUS_INCOMPLETE = "incomplete";
-	public static final String STATUS_COMPLETE = "complete";
-	public static final String STATUS_SUBMITTED = "submitted";
+    // status for instances
+    public static final String STATUS_INCOMPLETE = "incomplete";
+    public static final String STATUS_COMPLETE = "complete";
+    public static final String STATUS_SUBMITTED = "submitted";
 
-	public static final class InstanceColumns implements BaseColumns {
+    public static final class InstanceColumns implements BaseColumns {
 
-		// This class cannot be instantiated
-		private InstanceColumns() {
-		}
+        // This class cannot be instantiated
+        private InstanceColumns() {
+        }
 
-		public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/instances");
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/instances");
 
-		// These are the only things needed for an insert
-		public static final String DISPLAY_NAME = "displayName";
-		public static final String INSTANCE_FILE_PATH = "instanceFilePath";
-		public static final String JR_FORM_ID = "jrFormId";
-		public static final String JR_VERSION = "jrVersion";
+        // These are the only things needed for an insert
+        public static final String DISPLAY_NAME = "displayName";
+        public static final String INSTANCE_FILE_PATH = "instanceFilePath";
+        public static final String JR_FORM_ID = "jrFormId";
+        public static final String JR_VERSION = "jrVersion";
 
-		// these are generated for you (but you can insert something else if you want)
-		public static final String STATUS = "status";
-		public static final String CAN_EDIT_WHEN_COMPLETE = "canEditWhenComplete";
-	}
+        // these are generated for you (but you can insert something else if you want)
+        public static final String STATUS = "status";
+        public static final String CAN_EDIT_WHEN_COMPLETE = "canEditWhenComplete";
+    }
 }
