@@ -62,7 +62,7 @@ public class DatabaseAdapter {
         return instance;
     }
 
-    private DatabaseHelper helper;
+    private final DatabaseHelper helper;
 
     protected DatabaseAdapter() {
         helper = new DatabaseHelper(getApp().getApplicationContext());
