@@ -143,7 +143,7 @@ object CampaignUtils {
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun downloadCampaignFile(token: String?, uuid: String, targetFile: File?): CampaignDownloadResult {
+    fun downloadCampaignFile(token: String, uuid: String, targetFile: File): CampaignDownloadResult {
         val urlConn = HttpUtils.get(URL(getCampaignUrl(uuid)), null, HttpUtils.encodeBearerCreds(token), null)
         var `in`: InputStream? = null
         var out: OutputStream? = null
@@ -158,11 +158,16 @@ object CampaignUtils {
                 out = FileOutputStream(targetFile)
                 `in` = BufferedInputStream(urlConn.inputStream)
                 IOUtils.copy(`in`, out)
-                CampaignDownloadResult(targetFile, campaignId, etag)
+                CampaignDownloadResult.Success(targetFile, campaignId, etag)
             }
         } finally {
             IOUtils.close(`in`, out)
             urlConn.disconnect()
         }
     }
+}
+
+sealed class CampaignDownloadResult {
+    class Success(val downloadedFile: File, val campaign: String, val etag: String) : CampaignDownloadResult()
+    class Failure(val error: String) : CampaignDownloadResult()
 }

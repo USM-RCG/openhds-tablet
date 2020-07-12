@@ -27,13 +27,13 @@ public class CampaignTask extends AsyncTask<String, Void, CampaignDownloadResult
                     Log.i(CampaignTask.class.getSimpleName(), "downloading campaign '" + campaignName + "', uuid: " + campaignId);
                     return downloadCampaignFile(token, campaignId,  getDownloadedCampaignFile());
                 } else {
-                    return new CampaignDownloadResult("No campaign assigned to this device");
+                    return new CampaignDownloadResult.Failure("No campaign assigned to this device");
                 }
             } catch (IOException | JSONException e) {
-                return new CampaignDownloadResult("Download failed: " + e);
+                return new CampaignDownloadResult.Failure("Download failed: " + e);
             }
         } else {
-            return new CampaignDownloadResult("Download failed: not authenticated");
+            return new CampaignDownloadResult.Failure("Download failed: not authenticated");
         }
     }
 }

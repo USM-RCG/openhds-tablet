@@ -158,13 +158,12 @@ public class SetupUtils {
             new CampaignTask() {
                 @Override
                 protected void onPostExecute(CampaignDownloadResult campaignDownloadResult) {
-                    if (campaignDownloadResult.wasError()) {
-                        MessageUtils.showLongToast(ctx, campaignDownloadResult.getError());
+                    if (campaignDownloadResult instanceof CampaignDownloadResult.Failure) {
+                        MessageUtils.showLongToast(ctx, ((CampaignDownloadResult.Failure) campaignDownloadResult).getError());
                     } else {
-                        String etag = campaignDownloadResult.getEtag(), campaign = campaignDownloadResult.getCampaign();
-                        if (etag != null) {
-                            store(getFingerprintFile(campaignDownloadResult.getDownloadedFile()), etag);
-                        }
+                        CampaignDownloadResult.Success result = (CampaignDownloadResult.Success) campaignDownloadResult;
+                        String etag = result.getEtag(), campaign = result.getCampaign();
+                        store(getFingerprintFile(result.getDownloadedFile()), etag);
                         Intent intent = new Intent(CAMPAIGN_DOWNLOADED_ACTION);
                         clearActiveModules();
                         setCampaignId(campaign);
