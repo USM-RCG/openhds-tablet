@@ -63,14 +63,10 @@ object SetupUtils {
     }
 
     @JvmStatic
-    fun startApp(source: Activity?) {
-        launchLogin(source!!)
-    }
+    fun startApp(source: Activity) = launchLogin(source)
 
     @JvmStatic
-    fun createNotificationChannels(ctx: Context) {
-        createChannels(ctx.applicationContext)
-    }
+    fun createNotificationChannels(ctx: Context) = createChannels(ctx.applicationContext)
 
     @JvmStatic
     fun askForPermissions(activity: Activity, requestCode: Int) {
@@ -79,18 +75,14 @@ object SetupUtils {
         }
     }
 
-    private fun needsPermissions(ctx: Context): Boolean {
-        return !hasRequiredPermissions(ctx)
-    }
+    private fun needsPermissions(ctx: Context): Boolean = !hasRequiredPermissions(ctx)
 
     @JvmStatic
     val isConfigAvailable: Boolean
         get() = downloadedCampaignExists()
 
     @JvmStatic
-    fun isDataAvailable(ctx: Context?): Boolean {
-        return SyncUtils.downloadedContentBefore(ctx)
-    }
+    fun isDataAvailable(ctx: Context): Boolean = SyncUtils.downloadedContentBefore(ctx)
 
     @JvmStatic
     val isAccountInstalled: Boolean
@@ -191,9 +183,7 @@ object SetupUtils {
         }
 
     @JvmStatic
-    fun hasCampaignForms(): Boolean {
-        return hasFormsWithIds(NavigatorConfig.getInstance().formIds)
-    }
+    fun hasCampaignForms(): Boolean = hasFormsWithIds(NavigatorConfig.getInstance().formIds)
 
     @JvmStatic
     fun downloadForms(ctx: Context) {
