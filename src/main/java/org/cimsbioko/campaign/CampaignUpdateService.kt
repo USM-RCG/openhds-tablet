@@ -26,11 +26,11 @@ class CampaignUpdateService : JobIntentService() {
     override fun onHandleWork(intent: Intent) {
         val ctx = applicationContext
         val wifiOnlyEnabled = ConfigUtils.getPreferenceBool(ctx, ctx.getString(R.string.wifi_sync_key), true)
-        if (wifiOnlyEnabled && !NetUtils.isWiFiConnected()) {
+        if (wifiOnlyEnabled && !NetUtils.isWiFiConnected) {
             Log.i(TAG, "ignoring update request, not on wi-fi")
             return
         }
-        if (NetUtils.isConnected() && downloadedCampaignExists()) {
+        if (NetUtils.isConnected && downloadedCampaignExists()) {
             try {
                 val token = token
                 val hash = campaignHash

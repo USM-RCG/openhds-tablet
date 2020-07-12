@@ -15,13 +15,13 @@ import android.util.Log;
 import org.cimsbioko.R;
 import org.cimsbioko.sidecar.Sidecar;
 import org.cimsbioko.sidecar.SidecarNotFoundException;
+import org.cimsbioko.utilities.NetUtils;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.cimsbioko.utilities.ConfigUtils.getPreferenceBool;
-import static org.cimsbioko.utilities.NetUtils.isWiFiConnected;
 import static org.cimsbioko.utilities.SyncUtils.*;
 
 
@@ -43,7 +43,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         boolean sidecarEnabled = getPreferenceBool(ctx, ctx.getString(R.string.use_sidecar_key), false);
         boolean wifiOnlyEnabled = getPreferenceBool(ctx, ctx.getString(R.string.wifi_sync_key), true);
 
-        if (wifiOnlyEnabled && !isWiFiConnected()) {
+        if (wifiOnlyEnabled && !NetUtils.INSTANCE.isWiFiConnected()) {
             Log.w(TAG, "user settings require wi-fi, not syncing");
             return;
         }
