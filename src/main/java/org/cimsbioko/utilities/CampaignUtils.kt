@@ -28,7 +28,7 @@ object CampaignUtils {
         get() = buildServerUrl(App.getApp(), "/api/rest/mycampaigns")
 
     private val externalCampaignFile: File
-        get() = File(IOUtils.getExternalDir(), SetupUtils.CAMPAIGN_FILENAME)
+        get() = File(IOUtils.externalDir, SetupUtils.CAMPAIGN_FILENAME)
 
     @JvmStatic
     val downloadedCampaignFile: File
@@ -43,7 +43,7 @@ object CampaignUtils {
         get() = FileUtils.getTempFile(downloadedCampaignFile)
 
     @JvmStatic
-    val campaignHash: String
+    val campaignHash: String?
         get() = IOUtils.loadFirstLine(downloadedCampaignFingerprintFile)
 
     private val downloadedCampaignFingerprintFile: File
