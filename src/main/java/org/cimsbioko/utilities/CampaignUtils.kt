@@ -109,7 +109,7 @@ object CampaignUtils {
      */
     @JvmStatic
     @Throws(IOException::class, JSONException::class)
-    fun getCampaigns(token: String?): JSONArray {
+    fun getCampaigns(token: String): JSONArray {
         val urlConn = URL(myCampaignsUrl).openConnection() as HttpURLConnection
         urlConn.requestMethod = "GET"
         urlConn.setRequestProperty("Content-Type", "application/json")
