@@ -44,8 +44,6 @@ import org.jdom2.JDOMException;
 import java.io.IOException;
 import java.util.*;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.cimsbioko.model.form.FormInstance.*;
 import static org.cimsbioko.search.Utils.isSearchEnabled;
 import static org.cimsbioko.utilities.FormUtils.editIntent;
@@ -223,7 +221,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent();
         if (item.getItemId() == R.id.logout_menu_button) {
-            getLogin(FieldWorker.class).logout(this, true);
+            getLogin().logout(this, true);
         } else {
             String menuModule = menuItemTags.get(item);
             if (menuModule != null) {
@@ -305,7 +303,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
     }
 
     public FieldWorker getCurrentFieldWorker() {
-        return getLogin(FieldWorker.class).getAuthenticatedUser();
+        return getLogin().getAuthenticatedUser();
     }
 
     @Override
