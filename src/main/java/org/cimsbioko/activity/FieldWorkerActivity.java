@@ -6,11 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,19 +13,22 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import org.cimsbioko.R;
 import org.cimsbioko.fragment.navigate.FormListFragment;
-import org.cimsbioko.model.core.FieldWorker;
 import org.cimsbioko.navconfig.NavigatorModule;
 import org.cimsbioko.utilities.ConfigUtils;
 
 import java.util.Iterator;
 
 import static org.cimsbioko.search.Utils.isSearchEnabled;
+import static org.cimsbioko.utilities.FormsHelper.getAllUnsentFormInstances;
 import static org.cimsbioko.utilities.LayoutUtils.makeTextWithPayload;
 import static org.cimsbioko.utilities.LoginUtils.getLogin;
-import static org.cimsbioko.utilities.FormsHelper.getAllUnsentFormInstances;
 
 public class FieldWorkerActivity extends AppCompatActivity implements OnClickListener {
 
