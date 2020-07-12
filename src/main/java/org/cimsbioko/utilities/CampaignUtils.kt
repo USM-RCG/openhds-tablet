@@ -60,7 +60,7 @@ object CampaignUtils {
                 if (clearActiveModules) {
                     ConfigUtils.clearActiveModules()
                 }
-                SetupUtils.setCampaignId(campaignId)
+                SetupUtils.campaignId = campaignId
                 NavigatorConfig.getInstance().reload()
                 SyncUtils.checkForUpdate()
             } else {

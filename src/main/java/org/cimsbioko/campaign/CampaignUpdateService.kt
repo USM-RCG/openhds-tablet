@@ -34,7 +34,7 @@ class CampaignUpdateService : JobIntentService() {
             try {
                 val token = token
                 val hash = campaignHash
-                val existingCampaignId = SetupUtils.getCampaignId()
+                val existingCampaignId = SetupUtils.campaignId
                 val campaigns = getCampaigns(token)
                 if (campaigns.length() > 0) {
                     val firstCampaign = campaigns.getJSONObject(0)
