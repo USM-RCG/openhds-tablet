@@ -17,9 +17,9 @@ object UrlUtils {
         return baseUrl + path
     }
 
-    private fun getServerBaseUrl(context: Context): String {
-        return ConfigUtils.getPreferenceString(context, R.string.server_url_key, context.getString(R.string.default_server_url))
-    }
+    private fun getServerBaseUrl(context: Context) =
+            ConfigUtils.getPreferenceString(context, R.string.server_url_key, context.getString(R.string.default_server_url))
+                    ?: "no server url found"
 
     @JvmStatic
     fun setServerUrl(context: Context, url: String?) {
