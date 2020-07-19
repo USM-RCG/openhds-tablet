@@ -201,3 +201,27 @@ object IOUtils {
         fun streamed(bytes: Int)
     }
 }
+
+/**
+ * Similar to kotlin's built-in use block, but works on a collection to avoid nested use blocks.
+ */
+inline fun <T : Closeable?, R> Collection<T>.use(body: () -> R): R {
+    var t: Throwable? = null
+    try {
+        return body()
+    } catch (e: Throwable) {
+        t = e
+        throw e
+    } finally {
+        when (t) {
+            null -> forEach { it?.close() }
+            else -> forEach {
+                try {
+                    it?.close()
+                } catch (ct: Throwable) {
+                    t.addSuppressed(ct)
+                }
+            }
+        }
+    }
+}
