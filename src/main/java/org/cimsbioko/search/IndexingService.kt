@@ -13,7 +13,7 @@ class IndexingService : JobIntentService() {
     }
 
     override fun onHandleWork(intent: Intent) {
-        with(Indexer.getInstance()) {
+        with(Indexer.instance) {
             if (intent.hasExtra(ENTITY_UUID)) {
                 val type = EntityType.valueOf(intent.getStringExtra(ENTITY_TYPE))
                 val uuid = intent.getStringExtra(ENTITY_UUID)

@@ -5,7 +5,7 @@ import org.apache.lucene.document.Field
 import org.apache.lucene.document.Field.Index
 import org.apache.lucene.document.Field.Store
 
-internal open class SimpleCursorDocumentSource(c: Cursor?) : CursorDocumentSource(c) {
+internal open class SimpleCursorDocumentSource(c: Cursor) : CursorDocumentSource(c) {
 
     override fun getFields(): Array<Field> = with(mutableListOf<Field>()) {
 
