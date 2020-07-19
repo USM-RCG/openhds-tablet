@@ -111,36 +111,39 @@ class Indexer private constructor() {
                 .setContentText(ctx.getString(label))
                 .setOngoing(true)
         var lastUpdate: Long = 0
-        try {
-            if (source.next()) {
-                val totalCount = source.size()
-                var processed = 0
-                var lastNotified = -1
-                do {
-                    this.addDocument(source.document)
-                    processed++
-                    val thisUpdate = System.currentTimeMillis()
-                    if (thisUpdate - lastUpdate > PROGRESS_NOTIFICATION_RATE_MILLIS) {
-                        val percentFinished = (processed / totalCount.toFloat() * 100).toInt()
-                        if (lastNotified != percentFinished) {
-                            notificationBuilder.setProgress(totalCount, processed, false)
-                            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
-                            lastNotified = percentFinished
-                            lastUpdate = thisUpdate
-                        }
+        with(source) {
+            use {
+                try {
+                    if (next()) {
+                        val totalCount = size()
+                        var processed = 0
+                        var lastNotified = -1
+                        do {
+                            addDocument(document)
+                            processed++
+                            val thisUpdate = System.currentTimeMillis()
+                            if (thisUpdate - lastUpdate > PROGRESS_NOTIFICATION_RATE_MILLIS) {
+                                val percentFinished = (processed / totalCount.toFloat() * 100).toInt()
+                                if (lastNotified != percentFinished) {
+                                    notificationBuilder.setProgress(totalCount, processed, false)
+                                    notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
+                                    lastNotified = percentFinished
+                                    lastUpdate = thisUpdate
+                                }
+                            }
+                        } while (next())
                     }
-                } while (source.next())
+                } finally {
+                    notificationManager.cancel(NOTIFICATION_ID)
+                }
             }
-        } finally {
-            notificationManager.cancel(NOTIFICATION_ID)
-            source.close()
         }
     }
 
     @Throws(IOException::class)
     private fun IndexWriter.updateIndex(source: DocumentSource, idField: String) {
         with(source) {
-            try {
+            use {
                 if (next()) {
                     do {
                         val doc = document
@@ -148,8 +151,6 @@ class Indexer private constructor() {
                         updateDocument(idTerm, doc)
                     } while (next())
                 }
-            } finally {
-                close()
             }
         }
     }
@@ -178,5 +179,4 @@ class Indexer private constructor() {
         private val TAG = IndexingService::class.java.simpleName
         val instance by lazy { Indexer() }
     }
-
 }
