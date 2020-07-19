@@ -12,6 +12,8 @@ import android.util.Log
 import org.cimsbioko.activity.DeviceAuthenticatorActivity
 import org.cimsbioko.syncadpt.AuthUtils.token
 import org.cimsbioko.syncadpt.Constants.AUTHTOKEN_TYPE_DEVICE
+import org.cimsbioko.syncadpt.Constants.KEY_AUTH_TOKEN_TYPE
+import org.cimsbioko.syncadpt.Constants.KEY_NEW_ACCOUNT
 
 class AccountAuthenticator(private val ctx: Context) : AbstractAccountAuthenticator(ctx) {
 
@@ -20,8 +22,8 @@ class AccountAuthenticator(private val ctx: Context) : AbstractAccountAuthentica
             Intent(ctx, DeviceAuthenticatorActivity::class.java)
                     .apply {
                         putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType)
-                        putExtra(DeviceAuthenticatorActivity.KEY_AUTH_TOKEN_TYPE, authTokenType)
-                        putExtra(DeviceAuthenticatorActivity.KEY_NEW_ACCOUNT, true)
+                        putExtra(KEY_AUTH_TOKEN_TYPE, authTokenType)
+                        putExtra(KEY_NEW_ACCOUNT, true)
                         putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response)
                     }.let {
                         Bundle().apply { putParcelable(AccountManager.KEY_INTENT, it) }

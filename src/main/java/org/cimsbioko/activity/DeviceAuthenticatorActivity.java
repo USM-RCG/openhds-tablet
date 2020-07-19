@@ -33,14 +33,14 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static org.cimsbioko.App.AUTHORITY;
 import static org.cimsbioko.App.getApp;
 import static org.cimsbioko.syncadpt.AuthUtils.register;
+import static org.cimsbioko.syncadpt.Constants.KEY_AUTH_TOKEN_TYPE;
+import static org.cimsbioko.syncadpt.Constants.KEY_NEW_ACCOUNT;
 import static org.cimsbioko.utilities.MessageUtils.showLongToast;
 import static org.cimsbioko.utilities.UrlUtils.setServerUrl;
 import static org.cimsbioko.utilities.UrlUtils.urlDecode;
 
 public class DeviceAuthenticatorActivity extends AppCompatActivity implements LoginTaskListener, View.OnKeyListener {
 
-    public static final String KEY_AUTH_TOKEN_TYPE = "tokenType";
-    public static final String KEY_NEW_ACCOUNT = "newAccount";
     private static final String TAG = DeviceAuthenticatorActivity.class.getSimpleName();
     private static final Pattern SCAN_PATTERN = Pattern.compile("^cimsmcfg://(.*)[?]d=(.*)&s=(.*)$");
 
