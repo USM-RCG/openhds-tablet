@@ -9,7 +9,7 @@ import org.cimsbioko.App
 import java.io.File
 import java.io.IOException
 
-class SearchIndex private constructor() {
+object SearchIndex {
 
     private val searcherManager by lazy {
         val indexFile = File(App.getApp().applicationContext.filesDir, "search-index")
@@ -25,13 +25,9 @@ class SearchIndex private constructor() {
         return acquire()
     }
 
-    @Throws(IOException::class)
-    fun release(searcher: IndexSearcher) {
-        searcherManager.release(searcher)
-    }
 
-    companion object {
-        @JvmStatic
-        val instance by lazy { SearchIndex() }
+    @Throws(IOException::class)
+    fun IndexSearcher.release() {
+        searcherManager.release(this)
     }
 }

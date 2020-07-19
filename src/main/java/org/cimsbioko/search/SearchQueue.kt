@@ -15,7 +15,7 @@ class SearchQueue {
 
     fun queue(job: SearchJob) {
         if (!isShutdown) {
-            execService.submit(job.also { it.setQueue(this) })
+            execService.submit(job.also { it.service = this })
         }
     }
 }
