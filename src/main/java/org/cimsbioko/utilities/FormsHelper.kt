@@ -3,6 +3,7 @@ package org.cimsbioko.utilities
 import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
+import android.provider.BaseColumns
 import org.cimsbioko.App
 import org.cimsbioko.model.form.Form
 import org.cimsbioko.model.form.FormInstance
@@ -15,7 +16,7 @@ import java.util.*
 object FormsHelper {
 
     private val INSTANCE_COLUMNS = arrayOf(
-            InstanceColumns._ID,
+            BaseColumns._ID,
             InstanceColumns.JR_FORM_ID,
             InstanceColumns.DISPLAY_NAME,
             InstanceColumns.JR_VERSION,
@@ -40,7 +41,7 @@ object FormsHelper {
 
     private fun instanceFromCursor(cursor: Cursor): FormInstance {
         return FormInstance(
-                cursor.getLong(cursor.getColumnIndex(InstanceColumns._ID)),
+                cursor.getLong(cursor.getColumnIndex(BaseColumns._ID)),
                 cursor.getString(cursor.getColumnIndex(InstanceColumns.JR_FORM_ID)),
                 cursor.getString(cursor.getColumnIndex(InstanceColumns.DISPLAY_NAME)),
                 cursor.getString(cursor.getColumnIndex(InstanceColumns.JR_VERSION)),
@@ -53,7 +54,7 @@ object FormsHelper {
     fun getByIds(ids: Collection<Long>): List<FormInstance> {
         val formInstances = ArrayList<FormInstance>()
         if (!ids.isEmpty()) {
-            val where = String.format("%s IN (%s)", InstanceColumns._ID, makePlaceholders(ids.size))
+            val where = String.format("%s IN (%s)", BaseColumns._ID, makePlaceholders(ids.size))
             val idStrings: MutableList<String> = ArrayList(ids.size)
             for (id in ids) {
                 idStrings.add(id.toString())
@@ -79,7 +80,7 @@ object FormsHelper {
     fun getForm(formId: String): Form? {
         var metadata: Form? = null
         val columns = arrayOf(
-                FormsProviderAPI.FormsColumns._ID,
+                BaseColumns._ID,
                 FormsProviderAPI.FormsColumns.JR_FORM_ID,
                 FormsProviderAPI.FormsColumns.JR_VERSION,
                 FormsProviderAPI.FormsColumns.DISPLAY_NAME
@@ -129,7 +130,7 @@ object FormsHelper {
      */
     @JvmStatic
     fun deleteFormInstances(forms: Collection<FormInstance>): Int {
-        val where = String.format("%s IN (%s)", InstanceColumns._ID, makePlaceholders(forms.size))
+        val where = String.format("%s IN (%s)", BaseColumns._ID, makePlaceholders(forms.size))
         return contentResolver.delete(InstanceColumns.CONTENT_URI, where, formIds(forms))
     }
 
