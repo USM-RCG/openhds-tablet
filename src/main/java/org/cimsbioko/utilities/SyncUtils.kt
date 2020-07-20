@@ -194,7 +194,7 @@ object SyncUtils {
         }
         val existingFingerprint = loadFirstLine(getFingerprintFile(if (dbTempFile.exists()) dbTempFile else dbFile))
         Log.d(TAG, "attempting to update content, fingerprint: $existingFingerprint")
-        val db = DatabaseAdapter.getInstance()
+        val db = DatabaseAdapter.instance
         var fingerprint = "?"
         val downloadedContentBefore = downloadedContentBefore(ctx)
         val useZsync = isZyncEnabled(ctx) && downloadedContentBefore
