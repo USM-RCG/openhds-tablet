@@ -74,9 +74,8 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
         putConst(scope, MSG_NAME, MessagesScriptable(this))
     }
 
-    fun getString(key: String?): String {
-        val bundle = bundle
-        return if (bundle.containsKey(key)) bundle.getString(key) else String.format("{%s}", key)
+    fun getString(key: String?): String = with(bundle) {
+        if (containsKey(key)) getString(key) else "{$key}"
     }
 
     private val bundle: ResourceBundle
@@ -93,20 +92,9 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
 
     @get:Throws(URISyntaxException::class)
     private val jsModulePath: List<URI?>
-        get() {
-            if (loader is URLClassLoader) {
-                val uris: MutableList<URI?> = ArrayList()
-                for (u in loader.urLs) {
-                    uris.add(u.toURI())
-                }
-                return Collections.unmodifiableList(uris)
-            } else {
-                val root = loader.getResource("$MOBILE_INIT_MODULE.js")
-                if (root != null) {
-                    return listOf(root.toURI())
-                }
-            }
-            return emptyList<URI>()
+        get() = when (loader) {
+            is URLClassLoader -> loader.urLs.map { it.toURI() }
+            else -> loader.getResource("$MOBILE_INIT_MODULE.js")?.let { listOf(it.toURI()) } ?: emptyList<URI>()
         }
 
     override fun close() {
@@ -115,18 +103,14 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
 
     private class NonCachingModuleSourceProvider internal constructor(privilegedUris: Iterable<URI?>?) : UrlModuleSourceProvider(privilegedUris, null) {
         @Throws(IOException::class)
-        override fun openUrlConnection(url: URL): URLConnection {
-            val c = super.openUrlConnection(url)
-            c.useCaches = false
-            return c
-        }
+        override fun openUrlConnection(url: URL): URLConnection = super.openUrlConnection(url).apply { useCaches = false }
     }
 
     private class NonCachingResourceBundleControl : Control() {
+
         @Throws(IOException::class, IllegalAccessException::class, InstantiationException::class)
-        override fun newBundle(baseName: String, locale: Locale, format: String, loader: ClassLoader, reload: Boolean): ResourceBundle? {
-            return super.newBundle(baseName, locale, format, loader, true)
-        }
+        override fun newBundle(baseName: String, locale: Locale, format: String, loader: ClassLoader, reload: Boolean): ResourceBundle? =
+                super.newBundle(baseName, locale, format, loader, true)
 
         companion object {
             val INSTANCE: Control = NonCachingResourceBundleControl()
@@ -134,11 +118,13 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
     }
 
     companion object {
+
         private val TAG = JsConfig::class.java.simpleName
         private const val MOBILE_INIT_MODULE = "init"
         private const val BUNDLE_NAME = "strings"
         private const val DB_NAME = "\$db"
         private const val MSG_NAME = "\$msg"
+
         private fun buildScope(ctx: Context): ScriptableObject {
             return ctx.initSafeStandardObjects()
         }
