@@ -124,7 +124,7 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
 
     private class NonCachingResourceBundleControl : Control() {
         @Throws(IOException::class, IllegalAccessException::class, InstantiationException::class)
-        override fun newBundle(baseName: String, locale: Locale, format: String, loader: ClassLoader, reload: Boolean): ResourceBundle {
+        override fun newBundle(baseName: String, locale: Locale, format: String, loader: ClassLoader, reload: Boolean): ResourceBundle? {
             return super.newBundle(baseName, locale, format, loader, true)
         }
 
