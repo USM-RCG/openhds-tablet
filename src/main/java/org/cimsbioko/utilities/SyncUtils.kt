@@ -426,7 +426,7 @@ object SyncUtils {
         val dbTempFpFile = getFingerprintFile(dbTempFile)
         if (canUpdateDatabase(ctx)) {
             if (dbTempFile.renameTo(dbFile) && dbTempFpFile.renameTo(dbFpFile)) {
-                ContentProvider.getDatabaseHelper(ctx).close()
+                ContentProvider.databaseHelper.close()
                 listener.installed()
             } else {
                 Log.e(TAG, "failed to install update")

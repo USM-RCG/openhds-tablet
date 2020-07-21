@@ -30,7 +30,7 @@ class Indexer private constructor() {
     private val indexFile = File(App.getApp().applicationContext.filesDir, "search-index")
     private var writer: IndexWriter? = null
     private val database: SQLiteDatabase
-        get() = ContentProvider.getDatabaseHelper(App.getApp().applicationContext).readableDatabase
+        get() = ContentProvider.databaseHelper.readableDatabase
 
     @Throws(IOException::class)
     private fun getWriter(reuse: Boolean): IndexWriter {
