@@ -30,7 +30,7 @@ import java.net.*
 import java.util.*
 import java.util.ResourceBundle.Control
 
-class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoader) : Closeable {
+class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoader!!) : Closeable {
 
     var hierarchy: Hierarchy = StubHierarchy()
         private set
@@ -67,7 +67,7 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
     }
 
     private fun installDbService(scope: ScriptableObject) {
-        putConst(scope, DB_NAME, Gateways.getInstance())
+        putConst(scope, DB_NAME, Gateways)
     }
 
     private fun installTranslationService(scope: ScriptableObject) {
