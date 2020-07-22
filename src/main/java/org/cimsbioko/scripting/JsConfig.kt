@@ -63,7 +63,7 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
         installInterfaces(scope)
         installDomainClasses(scope)
         installDetailFragments(scope, IndividualDetailFragment::class.java)
-        installUtilityClasses(scope)
+        installUtilityObjects(scope)
     }
 
     private fun installDbService(scope: ScriptableObject) {
@@ -133,8 +133,8 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
             scope.putConst(name, scope, `object`)
         }
 
-        private fun installUtilityClasses(scope: ScriptableObject) {
-            putClasses(scope, DateUtils::class.java, IdHelper::class.java, FormUtils::class.java, StringUtils::class.java)
+        private fun installUtilityObjects(scope: ScriptableObject) {
+            putObjects(scope, DateUtils, IdHelper, FormUtils, StringUtils)
         }
 
         @SafeVarargs
@@ -159,6 +159,12 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
 
         private fun putClass(scope: ScriptableObject, clazz: Class<*>) {
             scope.putConst(clazz.simpleName, scope, NativeJavaClass(scope, clazz))
+        }
+
+        private fun putObjects(scope: ScriptableObject, vararg objects: Any) {
+            for (o in objects) {
+                putConst(scope, o.javaClass.simpleName, o)
+            }
         }
     }
 }
