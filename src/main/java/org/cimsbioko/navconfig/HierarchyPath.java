@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import org.cimsbioko.navconfig.db.DefaultQueryHelper;
 import org.cimsbioko.navconfig.db.QueryHelper;
 import org.cimsbioko.data.DataWrapper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -30,7 +31,7 @@ public class HierarchyPath implements Parcelable, Cloneable {
     @SuppressWarnings("unchecked")
     public Object clone() throws CloneNotSupportedException {
         HierarchyPath copy = (HierarchyPath) super.clone();
-        copy.path = (LinkedHashMap) this.path.clone();
+        copy.path = (LinkedHashMap<String, DataWrapper>) this.path.clone();
         return copy;
     }
 
@@ -101,6 +102,7 @@ public class HierarchyPath implements Parcelable, Cloneable {
         return path.size();
     }
 
+    @NotNull
     public String toString() {
         return toNodeString();
     }
@@ -231,23 +233,20 @@ public class HierarchyPath implements Parcelable, Cloneable {
         dest.writeTypedArray(path.values().toArray(new DataWrapper[depth]), 0);
     }
 
-    public static final Parcelable.Creator CREATOR = new Creator();
+    public static final Parcelable.Creator<HierarchyPath> CREATOR = new Creator();
 
     private static class Creator implements Parcelable.Creator<HierarchyPath> {
 
         @Override
         public HierarchyPath createFromParcel(Parcel source) {
-            HierarchyPath result = null;
             int depth = source.readInt();
             String[] levels = new String[depth];
             source.readStringArray(levels);
             DataWrapper[] values = new DataWrapper[depth];
             source.readTypedArray(values, DataWrapper.CREATOR);
-            if (depth == levels.length && levels.length == values.length) {
-                result = new HierarchyPath();
-                for (int l = 0; l < depth; l++) {
-                    result.down(levels[l], values[l]);
-                }
+            HierarchyPath result = new HierarchyPath();
+            for (int l = 0; l < depth; l++) {
+                result.down(levels[l], values[l]);
             }
             return result;
         }
