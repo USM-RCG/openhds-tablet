@@ -2,10 +2,10 @@ package org.cimsbioko.navconfig.db
 
 import org.cimsbioko.data.DataWrapper
 import org.cimsbioko.data.Gateway
-import org.cimsbioko.data.GatewayRegistry
+import org.cimsbioko.data.GatewayRegistry.*
+import org.cimsbioko.data.LocationHierarchyGateway
 import org.cimsbioko.navconfig.Hierarchy
 import org.cimsbioko.navconfig.NavigatorConfig
-import java.util.*
 
 interface QueryHelper {
     fun getAll(level: String): List<DataWrapper>
@@ -20,67 +20,39 @@ object DefaultQueryHelper : QueryHelper {
 
     private fun isTopLevel(level: String): Boolean = NavigatorConfig.instance.topLevel == level
 
-    private fun isLastAdminLevel(level: String): Boolean {
-        return NavigatorConfig.instance.adminLevels.let { it.isNotEmpty() && it[it.lastIndex] == level }
+    private fun isLastAdminLevel(level: String): Boolean =
+            NavigatorConfig.instance.adminLevels.let { it.isNotEmpty() && it[it.lastIndex] == level }
+
+    private fun getLevelGateway(level: String): Gateway<*>? = when {
+        Hierarchy.HOUSEHOLD == level -> getLocationGateway()
+        Hierarchy.INDIVIDUAL == level -> getIndividualGateway()
+        isAdminLevel(level) -> getLocationHierarchyGateway()
+        else -> null
     }
 
-    private fun getLevelGateway(level: String): Gateway<*>? = if (isAdminLevel(level)) {
-        GatewayRegistry.getLocationHierarchyGateway()
-    } else {
-        when (level) {
-            Hierarchy.HOUSEHOLD -> GatewayRegistry.getLocationGateway()
-            Hierarchy.INDIVIDUAL -> GatewayRegistry.getIndividualGateway()
+    override fun getAll(level: String): List<DataWrapper> = when (val gateway = getLevelGateway(level)) {
+        is LocationHierarchyGateway -> gateway.findByLevel(level).wrapperList
+        else -> gateway?.findAll()?.wrapperList ?: emptyList()
+    }
+
+    override fun getChildren(parent: DataWrapper, childLevel: String): List<DataWrapper> = parent.category?.let { lvl ->
+        when {
+            isLastAdminLevel(lvl) -> getLocationGateway().findByHierarchy(parent.uuid).wrapperList
+            isAdminLevel(lvl) -> getLocationHierarchyGateway().findByParent(parent.uuid).wrapperList
+            Hierarchy.HOUSEHOLD == lvl -> getIndividualGateway().findByResidency(parent.uuid).wrapperList
             else -> null
         }
-    }
+    } ?: emptyList()
 
-    override fun getAll(level: String): List<DataWrapper> {
-        if (isAdminLevel(level)) {
-            return GatewayRegistry.getLocationHierarchyGateway().findByLevel(level).wrapperList
-        }
-        when (level) {
-            Hierarchy.HOUSEHOLD, Hierarchy.INDIVIDUAL -> {
-                val gateway = getLevelGateway(level)
-                if (gateway != null) {
-                    return gateway.findAll().wrapperList
-                }
-            }
-        }
-        return ArrayList()
-    }
+    override fun get(level: String, uuid: String): DataWrapper? = getLevelGateway(level)?.findById(uuid)?.firstWrapper
 
-    override fun getChildren(parent: DataWrapper, childLevel: String): List<DataWrapper> {
-        val level = parent.category
-        return if (isAdminLevel(level)) {
-            if (isLastAdminLevel(level)) {
-                GatewayRegistry.getLocationGateway().findByHierarchy(parent.uuid).wrapperList
-            } else {
-                GatewayRegistry.getLocationHierarchyGateway().findByParent(parent.uuid).wrapperList
-            }
-        } else if (Hierarchy.HOUSEHOLD == level) {
-            GatewayRegistry.getIndividualGateway().findByResidency(parent.uuid).wrapperList
-        } else ArrayList()
-    }
-
-    override fun get(level: String, uuid: String): DataWrapper? {
-        return getLevelGateway(level)?.findById(uuid)?.firstWrapper
-    }
-
-    override fun getParent(level: String, uuid: String): DataWrapper? {
-        return NavigatorConfig.instance.getParentLevel(level)?.let {
-            if (isAdminLevel(level) && !isTopLevel(level)) {
-                get(it, GatewayRegistry.getLocationHierarchyGateway().findById(uuid).first.parentUuid)
-            } else {
-                when (level) {
-                    Hierarchy.HOUSEHOLD -> {
-                        get(it, GatewayRegistry.getLocationGateway().findById(uuid).first.hierarchyUuid)
-                    }
-                    Hierarchy.INDIVIDUAL -> {
-                        get(it, GatewayRegistry.getIndividualGateway().findById(uuid).first.currentResidenceUuid)
-                    }
+    override fun getParent(level: String, uuid: String): DataWrapper? =
+            NavigatorConfig.instance.getParentLevel(level)?.let { pl ->
+                when {
+                    level.let { isAdminLevel(it) && !isTopLevel(it) } -> getLocationHierarchyGateway().findById(uuid).first?.parentUuid
+                    level == Hierarchy.HOUSEHOLD -> getLocationGateway().findById(uuid).first?.hierarchyUuid
+                    level == Hierarchy.INDIVIDUAL -> getIndividualGateway().findById(uuid).first?.currentResidenceUuid
                     else -> null
-                }
+                }?.let { get(pl, it) }
             }
-        }
-    }
 }
