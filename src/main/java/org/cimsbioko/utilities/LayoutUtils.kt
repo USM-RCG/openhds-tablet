@@ -138,7 +138,7 @@ object LayoutUtils {
         try {
             val dataDoc = instance.load()
             if (instance.isComplete) {
-                if (instance.canEdit()) {
+                if (instance.isEditable) {
                     view.setBackgroundResource(R.drawable.form_list)
                 } else {
                     view.setBackgroundResource(R.drawable.form_list_locked)
@@ -148,7 +148,7 @@ object LayoutUtils {
             }
 
             // Set form name based on its embedded binding
-            val formTypeName = if (FormInstance.getBinding(dataDoc) != null) FormInstance.getBinding(dataDoc).label else instance.formName
+            val formTypeName = FormInstance.getBinding(dataDoc)?.label ?: instance.formName
             val formTypeView = view.findViewById<TextView>(R.id.form_instance_list_type)
             formTypeView.text = formTypeName
             val data = dataDoc.rootElement

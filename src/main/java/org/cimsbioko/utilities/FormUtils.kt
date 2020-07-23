@@ -70,7 +70,7 @@ object FormUtils {
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun domToStream(doc: Document?, stream: OutputStream) {
+    fun domToStream(doc: Document, stream: OutputStream) {
         stream.use { s ->
             val xmlOutput = XMLOutputter()
             xmlOutput.format = Format.getCompactFormat().setOmitDeclaration(true)
@@ -116,19 +116,17 @@ object FormUtils {
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun saveForm(form: Document?, location: File) {
+    fun saveForm(form: Document, location: File) {
         makeDirs(location)
         domToFile(form, location)
     }
 
     /**
      * Generates a data document from a template form.
-     *
-     * @param template dom containing full form to use as template
-     * @return a [Document] object containing just a blank main data element from the template
+     * @return a [Document] object containing just a blank main data element from this
      */
     @JvmStatic
-    fun detachedDataDoc(template: Document): Document = Document(getDataElement(template))
+    fun Document.detachDataDoc(): Document = Document(getDataElement(this))
 
     private fun getDataElement(blank: Document): Element = blank
             .rootElement

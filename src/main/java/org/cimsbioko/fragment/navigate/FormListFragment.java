@@ -3,7 +3,6 @@ package org.cimsbioko.fragment.navigate;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
@@ -101,7 +100,7 @@ public class FormListFragment extends Fragment {
     }
 
     private void editForm(FormInstance selected) {
-        if (selected.canEdit()) {
+        if (selected.isEditable()) {
             showShortToast(getActivity(), R.string.launching_form);
             startActivityForResult(editIntent(selected.getUri()), 0);
         } else {
@@ -178,7 +177,7 @@ public class FormListFragment extends Fragment {
             FormInstance selected = getItem(info.position);
             if (selected != null) {
                 getActivity().getMenuInflater().inflate(R.menu.formlist_menu, menu);
-                menu.findItem(R.id.edit_form).setVisible(selected.canEdit());
+                menu.findItem(R.id.edit_form).setVisible(selected.isEditable());
                 menu.findItem(R.id.find_form).setVisible(isFindEnabled);
             }
         }
