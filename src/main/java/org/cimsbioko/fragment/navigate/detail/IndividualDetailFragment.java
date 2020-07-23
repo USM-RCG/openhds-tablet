@@ -7,11 +7,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import org.cimsbioko.R;
+import org.cimsbioko.data.DataWrapper;
 import org.cimsbioko.model.core.Individual;
 import org.cimsbioko.navconfig.forms.KnownValues;
-import org.cimsbioko.data.DataWrapper;
+
+import java.util.Objects;
 
 import static org.cimsbioko.data.GatewayRegistry.getIndividualGateway;
 import static org.cimsbioko.utilities.LayoutUtils.makeLargeTextWithValueAndLabel;
@@ -48,20 +49,21 @@ public class IndividualDetailFragment extends DetailFragment {
         container.removeAllViews();
         addTextView(container, R.string.individual_full_name_label, individual.getFirstName() + " " + individual.getLastName());
         addTextView(container, R.string.individual_other_names_label, individual.getOtherNames());
-        addTextView(container, R.string.gender_lbl, decodedLabel(KnownValues.Individual.getIndividualStringId(individual.getGender())));
-        addTextView(container, R.string.individual_language_preference_label, decodedLabel(KnownValues.Individual.getIndividualStringId(individual.getLanguagePreference())));
-        addTextView(container, R.string.individual_nationality_label, decodedLabel(KnownValues.Individual.getIndividualStringId(individual.getNationality())));
+        addTextView(container, R.string.gender_lbl, decodedLabel(KnownValues.Individual.getLabel(individual.getGender())));
+        addTextView(container, R.string.individual_language_preference_label, decodedLabel(KnownValues.Individual.getLabel(individual.getLanguagePreference())));
+        addTextView(container, R.string.individual_nationality_label, decodedLabel(KnownValues.Individual.getLabel(individual.getNationality())));
         addTextView(container, R.string.individual_date_of_birth_label, individual.getDob());
         addTextView(container, R.string.uuid, individual.getUuid());
-        addTextView(container, R.string.individual_status_label, decodedLabel(KnownValues.Individual.getIndividualStringId(individual.getStatus())));
-        addTextView(container, R.string.individual_relationship_to_head_label, decodedLabel(KnownValues.Relationship.getRelationshipStringId(individual.getRelationshipToHead())));
+        addTextView(container, R.string.individual_status_label, decodedLabel(KnownValues.Individual.getLabel(individual.getStatus())));
+        addTextView(container, R.string.individual_relationship_to_head_label, decodedLabel(KnownValues.Relationship.getLabel(individual.getRelationshipToHead())));
     }
 
-    private String decodedLabel(int resId) {
-        if (resId == 0)
-            return null;
-        else
+    private String decodedLabel(Integer resId) {
+        if (resId != null) {
             return getString(resId);
+        } else {
+            return null;
+        }
     }
 
     private void rebuildContactDetails(Individual individual) {
@@ -74,6 +76,7 @@ public class IndividualDetailFragment extends DetailFragment {
     }
 
     private void addTextView(LinearLayout layout, int label, String value) {
+        Objects.requireNonNull(getActivity());
         layout.addView(makeLargeTextWithValueAndLabel(getActivity(), label, value, LABEL_COLOR, VALUE_COLOR, MISSING_COLOR));
     }
 
