@@ -10,8 +10,6 @@ import java.io.Reader
  * stream of lowercase alphanumeric tokens.
  */
 class CustomAnalyzer : Analyzer() {
-    override fun createComponents(fieldName: String, reader: Reader) = TokenStreamComponents(
-            AlphaNumericTokenizer(Version.LUCENE_40, reader),
-            LowerCaseFilter(Version.LUCENE_40, AlphaNumericTokenizer(Version.LUCENE_40, reader))
-    )
+    override fun createComponents(fieldName: String, reader: Reader) = AlphaNumericTokenizer(Version.LUCENE_40, reader)
+            .let { TokenStreamComponents(it, LowerCaseFilter(Version.LUCENE_40, it)) }
 }
