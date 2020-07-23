@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -381,11 +380,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
     }
 
     private void pushHistory() {
-        try {
-            pathHistory.push((HierarchyPath) hierarchyPath.clone());
-        } catch (CloneNotSupportedException e) {
-            Log.e(TAG, "failed to push path history", e);
-        }
+        pathHistory.push(hierarchyPath.clone());
     }
 
     @Override

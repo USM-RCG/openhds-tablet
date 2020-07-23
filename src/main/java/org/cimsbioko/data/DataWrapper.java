@@ -3,8 +3,8 @@ package org.cimsbioko.data;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import org.cimsbioko.navconfig.db.DefaultQueryHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,6 +75,7 @@ public class DataWrapper implements Parcelable {
     }
 
     @Override
+    @NotNull
     public String toString() {
         return "QueryResult[name: " + name + " extId: " + extId + " category: "
                 + category + " + payload size: " + stringsPayload.size() + "]";
@@ -160,7 +161,7 @@ public class DataWrapper implements Parcelable {
     public static final Creator CREATOR = new Creator();
 
     // for Parcelable
-    private static class Creator implements Parcelable.Creator<DataWrapper> {
+    public static class Creator implements Parcelable.Creator<DataWrapper> {
         public DataWrapper createFromParcel(Parcel in) {
             return new DataWrapper(in);
         }
