@@ -88,7 +88,7 @@ public class DataWrapper implements Parcelable {
         String [] parts = hierId.split(":");
         if (parts.length == 2) {
             String level = parts[0], uuid = parts[1];
-            return DefaultQueryHelper.getInstance().get(level, uuid);
+            return DefaultQueryHelper.INSTANCE.get(level, uuid);
         }
         return null;
     }

@@ -398,7 +398,7 @@ public class SearchableActivity extends AppCompatActivity {
         }
 
         private DataWrapper getParent(DataWrapper item) {
-            return DefaultQueryHelper.getInstance().getParent(item.getCategory(), item.getUuid());
+            return DefaultQueryHelper.INSTANCE.getParent(item.getCategory(), item.getUuid());
         }
     }
 
@@ -469,7 +469,7 @@ public class SearchableActivity extends AppCompatActivity {
             Log.i(TAG, "searching: " + query.toString());
             items.clear();
             TopDocs topDocs = searcher.search(query, limit);
-            QueryHelper helper = DefaultQueryHelper.getInstance();
+            QueryHelper helper = DefaultQueryHelper.INSTANCE;
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
                 Document doc = searcher.doc(scoreDoc.doc);
                 String uuid = doc.get("uuid"), level = doc.get("level");

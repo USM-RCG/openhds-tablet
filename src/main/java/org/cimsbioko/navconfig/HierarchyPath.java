@@ -128,7 +128,7 @@ public class HierarchyPath implements Parcelable, Cloneable {
         if (pathStr != null) {
             Matcher leafMatcher = LEAF_PATTERN.matcher(pathStr);
             if (leafMatcher.matches()) {
-                QueryHelper helper = DefaultQueryHelper.getInstance();
+                QueryHelper helper = DefaultQueryHelper.INSTANCE;
                 DataWrapper leafNode = helper.get(leafMatcher.group(1), leafMatcher.group(2));
                 return fromLeafString(leafNode);
             } else {
@@ -139,7 +139,7 @@ public class HierarchyPath implements Parcelable, Cloneable {
     }
 
     private static HierarchyPath fromPathString(String pathStr) {
-        QueryHelper helper = DefaultQueryHelper.getInstance();
+        QueryHelper helper = DefaultQueryHelper.INSTANCE;
         HierarchyPath path = null;
         List<String> configuredLevels = NavigatorConfig.getInstance().getLevels();
         if (pathStr != null) {
@@ -163,7 +163,7 @@ public class HierarchyPath implements Parcelable, Cloneable {
 
     private static HierarchyPath fromLeafString(DataWrapper leaf) {
 
-        QueryHelper helper = DefaultQueryHelper.getInstance();
+        QueryHelper helper = DefaultQueryHelper.INSTANCE;
 
         if (leaf != null) {
             // Traverse up the hierarchy using child-parent relationships, tracking the nodes traversed

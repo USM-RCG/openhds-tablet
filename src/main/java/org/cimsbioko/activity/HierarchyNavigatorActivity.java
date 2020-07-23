@@ -114,7 +114,7 @@ public class HierarchyNavigatorActivity extends AppCompatActivity implements Lau
             actionBar.setHomeButtonEnabled(true);
         }
 
-        queryHelper = DefaultQueryHelper.getInstance();
+        queryHelper = DefaultQueryHelper.INSTANCE;
 
         hierarchyPath = new HierarchyPath();
 
