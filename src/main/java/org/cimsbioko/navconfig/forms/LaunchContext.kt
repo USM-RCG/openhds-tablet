@@ -7,7 +7,7 @@ import org.cimsbioko.navconfig.UsedByJSConfig
 
 /**
  * This is the formal contract currently required to build a payload and launch a form. Currently,
- * [HierarchyNavigatorActivity] implements this contract directly. However, this ensures that
+ * [org.cimsbioko.activity.HierarchyNavigatorActivity] implements this contract directly. However, this ensures that
  * that dependency can be easily identified and, if necessary, decoupled.
  */
 interface LaunchContext {
