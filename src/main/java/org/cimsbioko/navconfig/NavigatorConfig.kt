@@ -65,7 +65,8 @@ class NavigatorConfig private constructor() {
      *
      * @return a list of configured [NavigatorModule]s in definition order
      */
-    val modules: Collection<NavigatorModule> = mods.values
+    val modules: Collection<NavigatorModule>
+        get() = mods.values
 
     /**
      * Gets all configured navigator module names.
