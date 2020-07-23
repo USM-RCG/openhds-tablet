@@ -164,6 +164,7 @@ class HierarchyPath(path: Map<String, DataWrapper> = emptyMap()) : Parcelable {
             } else null
         }
 
+        @JvmField
         val CREATOR: Parcelable.Creator<HierarchyPath> = Creator()
     }
 }
