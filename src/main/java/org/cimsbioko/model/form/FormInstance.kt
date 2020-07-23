@@ -115,7 +115,7 @@ class FormInstance(
          */
         @JvmStatic
         @Throws(IOException::class, JDOMException::class)
-        fun generate(template: Form, binding: Binding, ctx: LaunchContext?): Uri = template.newDataDoc().apply {
+        fun generate(template: Form, binding: Binding, ctx: LaunchContext): Uri = template.newDataDoc().apply {
             rootElement.apply {
                 setAttribute(BINDING_ATTR, binding.name)
                 campaignId?.let { setAttribute(CAMPAIGN_ATTR, it) }
