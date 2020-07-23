@@ -16,7 +16,6 @@ import org.cimsbioko.App
 import org.cimsbioko.R
 import org.cimsbioko.navconfig.Hierarchy
 import org.cimsbioko.provider.ContentProvider
-import org.cimsbioko.utilities.IOUtils.close
 import org.cimsbioko.utilities.NotificationUtils.PROGRESS_NOTIFICATION_RATE_MILLIS
 import org.cimsbioko.utilities.NotificationUtils.SYNC_CHANNEL_ID
 import org.cimsbioko.utilities.NotificationUtils.getNotificationColor
@@ -28,32 +27,23 @@ import java.io.IOException
 class Indexer private constructor() {
 
     private val indexFile = File(App.getApp().applicationContext.filesDir, "search-index")
-    private var writer: IndexWriter? = null
     private val database: SQLiteDatabase
         get() = ContentProvider.databaseHelper.readableDatabase
 
-    @Throws(IOException::class)
-    private fun getWriter(reuse: Boolean): IndexWriter {
-        val w = writer
-        if (!reuse) {
-            w?.let {
-                close()
-                writer = null
-            }
-        }
-        return w ?: let {
+    @get:Throws(IOException::class)
+    private val writer: IndexWriter
+        get() {
             val indexDir: Directory = FSDirectory.open(indexFile)
             val analyzer: Analyzer = CustomAnalyzer()
             val config = IndexWriterConfig(Version.LUCENE_47, analyzer).apply {
                 openMode = OpenMode.CREATE_OR_APPEND
             }
-            IndexWriter(indexDir, config).also { writer = it }
+            return IndexWriter(indexDir, config)
         }
-    }
 
     fun reindexAll() {
         try {
-            getWriter(false).use {
+            writer.use {
                 with(it) {
                     deleteAll()
                     bulkIndexHierarchy()
@@ -66,17 +56,14 @@ class Indexer private constructor() {
         }
     }
 
-    @Throws(IOException::class)
-    private fun IndexWriter.bulkIndexHierarchy() = bulkIndex(R.string.indexing_hierarchy_items,
-            SimpleCursorDocumentSource(database.rawQuery(HIERARCHY_INDEX_QUERY, emptyArray()))
-    )
-
     private fun reindexEntity(cursor: Cursor, idField: String) {
-        with(getWriter(false)) {
-            try {
-                updateIndex(SimpleCursorDocumentSource(cursor), idField)
-            } finally {
-                commit()
+        writer.use {
+            with(it) {
+                try {
+                    updateIndex(SimpleCursorDocumentSource(cursor), idField)
+                } finally {
+                    commit()
+                }
             }
         }
     }
@@ -89,6 +76,11 @@ class Indexer private constructor() {
 
     @Throws(IOException::class)
     fun reindexIndividual(uuid: String) = reindexEntity(database.rawQuery(INDIVIDUAL_UPDATE_QUERY, arrayOf(uuid)), App.Individuals.COLUMN_INDIVIDUAL_UUID)
+
+    @Throws(IOException::class)
+    private fun IndexWriter.bulkIndexHierarchy() {
+        bulkIndex(R.string.indexing_hierarchy_items, SimpleCursorDocumentSource(database.rawQuery(HIERARCHY_INDEX_QUERY, emptyArray())))
+    }
 
     @Throws(IOException::class)
     private fun IndexWriter.bulkIndexLocations() {
@@ -111,8 +103,8 @@ class Indexer private constructor() {
                 .setContentText(ctx.getString(label))
                 .setOngoing(true)
         var lastUpdate: Long = 0
-        with(source) {
-            use {
+        source.use {
+            with(it) {
                 try {
                     if (next()) {
                         val totalCount = size()
@@ -142,8 +134,8 @@ class Indexer private constructor() {
 
     @Throws(IOException::class)
     private fun IndexWriter.updateIndex(source: DocumentSource, idField: String) {
-        with(source) {
-            use {
+        source.use {
+            with(it) {
                 if (next()) {
                     do {
                         val doc = document
