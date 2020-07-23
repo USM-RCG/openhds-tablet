@@ -163,7 +163,7 @@ object SetupUtils {
                             val intent = Intent(CAMPAIGN_DOWNLOADED_ACTION)
                             clearActiveModules()
                             campaignId = campaign
-                            NavigatorConfig.getInstance().reload()
+                            NavigatorConfig.instance.reload()
                             LocalBroadcastManager
                                     .getInstance(ctx)
                                     .sendBroadcast(intent)
@@ -183,7 +183,7 @@ object SetupUtils {
         }
 
     @JvmStatic
-    fun hasCampaignForms(): Boolean = hasFormsWithIds(NavigatorConfig.getInstance().formIds)
+    fun hasCampaignForms(): Boolean = hasFormsWithIds(NavigatorConfig.instance.formIds)
 
     @JvmStatic
     fun downloadForms(ctx: Context) {

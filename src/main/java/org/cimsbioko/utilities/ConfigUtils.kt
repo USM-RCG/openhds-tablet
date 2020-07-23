@@ -51,16 +51,9 @@ object ConfigUtils {
     }
 
     @JvmStatic
-    fun getActiveModules(ctx: Context): Collection<NavigatorModule> {
-        val cfg = NavigatorConfig.getInstance()
-        val actives: MutableList<NavigatorModule> = ArrayList()
-        val activeModuleNames = getMultiSelectPreference(ctx, ctx.getString(R.string.active_modules_key), cfg.moduleNames)
-        for (module in cfg.modules) {
-            if (activeModuleNames.contains(module.name)) {
-                actives.add(module)
-            }
-        }
-        return actives
+    fun getActiveModules(ctx: Context): Collection<NavigatorModule> = NavigatorConfig.instance.run {
+        val activeModuleNames = getMultiSelectPreference(ctx, ctx.getString(R.string.active_modules_key), moduleNames)
+        modules.filter { it.name in activeModuleNames }
     }
 
     @JvmStatic

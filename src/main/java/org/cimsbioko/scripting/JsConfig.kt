@@ -75,7 +75,7 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
     }
 
     fun getString(key: String?): String = with(bundle) {
-        if (containsKey(key)) getString(key) else "{$key}"
+        return key?.let { if (containsKey(it)) getString(it) else "{$it}" } ?: "{null}"
     }
 
     private val bundle: ResourceBundle

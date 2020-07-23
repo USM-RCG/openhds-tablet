@@ -84,7 +84,7 @@ class FormInstance(
          */
         @JvmStatic
         fun getBinding(data: Document): Binding? =
-                if (isBound(data)) NavigatorConfig.getInstance().getBinding(data.rootElement.getAttribute(BINDING_ATTR).value)
+                if (isBound(data)) NavigatorConfig.instance.getBinding(data.rootElement.getAttribute(BINDING_ATTR).value)
                 else null
 
         /**

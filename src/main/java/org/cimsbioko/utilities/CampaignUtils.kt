@@ -61,7 +61,7 @@ object CampaignUtils {
                     ConfigUtils.clearActiveModules()
                 }
                 SetupUtils.campaignId = campaignId
-                NavigatorConfig.getInstance().reload()
+                NavigatorConfig.instance.reload()
                 SyncUtils.checkForUpdate()
             } else {
                 Log.w(TAG, "failed to install campaign update: move failed")

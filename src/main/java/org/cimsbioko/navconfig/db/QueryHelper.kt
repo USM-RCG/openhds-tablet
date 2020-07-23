@@ -5,7 +5,7 @@ import org.cimsbioko.data.Gateway
 import org.cimsbioko.data.GatewayRegistry
 import org.cimsbioko.navconfig.Hierarchy
 import org.cimsbioko.navconfig.NavigatorConfig
-import java.util.ArrayList
+import java.util.*
 
 interface QueryHelper {
     fun getAll(level: String): List<DataWrapper>
@@ -16,12 +16,12 @@ interface QueryHelper {
 
 object DefaultQueryHelper : QueryHelper {
 
-    private fun isAdminLevel(level: String): Boolean = NavigatorConfig.getInstance().adminLevels.contains(level)
+    private fun isAdminLevel(level: String): Boolean = NavigatorConfig.instance.adminLevels.contains(level)
 
-    private fun isTopLevel(level: String): Boolean = NavigatorConfig.getInstance().topLevel == level
+    private fun isTopLevel(level: String): Boolean = NavigatorConfig.instance.topLevel == level
 
     private fun isLastAdminLevel(level: String): Boolean {
-        return NavigatorConfig.getInstance().adminLevels.let { it.isNotEmpty() && it[it.lastIndex] == level }
+        return NavigatorConfig.instance.adminLevels.let { it.isNotEmpty() && it[it.lastIndex] == level }
     }
 
     private fun getLevelGateway(level: String): Gateway<*>? = if (isAdminLevel(level)) {
@@ -67,18 +67,19 @@ object DefaultQueryHelper : QueryHelper {
     }
 
     override fun getParent(level: String, uuid: String): DataWrapper? {
-        val parentLevel = NavigatorConfig.getInstance().getParentLevel(level)
-        return if (isAdminLevel(level) && !isTopLevel(level)) {
-            get(parentLevel, GatewayRegistry.getLocationHierarchyGateway().findById(uuid).first.parentUuid)
-        } else {
-            when (level) {
-                Hierarchy.HOUSEHOLD -> {
-                    get(parentLevel, GatewayRegistry.getLocationGateway().findById(uuid).first.hierarchyUuid)
+        return NavigatorConfig.instance.getParentLevel(level)?.let {
+            if (isAdminLevel(level) && !isTopLevel(level)) {
+                get(it, GatewayRegistry.getLocationHierarchyGateway().findById(uuid).first.parentUuid)
+            } else {
+                when (level) {
+                    Hierarchy.HOUSEHOLD -> {
+                        get(it, GatewayRegistry.getLocationGateway().findById(uuid).first.hierarchyUuid)
+                    }
+                    Hierarchy.INDIVIDUAL -> {
+                        get(it, GatewayRegistry.getIndividualGateway().findById(uuid).first.currentResidenceUuid)
+                    }
+                    else -> null
                 }
-                Hierarchy.INDIVIDUAL -> {
-                    get(parentLevel, GatewayRegistry.getIndividualGateway().findById(uuid).first.currentResidenceUuid)
-                }
-                else -> null
             }
         }
     }
