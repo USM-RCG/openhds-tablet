@@ -43,17 +43,11 @@ object IOUtils {
      * @param closeables a list of possibly null closeable references or null
      */
     @JvmStatic
-    fun close(vararg closeables: Closeable?) {
-        if (closeables != null) {
-            for (c in closeables) {
-                if (c != null) {
-                    try {
-                        c.close()
-                    } catch (e: IOException) {
-                        Log.w(TAG, "failure during close", e)
-                    }
-                }
-            }
+    fun close(vararg closeables: Closeable?) = closeables.filterNotNull().forEach {
+        try {
+            it.close()
+        } catch (e: IOException) {
+            Log.w(TAG, "failure during close", e)
         }
     }
 
