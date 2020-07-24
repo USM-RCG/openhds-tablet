@@ -23,15 +23,15 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
     }
 
     public Query<LocationHierarchy> findByLevel(String level) {
-        return new Query<>(this, tableUri, COLUMN_HIERARCHY_LEVEL, level, COLUMN_HIERARCHY_UUID);
+        return new Query<>(this, getTableUri(), COLUMN_HIERARCHY_LEVEL, level, COLUMN_HIERARCHY_UUID);
     }
 
     public Query<LocationHierarchy> findByParent(String parentId) {
-        return new Query<>(this, tableUri, COLUMN_HIERARCHY_PARENT, parentId, COLUMN_HIERARCHY_EXTID);
+        return new Query<>(this, getTableUri(), COLUMN_HIERARCHY_PARENT, parentId, COLUMN_HIERARCHY_EXTID);
     }
 
     @Override
-    String getId(LocationHierarchy entity) {
+    public String getId(LocationHierarchy entity) {
         return entity.getUuid();
     }
 
@@ -46,7 +46,7 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
     }
 
     @Override
-    ContentValuesConverter<LocationHierarchy> getContentValuesConverter() {
+    public ContentValuesConverter<LocationHierarchy> getContentValuesConverter() {
         return CONTENT_VALUES_CONVERTER;
     }
 }

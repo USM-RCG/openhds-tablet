@@ -24,11 +24,11 @@ public class FieldWorkerGateway extends Gateway<FieldWorker> {
     }
 
     public Query<FieldWorker> findByExtId(String extId) {
-        return new Query<>(this, tableUri, COLUMN_FIELD_WORKER_EXTID, extId, COLUMN_FIELD_WORKER_UUID);
+        return new Query<>(this, getTableUri(), COLUMN_FIELD_WORKER_EXTID, extId, COLUMN_FIELD_WORKER_UUID);
     }
 
     @Override
-    String getId(FieldWorker entity) {
+    public String getId(FieldWorker entity) {
         return entity.getUuid();
     }
 
@@ -43,7 +43,7 @@ public class FieldWorkerGateway extends Gateway<FieldWorker> {
     }
 
     @Override
-    ContentValuesConverter<FieldWorker> getContentValuesConverter() {
+    public ContentValuesConverter<FieldWorker> getContentValuesConverter() {
         return CONTENT_VALUES_CONVERTER;
     }
 }

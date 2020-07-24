@@ -26,11 +26,11 @@ public class IndividualGateway extends Gateway<Individual> {
     }
 
     public Query<Individual> findByResidency(String residencyId) {
-        return new Query<>(this, tableUri, COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, residencyId, COLUMN_INDIVIDUAL_EXTID);
+        return new Query<>(this, getTableUri(), COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, residencyId, COLUMN_INDIVIDUAL_EXTID);
     }
 
     @Override
-    String getId(Individual entity) {
+    public String getId(Individual entity) {
         return entity.getUuid();
     }
 
@@ -45,7 +45,7 @@ public class IndividualGateway extends Gateway<Individual> {
     }
 
     @Override
-    ContentValuesConverter<Individual> getContentValuesConverter() {
+    public ContentValuesConverter<Individual> getContentValuesConverter() {
         return CONTENT_VALUES_CONVERTER;
     }
 }
