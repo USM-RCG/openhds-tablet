@@ -7,7 +7,7 @@ import org.cimsbioko.navconfig.UsedByJSConfig
 /**
  * Base class for simplistic data mappers supporting CRUD operations
  */
-abstract class Gateway<T> internal constructor(
+abstract class Gateway<T : Any> internal constructor(
         val tableUri: Uri,
         private val idColumnName: String
 ) {
@@ -27,7 +27,7 @@ abstract class Gateway<T> internal constructor(
 
     abstract fun getId(entity: T): String
     abstract val entityConverter: CursorConverter<T>
-    abstract val wrapperConverter: CursorConverter<DataWrapper?>
+    abstract val wrapperConverter: CursorConverter<DataWrapper>
     abstract val contentValuesConverter: ContentValuesConverter<T>
 
     // find entities with given id

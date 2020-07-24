@@ -5,7 +5,7 @@ import android.database.Cursor
 internal object CursorConvert {
 
     @JvmStatic
-    fun <X> list(cursor: Cursor?, converter: CursorConverter<X>): List<X> =
+    fun <X : Any> list(cursor: Cursor?, converter: CursorConverter<X>): List<X> =
             ArrayList<X>().apply {
                 cursor?.use {
                     while (it.moveToNext()) {
@@ -15,7 +15,7 @@ internal object CursorConvert {
             }
 
     @JvmStatic
-    fun <Y> one(cursor: Cursor?, converter: CursorConverter<Y>): Y? =
+    fun <Y : Any> one(cursor: Cursor?, converter: CursorConverter<Y>): Y? =
             cursor?.use { if (it.moveToFirst()) converter.convert(it) else null }
 
     @JvmStatic

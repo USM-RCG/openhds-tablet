@@ -5,6 +5,6 @@ import android.content.ContentValues
 /**
  * Convert an entity to database content values and convert a database cursor to an entity.
  */
-interface ContentValuesConverter<T> {
+interface ContentValuesConverter<T : Any> {
     fun toContentValues(entity: T): ContentValues
 }

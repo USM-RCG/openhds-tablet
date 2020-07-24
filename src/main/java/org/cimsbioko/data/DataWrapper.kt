@@ -23,11 +23,8 @@ data class DataWrapper(
         val name: String
 ) : Parcelable {
 
-    private var stringsPayload: MutableMap<Int, String?> = HashMap()
-    private var stringIdsPayload: MutableMap<Int, Int> = HashMap()
-
-    fun getStringsPayload(): Map<Int, String?> = stringsPayload
-    fun getStringIdsPayload(): Map<Int, Int> = stringIdsPayload
+    var stringsPayload: MutableMap<Int, String?> = HashMap()
+    var stringIdsPayload: MutableMap<Int, Int> = HashMap()
 
     override fun toString(): String =
             "QueryResult[name: $name extId: $extId category: $category + payload size: ${stringsPayload.size}]"
