@@ -30,14 +30,6 @@ abstract class Gateway<T : Any> internal constructor(
     abstract val wrapperConverter: CursorConverter<DataWrapper>
     abstract val contentValuesConverter: ContentValuesConverter<T>
 
-    // find entities with given id
-    fun findById(id: String): Query<T> {
-        return Query(this, tableUri, idColumnName, id, idColumnName)
-    }
-
-    // find entities ordered by id, might be huge
-    fun findAll(): Query<T> {
-        return Query(this, tableUri, null, null, idColumnName)
-    }
-
+    fun findById(id: String): Query<T> = Query(this, tableUri, idColumnName, id, idColumnName)
+    fun findAll(): Query<T> = Query(this, tableUri, null, null, idColumnName)
 }

@@ -9,18 +9,18 @@ object Gateways {
 
     @get:UsedByJSConfig
     val individuals: IndividualGateway
-        get() = GatewayRegistry.getIndividualGateway()
+        get() = GatewayRegistry.individualGateway
 
     @get:UsedByJSConfig
     val locations: LocationGateway
-        get() = GatewayRegistry.getLocationGateway()
+        get() = GatewayRegistry.locationGateway
 
     @get:UsedByJSConfig
     val hierarchy: LocationHierarchyGateway
-        get() = GatewayRegistry.getLocationHierarchyGateway()
+        get() = GatewayRegistry.locationHierarchyGateway
 
     @get:UsedByJSConfig
     val fieldworkers: FieldWorkerGateway
-        get() = GatewayRegistry.getFieldWorkerGateway()
+        get() = GatewayRegistry.fieldWorkerGateway
 
 }
