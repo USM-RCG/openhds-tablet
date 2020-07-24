@@ -35,8 +35,7 @@ class FormChecklistAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View =
             (convertView ?: inflater.inflate(R.layout.form_instance_check_item, null)).also { view ->
-
-                getItem(position)?.also { instance ->
+                instances[position].also { instance ->
                     configureFormListItem(view, instance)
                     view.findViewById<ViewGroup>(R.id.form_instance_item_area).also { item ->
                         item.tag = instance
