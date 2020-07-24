@@ -18,7 +18,7 @@ abstract class Gateway<T : Any> internal constructor(
         val contentValues = contentValuesConverter.toContentValues(entity)
         val id = getId(entity)
         return if (findById(id).exists()) {
-            resolver.update(tableUri, contentValues, WhereUtils.buildWhereStatement(arrayOf(idColumnName), WhereUtils.EQUALS), arrayOf(id))
+            resolver.update(tableUri, contentValues, WhereUtils.buildWhereStatement(arrayOf(idColumnName), EQUALS), arrayOf(id))
             false
         } else {
             null != resolver.insert(tableUri, contentValues)
