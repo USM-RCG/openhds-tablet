@@ -35,7 +35,7 @@ object DefaultQueryHelper : QueryHelper {
         else -> gateway?.findAll()?.wrapperList ?: emptyList()
     }
 
-    override fun getChildren(parent: DataWrapper, childLevel: String): List<DataWrapper> = parent.category?.let { lvl ->
+    override fun getChildren(parent: DataWrapper, childLevel: String): List<DataWrapper> = parent.category.let { lvl ->
         when {
             isLastAdminLevel(lvl) -> getLocationGateway().findByHierarchy(parent.uuid).wrapperList
             isAdminLevel(lvl) -> getLocationHierarchyGateway().findByParent(parent.uuid).wrapperList

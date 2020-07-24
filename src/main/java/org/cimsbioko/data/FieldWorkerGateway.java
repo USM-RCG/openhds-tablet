@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import org.cimsbioko.App;
 import org.cimsbioko.model.core.FieldWorker;
+import org.jetbrains.annotations.NotNull;
 
 import static org.cimsbioko.App.FieldWorkers.*;
 import static org.cimsbioko.data.CursorConvert.extractString;
@@ -49,7 +50,8 @@ public class FieldWorkerGateway extends Gateway<FieldWorker> {
 
 class FieldWorkerEntityConverter implements CursorConverter<FieldWorker> {
     @Override
-    public FieldWorker convert(Cursor c) {
+    @NotNull
+    public FieldWorker convert(@NotNull Cursor c) {
         FieldWorker fieldWorker = new FieldWorker();
         fieldWorker.setExtId(extractString(c, COLUMN_FIELD_WORKER_EXTID));
         fieldWorker.setIdPrefix(extractString(c, COLUMN_FIELD_WORKER_ID_PREFIX));
@@ -62,20 +64,25 @@ class FieldWorkerEntityConverter implements CursorConverter<FieldWorker> {
 }
 
 class FieldWorkerWrapperConverter implements CursorConverter<DataWrapper> {
+
+    public static final String FIELDWORKER = "fieldworker";
+
     @Override
-    public DataWrapper convert(Cursor c) {
-        DataWrapper dataWrapper = new DataWrapper();
-        dataWrapper.setExtId(extractString(c, COLUMN_FIELD_WORKER_EXTID));
-        dataWrapper.setName(extractString(c, COLUMN_FIELD_WORKER_FIRST_NAME) + " " + extractString(c, COLUMN_FIELD_WORKER_LAST_NAME));
-        dataWrapper.setUuid(extractString(c, COLUMN_FIELD_WORKER_UUID));
-        dataWrapper.setCategory("fieldworker");
-        return dataWrapper;
+    @NotNull
+    public DataWrapper convert(@NotNull Cursor c) {
+        return new DataWrapper(
+                extractString(c, COLUMN_FIELD_WORKER_UUID),
+                FIELDWORKER,
+                extractString(c, COLUMN_FIELD_WORKER_EXTID),
+                extractString(c, COLUMN_FIELD_WORKER_FIRST_NAME) + " " + extractString(c, COLUMN_FIELD_WORKER_LAST_NAME)
+        );
     }
 }
 
 class FieldWorkerContentValuesConverter implements ContentValuesConverter<FieldWorker> {
     @Override
-    public ContentValues toContentValues(FieldWorker fieldWorker) {
+    @NotNull
+    public ContentValues toContentValues(@NotNull FieldWorker fieldWorker) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_FIELD_WORKER_EXTID, fieldWorker.getExtId());
         contentValues.put(COLUMN_FIELD_WORKER_ID_PREFIX, fieldWorker.getIdPrefix());

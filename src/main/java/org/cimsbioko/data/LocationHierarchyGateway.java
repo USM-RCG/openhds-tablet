@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import org.cimsbioko.App;
 import org.cimsbioko.model.core.LocationHierarchy;
+import org.jetbrains.annotations.NotNull;
 
 import static org.cimsbioko.App.HierarchyItems.*;
 import static org.cimsbioko.data.CursorConvert.extractString;
@@ -53,7 +54,8 @@ public class LocationHierarchyGateway extends Gateway<LocationHierarchy> {
 class LocationHierarchyEntityConverter implements CursorConverter<LocationHierarchy> {
 
     @Override
-    public LocationHierarchy convert(Cursor c) {
+    @NotNull
+    public LocationHierarchy convert(@NotNull Cursor c) {
         LocationHierarchy locationHierarchy = new LocationHierarchy();
         locationHierarchy.setUuid(extractString(c, COLUMN_HIERARCHY_UUID));
         locationHierarchy.setExtId(extractString(c, COLUMN_HIERARCHY_EXTID));
@@ -67,20 +69,22 @@ class LocationHierarchyEntityConverter implements CursorConverter<LocationHierar
 
 class LocationHierarchyWrapperConverter implements CursorConverter<DataWrapper> {
     @Override
-    public DataWrapper convert(Cursor c) {
-        DataWrapper dataWrapper = new DataWrapper();
-        dataWrapper.setExtId(extractString(c, COLUMN_HIERARCHY_EXTID));
-        dataWrapper.setUuid(extractString(c, COLUMN_HIERARCHY_UUID));
-        dataWrapper.setName(extractString(c, COLUMN_HIERARCHY_NAME));
-        dataWrapper.setCategory(extractString(c, COLUMN_HIERARCHY_LEVEL));
-        return dataWrapper;
+    @NotNull
+    public DataWrapper convert(@NotNull Cursor c) {
+        return new DataWrapper(
+                extractString(c, COLUMN_HIERARCHY_UUID),
+                extractString(c, COLUMN_HIERARCHY_LEVEL),
+                extractString(c, COLUMN_HIERARCHY_EXTID),
+                extractString(c, COLUMN_HIERARCHY_NAME)
+        );
     }
 }
 
 class LocationHierarchyContentValuesConverter implements ContentValuesConverter<LocationHierarchy> {
 
     @Override
-    public ContentValues toContentValues(LocationHierarchy locationHierarchy) {
+    @NotNull
+    public ContentValues toContentValues(@NotNull LocationHierarchy locationHierarchy) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_HIERARCHY_UUID, locationHierarchy.getUuid());
         contentValues.put(COLUMN_HIERARCHY_EXTID, locationHierarchy.getExtId());

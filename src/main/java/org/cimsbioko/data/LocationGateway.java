@@ -6,6 +6,7 @@ import android.database.Cursor;
 import org.cimsbioko.App;
 import org.cimsbioko.R;
 import org.cimsbioko.model.core.Location;
+import org.jetbrains.annotations.NotNull;
 
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_ATTRS;
 import static org.cimsbioko.App.Locations.COLUMN_LOCATION_DESCRIPTION;
@@ -58,7 +59,8 @@ public class LocationGateway extends Gateway<Location> {
 
 class LocationEntityConverter implements CursorConverter<Location> {
     @Override
-    public Location convert(Cursor c) {
+    @NotNull
+    public Location convert(@NotNull Cursor c) {
         Location location = new Location();
         location.setUuid(extractString(c, COLUMN_LOCATION_UUID));
         location.setExtId(extractString(c, COLUMN_LOCATION_EXTID));
@@ -76,13 +78,15 @@ class LocationEntityConverter implements CursorConverter<Location> {
 
 class LocationWrapperConverter implements CursorConverter<DataWrapper> {
     @Override
-    public DataWrapper convert(Cursor c) {
-        DataWrapper dataWrapper = new DataWrapper();
-        dataWrapper.setUuid(extractString(c, COLUMN_LOCATION_UUID));
-        dataWrapper.setExtId(extractString(c, COLUMN_LOCATION_EXTID));
-        dataWrapper.setName(extractString(c, COLUMN_LOCATION_NAME));
+    @NotNull
+    public DataWrapper convert(@NotNull Cursor c) {
+        DataWrapper dataWrapper = new DataWrapper(
+                extractString(c, COLUMN_LOCATION_UUID),
+                HOUSEHOLD,
+                extractString(c, COLUMN_LOCATION_EXTID),
+                extractString(c, COLUMN_LOCATION_NAME)
+        );
         dataWrapper.getStringsPayload().put(R.string.location_description_label, extractString(c, COLUMN_LOCATION_DESCRIPTION));
-        dataWrapper.setCategory(HOUSEHOLD);
         return dataWrapper;
     }
 }
@@ -90,7 +94,8 @@ class LocationWrapperConverter implements CursorConverter<DataWrapper> {
 class LocationContentValuesConverter implements ContentValuesConverter<Location> {
 
     @Override
-    public ContentValues toContentValues(Location location) {
+    @NotNull
+    public ContentValues toContentValues(@NotNull Location location) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_LOCATION_UUID, location.getUuid());
         contentValues.put(COLUMN_LOCATION_EXTID, location.getExtId());
