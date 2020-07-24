@@ -32,7 +32,7 @@ class Query<T : Any> internal constructor(
     private fun select(): Cursor? {
         return App.instance
                 .contentResolver
-                .query(tableUri, null, buildWhereStatement(columnNames!!, operator), columnValues, columnOrderBy)
+                .query(tableUri, null, buildWhereStatement(columnNames ?: emptyArray(), operator), columnValues, columnOrderBy)
     }
 
     val first: T?
