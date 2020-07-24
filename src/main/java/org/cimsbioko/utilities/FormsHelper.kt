@@ -24,7 +24,7 @@ object FormsHelper {
             InstanceColumns.CAN_EDIT_WHEN_COMPLETE)
 
     private val contentResolver: ContentResolver
-        get() = App.getApp().contentResolver
+        get() = App.instance.contentResolver
 
     @JvmStatic
     val allUnsentFormInstances: List<FormInstance>

@@ -143,7 +143,7 @@ object SyncUtils {
      */
     @JvmStatic
     fun checkForUpdate() {
-        val ctx: Context = App.getApp()
+        val ctx: Context = App.instance
         val manager = AccountManager.get(ctx)
         val accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE)
         if (accounts.isNotEmpty()) {

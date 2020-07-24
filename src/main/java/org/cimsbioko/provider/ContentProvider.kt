@@ -40,7 +40,7 @@ class ContentProvider : ContentProvider() {
 
         private val individualProjection = mapOf(
                 // general individual columns
-                App.Individuals._ID to App.Individuals._ID,
+                App.Individuals.ID to App.Individuals.ID,
                 App.Individuals.COLUMN_INDIVIDUAL_UUID to App.Individuals.COLUMN_INDIVIDUAL_UUID,
                 App.Individuals.COLUMN_INDIVIDUAL_DOB to App.Individuals.COLUMN_INDIVIDUAL_DOB,
                 App.Individuals.COLUMN_INDIVIDUAL_EXTID to App.Individuals.COLUMN_INDIVIDUAL_EXTID,
@@ -63,7 +63,7 @@ class ContentProvider : ContentProvider() {
         )
 
         private val locationProjection = mapOf(
-                App.Locations._ID to App.Locations._ID,
+                App.Locations.ID to App.Locations.ID,
                 App.Locations.COLUMN_LOCATION_EXTID to App.Locations.COLUMN_LOCATION_EXTID,
                 App.Locations.COLUMN_LOCATION_UUID to App.Locations.COLUMN_LOCATION_UUID,
                 App.Locations.COLUMN_LOCATION_HIERARCHY_UUID to App.Locations.COLUMN_LOCATION_HIERARCHY_UUID,
@@ -75,7 +75,7 @@ class ContentProvider : ContentProvider() {
         )
 
         private val hierarchyProjection = mapOf(
-                App.HierarchyItems._ID to App.HierarchyItems._ID,
+                App.HierarchyItems.ID to App.HierarchyItems.ID,
                 App.HierarchyItems.COLUMN_HIERARCHY_EXTID to App.HierarchyItems.COLUMN_HIERARCHY_EXTID,
                 App.HierarchyItems.COLUMN_HIERARCHY_UUID to App.HierarchyItems.COLUMN_HIERARCHY_UUID,
                 App.HierarchyItems.COLUMN_HIERARCHY_LEVEL to App.HierarchyItems.COLUMN_HIERARCHY_LEVEL,
@@ -85,7 +85,7 @@ class ContentProvider : ContentProvider() {
         )
 
         private val fieldworkerProjection = mapOf(
-                App.FieldWorkers._ID to App.FieldWorkers._ID,
+                App.FieldWorkers.ID to App.FieldWorkers.ID,
                 App.FieldWorkers.COLUMN_FIELD_WORKER_EXTID to App.FieldWorkers.COLUMN_FIELD_WORKER_EXTID,
                 App.FieldWorkers.COLUMN_FIELD_WORKER_UUID to App.FieldWorkers.COLUMN_FIELD_WORKER_UUID,
                 App.FieldWorkers.COLUMN_FIELD_WORKER_ID_PREFIX to App.FieldWorkers.COLUMN_FIELD_WORKER_ID_PREFIX,
@@ -103,7 +103,7 @@ class ContentProvider : ContentProvider() {
         private const val FIELDWORKERS = 13
         private const val FIELDWORKER_ID = 14
 
-        val databaseHelper: DatabaseHelper by lazy { DatabaseHelper(App.getApp().applicationContext) }
+        val databaseHelper: DatabaseHelper by lazy { DatabaseHelper(App.instance.applicationContext) }
     }
 
     /**
@@ -133,7 +133,7 @@ class ContentProvider : ContentProvider() {
             INDIVIDUAL_ID -> {
                 tables = App.Individuals.TABLE_NAME
                 setProjectionMap(individualProjection)
-                appendWhere("${App.Individuals._ID} = ${uri.pathSegments[App.Individuals.NOTE_ID_PATH_POSITION]}")
+                appendWhere("${App.Individuals.ID} = ${uri.pathSegments[1]}")
             }
             LOCATIONS -> {
                 tables = App.Locations.TABLE_NAME
@@ -142,7 +142,7 @@ class ContentProvider : ContentProvider() {
             LOCATION_ID -> {
                 tables = App.Locations.TABLE_NAME
                 setProjectionMap(locationProjection)
-                appendWhere("${App.Locations._ID} = ${uri.pathSegments[App.Locations.NOTE_ID_PATH_POSITION]}")
+                appendWhere("${App.Locations.ID} = ${uri.pathSegments[1]}")
             }
             HIERARCHYITEMS -> {
                 tables = App.HierarchyItems.TABLE_NAME
@@ -151,7 +151,7 @@ class ContentProvider : ContentProvider() {
             HIERARCHYITEM_ID -> {
                 tables = App.HierarchyItems.TABLE_NAME
                 setProjectionMap(hierarchyProjection)
-                appendWhere("${App.HierarchyItems._ID} = ${uri.pathSegments[App.HierarchyItems.NOTE_ID_PATH_POSITION]}")
+                appendWhere("${App.HierarchyItems.ID} = ${uri.pathSegments[1]}")
             }
             FIELDWORKERS -> {
                 tables = App.FieldWorkers.TABLE_NAME
@@ -160,7 +160,7 @@ class ContentProvider : ContentProvider() {
             FIELDWORKER_ID -> {
                 tables = App.FieldWorkers.TABLE_NAME
                 setProjectionMap(fieldworkerProjection)
-                appendWhere("${App.FieldWorkers._ID} = ${uri.pathSegments[App.FieldWorkers.ID_PATH_POSITION]}")
+                appendWhere("${App.FieldWorkers.ID} = ${uri.pathSegments[1]}")
             }
             else -> throw IllegalArgumentException("Unknown URI $uri")
         }
@@ -238,22 +238,22 @@ class ContentProvider : ContentProvider() {
         when (sUriMatcher.match(uri)) {
             INDIVIDUALS -> delete(App.Individuals.TABLE_NAME, where, whereArgs)
             INDIVIDUAL_ID -> {
-                finalWhere = buildFinalWhere(uri, App.Individuals.NOTE_ID_PATH_POSITION, where)
+                finalWhere = buildFinalWhere(uri, 1, where)
                 delete(App.Individuals.TABLE_NAME, finalWhere, whereArgs)
             }
             LOCATIONS -> delete(App.Locations.TABLE_NAME, where, whereArgs)
             LOCATION_ID -> {
-                finalWhere = buildFinalWhere(uri, App.Locations.NOTE_ID_PATH_POSITION, where)
+                finalWhere = buildFinalWhere(uri, 1, where)
                 delete(App.Locations.TABLE_NAME, finalWhere, whereArgs)
             }
             HIERARCHYITEMS -> delete(App.HierarchyItems.TABLE_NAME, where, whereArgs)
             HIERARCHYITEM_ID -> {
-                finalWhere = buildFinalWhere(uri, App.HierarchyItems.NOTE_ID_PATH_POSITION, where)
+                finalWhere = buildFinalWhere(uri, 1, where)
                 delete(App.HierarchyItems.TABLE_NAME, finalWhere, whereArgs)
             }
             FIELDWORKERS -> delete(App.FieldWorkers.TABLE_NAME, where, whereArgs)
             FIELDWORKER_ID -> {
-                finalWhere = buildFinalWhere(uri, App.FieldWorkers.ID_PATH_POSITION, where)
+                finalWhere = buildFinalWhere(uri, 1, where)
                 delete(App.FieldWorkers.TABLE_NAME, finalWhere, whereArgs)
             }
             else -> throw IllegalArgumentException("Unknown URI $uri")
@@ -280,7 +280,7 @@ class ContentProvider : ContentProvider() {
                 uuid = values.getAsString(App.Individuals.COLUMN_INDIVIDUAL_UUID)
             }
             INDIVIDUAL_ID -> {
-                finalWhere = buildFinalWhere(uri, App.Individuals.NOTE_ID_PATH_POSITION, where)
+                finalWhere = buildFinalWhere(uri, 1, where)
                 count = db.update(App.Individuals.TABLE_NAME, values, finalWhere, whereArgs)
                 reindexType = EntityType.INDIVIDUAL
                 uuid = values.getAsString(App.Individuals.COLUMN_INDIVIDUAL_UUID)
@@ -291,7 +291,7 @@ class ContentProvider : ContentProvider() {
                 uuid = values.getAsString(App.Locations.COLUMN_LOCATION_UUID)
             }
             LOCATION_ID -> {
-                finalWhere = buildFinalWhere(uri, App.Locations.NOTE_ID_PATH_POSITION, where)
+                finalWhere = buildFinalWhere(uri, 1, where)
                 count = db.update(App.Locations.TABLE_NAME, values, finalWhere, whereArgs)
                 reindexType = EntityType.LOCATION
                 uuid = values.getAsString(App.Locations.COLUMN_LOCATION_UUID)
@@ -302,7 +302,7 @@ class ContentProvider : ContentProvider() {
                 uuid = values.getAsString(App.HierarchyItems.COLUMN_HIERARCHY_UUID)
             }
             HIERARCHYITEM_ID -> {
-                finalWhere = buildFinalWhere(uri, App.HierarchyItems.NOTE_ID_PATH_POSITION, where)
+                finalWhere = buildFinalWhere(uri, 1, where)
                 count = db.update(App.HierarchyItems.TABLE_NAME, values, finalWhere, whereArgs)
                 reindexType = EntityType.HIERARCHY
                 uuid = values.getAsString(App.HierarchyItems.COLUMN_HIERARCHY_UUID)
@@ -310,7 +310,7 @@ class ContentProvider : ContentProvider() {
             FIELDWORKERS -> count = db.update(App.FieldWorkers.TABLE_NAME, values, where,
                     whereArgs)
             FIELDWORKER_ID -> {
-                finalWhere = buildFinalWhere(uri, App.FieldWorkers.ID_PATH_POSITION, where)
+                finalWhere = buildFinalWhere(uri, 1, where)
                 count = db.update(App.FieldWorkers.TABLE_NAME, values, finalWhere, whereArgs)
             }
             else -> throw IllegalArgumentException("Unknown URI $uri")
@@ -327,7 +327,7 @@ class ContentProvider : ContentProvider() {
         override fun onCreate(db: SQLiteDatabase) {
             with(db) {
                 execSQL("""CREATE TABLE ${App.Individuals.TABLE_NAME} (
-                           ${App.Individuals._ID} INTEGER,
+                           ${App.Individuals.ID} INTEGER,
                            ${App.Individuals.COLUMN_INDIVIDUAL_UUID} TEXT PRIMARY KEY NOT NULL,
                            ${App.Individuals.COLUMN_INDIVIDUAL_DOB} TEXT,
                            ${App.Individuals.COLUMN_INDIVIDUAL_EXTID} TEXT NOT NULL,
@@ -350,7 +350,7 @@ class ContentProvider : ContentProvider() {
                 execSQL("CREATE INDEX INDIVIDUAL_RESIDENCY_INDEX ON ${App.Individuals.TABLE_NAME}(${App.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID});")
 
                 execSQL("""CREATE TABLE ${App.Locations.TABLE_NAME} (
-                           ${App.Locations._ID} INTEGER,
+                           ${App.Locations.ID} INTEGER,
                            ${App.Locations.COLUMN_LOCATION_EXTID} TEXT NOT NULL,
                            ${App.Locations.COLUMN_LOCATION_UUID} TEXT NOT NULL PRIMARY KEY,
                            ${App.Locations.COLUMN_LOCATION_HIERARCHY_UUID} TEXT NOT NULL,
@@ -364,7 +364,7 @@ class ContentProvider : ContentProvider() {
                 execSQL("CREATE INDEX LOCATION_UUID_INDEX ON ${App.Locations.TABLE_NAME}(${App.Locations.COLUMN_LOCATION_UUID});")
 
                 execSQL("""CREATE TABLE ${App.HierarchyItems.TABLE_NAME} (
-                           ${App.HierarchyItems._ID} INTEGER,
+                           ${App.HierarchyItems.ID} INTEGER,
                            ${App.HierarchyItems.COLUMN_HIERARCHY_UUID} TEXT NOT NULL PRIMARY KEY,
                            ${App.HierarchyItems.COLUMN_HIERARCHY_EXTID} TEXT NOT NULL,
                            ${App.HierarchyItems.COLUMN_HIERARCHY_LEVEL} TEXT NOT NULL,
@@ -376,7 +376,7 @@ class ContentProvider : ContentProvider() {
                 execSQL("CREATE INDEX LOCATIONHIERARCHY_EXTID_INDEX ON ${App.HierarchyItems.TABLE_NAME}(${App.HierarchyItems.COLUMN_HIERARCHY_EXTID});")
 
                 execSQL("""CREATE TABLE ${App.FieldWorkers.TABLE_NAME} (
-                           ${App.FieldWorkers._ID} INTEGER,
+                           ${App.FieldWorkers.ID} INTEGER,
                            ${App.FieldWorkers.COLUMN_FIELD_WORKER_UUID} TEXT PRIMARY KEY NOT NULL,
                            ${App.FieldWorkers.COLUMN_FIELD_WORKER_EXTID} TEXT NOT NULL,
                            ${App.FieldWorkers.COLUMN_FIELD_WORKER_ID_PREFIX} TEXT NOT NULL,

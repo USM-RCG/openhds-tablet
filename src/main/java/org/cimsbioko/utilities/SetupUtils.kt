@@ -176,10 +176,10 @@ object SetupUtils {
 
     @JvmStatic
     var campaignId: String?
-        get() = getSharedPrefs(App.getApp()).getString(CampaignUpdateService.CIMS_CAMPAIGN_ID, null)
+        get() = getSharedPrefs(App.instance).getString(CampaignUpdateService.CIMS_CAMPAIGN_ID, null)
         set(campaignId) {
             Log.i(TAG, "campaign id set to '$campaignId'")
-            getSharedPrefs(App.getApp()).edit().putString(CampaignUpdateService.CIMS_CAMPAIGN_ID, campaignId).apply()
+            getSharedPrefs(App.instance).edit().putString(CampaignUpdateService.CIMS_CAMPAIGN_ID, campaignId).apply()
         }
 
     @JvmStatic

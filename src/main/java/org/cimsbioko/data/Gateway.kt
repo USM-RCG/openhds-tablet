@@ -14,7 +14,7 @@ abstract class Gateway<T : Any> internal constructor(
 
     @UsedByJSConfig
     fun insertOrUpdate(entity: T): Boolean {
-        val resolver = App.getApp().contentResolver
+        val resolver = App.instance.contentResolver
         val contentValues = contentValuesConverter.toContentValues(entity)
         val id = getId(entity)
         return if (findById(id).exists()) {

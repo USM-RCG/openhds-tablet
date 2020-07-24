@@ -11,7 +11,7 @@ import java.io.IOException
 object AccountUtils {
 
     private val accountManager: AccountManager
-        get() = AccountManager.get(App.getApp())
+        get() = AccountManager.get(App.instance)
 
     private val accounts: Array<Account>
         get() = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE)

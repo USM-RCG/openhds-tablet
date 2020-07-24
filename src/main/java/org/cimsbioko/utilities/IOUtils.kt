@@ -15,7 +15,7 @@ object IOUtils {
      */
     @JvmStatic
     val externalDir: File
-        get() = File(App.getApp().getExternalFilesDir(null), "cims")
+        get() = File(App.instance.getExternalFilesDir(null), "cims")
 
     /**
      * Copies the contents from one stream to another.

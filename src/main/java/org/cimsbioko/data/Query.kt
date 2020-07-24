@@ -30,7 +30,7 @@ class Query<T : Any> internal constructor(
     private val columnValues: Array<String>? = columnValue?.let { arrayOf(it) }
 
     private fun select(): Cursor? {
-        return App.getApp()
+        return App.instance
                 .contentResolver
                 .query(tableUri, null, buildWhereStatement(columnNames!!, operator), columnValues, columnOrderBy)
     }

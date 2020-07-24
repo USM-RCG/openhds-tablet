@@ -86,7 +86,7 @@ object FormUtils {
     @JvmStatic
     @Throws(IOException::class)
     fun formFile(): File {
-        val genDir = File(App.getApp().cacheDir, "generated_instances").also { it.mkdir() }
+        val genDir = File(App.instance.cacheDir, "generated_instances").also { it.mkdir() }
         return File.createTempFile("starter", FILE_EXTENSION, genDir)
     }
 

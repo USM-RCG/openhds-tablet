@@ -12,7 +12,7 @@ import java.io.IOException
 object SearchIndex {
 
     private val searcherManager by lazy {
-        val indexFile = File(App.getApp().applicationContext.filesDir, "search-index")
+        val indexFile = File(App.instance.applicationContext.filesDir, "search-index")
         val indexDir: Directory = FSDirectory.open(indexFile)
         SearcherManager(indexDir, SearcherFactory())
     }

@@ -58,7 +58,7 @@ object ConfigUtils {
 
     @JvmStatic
     fun clearActiveModules() {
-        val ctx: Context = App.getApp()
+        val ctx: Context = App.instance
         getSharedPrefs(ctx).edit().remove(ctx.getString(R.string.active_modules_key)).apply()
         Log.i(TAG, "cleared active modules from preferences")
     }

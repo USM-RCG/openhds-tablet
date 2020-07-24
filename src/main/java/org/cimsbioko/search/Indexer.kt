@@ -26,7 +26,7 @@ import java.io.IOException
 
 class Indexer private constructor() {
 
-    private val indexFile = File(App.getApp().applicationContext.filesDir, "search-index")
+    private val indexFile = File(App.instance.applicationContext.filesDir, "search-index")
     private val database: SQLiteDatabase
         get() = ContentProvider.databaseHelper.readableDatabase
 
@@ -94,7 +94,7 @@ class Indexer private constructor() {
 
     @Throws(IOException::class)
     private fun IndexWriter.bulkIndex(label: Int, source: DocumentSource) {
-        val ctx = App.getApp().applicationContext
+        val ctx = App.instance.applicationContext
         val notificationManager = getNotificationManager(ctx)
         val notificationBuilder = NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)
                 .setSmallIcon(notificationIcon)

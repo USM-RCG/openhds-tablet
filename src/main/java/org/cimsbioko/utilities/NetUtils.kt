@@ -7,7 +7,7 @@ import org.cimsbioko.App
 object NetUtils {
 
     private val connMan: ConnectivityManager?
-        get() = App.getApp().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        get() = App.instance.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     val isConnected: Boolean
         get() {

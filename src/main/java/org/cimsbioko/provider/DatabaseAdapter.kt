@@ -12,7 +12,7 @@ import java.util.*
 
 class DatabaseAdapter private constructor() {
 
-    private val helper: DatabaseHelper = DatabaseHelper(App.getApp().applicationContext)
+    private val helper: DatabaseHelper = DatabaseHelper(App.instance.applicationContext)
 
     fun attachFormToHierarchy(hierarchyPath: String, formId: Long): Long {
         with(helper.writableDatabase) {

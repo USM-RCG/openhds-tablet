@@ -17,22 +17,22 @@ object CampaignUtils {
 
     @JvmStatic
     val campaignUrl: String?
-        get() = buildServerUrl(App.getApp(), "/api/rest/campaign")
+        get() = buildServerUrl(App.instance, "/api/rest/campaign")
 
     @JvmStatic
     fun getCampaignUrl(uuid: String): String? {
-        return buildServerUrl(App.getApp(), "/api/rest/campaign/$uuid")
+        return buildServerUrl(App.instance, "/api/rest/campaign/$uuid")
     }
 
     private val myCampaignsUrl: String?
-        get() = buildServerUrl(App.getApp(), "/api/rest/mycampaigns")
+        get() = buildServerUrl(App.instance, "/api/rest/mycampaigns")
 
     private val externalCampaignFile: File
         get() = File(IOUtils.externalDir, SetupUtils.CAMPAIGN_FILENAME)
 
     @JvmStatic
     val downloadedCampaignFile: File
-        get() = App.getApp().getFileStreamPath(SetupUtils.CAMPAIGN_FILENAME)
+        get() = App.instance.getFileStreamPath(SetupUtils.CAMPAIGN_FILENAME)
 
     @JvmStatic
     val campaignTempFingerprintFile: File

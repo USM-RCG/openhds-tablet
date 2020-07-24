@@ -14,7 +14,7 @@ data class Form(val id: Long, val formId: String, val formVersion: String, val f
 
     @get:Throws(FileNotFoundException::class)
     val inputStream: InputStream?
-        get() = App.getApp().contentResolver.openInputStream(uri)
+        get() = App.instance.contentResolver.openInputStream(uri)
 
     val uri: Uri
         get() = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, id)

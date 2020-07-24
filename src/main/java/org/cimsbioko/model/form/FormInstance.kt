@@ -62,11 +62,11 @@ class FormInstance(
 
     @get:Throws(FileNotFoundException::class)
     private val outputStream: OutputStream?
-        get() = App.getApp().contentResolver.openOutputStream(uri)
+        get() = App.instance.contentResolver.openOutputStream(uri)
 
     @get:Throws(FileNotFoundException::class)
     private val inputStream: InputStream?
-        get() = App.getApp().contentResolver.openInputStream(uri)
+        get() = App.instance.contentResolver.openInputStream(uri)
 
     val uri: Uri = ContentUris.withAppendedId(InstanceProviderAPI.InstanceColumns.CONTENT_URI, id)
 
@@ -124,7 +124,7 @@ class FormInstance(
             binding.builder.build(formData, ctx)
             formFile()
                     .apply { saveForm(formData, this) }
-                    .let { FileProvider.getUriForFile(App.getApp(), "org.cimsbioko.files", it) }
+                    .let { FileProvider.getUriForFile(App.instance, "org.cimsbioko.files", it) }
         }
 
         @Throws(JDOMException::class, IOException::class)
