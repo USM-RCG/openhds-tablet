@@ -14,7 +14,6 @@ import java.util.*
  * correctly, for example using the extId and "category" (i.e. hierarchy level).
  *
  * Payloads may contain arbitrary data, for example to display with result name and extId.
- *
  */
 data class DataWrapper(
         val uuid: String,
@@ -39,16 +38,20 @@ data class DataWrapper(
             uuid = parcel.readString()!!
     ) {
         stringsPayload = HashMap<Int, String?>().also { map ->
-            parcel.readBundle(DataWrapper::class.java.classLoader)?.let { bundle ->
-                for (key in ArrayList<Int>().also { parcel.readList(it, null) }) {
-                    map[key] = bundle.getString(key.toString())
+            ArrayList<Int>().also { parcel.readList(it, null) }.let { list ->
+                parcel.readBundle(DataWrapper::class.java.classLoader)?.let { bundle ->
+                    for (key in list) {
+                        map[key] = bundle.getString(key.toString())
+                    }
                 }
             }
         }
         stringIdsPayload = HashMap<Int, Int>().also { map ->
-            parcel.readBundle(DataWrapper::class.java.classLoader)?.let { bundle ->
-                for (key in ArrayList<Int>().also { parcel.readList(it, null) }) {
-                    map[key] = bundle.getInt(key.toString())
+            ArrayList<Int>().also { parcel.readList(it, null) }.let { list ->
+                parcel.readBundle(DataWrapper::class.java.classLoader)?.let { bundle ->
+                    for (key in list) {
+                        map[key] = bundle.getInt(key.toString())
+                    }
                 }
             }
         }
