@@ -107,7 +107,7 @@ class NavigatorConfig private constructor() {
      * @return the top-most level
      */
     val topLevel: String?
-        get() = levels[0]
+        get() = levels.firstOrNull()
 
     /**
      * Convenience method for getting bottom-most level.
