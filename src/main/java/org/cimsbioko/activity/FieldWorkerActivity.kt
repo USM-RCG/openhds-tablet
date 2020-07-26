@@ -47,7 +47,7 @@ class FieldWorkerActivity : AppCompatActivity(), View.OnClickListener {
         }
         formListFragment = (supportFragmentManager.findFragmentById(R.id.portal_form_list) as FormListFragment).apply {
             setHeaderText(R.string.unsent_forms)
-            setFindEnabled(true)
+            isFindEnabled = true
         }
     }
 
