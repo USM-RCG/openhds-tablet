@@ -48,7 +48,8 @@ import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
-class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, HierarchyButtonListener, DetailToggleListener, DataSelectionListener, FormSelectionListener {
+class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, HierarchyButtonListener, DetailToggleListener,
+        DataSelectionListener, FormSelectionListener {
 
     private lateinit var hierarchyButtonFragment: HierarchyButtonFragment
     private lateinit var valueFragment: DataSelectionFragment
