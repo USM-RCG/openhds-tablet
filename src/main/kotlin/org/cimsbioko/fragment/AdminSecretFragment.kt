@@ -19,9 +19,9 @@ class AdminSecretFragment : DialogFragment() {
                         .setTitle(R.string.admin_access)
                         .setView(content)
                         .setPositiveButton(android.R.string.ok) { _: DialogInterface?, _: Int ->
-                            listener!!.onAdminSecretDialogOk(content.findViewById<EditText>(R.id.adminSecretEditText).text.toString())
+                            listener?.onAdminSecretDialogOk(content.findViewById<EditText>(R.id.adminSecretEditText).text.toString())
                         }
-                        .setNegativeButton(android.R.string.cancel) { _: DialogInterface?, _: Int -> listener!!.onAdminSecretDialogCancel() }
+                        .setNegativeButton(android.R.string.cancel) { _: DialogInterface?, _: Int -> listener?.onAdminSecretDialogCancel() }
                         .create()
             }
 
