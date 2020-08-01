@@ -15,7 +15,7 @@ class FieldWorkerGateway internal constructor()
     : Gateway<FieldWorker>(FieldWorkers.CONTENT_ID_URI_BASE, FieldWorkers.COLUMN_FIELD_WORKER_UUID) {
 
     fun findByExtId(extId: String): Query<FieldWorker> =
-            Query<FieldWorker>(this, tableUri, FieldWorkers.COLUMN_FIELD_WORKER_EXTID, extId, FieldWorkers.COLUMN_FIELD_WORKER_UUID)
+            Query(this, tableUri, FieldWorkers.COLUMN_FIELD_WORKER_EXTID, extId, FieldWorkers.COLUMN_FIELD_WORKER_UUID)
 
     override fun getId(entity: FieldWorker): String = entity.uuid!!
 
