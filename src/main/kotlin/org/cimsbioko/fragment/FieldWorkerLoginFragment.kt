@@ -12,17 +12,29 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import kotlinx.coroutines.*
 import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.data.GatewayRegistry.fieldWorkerGateway
 import org.cimsbioko.utilities.LoginUtils.login
 import org.cimsbioko.utilities.MessageUtils.showLongToast
 import org.mindrot.jbcrypt.BCrypt
+import kotlin.coroutines.CoroutineContext
 
-class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyListener {
+class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyListener, CoroutineScope {
+
+    private val job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     private lateinit var usernameEditText: EditText
     private lateinit var passwordEditText: EditText
+
+    override fun onStop() {
+        job.cancel("fragment stopping")
+        super.onStop()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fieldworker_login_fragment, container, false).also { vg ->
@@ -43,7 +55,7 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
     override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
         if (event.action == KeyEvent.ACTION_DOWN) {
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                authenticateFieldWorker()
+                launch { authenticateFieldWorker() }
                 return true
             }
         }
@@ -51,22 +63,21 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
     }
 
     override fun onClick(view: View) {
-        authenticateFieldWorker()
+        launch { authenticateFieldWorker() }
     }
 
     private fun getTextString(text: EditText): String {
         return text.text.toString()
     }
 
-    private fun authenticateFieldWorker() {
+    private suspend fun authenticateFieldWorker() {
         val activity: Activity = requireActivity()
-        val password = getTextString(passwordEditText)
-        val username = getTextString(usernameEditText)
+        val (username, password) = Pair(getTextString(usernameEditText), getTextString(passwordEditText))
         val login = login
         val fieldWorkerGateway = fieldWorkerGateway
-        val fieldWorker = fieldWorkerGateway.findByExtId(username).first
+        val fieldWorker = withContext(Dispatchers.IO) { fieldWorkerGateway.findByExtId(username).first }
         if (fieldWorker != null) {
-            if (BCrypt.checkpw(password, fieldWorker.passwordHash)) {
+            if (withContext(Dispatchers.Default) { BCrypt.checkpw(password, fieldWorker.passwordHash) }) {
                 login.authenticatedUser = fieldWorker
                 if (activity.isTaskRoot) {
                     launchPortalActivity()
@@ -78,7 +89,7 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
                 showLongToast(getActivity(), R.string.field_worker_bad_credentials)
             }
         } else {
-            if (fieldWorkerGateway.findAll().exists()) {
+            if (withContext(Dispatchers.IO) { fieldWorkerGateway.findAll().exists() }) {
                 showLongToast(getActivity(), R.string.field_worker_bad_credentials)
             } else {
                 showLongToast(getActivity(), R.string.field_worker_none_exist)
