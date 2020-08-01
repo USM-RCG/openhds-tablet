@@ -30,6 +30,7 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
 
     private lateinit var usernameEditText: EditText
     private lateinit var passwordEditText: EditText
+    private lateinit var loginButton: Button
 
     override fun onStop() {
         job.cancel("fragment stopping")
@@ -45,10 +46,8 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
                 it.setOnKeyListener(this)
                 it.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
             }
-            passwordEditText = vg.findViewById<EditText>(R.id.passwordEditText).also {
-                it.setOnKeyListener(this)
-            }
-            vg.findViewById<Button>(R.id.loginButton).also { it.setOnClickListener(this) }
+            passwordEditText = vg.findViewById<EditText>(R.id.passwordEditText).also { it.setOnKeyListener(this) }
+            loginButton = vg.findViewById<Button>(R.id.loginButton).also { it.setOnClickListener(this) }
         }
     }
 
@@ -63,7 +62,14 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
     }
 
     override fun onClick(view: View) {
-        launch { authenticateFieldWorker() }
+        launch {
+            try {
+                loginButton.isEnabled = false
+                authenticateFieldWorker()
+            } finally {
+                loginButton.isEnabled = true
+            }
+        }
     }
 
     private fun getTextString(text: EditText): String {
