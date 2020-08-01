@@ -39,3 +39,9 @@
 -keep class * extends org.apache.lucene.codecs.PostingsFormat
 -keep class * extends org.apache.lucene.codecs.DocValuesFormat
 -keep class * implements org.apache.lucene.util.Attribute
+
+# kotlin coroutines
+-dontwarn java.lang.instrument.ClassFileTransformer
+-dontwarn sun.misc.SignalHandler
+-dontwarn java.lang.instrument.Instrumentation
+-dontwarn sun.misc.Signal
