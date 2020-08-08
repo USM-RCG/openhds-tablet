@@ -60,7 +60,8 @@ class HierarchyPath(path: Map<String, DataWrapper> = emptyMap()) : Parcelable {
         var seenLevel = false
         with(p.entries.iterator()) {
             while (hasNext()) {
-                if (!seenLevel && next().key == level) seenLevel = true
+                val pathElem = next()
+                if (!seenLevel && pathElem.key == level) seenLevel = true
                 if (seenLevel) remove()
             }
         }
