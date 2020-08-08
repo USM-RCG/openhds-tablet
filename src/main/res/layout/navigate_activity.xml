@@ -53,7 +53,7 @@
                     android:layout_height="wrap_content"/>
 
             <fragment
-                    android:name="org.cimsbioko.fragment.navigate.FormListFragment"
+                    android:name="org.cimsbioko.fragment.navigate.HierarchyFormsFragment"
                     android:id="@+id/form_list_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>

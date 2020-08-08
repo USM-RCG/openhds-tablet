@@ -14,16 +14,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuItemCompat
 import org.cimsbioko.R
-import org.cimsbioko.fragment.navigate.FormListFragment
 import org.cimsbioko.search.Utils.isSearchEnabled
 import org.cimsbioko.utilities.ConfigUtils.getActiveModules
-import org.cimsbioko.utilities.FormsHelper.allUnsentFormInstances
 import org.cimsbioko.utilities.LayoutUtils.makeTextWithPayload
 import org.cimsbioko.utilities.LoginUtils.login
 
 class FieldWorkerActivity : AppCompatActivity(), View.OnClickListener {
-
-    private lateinit var formListFragment: FormListFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,10 +40,6 @@ class FieldWorkerActivity : AppCompatActivity(), View.OnClickListener {
                         ?.let { it.layoutParams as LinearLayout.LayoutParams }
                         ?.setMargins(0, 0, 0, resources.getDimensionPixelSize(R.dimen.module_button_spacing))
             }
-        }
-        formListFragment = (supportFragmentManager.findFragmentById(R.id.portal_form_list) as FormListFragment).apply {
-            setHeaderText(R.string.unsent_forms)
-            isFindEnabled = true
         }
     }
 
@@ -76,15 +68,6 @@ class FieldWorkerActivity : AppCompatActivity(), View.OnClickListener {
         startActivity(Intent(this, HierarchyNavigatorActivity::class.java).apply {
             putExtra(ACTIVITY_MODULE_EXTRA, v.tag as String)
         })
-    }
-
-    override fun onResume() {
-        super.onResume()
-        populateFormInstanceListView()
-    }
-
-    private fun populateFormInstanceListView() {
-        formListFragment.populate(allUnsentFormInstances)
     }
 
     companion object {

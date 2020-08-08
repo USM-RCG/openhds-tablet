@@ -12,26 +12,37 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.activity.HierarchyNavigatorActivity
 import org.cimsbioko.adapter.FormInstanceAdapter
 import org.cimsbioko.model.form.FormInstance
 import org.cimsbioko.model.form.FormInstance.Companion.getBinding
+import org.cimsbioko.model.form.LoadedFormInstance
+import org.cimsbioko.navconfig.HierarchyPath
 import org.cimsbioko.navconfig.HierarchyPath.Companion.fromString
-import org.cimsbioko.provider.DatabaseAdapter.Companion.instance
+import org.cimsbioko.provider.DatabaseAdapter
 import org.cimsbioko.utilities.ConfigUtils.getActiveModuleForBinding
 import org.cimsbioko.utilities.ConfigUtils.getActiveModules
 import org.cimsbioko.utilities.FormUtils.editIntent
+import org.cimsbioko.utilities.FormsHelper
 import org.cimsbioko.utilities.FormsHelper.deleteFormInstances
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 import java.util.*
+import kotlin.coroutines.CoroutineContext
 
-class FormListFragment : Fragment() {
+abstract class FormListFragment : Fragment(), CoroutineScope {
+
+    private lateinit var job: Job
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     private lateinit var headerView: TextView
     private lateinit var listView: ListView
-    private lateinit var adapter: FormInstanceAdapter
+    protected lateinit var adapter: FormInstanceAdapter
 
     var isFindEnabled = false
 
@@ -45,6 +56,19 @@ class FormListFragment : Fragment() {
                 registerForContextMenu(listView)
             }
         }
+    }
+
+    override fun onResume() {
+        job = Job()
+        populateForms()
+        super.onResume()
+    }
+
+    abstract fun populateForms()
+
+    override fun onPause() {
+        job.cancel("fragment paused")
+        super.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -66,10 +90,13 @@ class FormListFragment : Fragment() {
         }
     }
 
-    fun populate(forms: List<FormInstance>) = adapter.populate(forms)
+    fun populate(instances: Flow<FormInstance>) = launch {
+        adapter.clear()
+        instances.map { it.load() }.flowOn(Dispatchers.IO).collect { instance -> adapter.add(instance) }
+    }
 
-    private fun getItem(pos: Int): FormInstance {
-        return listView.getItemAtPosition(pos) as FormInstance // accounts for offset shifts from added headers
+    private fun getItem(pos: Int): LoadedFormInstance {
+        return listView.getItemAtPosition(pos) as LoadedFormInstance // accounts for offset shifts from added headers
     }
 
     private fun editForm(selected: FormInstance) {
@@ -81,19 +108,19 @@ class FormListFragment : Fragment() {
         }
     }
 
-    private fun removeForm(selected: FormInstance) {
+    private fun removeForm(selected: LoadedFormInstance) {
         if (deleteFormInstances(listOf(selected)) == 1) {
             adapter.remove(selected)
             showShortToast(activity, R.string.deleted)
         }
     }
 
-    private fun findForm(selected: FormInstance) {
+    private fun findForm(selected: LoadedFormInstance) {
         val ctx = requireContext()
-        fromString(instance.findHierarchyForForm(selected.id))?.let { path ->
+        fromString(DatabaseAdapter.findHierarchyForForm(selected.id))?.let { path ->
             try {
                 // launch the navigator using the first relevant module
-                (getBinding(selected.load())
+                (getBinding(selected.document)
                         ?.let { getActiveModuleForBinding(ctx, it) }
                         ?.takeIf { it.isNotEmpty() } ?: getActiveModules(ctx))
                         .firstOrNull()?.also { firstModule ->
@@ -109,11 +136,11 @@ class FormListFragment : Fragment() {
         } ?: showShortToast(ctx, R.string.form_not_found)
     }
 
-    private fun confirmDelete(selected: FormInstance) {
+    private fun confirmDelete(selected: LoadedFormInstance) {
         AlertDialog.Builder(requireContext())
                 .setMessage(R.string.delete_forms_dialog_warning)
                 .setTitle(R.string.delete_dialog_warning_title)
-                .setPositiveButton(R.string.delete_forms) { dialogInterface: DialogInterface?, i: Int -> removeForm(selected) }
+                .setPositiveButton(R.string.delete_forms) { _: DialogInterface?, _: Int -> removeForm(selected) }
                 .setNegativeButton(R.string.cancel_label, null)
                 .create()
                 .show()
@@ -154,5 +181,35 @@ class FormListFragment : Fragment() {
 
     companion object {
         private const val FIND_ENABLED_KEY = "FIND_ENABLED"
+    }
+
+}
+
+class UnsentFormsFragment : FormListFragment() {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return super.onCreateView(inflater, container, savedInstanceState).also {
+            setHeaderText(R.string.unsent_forms)
+            isFindEnabled = true
+        }
+    }
+
+    override fun populateForms() {
+        populate(FormsHelper.allUnsentFormInstances)
+    }
+}
+
+class HierarchyFormsFragment : FormListFragment() {
+
+    var job: Job? = null
+    var path: HierarchyPath = HierarchyPath()
+        set(value) {
+            field = value
+            populateForms()
+        }
+
+    override fun populateForms() {
+        job?.takeIf { it.isActive }?.cancel()
+        job = populate(DatabaseAdapter.findFormsForHierarchy(path.toString()).filterNot { it.isSubmitted })
     }
 }

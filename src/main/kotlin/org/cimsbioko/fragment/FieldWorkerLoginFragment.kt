@@ -23,7 +23,7 @@ import kotlin.coroutines.CoroutineContext
 
 class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyListener, CoroutineScope {
 
-    private val job = Job()
+    private lateinit var job: Job
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -32,9 +32,14 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
     private lateinit var passwordEditText: EditText
     private lateinit var loginButton: Button
 
-    override fun onStop() {
-        job.cancel("fragment stopping")
-        super.onStop()
+    override fun onResume() {
+        job = Job()
+        super.onResume()
+    }
+
+    override fun onPause() {
+        job.cancel("fragment paused")
+        super.onPause()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

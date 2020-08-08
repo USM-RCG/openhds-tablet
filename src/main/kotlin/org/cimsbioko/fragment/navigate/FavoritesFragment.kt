@@ -19,7 +19,7 @@ import org.cimsbioko.activity.HierarchyNavigatorActivity
 import org.cimsbioko.data.DataWrapper
 import org.cimsbioko.data.DataWrapper.Companion.getByHierarchyId
 import org.cimsbioko.navconfig.HierarchyPath.Companion.fromString
-import org.cimsbioko.provider.DatabaseAdapter.Companion.instance
+import org.cimsbioko.provider.DatabaseAdapter
 import org.cimsbioko.utilities.ConfigUtils.getActiveModules
 import org.cimsbioko.utilities.LayoutUtils.configureTextWithPayload
 import org.cimsbioko.utilities.LayoutUtils.makeTextWithPayload
@@ -77,7 +77,7 @@ class FavoritesFragment : Fragment() {
             }
             R.id.forget_favorite -> {
                 getItem(info.position)?.let {
-                    instance.removeFavorite(it)
+                    DatabaseAdapter.removeFavorite(it)
                     showShortToast(requireContext(), R.string.removed_favorite)
                     loadData()
                 }
@@ -157,7 +157,7 @@ class FavoritesFragment : Fragment() {
         }
 
         override fun doInBackground(vararg params: Void): List<DataWrapper> {
-            return instance.let { db ->
+            return DatabaseAdapter.let { db ->
                 db.favoriteIds
                         .map { it to getByHierarchyId(it) }
                         .partition { (_, item) -> item != null }

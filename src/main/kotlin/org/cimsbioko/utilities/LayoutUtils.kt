@@ -10,6 +10,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import org.cimsbioko.R
 import org.cimsbioko.model.form.FormInstance
+import org.cimsbioko.model.form.LoadedFormInstance
 import org.cimsbioko.navconfig.forms.KnownFields
 import org.jdom2.JDOMException
 import java.io.IOException
@@ -133,10 +134,9 @@ object LayoutUtils {
     }
 
     // Set up a form list item based on a given form instance.
-    @JvmStatic
-    fun configureFormListItem(view: View, instance: FormInstance) {
+    fun configureFormListItem(view: View, instance: LoadedFormInstance) {
         try {
-            val dataDoc = instance.load()
+            val doc = instance.document
             if (instance.isComplete) {
                 if (instance.isEditable) {
                     view.setBackgroundResource(R.drawable.form_list)
@@ -148,10 +148,10 @@ object LayoutUtils {
             }
 
             // Set form name based on its embedded binding
-            val formTypeName = FormInstance.getBinding(dataDoc)?.label ?: instance.formName
+            val formTypeName = FormInstance.getBinding(doc)?.label ?: instance.formName
             val formTypeView = view.findViewById<TextView>(R.id.form_instance_list_type)
             formTypeView.text = formTypeName
-            val data = dataDoc.rootElement
+            val data = doc.rootElement
 
             // Extract and set values contained within the form instance
             val entityId = data.getChildText(KnownFields.ENTITY_EXTID)

@@ -4,6 +4,10 @@ import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
 import android.provider.BaseColumns
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import org.cimsbioko.App
 import org.cimsbioko.model.form.Form
 import org.cimsbioko.model.form.FormInstance
@@ -26,18 +30,14 @@ object FormsHelper {
     private val contentResolver: ContentResolver
         get() = App.instance.contentResolver
 
-    @JvmStatic
-    val allUnsentFormInstances: List<FormInstance>
-        get() {
-            val formInstances = ArrayList<FormInstance>()
-            contentResolver.query(InstanceColumns.CONTENT_URI, INSTANCE_COLUMNS,
-                    InstanceColumns.STATUS + " != ?", arrayOf(InstanceProviderAPI.STATUS_SUBMITTED), null)?.use { c ->
-                while (c.moveToNext()) {
-                    formInstances.add(instanceFromCursor(c))
-                }
+    val allUnsentFormInstances: Flow<FormInstance> = flow {
+        contentResolver.query(InstanceColumns.CONTENT_URI, INSTANCE_COLUMNS,
+                "${InstanceColumns.STATUS} != ?", arrayOf(InstanceProviderAPI.STATUS_SUBMITTED), null)?.use { c ->
+            while (c.moveToNext()) {
+                emit(instanceFromCursor(c))
             }
-            return formInstances
         }
+    }.flowOn(Dispatchers.IO)
 
     private fun instanceFromCursor(cursor: Cursor): FormInstance {
         return FormInstance(
@@ -50,25 +50,6 @@ object FormsHelper {
         )
     }
 
-    @JvmStatic
-    fun getByIds(ids: Collection<Long>): List<FormInstance> {
-        val formInstances = ArrayList<FormInstance>()
-        if (!ids.isEmpty()) {
-            val where = String.format("%s IN (%s)", BaseColumns._ID, makePlaceholders(ids.size))
-            val idStrings: MutableList<String> = ArrayList(ids.size)
-            for (id in ids) {
-                idStrings.add(id.toString())
-            }
-            contentResolver.query(
-                    InstanceColumns.CONTENT_URI, INSTANCE_COLUMNS, where, idStrings.toTypedArray(), null
-            )?.use { c ->
-                while (c.moveToNext()) {
-                    formInstances.add(instanceFromCursor(c))
-                }
-            }
-        }
-        return formInstances
-    }
 
     /**
      * Retrieves metadata for the form identified by the specified form id.
@@ -76,7 +57,6 @@ object FormsHelper {
      * @param formId the form id as specified on the form's data instance element
      * @return a [FormInstance] object containing the matching form's metadata or null if none was found.
      */
-    @JvmStatic
     fun getForm(formId: String): Form? {
         var metadata: Form? = null
         val columns = arrayOf(
@@ -95,13 +75,22 @@ object FormsHelper {
         return metadata
     }
 
+    fun getById(id: Long): FormInstance? {
+        return contentResolver.query(
+                InstanceColumns.CONTENT_URI, INSTANCE_COLUMNS, "${BaseColumns._ID} = ?", arrayOf(id.toString()), null
+        )?.use { c ->
+            if (c.moveToNext()) {
+                instanceFromCursor(c)
+            } else null
+        }
+    }
+
     /**
      * Retrieves metadata for the blank form identified by the specified form id.
      *
      * @param instance the uri of the instance of interest
      * @return a [FormInstance] object containing the instance's metadata or null if none was found.
      */
-    @JvmStatic
     fun getInstance(instance: Uri): FormInstance? {
         var metadata: FormInstance? = null
         contentResolver.query(instance, INSTANCE_COLUMNS, null, null, null)?.use { c ->
@@ -128,13 +117,11 @@ object FormsHelper {
      * @param forms list of forms
      * @return the number of forms removed
      */
-    @JvmStatic
     fun deleteFormInstances(forms: Collection<FormInstance>): Int {
         val where = String.format("%s IN (%s)", BaseColumns._ID, makePlaceholders(forms.size))
         return contentResolver.delete(InstanceColumns.CONTENT_URI, where, formIds(forms))
     }
 
-    @JvmStatic
     fun hasFormsWithIds(formIds: Set<String>): Boolean {
         val projection = arrayOf(FormsProviderAPI.FormsColumns.JR_FORM_ID)
         val where = String.format("%s IN (%s)", FormsProviderAPI.FormsColumns.JR_FORM_ID, makePlaceholders(formIds.size))

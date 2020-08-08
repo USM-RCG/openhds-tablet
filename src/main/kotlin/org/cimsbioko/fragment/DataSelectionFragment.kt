@@ -13,7 +13,7 @@ import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import org.cimsbioko.R
 import org.cimsbioko.data.DataWrapper
-import org.cimsbioko.provider.DatabaseAdapter.Companion.instance
+import org.cimsbioko.provider.DatabaseAdapter
 import org.cimsbioko.utilities.LayoutUtils.configureTextWithPayload
 import org.cimsbioko.utilities.LayoutUtils.makeTextWithPayload
 import org.cimsbioko.utilities.MessageUtils.showShortToast
@@ -67,7 +67,7 @@ class DataSelectionFragment : Fragment() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.save_favorite) {
             getItem((item.menuInfo as AdapterContextMenuInfo).position)?.let { selected ->
-                instance.addFavorite(selected)
+                DatabaseAdapter.addFavorite(selected)
                 showShortToast(requireContext(), R.string.saved_favorite)
             }
             return true

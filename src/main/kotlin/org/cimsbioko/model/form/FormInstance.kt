@@ -21,13 +21,13 @@ import org.jdom2.Namespace
 import org.jdom2.filter.Filters
 import java.io.*
 
-class FormInstance(
+open class FormInstance(
         val id: Long,
         val formName: String,
         val fileName: String,
         val formVersion: String,
         val status: String,
-        private val isCanEditWhenComplete: Boolean
+        internal val isCanEditWhenComplete: Boolean
 ) : Serializable {
 
     val isComplete: Boolean
@@ -43,26 +43,15 @@ class FormInstance(
         get() = !(isSubmitted || isComplete && !isCanEditWhenComplete)
 
     /**
-     * Updates the form instance on disk with the supplied values.
-     *
-     * @param data key/value pairs corresponding to element names to update and their values
-     * @throws IOException
-     */
-    @Throws(IOException::class)
-    fun store(data: Document) = outputStream?.let { domToStream(data, it) } ?: throw IOException("null stream")
-
-    /**
      * Fetches the form instance values from disk.
      *
      * @return a map of key/value pairs corresponding to elements and their values
      * @throws IOException
      */
     @Throws(IOException::class, JDOMException::class)
-    fun load(): Document = inputStream?.let { domFromStream(it) } ?: throw IOException("null stream")
-
-    @get:Throws(FileNotFoundException::class)
-    private val outputStream: OutputStream?
-        get() = App.instance.contentResolver.openOutputStream(uri)
+    fun load(): LoadedFormInstance = inputStream?.let {
+        LoadedFormInstance(this, domFromStream(it))
+    } ?: throw IOException("null stream")
 
     @get:Throws(FileNotFoundException::class)
     private val inputStream: InputStream?
@@ -143,5 +132,30 @@ class FormInstance(
             }
         }
     }
+}
+
+class LoadedFormInstance(
+        instance: FormInstance,
+        val document: Document
+) : FormInstance(
+        id = instance.id,
+        formName = instance.formName,
+        fileName = instance.fileName,
+        formVersion = instance.formVersion,
+        status = instance.status,
+        isCanEditWhenComplete = instance.isCanEditWhenComplete) {
+
+    /**
+     * Updates the form instance on disk with the supplied values.
+     *
+     * @param data key/value pairs corresponding to element names to update and their values
+     * @throws IOException
+     */
+    @Throws(IOException::class)
+    fun store(data: Document) = outputStream?.let { domToStream(data, it) } ?: throw IOException("null stream")
+
+    @get:Throws(FileNotFoundException::class)
+    private val outputStream: OutputStream?
+        get() = App.instance.contentResolver.openOutputStream(uri)
 
 }

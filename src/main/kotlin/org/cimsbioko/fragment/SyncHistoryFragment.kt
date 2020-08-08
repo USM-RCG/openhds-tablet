@@ -25,7 +25,7 @@ class SyncHistoryFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.sync_history_fragment, container, false).also { graphView: View ->
             graphView.findViewById<XYPlot>(R.id.sync_history_plot).apply {
-                SimpleXYSeries(SimpleXYSeries.ArrayFormat.XY_VALS_INTERLEAVED, "", *DatabaseAdapter.instance.syncResults).also { series ->
+                SimpleXYSeries(SimpleXYSeries.ArrayFormat.XY_VALS_INTERLEAVED, "", *DatabaseAdapter.syncResults).also { series ->
                     addSeries(series, LineAndPointFormatter().apply {
                         fillPaint = null
                         vertexPaint.setARGB(255, 0, 0, 0)

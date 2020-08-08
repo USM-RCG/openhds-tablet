@@ -10,20 +10,20 @@ import android.widget.CheckBox
 import android.widget.CompoundButton
 import org.cimsbioko.R
 import org.cimsbioko.model.form.FormInstance
+import org.cimsbioko.model.form.LoadedFormInstance
 import org.cimsbioko.utilities.FormUtils.editIntent
 import org.cimsbioko.utilities.LayoutUtils.configureFormListItem
 import org.cimsbioko.utilities.MessageUtils.showShortToast
-import java.util.*
 
 class FormChecklistAdapter(
         context: Context,
         checklistItemId: Int,
-        formInstances: MutableList<FormInstance>
-) : ArrayAdapter<FormInstance>(context, checklistItemId, formInstances) {
+        formInstances: MutableList<LoadedFormInstance>
+) : ArrayAdapter<LoadedFormInstance>(context, checklistItemId, formInstances) {
 
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    private val instances: MutableList<FormInstance> = formInstances
-    private var checkStates: MutableList<Boolean> = emptyList<Boolean>().toMutableList()
+    private val instances: MutableList<LoadedFormInstance> = formInstances
+    private var checkStates: MutableList<Boolean> = ArrayList()
 
     init {
         initCheckStates()
@@ -60,6 +60,11 @@ class FormChecklistAdapter(
     val checkedInstances: List<FormInstance>
         get() = ArrayList<FormInstance>().apply { for (i in checkStates.indices) if (checkStates[i]) add(getItem(i)!!) }
 
+    override fun add(`object`: LoadedFormInstance?) {
+        super.add(`object`)
+        checkStates.add(false)
+    }
+
     fun removeAll(instances: List<FormInstance>): Boolean = try {
         setNotifyOnChange(false)
         this.instances.removeAll(instances).also {
@@ -69,5 +74,4 @@ class FormChecklistAdapter(
     } finally {
         setNotifyOnChange(true)
     }
-
 }

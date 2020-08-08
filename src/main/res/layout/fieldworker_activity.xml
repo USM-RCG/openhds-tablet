@@ -32,7 +32,7 @@
         </ScrollView>
         <FrameLayout style="@style/FieldworkerSideColumn">
             <fragment
-                    android:name="org.cimsbioko.fragment.navigate.FormListFragment"
+                    android:name="org.cimsbioko.fragment.navigate.UnsentFormsFragment"
                     android:id="@+id/portal_form_list"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"/>

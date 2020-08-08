@@ -5,12 +5,18 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import org.cimsbioko.App
 import org.cimsbioko.data.DataWrapper
+import org.cimsbioko.model.form.FormInstance
+import org.cimsbioko.utilities.FormsHelper
 import org.cimsbioko.utilities.SQLUtils.makePlaceholders
 import java.util.*
 
-class DatabaseAdapter private constructor() {
+object DatabaseAdapter {
 
     private val helper: DatabaseHelper = DatabaseHelper(App.instance.applicationContext)
 
@@ -44,20 +50,23 @@ class DatabaseAdapter private constructor() {
         }
     }
 
-    fun findFormsForHierarchy(hierarchyPath: String): Collection<Long> {
+    fun findFormsForHierarchy(hierarchyPath: String): Flow<FormInstance> = flow {
         val columns = arrayOf(KEY_FORM_ID)
         val where = String.format("%s = ?", KEY_HIER_PATH)
         val whereArgs = arrayOf(hierarchyPath)
-        val result: MutableSet<Long> = HashSet()
-        helper.readableDatabase.query(FORM_PATH_TABLE_NAME, columns, where, whereArgs, null, null, null)?.use {
-            with(it) {
+        helper.readableDatabase.query(FORM_PATH_TABLE_NAME, columns, where, whereArgs, null, null, null)?.use { c ->
+            with(c) {
                 while (moveToNext()) {
-                    result.add(java.lang.Long.valueOf(getString(getColumnIndex(KEY_FORM_ID))))
+                    getColumnIndex(KEY_FORM_ID)
+                            .takeIf { it >= 0 }
+                            ?.let { getString(it) }
+                            ?.toLong()
+                            ?.let { FormsHelper.getById(it) }
+                            ?.let { emit(it) }
                 }
             }
         }
-        return result
-    }
+    }.flowOn(Dispatchers.IO)
 
     fun detachFromHierarchy(formIds: List<Long>) {
         if (formIds.isNotEmpty()) {
@@ -85,8 +94,8 @@ class DatabaseAdapter private constructor() {
             try {
                 insert(SYNC_HISTORY_TABLE_NAME, null, ContentValues().apply {
                     put(KEY_FINGERPRINT, fingerprint)
-                    put(KEY_START_TIME, startTime / millisInSecond)
-                    put(KEY_END_TIME, endTime / millisInSecond)
+                    put(KEY_START_TIME, startTime / MILLIS_IN_SECOND)
+                    put(KEY_END_TIME, endTime / MILLIS_IN_SECOND)
                     put(KEY_RESULT, result)
                 })
                 setTransactionSuccessful()
@@ -218,37 +227,32 @@ class DatabaseAdapter private constructor() {
             }
         }
     }
-
-    companion object {
-        private const val DATABASE_NAME = "entityData"
-        private const val DATABASE_VERSION = 19
-        private const val FORM_PATH_TABLE_NAME = "path_to_forms"
-        private const val FORM_PATH_IDX_NAME = "path_id"
-        private const val KEY_HIER_PATH = "hierarchyPath"
-        private const val KEY_FORM_ID = "form_id"
-        private const val SYNC_HISTORY_TABLE_NAME = "sync_history"
-        private const val KEY_FINGERPRINT = "fingerprint"
-        private const val START_TIME_IDX_NAME = "start_time_idx"
-        private const val KEY_START_TIME = "start_time"
-        private const val KEY_END_TIME = "end_time"
-        private const val KEY_RESULT = "result"
-        private const val FORM_PATH_CREATE = "CREATE TABLE IF NOT EXISTS $FORM_PATH_TABLE_NAME (" +
-                "$KEY_HIER_PATH TEXT, " +
-                "$KEY_FORM_ID TEXT, " +
-                "CONSTRAINT $FORM_PATH_IDX_NAME UNIQUE ($KEY_FORM_ID)" +
-                ")"
-        private const val SYNC_HISTORY_CREATE = "CREATE TABLE IF NOT EXISTS $SYNC_HISTORY_TABLE_NAME (" +
-                "$KEY_FINGERPRINT TEXT NOT NULL, " +
-                "$KEY_START_TIME INTEGER NOT NULL, " +
-                "$KEY_END_TIME INTEGER NOT NULL, " +
-                "$KEY_RESULT TEXT NOT NULL" +
-                ")"
-        private const val START_TIME_IDX_CREATE = "CREATE INDEX IF NOT EXISTS $START_TIME_IDX_NAME ON $SYNC_HISTORY_TABLE_NAME($KEY_START_TIME)"
-        private const val FAVORITE_TABLE_NAME = "favorite"
-        private const val FAVORITE_CREATE = "CREATE TABLE IF NOT EXISTS $FAVORITE_TABLE_NAME ($KEY_HIER_PATH TEXT PRIMARY KEY)"
-        const val millisInSecond = 1000
-
-        @JvmStatic
-        val instance: DatabaseAdapter by lazy { DatabaseAdapter() }
-    }
 }
+
+private const val DATABASE_NAME = "entityData"
+private const val DATABASE_VERSION = 19
+private const val FORM_PATH_TABLE_NAME = "path_to_forms"
+private const val FORM_PATH_IDX_NAME = "path_id"
+private const val KEY_HIER_PATH = "hierarchyPath"
+private const val KEY_FORM_ID = "form_id"
+private const val SYNC_HISTORY_TABLE_NAME = "sync_history"
+private const val KEY_FINGERPRINT = "fingerprint"
+private const val START_TIME_IDX_NAME = "start_time_idx"
+private const val KEY_START_TIME = "start_time"
+private const val KEY_END_TIME = "end_time"
+private const val KEY_RESULT = "result"
+private const val FORM_PATH_CREATE = "CREATE TABLE IF NOT EXISTS $FORM_PATH_TABLE_NAME (" +
+        "$KEY_HIER_PATH TEXT, " +
+        "$KEY_FORM_ID TEXT, " +
+        "CONSTRAINT $FORM_PATH_IDX_NAME UNIQUE ($KEY_FORM_ID)" +
+        ")"
+private const val SYNC_HISTORY_CREATE = "CREATE TABLE IF NOT EXISTS $SYNC_HISTORY_TABLE_NAME (" +
+        "$KEY_FINGERPRINT TEXT NOT NULL, " +
+        "$KEY_START_TIME INTEGER NOT NULL, " +
+        "$KEY_END_TIME INTEGER NOT NULL, " +
+        "$KEY_RESULT TEXT NOT NULL" +
+        ")"
+private const val START_TIME_IDX_CREATE = "CREATE INDEX IF NOT EXISTS $START_TIME_IDX_NAME ON $SYNC_HISTORY_TABLE_NAME($KEY_START_TIME)"
+private const val FAVORITE_TABLE_NAME = "favorite"
+private const val FAVORITE_CREATE = "CREATE TABLE IF NOT EXISTS $FAVORITE_TABLE_NAME ($KEY_HIER_PATH TEXT PRIMARY KEY)"
+private const val MILLIS_IN_SECOND = 1000

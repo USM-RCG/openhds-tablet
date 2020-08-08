@@ -6,12 +6,17 @@ import android.content.ClipData
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import org.cimsbioko.R
 import org.cimsbioko.data.DataWrapper
 import org.cimsbioko.fragment.DataSelectionFragment
@@ -20,9 +25,9 @@ import org.cimsbioko.fragment.FormSelectionFragment
 import org.cimsbioko.fragment.FormSelectionFragment.FormSelectionListener
 import org.cimsbioko.fragment.navigate.DetailToggleFragment
 import org.cimsbioko.fragment.navigate.DetailToggleFragment.DetailToggleListener
-import org.cimsbioko.fragment.navigate.FormListFragment
 import org.cimsbioko.fragment.navigate.HierarchyButtonFragment
 import org.cimsbioko.fragment.navigate.HierarchyButtonFragment.HierarchyButtonListener
+import org.cimsbioko.fragment.navigate.HierarchyFormsFragment
 import org.cimsbioko.fragment.navigate.detail.DefaultDetailFragment
 import org.cimsbioko.fragment.navigate.detail.DetailFragment
 import org.cimsbioko.model.core.FieldWorker
@@ -41,15 +46,20 @@ import org.cimsbioko.provider.DatabaseAdapter
 import org.cimsbioko.search.Utils.isSearchEnabled
 import org.cimsbioko.utilities.ConfigUtils.getActiveModules
 import org.cimsbioko.utilities.FormUtils.editIntent
-import org.cimsbioko.utilities.FormsHelper.getByIds
 import org.cimsbioko.utilities.LoginUtils.login
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.coroutines.CoroutineContext
 
 class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, HierarchyButtonListener, DetailToggleListener,
-        DataSelectionListener, FormSelectionListener {
+        DataSelectionListener, FormSelectionListener, CoroutineScope {
+
+    private lateinit var job: Job
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     private lateinit var hierarchyButtonFragment: HierarchyButtonFragment
     private lateinit var valueFragment: DataSelectionFragment
@@ -57,7 +67,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
     private lateinit var detailToggleFragment: DetailToggleFragment
     private lateinit var defaultDetailFragment: DetailFragment
     private lateinit var detailFragment: DetailFragment
-    private lateinit var formListFragment: FormListFragment
+    private lateinit var formsFragment: HierarchyFormsFragment
 
     private lateinit var config: NavigatorConfig
     private lateinit var currentModuleName: String
@@ -71,7 +81,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
     override var hierarchyPath: HierarchyPath = HierarchyPath()
         private set
 
-    private var updateAfterResult = false
+    private var formResult: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,7 +108,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         hierarchyButtonFragment = fragmentManager.findFragmentById(R.id.hierarchy_button_fragment) as HierarchyButtonFragment
         detailToggleFragment = fragmentManager.findFragmentById(R.id.detail_toggle_fragment) as DetailToggleFragment
         formFragment = fragmentManager.findFragmentById(R.id.form_selection_fragment) as FormSelectionFragment
-        formListFragment = fragmentManager.findFragmentById(R.id.form_list_fragment) as FormListFragment
+        formsFragment = fragmentManager.findFragmentById(R.id.form_list_fragment) as HierarchyFormsFragment
 
         defaultDetailFragment = DefaultDetailFragment()
         valueFragment = DataSelectionFragment()
@@ -123,12 +133,19 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         }
     }
 
+    override fun onResume() {
+        job = Job()
+        super.onResume()
+    }
+
     override fun onPostResume() {
         super.onPostResume()
-        if (updateAfterResult) {
-            update()
-            updateAfterResult = false
-        }
+        update()  // allow fragments to resume before updating
+    }
+
+    override fun onPause() {
+        job.cancel("activity paused")
+        super.onPause()
     }
 
     public override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -139,16 +156,12 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         })
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        update() // called here since it expects fragments to be created
-    }
-
     /*
      * A hack to inject extra context when starting the search activity, onSearchRequested was not being called.
      */
     override fun startActivity(intent: Intent) {
-        intent.takeIf { it.action == Intent.ACTION_SEARCH }?.putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, currentModuleName)
+        intent.takeIf { it.action == Intent.ACTION_SEARCH }
+                ?.putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, currentModuleName)
         super.startActivity(intent)
     }
 
@@ -209,8 +222,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         data?.also {
             if (resultCode == Activity.RESULT_OK) {
                 if (requestCode == FORM_ACTIVITY_REQUEST_CODE) {
-                    handleFormResult(it)
-                    updateAfterResult = true
+                    formResult = it.data
                 }
             }
         }
@@ -220,24 +232,33 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
     /**
      * Handles forms created with launchNewForm on return from the forms app.
      */
-    private fun handleFormResult(data: Intent) {
-        data.data?.let { uri ->
-            lookup(uri)?.also { DatabaseAdapter.instance.attachFormToHierarchy(hierarchyPath.toString(), it.id) }
-        }?.also { instance ->
-            try {
-                val dataDoc = instance.load()
-                val binding = getBinding(dataDoc)
-                if (instance.isComplete && binding != null) {
-                    if (binding.consumer.consume(dataDoc, this)) {
+    private suspend fun handleFormResultIfPresent() {
+        formResult?.also { uri ->
+            formResult = null
+            withContext(Dispatchers.IO) {
+                lookup(uri)?.also { instance ->
+                    DatabaseAdapter.attachFormToHierarchy(hierarchyPath.toString(), instance.id)
+                    if (instance.isComplete) {
+                        val activity = this@HierarchyNavigatorActivity
                         try {
-                            instance.store(dataDoc)
-                        } catch (ue: IOException) {
-                            showShortToast(this, "Update failed: " + ue.message)
+                            val loadedInstance = instance.load()
+                            val dataDoc = loadedInstance.document
+                            getBinding(dataDoc)?.let { binding ->
+                                if (binding.consumer.consume(dataDoc, activity)) {
+                                    try {
+                                        loadedInstance.store(dataDoc)
+                                    } catch (ue: IOException) {
+                                        withContext(Dispatchers.Main) {
+                                            showShortToast(activity, "Update failed: " + ue.message)
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (e: Exception) {
+                            withContext(Dispatchers.Main) { showShortToast(activity, "Read failed: " + e.message) }
                         }
                     }
                 }
-            } catch (e: Exception) {
-                showShortToast(this, "Read failed: " + e.message)
             }
         }
     }
@@ -328,9 +349,10 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
     private val level: String
         get() = if (hierarchyPath.depth() <= 0) ROOT_LEVEL else config.levels[hierarchyPath.depth() - 1]
 
-    private fun update() {
+    private fun update() = launch {
         val level = level
         check(ROOT_LEVEL == level || level in config.levels) { "no such level: $level" }
+        handleFormResultIfPresent()
         updatePathButtons()
         updateData()
         updateMiddle()
@@ -343,16 +365,18 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         hierarchyButtonFragment.update(hierarchyPath)
     }
 
-    private fun updateData() {
+    private suspend fun updateData() {
         currentResults =
-                if (ROOT_LEVEL == level) config.topLevel?.let { queryHelper.getAll(it) }
+                if (ROOT_LEVEL == level) config.topLevel?.let { withContext(Dispatchers.IO) { queryHelper.getAll(it) } }
                 else {
                     hierarchyPath.depth()
                             .takeIf { it in config.levels.indices }
                             ?.let { depth -> config.levels[depth] }
                             ?.let { nextLevel ->
                                 currentSelection?.let { currentItem ->
-                                    queryHelper.getChildren(parent = currentItem, childLevel = nextLevel)
+                                    withContext(Dispatchers.IO) {
+                                        queryHelper.getChildren(parent = currentItem, childLevel = nextLevel)
+                                    }
                                 }
                             }
                 } ?: emptyList()
@@ -382,14 +406,14 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
     /**
      * Refreshes the attached forms at the current hierarchy path and prunes sent form associations.
      */
-    private fun updateForms() {
-        DatabaseAdapter.instance.let { db ->
-            getByIds(db.findFormsForHierarchy(hierarchyPath.toString()))
-                    .partition { it.isSubmitted }
-                    .also { (sent, notSent) ->
-                        db.detachFromHierarchy(sent.map { it.id })
-                        formListFragment.populate(notSent)
-                    }
+    private suspend fun updateForms() {
+        formsFragment.path = hierarchyPath
+        withContext(Dispatchers.IO) {
+            DatabaseAdapter.findFormsForHierarchy(hierarchyPath.toString())
+                    .filter { it.isSubmitted }
+                    .map { it.id }
+                    .toList()
+                    .let { idList -> DatabaseAdapter.detachFromHierarchy(idList) }
         }
     }
 
