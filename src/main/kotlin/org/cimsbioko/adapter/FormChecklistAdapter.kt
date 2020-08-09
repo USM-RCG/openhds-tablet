@@ -12,8 +12,8 @@ import org.cimsbioko.R
 import org.cimsbioko.model.form.FormInstance
 import org.cimsbioko.model.form.LoadedFormInstance
 import org.cimsbioko.utilities.FormUtils.editIntent
-import org.cimsbioko.utilities.LayoutUtils.configureFormListItem
 import org.cimsbioko.utilities.MessageUtils.showShortToast
+import org.cimsbioko.utilities.configureFormListItem
 
 class FormChecklistAdapter(
         context: Context,
@@ -36,7 +36,7 @@ class FormChecklistAdapter(
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View =
             (convertView ?: inflater.inflate(R.layout.form_instance_check_item, null)).also { view ->
                 instances[position].also { instance ->
-                    configureFormListItem(view, instance)
+                    view.configureFormListItem(instance)
                     view.findViewById<ViewGroup>(R.id.form_instance_item_area).also { item ->
                         item.tag = instance
                         item.setOnClickListener { v: View ->

@@ -12,7 +12,8 @@ import org.cimsbioko.data.DataWrapper
 import org.cimsbioko.data.GatewayRegistry.individualGateway
 import org.cimsbioko.model.core.Individual
 import org.cimsbioko.navconfig.forms.KnownValues
-import org.cimsbioko.utilities.LayoutUtils.makeLargeTextWithValueAndLabel
+import org.cimsbioko.utilities.configureTextWithLabel
+import org.cimsbioko.utilities.makeLargeTextWithLabel
 
 class IndividualDetailFragment : DetailFragment() {
 
@@ -68,7 +69,9 @@ class IndividualDetailFragment : DetailFragment() {
 
     private fun LinearLayout.addTextView(label: Int, value: String?) {
         activity?.let {
-            addView(makeLargeTextWithValueAndLabel(it, label, value, LABEL_COLOR, VALUE_COLOR, MISSING_COLOR))
+            addView(makeLargeTextWithLabel(it).apply {
+                configureTextWithLabel(label, value, LABEL_COLOR, VALUE_COLOR, MISSING_COLOR)
+            })
         }
     }
 

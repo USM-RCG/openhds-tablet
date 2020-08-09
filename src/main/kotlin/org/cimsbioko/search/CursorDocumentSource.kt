@@ -26,14 +26,13 @@ internal abstract class CursorDocumentSource(protected val cursor: Cursor) : Doc
             }
 
             // manipulate document to match next cursor record, remove fields for null values
-            for (f in flds.indices) {
-                val field = flds[f]
-                val value = getFieldValue(f)
+            for ((i, fld) in flds.withIndex()) {
+                val value = getFieldValue(i)
                 if (value != null) {
-                    field.setStringValue(value)
+                    fld.setStringValue(value)
                 } else {
-                    doc.removeField(field.name())
-                    nullFields.add(field)
+                    doc.removeField(fld.name())
+                    nullFields.add(fld)
                 }
             }
             return doc

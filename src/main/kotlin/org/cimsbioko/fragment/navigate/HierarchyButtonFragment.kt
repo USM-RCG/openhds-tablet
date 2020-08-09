@@ -16,8 +16,8 @@ import org.cimsbioko.data.DataWrapper
 import org.cimsbioko.navconfig.HierarchyPath
 import org.cimsbioko.navconfig.NavigatorConfig
 import org.cimsbioko.navconfig.NavigatorConfig.Companion.instance
-import org.cimsbioko.utilities.LayoutUtils.configureTextWithPayload
-import org.cimsbioko.utilities.LayoutUtils.makeTextWithPayload
+import org.cimsbioko.utilities.configureText
+import org.cimsbioko.utilities.makeText
 
 class HierarchyButtonFragment : Fragment(), View.OnClickListener {
 
@@ -52,9 +52,13 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
             levelViews = findViewById<ViewGroup>(R.id.hierbutton_layout).let { buttonLayout ->
                 val activity = requireActivity()
                 config.levels.map { level ->
-                    level to makeTextWithPayload(
-                            activity, config.getLevelLabel(level), null, level, this@HierarchyButtonFragment,
-                            buttonLayout, R.drawable.data_selector, null, null, true).apply {
+                    level to makeText(
+                            activity,
+                            layoutTag = level,
+                            listener = this@HierarchyButtonFragment,
+                            container = buttonLayout,
+                            background = R.drawable.data_selector).apply {
+                        configureText(activity, primaryText = config.getLevelLabel(level))
                         visibility = View.GONE
                         (layoutParams as LinearLayout.LayoutParams).setMargins(0, 0, 0, BUTTON_MARGIN)
                     }
@@ -113,9 +117,7 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setButtonLabel(level: String, name: String?, id: String?, centerText: Boolean) {
-        levelViews[level]?.let { layout ->
-            configureTextWithPayload(requireActivity(), layout, name, id, null, null, centerText)
-        }
+        levelViews[level]?.configureText(requireActivity(), name, id, null, null, centerText)
     }
 
     override fun onClick(v: View) {

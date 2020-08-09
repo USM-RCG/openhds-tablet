@@ -12,12 +12,12 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.MenuItemCompat
 import org.cimsbioko.R
 import org.cimsbioko.search.Utils.isSearchEnabled
 import org.cimsbioko.utilities.ConfigUtils.getActiveModules
-import org.cimsbioko.utilities.LayoutUtils.makeTextWithPayload
 import org.cimsbioko.utilities.LoginUtils.login
+import org.cimsbioko.utilities.configureText
+import org.cimsbioko.utilities.makeText
 
 class FieldWorkerActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -34,8 +34,12 @@ class FieldWorkerActivity : AppCompatActivity(), View.OnClickListener {
         getActiveModules(this).also { modules ->
             val lastIndex = modules.indices.last
             for ((index, module) in modules.withIndex()) {
-                makeTextWithPayload(this, module.launchLabel, module.launchDescription, module.name, this,
-                        activitiesLayout, R.drawable.data_selector, null, null, true)
+                makeText(this,
+                        layoutTag = module.name,
+                        listener = this,
+                        container = activitiesLayout,
+                        background = R.drawable.data_selector)
+                        .apply { configureText(this@FieldWorkerActivity, primaryText = module.launchLabel, secondaryText = module.launchDescription) }
                         .takeIf { index != lastIndex }
                         ?.let { it.layoutParams as LinearLayout.LayoutParams }
                         ?.setMargins(0, 0, 0, resources.getDimensionPixelSize(R.dimen.module_button_spacing))
@@ -48,7 +52,7 @@ class FieldWorkerActivity : AppCompatActivity(), View.OnClickListener {
         menu.findItem(R.id.field_worker_search).isVisible = isSearchEnabled(this).also { enabled ->
             if (enabled) {
                 val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-                val searchView = MenuItemCompat.getActionView(menu.findItem(R.id.field_worker_search)) as SearchView
+                val searchView = menu.findItem(R.id.field_worker_search).actionView as SearchView
                 val searchInfo = searchManager.getSearchableInfo(ComponentName(this, SearchableActivity::class.java))
                 searchView.setSearchableInfo(searchInfo)
             }

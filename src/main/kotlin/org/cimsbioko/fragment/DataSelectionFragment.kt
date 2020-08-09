@@ -14,9 +14,9 @@ import androidx.fragment.app.Fragment
 import org.cimsbioko.R
 import org.cimsbioko.data.DataWrapper
 import org.cimsbioko.provider.DatabaseAdapter
-import org.cimsbioko.utilities.LayoutUtils.configureTextWithPayload
-import org.cimsbioko.utilities.LayoutUtils.makeTextWithPayload
 import org.cimsbioko.utilities.MessageUtils.showShortToast
+import org.cimsbioko.utilities.configureText
+import org.cimsbioko.utilities.makeText
 
 class DataSelectionFragment : Fragment() {
 
@@ -84,14 +84,14 @@ class DataSelectionFragment : Fragment() {
     private inner class DataSelectionListAdapter(context: Context, resource: Int, objects: List<DataWrapper>) : ArrayAdapter<DataWrapper>(context, resource, objects) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             return getItem(position).let { item ->
-                if (convertView == null) {
-                    makeTextWithPayload(requireActivity(), item?.name, item?.extId, item?.name,
-                            null, null, R.drawable.data_selector, item?.stringsPayload, item?.stringIdsPayload, false)
-                } else {
-                    (convertView as RelativeLayout).also {
-                        configureTextWithPayload(requireActivity(), it, item?.name, item?.extId, item?.stringsPayload,
-                                item?.stringIdsPayload, false)
-                    }
+                (convertView as? RelativeLayout
+                        ?: makeText(requireActivity(), layoutTag = item?.name, background = R.drawable.data_selector)).apply {
+                    configureText(requireActivity(),
+                            primaryText = item?.name,
+                            secondaryText = item?.extId,
+                            stringsPayload = item?.stringsPayload,
+                            stringsIdsPayload = item?.stringIdsPayload,
+                            centerText = false)
                 }
             }
         }

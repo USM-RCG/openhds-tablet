@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import org.cimsbioko.R
 import org.cimsbioko.model.form.LoadedFormInstance
-import org.cimsbioko.utilities.LayoutUtils.configureFormListItem
+import org.cimsbioko.utilities.configureFormListItem
 
 class FormInstanceAdapter(
         context: Context,
@@ -19,6 +19,6 @@ class FormInstanceAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View =
             (convertView ?: inflater.inflate(R.layout.form_instance_list_item, null)).also {
-                configureFormListItem(it, instances[position])
+                it.configureFormListItem(instances[position])
             }
 }

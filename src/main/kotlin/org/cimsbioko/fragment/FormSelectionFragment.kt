@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment
 import org.cimsbioko.R
 import org.cimsbioko.navconfig.forms.Binding
 import org.cimsbioko.navconfig.forms.Launcher
-import org.cimsbioko.utilities.LayoutUtils.configureTextWithPayload
-import org.cimsbioko.utilities.LayoutUtils.makeTextWithPayload
+import org.cimsbioko.utilities.configureText
+import org.cimsbioko.utilities.makeText
 
 class FormSelectionFragment : Fragment() {
 
@@ -69,9 +69,9 @@ class FormSelectionFragment : Fragment() {
     ) : ArrayAdapter<Launcher?>(context, resource, objects) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val label = formListAdapter?.getItem(position)?.label
-            return (convertView
-                    ?: makeTextWithPayload(activity!!, label, null, label, null, null, R.drawable.form_selector, null, null, true)).also {
-                configureTextWithPayload(activity!!, it as RelativeLayout, label, null, null, null, true)
+            return (convertView as? RelativeLayout
+                    ?: makeText(requireActivity(), layoutTag = label, background = R.drawable.form_selector)).apply {
+                configureText(requireActivity(), primaryText = label)
             }
         }
     }

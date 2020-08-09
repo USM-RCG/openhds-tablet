@@ -21,9 +21,9 @@ import org.cimsbioko.data.DataWrapper.Companion.getByHierarchyId
 import org.cimsbioko.navconfig.HierarchyPath.Companion.fromString
 import org.cimsbioko.provider.DatabaseAdapter
 import org.cimsbioko.utilities.ConfigUtils.getActiveModules
-import org.cimsbioko.utilities.LayoutUtils.configureTextWithPayload
-import org.cimsbioko.utilities.LayoutUtils.makeTextWithPayload
 import org.cimsbioko.utilities.MessageUtils.showShortToast
+import org.cimsbioko.utilities.configureText
+import org.cimsbioko.utilities.makeText
 
 class FavoritesFragment : Fragment() {
 
@@ -127,15 +127,17 @@ class FavoritesFragment : Fragment() {
     ) : ArrayAdapter<DataWrapper>(context, R.layout.generic_list_item_white_text) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             return requireActivity().let { activity ->
-                (convertView
-                        ?: makeTextWithPayload(activity, null, null, null, null, null, R.drawable.data_selector, null, null, false)
-                        ).also { view ->
-                            (view as? RelativeLayout)?.also { rl ->
-                                getItem(position)?.apply {
-                                    configureTextWithPayload(activity, rl, name, extId, stringsPayload, stringIdsPayload, false)
-                                }
-                            }
-                        }
+                (convertView as? RelativeLayout
+                        ?: makeText(activity, background = R.drawable.data_selector)).also { view ->
+                    getItem(position)?.apply {
+                        view.configureText(activity,
+                                primaryText = name,
+                                secondaryText = extId,
+                                stringsPayload = stringsPayload,
+                                stringsIdsPayload = stringIdsPayload,
+                                centerText = false)
+                    }
+                }
             }
         }
     }

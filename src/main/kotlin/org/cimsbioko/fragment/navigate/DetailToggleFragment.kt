@@ -9,8 +9,8 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import org.cimsbioko.R
-import org.cimsbioko.utilities.LayoutUtils.configureTextWithPayload
-import org.cimsbioko.utilities.LayoutUtils.makeTextWithPayload
+import org.cimsbioko.utilities.configureText
+import org.cimsbioko.utilities.makeText
 
 class DetailToggleFragment : Fragment(), View.OnClickListener {
 
@@ -35,9 +35,8 @@ class DetailToggleFragment : Fragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return (inflater.inflate(R.layout.detail_toggle_fragment, container, false) as LinearLayout).also { df ->
-            layout = makeTextWithPayload(requireActivity(), null, null, null, this, df, 0, null, null, true)
-            (layout.layoutParams as LinearLayout.LayoutParams).apply {
-                setMargins(0, 0, 0, BUTTON_MARGIN)
+            layout = makeText(requireActivity(), listener = this, container = df).apply {
+                (layoutParams as LinearLayout.LayoutParams).apply { setMargins(0, 0, 0, BUTTON_MARGIN) }
             }
         }
     }
@@ -48,25 +47,27 @@ class DetailToggleFragment : Fragment(), View.OnClickListener {
 
     fun setEnabled(isEnabled: Boolean) {
         this.isEnabled = isEnabled
-        if (!isEnabled) {
-            layout.visibility = ViewGroup.INVISIBLE
-        } else {
-            layout.visibility = ViewGroup.VISIBLE
-            layout.isClickable = true
-            setHighlighted(false)
+        with(layout) {
+            if (!isEnabled) {
+                visibility = ViewGroup.INVISIBLE
+            } else {
+                visibility = ViewGroup.VISIBLE
+                isClickable = true
+                setHighlighted(false)
+            }
         }
     }
 
     fun setHighlighted(isHighlighted: Boolean) {
         requireActivity().also { activity ->
-            if (isEnabled && isHighlighted) {
-                layout.setBackgroundColor(resources.getColor(R.color.LightGreen, activity.theme))
-                configureTextWithPayload(activity, layout, getString(R.string.toggle_fragment_button_show_children),
-                        null, null, null, true)
-            } else if (isEnabled && !isHighlighted) {
-                layout.setBackgroundColor(resources.getColor(R.color.DarkGreen, activity.theme))
-                configureTextWithPayload(activity, layout, getString(R.string.toggle_fragment_button_show_details),
-                        null, null, null, true)
+            with(layout) {
+                if (isEnabled && isHighlighted) {
+                    setBackgroundColor(resources.getColor(R.color.LightGreen, activity.theme))
+                    configureText(activity, getString(R.string.toggle_fragment_button_show_children))
+                } else if (isEnabled && !isHighlighted) {
+                    setBackgroundColor(resources.getColor(R.color.DarkGreen, activity.theme))
+                    configureText(activity, getString(R.string.toggle_fragment_button_show_details))
+                }
             }
         }
     }
