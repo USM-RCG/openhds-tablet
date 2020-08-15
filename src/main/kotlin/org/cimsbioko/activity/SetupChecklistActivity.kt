@@ -24,6 +24,7 @@ import org.cimsbioko.utilities.SetupUtils.downloadForms
 import org.cimsbioko.utilities.SetupUtils.getToken
 import org.cimsbioko.utilities.SetupUtils.hasCampaignForms
 import org.cimsbioko.utilities.SetupUtils.hasRequiredPermissions
+import org.cimsbioko.utilities.SetupUtils.isAccountInstalled
 import org.cimsbioko.utilities.SetupUtils.isConfigAvailable
 import org.cimsbioko.utilities.SetupUtils.isDataAvailable
 import org.cimsbioko.utilities.SetupUtils.isFormsAppInstalled
@@ -104,7 +105,7 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
 
         val hasPerms = hasPermissions().also { permissionsCheckbox.isChecked = it }
         val hasApps = hasApps().also { appsCheckbox.isChecked = it }
-        val isConnected: Boolean = isConnected.also { connectCheckbox.isChecked = it }
+        val isConnected: Boolean = isAccountInstalled.also { connectCheckbox.isChecked = it }
         val hasData = hasData().also { dataCheckbox.isChecked = it }
         val hasConfig = hasConfig().also { configCheckbox.isChecked = it }
         val hasForms = hasForms().also { formsCheckbox.isChecked = it }

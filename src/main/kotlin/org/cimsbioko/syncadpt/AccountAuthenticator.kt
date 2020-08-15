@@ -1,9 +1,6 @@
 package org.cimsbioko.syncadpt
 
-import android.accounts.AbstractAccountAuthenticator
-import android.accounts.Account
-import android.accounts.AccountAuthenticatorResponse
-import android.accounts.AccountManager
+import android.accounts.*
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -17,8 +14,9 @@ import org.cimsbioko.syncadpt.Constants.KEY_NEW_ACCOUNT
 
 class AccountAuthenticator(private val ctx: Context) : AbstractAccountAuthenticator(ctx) {
 
-    override fun addAccount(response: AccountAuthenticatorResponse, accountType: String, authTokenType: String,
-                            requiredFeatures: Array<String>, options: Bundle): Bundle =
+    @Throws(NetworkErrorException::class)
+    override fun addAccount(response: AccountAuthenticatorResponse, accountType: String, authTokenType: String?,
+                            requiredFeatures: Array<String>?, options: Bundle?): Bundle? =
             Intent(ctx, DeviceAuthenticatorActivity::class.java)
                     .apply {
                         putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType)
