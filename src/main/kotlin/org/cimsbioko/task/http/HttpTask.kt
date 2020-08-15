@@ -77,7 +77,7 @@ class HttpTask(private val handler: HttpTaskResponseHandler) : AsyncTask<HttpTas
 
 }
 
-class HttpTaskRequest @JvmOverloads constructor(
+class HttpTaskRequest constructor(
         val url: String,
         val accept: String,
         val auth: String,
@@ -85,7 +85,7 @@ class HttpTaskRequest @JvmOverloads constructor(
         val file: File? = null
 )
 
-class HttpTaskResponse @JvmOverloads internal constructor(
+class HttpTaskResponse internal constructor(
         val isSuccess: Boolean,
         val result: HttpTask.Result,
         val httpStatus: Int,

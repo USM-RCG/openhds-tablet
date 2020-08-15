@@ -11,10 +11,8 @@ object Utils {
     private const val MAX_SIMILARITY = 0.99f
     private val jwd = JaroWinklerDistance()
 
-    @JvmStatic
     fun extractUniquePhones(phoneValue: String): Set<String> = phoneValue.trim { it <= ' ' }.split("\\s+".toRegex()).toSet()
 
-    @JvmStatic
     fun extractDissimilarNames(nameValue: String): Set<String> {
 
         fun MutableSet<String>.addIfDissimilar(value: String) {
@@ -31,7 +29,6 @@ object Utils {
         return names
     }
 
-    @JvmStatic
     fun join(values: Set<String>, separator: String) = buildString {
         for (name in values) {
             if (isNotEmpty()) {
@@ -47,7 +44,6 @@ object Utils {
      * @param ctx the app context to use for accessing preferences
      * @return true if auto-update is enabled, otherwise false
      */
-    @JvmStatic
     fun isAutoReindexingEnabled(ctx: Context) = isSearchEnabled(ctx) &&
             getSharedPrefs(ctx).getBoolean(ctx.getString(R.string.auto_index_on_db_update_key), false)
 
@@ -57,7 +53,6 @@ object Utils {
      * @param ctx the app context to use for accessing preferences
      * @return true is search is enabled, otherwise false
      */
-    @JvmStatic
     fun isSearchEnabled(ctx: Context): Boolean = getSharedPrefs(ctx).getBoolean(ctx.getString(R.string.use_search_key), false)
 
 }

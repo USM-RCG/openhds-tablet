@@ -120,7 +120,6 @@ class HierarchyPath(path: Map<String, DataWrapper> = emptyMap()) : Parcelable {
         private const val PATH_SEPARATOR = "|"
         private val LEAF_PATTERN = Pattern.compile("(\\w+):([a-f0-9]+)")
 
-        @JvmStatic
         fun fromString(pathStr: String?): HierarchyPath? = pathStr?.let { path ->
             with(LEAF_PATTERN.matcher(path)) {
                 if (matches()) DefaultQueryHelper[group(1), group(2)]?.let { fromLeafString(it) }

@@ -118,7 +118,6 @@ object SetupUtils {
                 .getAuthTokenByFeatures(Constants.ACCOUNT_TYPE, Constants.AUTHTOKEN_TYPE_DEVICE, null, activity, null, null, callback, null)
     }
 
-    @JvmStatic
     fun downloadConfig(activity: Activity) {
         getToken(activity, AccountManagerCallback { future: AccountManagerFuture<Bundle> ->
 

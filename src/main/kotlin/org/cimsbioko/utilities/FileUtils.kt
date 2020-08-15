@@ -34,7 +34,6 @@ object FileUtils {
      * @param ctx application context to use for determining database directory path
      * @return a [File] object corresponding to the application's main sqlite database
      */
-    @JvmStatic
     fun getDatabaseFile(ctx: Context): File {
         return ctx.getDatabasePath(ContentProvider.DATABASE_NAME)
     }
@@ -45,7 +44,6 @@ object FileUtils {
      * @param original [File] object corresponding to location of original file
      * @return [File] object corresponding to the temp file location for the original
      */
-    @JvmStatic
     fun getTempFile(original: File): File {
         return File(original.parentFile, tempFilename(original.name))
     }
@@ -56,7 +54,6 @@ object FileUtils {
      * @param original [File] object corresponding to the location of the original file
      * @return [File] object corresponding to the fingerprint file for the original
      */
-    @JvmStatic
     fun getFingerprintFile(original: File): File {
         return File(original.parentFile, hashFilename(original.name))
     }

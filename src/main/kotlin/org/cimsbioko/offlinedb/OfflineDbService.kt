@@ -25,7 +25,7 @@ class OfflineDbService : JobIntentService() {
     companion object {
         private val TAG = OfflineDbService::class.java.simpleName
         private const val JOB_ID = 0xFC
-        @JvmStatic
+
         fun enqueueWork(context: Context, intent: Intent) {
             enqueueWork(context, OfflineDbService::class.java, JOB_ID, intent)
         }

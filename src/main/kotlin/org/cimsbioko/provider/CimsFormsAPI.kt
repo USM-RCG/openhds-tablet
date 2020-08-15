@@ -13,7 +13,6 @@ object FormsProviderAPI {
     const val AUTHORITY = "org.cimsbioko.forms.provider.odk.forms"
 
     object FormsColumns : BaseColumns {
-        @JvmField
         val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY/forms")
         const val CONTENT_TYPE = "vnd.android.cursor.dir/vnd.odk.form"
         const val CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.odk.form"
@@ -51,7 +50,6 @@ object InstanceProviderAPI {
     const val STATUS_SUBMITTED = "submitted"
 
     object InstanceColumns {
-        @JvmField
         val CONTENT_URI: Uri = Uri.parse("content://$AUTHORITY/instances")
 
         // These are the only things needed for an insert

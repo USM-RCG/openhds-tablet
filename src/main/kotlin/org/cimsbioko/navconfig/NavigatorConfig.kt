@@ -153,8 +153,6 @@ class NavigatorConfig private constructor() {
 
     companion object {
         private val TAG = NavigatorConfig::class.java.simpleName
-
-        @JvmStatic
         val instance: NavigatorConfig by lazy { NavigatorConfig() }
     }
 }

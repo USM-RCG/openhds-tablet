@@ -7,10 +7,8 @@ import org.cimsbioko.model.core.FieldWorker
 
 object LoginUtils {
 
-    @JvmStatic
     val login = Login<FieldWorker>()
 
-    @JvmStatic
     fun launchLogin(ctx: Activity) {
         ctx.startActivity(Intent(ctx, FieldWorkerLoginActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK))
     }

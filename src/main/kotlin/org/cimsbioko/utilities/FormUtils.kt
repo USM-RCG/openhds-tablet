@@ -41,7 +41,6 @@ object FormUtils {
      * @throws JDOMException
      * @throws IOException
      */
-    @JvmStatic
     @Throws(JDOMException::class, IOException::class)
     fun domFromStream(stream: InputStream): Document = stream.use { s -> SAXBuilder().build(s) }
 
@@ -68,7 +67,6 @@ object FormUtils {
      * @param stream the stream to save the document content to
      * @throws IOException
      */
-    @JvmStatic
     @Throws(IOException::class)
     fun domToStream(doc: Document, stream: OutputStream) {
         stream.use { s ->
@@ -83,7 +81,6 @@ object FormUtils {
      *
      * @return the filesystem location to save/load the form
      */
-    @JvmStatic
     @Throws(IOException::class)
     fun formFile(): File {
         val genDir = File(App.instance.cacheDir, "generated_instances").also { it.mkdir() }
@@ -114,7 +111,6 @@ object FormUtils {
      * @param location the file system location to save the form at
      * @throws IOException
      */
-    @JvmStatic
     @Throws(IOException::class)
     fun saveForm(form: Document, location: File) {
         makeDirs(location)
@@ -125,7 +121,6 @@ object FormUtils {
      * Generates a data document from a template form.
      * @return a [Document] object containing just a blank main data element from this
      */
-    @JvmStatic
     fun Document.detachDataDoc(): Document = Document(getDataElement(this))
 
     private fun getDataElement(blank: Document): Element = blank
@@ -142,6 +137,5 @@ object FormUtils {
      * @param formUri the content [Uri] for the form instance to edit
      * @return an [Intent] useful for launching the editing activity in CIMS Forms
      */
-    @JvmStatic
     fun editIntent(formUri: Uri): Intent = Intent(Intent.ACTION_EDIT, formUri)
 }

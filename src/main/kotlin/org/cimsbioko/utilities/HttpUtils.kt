@@ -40,7 +40,6 @@ object HttpUtils {
     /**
      * Constructs an [HttpURLConnection] with the specified settings, if non-null.
      */
-    @JvmStatic
     @Throws(IOException::class)
     operator fun get(url: URL, accept: String?, auth: String?, eTag: String?): HttpURLConnection {
         val headers: MutableMap<String?, String?> = HashMap()

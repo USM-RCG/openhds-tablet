@@ -13,7 +13,6 @@ object IOUtils {
      *
      * @return a [File] indicating where cims-specific (public) files are/can be stored
      */
-    @JvmStatic
     val externalDir: File
         get() = File(App.instance.getExternalFilesDir(null), "cims")
 
@@ -24,7 +23,6 @@ object IOUtils {
      * @param target the [OutputStream] to copy bytes to
      * @throws IOException if any error occurs reading or writing
      */
-    @JvmStatic
     @Throws(IOException::class)
     fun copy(source: InputStream, target: OutputStream) {
         val buffer = ByteArray(BUFFER_SIZE)
@@ -42,7 +40,6 @@ object IOUtils {
      *
      * @param closeables a list of possibly null closeable references or null
      */
-    @JvmStatic
     fun close(vararg closeables: Closeable?) = closeables.filterNotNull().forEach {
         try {
             it.close()
@@ -67,7 +64,6 @@ object IOUtils {
      * @param toWrap the stram to wrap
      * @return a [BufferedInputStream] wrapping toWrap
      */
-    @JvmStatic
     fun buffer(toWrap: InputStream?): InputStream {
         return BufferedInputStream(toWrap)
     }
@@ -78,7 +74,6 @@ object IOUtils {
      * @param file the file to read
      * @return the first line of content as delimited by system line separator
      */
-    @JvmStatic
     fun loadFirstLine(file: File): String? {
         var line: String? = null
         if (file.exists() && file.canRead()) {
@@ -105,7 +100,6 @@ object IOUtils {
      * @param file the location of the file to write to
      * @param s    the string to store
      */
-    @JvmStatic
     fun store(file: File, s: String?) {
         if (!file.exists() || file.exists() && file.canWrite()) {
             var out: OutputStream? = null
@@ -134,8 +128,6 @@ object IOUtils {
     /**
      * Convenience method for [IOUtils.streamToFile].
      */
-    @JvmStatic
-    @JvmOverloads
     @Throws(IOException::class, InterruptedException::class)
     fun streamToFile(`in`: InputStream, f: File?, listener: StreamListener? = null) {
         val out = buffer(FileOutputStream(f))
@@ -156,7 +148,6 @@ object IOUtils {
      * @throws IOException
      * @throws InterruptedException
      */
-    @JvmStatic
     @Throws(IOException::class, InterruptedException::class)
     fun streamToStream(`in`: InputStream, out: OutputStream, listener: StreamListener?) {
         val buf = ByteArray(BUFFER_SIZE)
@@ -177,7 +168,6 @@ object IOUtils {
      * @param target [File] specifying location to copy to
      * @throws IOException
      */
-    @JvmStatic
     @Throws(IOException::class)
     fun copyFile(source: File?, target: File?) {
         val sStream = FileInputStream(source)

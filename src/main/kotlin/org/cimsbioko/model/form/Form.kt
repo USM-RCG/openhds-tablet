@@ -20,7 +20,6 @@ data class Form(val id: Long, val formId: String, val formVersion: String, val f
         get() = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, id)
 
     companion object {
-        @JvmStatic
         @Throws(FileNotFoundException::class)
         fun lookup(binding: Binding): Form {
             val formId = binding.form

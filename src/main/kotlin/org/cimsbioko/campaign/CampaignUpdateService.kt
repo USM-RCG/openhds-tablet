@@ -95,7 +95,6 @@ class CampaignUpdateService : JobIntentService() {
         const val CIMS_CAMPAIGN_ID = "cims-campaign-id"
         private const val JOB_ID = 0xFA
 
-        @JvmStatic
         fun enqueueWork(context: Context, intent: Intent) {
             enqueueWork(context, CampaignUpdateService::class.java, JOB_ID, intent)
         }

@@ -13,7 +13,6 @@ class ContextFactory private constructor() : org.mozilla.javascript.ContextFacto
     }
 
     companion object {
-        @JvmStatic
         fun register() {
             if (!hasExplicitGlobal()) {
                 initGlobal(ContextFactory())

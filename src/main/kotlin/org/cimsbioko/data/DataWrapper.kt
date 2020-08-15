@@ -86,7 +86,6 @@ data class DataWrapper(
 
     companion object {
 
-        @JvmStatic
         fun getByHierarchyId(id: String): DataWrapper? = id.split(":".toRegex()).let { parts ->
             if (parts.size == 2) parts.let { (level, uuid) -> get(level, uuid) } else null
         }

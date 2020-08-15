@@ -76,7 +76,6 @@ object SyncUtils {
      * @return a [URL] to use for fetching app sqlite db update for the current campaign
      * @throws MalformedURLException when the constructed value is not a valid URL
      */
-    @JvmStatic
     @Throws(MalformedURLException::class)
     fun getRemoteSyncEndpoint(ctx: Context): URL {
         val baseUrl = buildServerUrl(ctx, ctx.getString(R.string.sync_database_path))
@@ -93,7 +92,6 @@ object SyncUtils {
      * @return a [URL] to use for fetching app sqlite db update for the current campaign
      * @throws MalformedURLException
      */
-    @JvmStatic
     @Throws(MalformedURLException::class)
     fun getLocalSyncEndpoint(ctx: Context, info: NsdServiceInfo): URL =
             URL("http", info.host.hostName, info.port, ctx.getString(R.string.sync_database_path) + "/" + campaignId)
@@ -113,7 +111,6 @@ object SyncUtils {
      * @param ctx the app context to use for determining content paths
      * @return true if there appears to be temp content to replace app db, otherwise false
      */
-    @JvmStatic
     fun canUpdateDatabase(ctx: Context): Boolean = getFingerprintFile(getTempFile(getDatabaseFile(ctx))).exists()
 
     /**
@@ -124,7 +121,6 @@ object SyncUtils {
      * @param ctx the app context to use for determiningg file paths
      * @return the content of the fingerprint file for the app sqlite database
      */
-    @JvmStatic
     fun getDatabaseFingerprint(ctx: Context): String {
         return loadFirstLine(getFingerprintFile(getDatabaseFile(ctx)))
                 ?: ctx.getString(R.string.sync_database_no_fingerprint)
@@ -141,7 +137,6 @@ object SyncUtils {
     /**
      * Requests a database synchronization occur for the CIMS account.
      */
-    @JvmStatic
     fun checkForUpdate() {
         val ctx: Context = App.instance
         val manager = AccountManager.get(ctx)
@@ -156,7 +151,6 @@ object SyncUtils {
         }
     }
 
-    @JvmStatic
     fun cancelUpdate(ctx: Context?) {
         val manager = AccountManager.get(ctx)
         val accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE)
@@ -181,7 +175,6 @@ object SyncUtils {
      * @param endpoint url of the remote http endpoint to sync with
      * @param accessToken bearer token to use when contacting server
      */
-    @JvmStatic
     fun downloadUpdate(ctx: Context, endpoint: URL, accessToken: String?) {
         val broadcastManager = LocalBroadcastManager.getInstance(ctx)
         val notificationManager = getNotificationManager(ctx)
@@ -418,7 +411,6 @@ object SyncUtils {
      * @param ctx      the app context to use for accessing relevant resources
      * @param listener object to use for callback upon successful update
      */
-    @JvmStatic
     fun installUpdate(ctx: Context, listener: DatabaseInstallationListener) {
         val dbFile = getDatabaseFile(ctx)
         val dbTempFile = getTempFile(dbFile)
@@ -442,7 +434,6 @@ object SyncUtils {
      * @throws NoSuchAlgorithmException
      * @throws InterruptedException
      */
-    @JvmStatic
     @Throws(IOException::class, NoSuchAlgorithmException::class, InterruptedException::class)
     fun makeOfflineDbAvailable(ctx: Context) {
         if (offlineDbExists()) {

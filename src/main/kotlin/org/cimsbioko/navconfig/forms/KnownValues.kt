@@ -24,7 +24,6 @@ object KnownValues {
                 "notApplicable" to R.string.not_available
         )
 
-        @JvmStatic
         fun getLabel(value: String) = labels[value]
     }
 
@@ -44,7 +43,6 @@ object KnownValues {
                 "11" to R.string.db_val_relation_to_head_type_nephew_niece
         )
 
-        @JvmStatic
         fun getLabel(value: String) = labels[value]
     }
 }

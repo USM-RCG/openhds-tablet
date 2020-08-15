@@ -7,7 +7,6 @@ import java.net.URLDecoder
 
 object UrlUtils {
 
-    @JvmStatic
     fun buildServerUrl(context: Context, path: String): String? {
         val baseUrl = getServerBaseUrl(context)
         if (baseUrl.trim { it <= ' ' }.isEmpty()) {
@@ -21,7 +20,6 @@ object UrlUtils {
             ConfigUtils.getPreferenceString(context, R.string.server_url_key, context.getString(R.string.default_server_url))
                     ?: "no server url found"
 
-    @JvmStatic
     fun setServerUrl(context: Context, url: String?) {
         ConfigUtils.getSharedPrefs(context)
                 .edit()
@@ -29,7 +27,6 @@ object UrlUtils {
                 .apply()
     }
 
-    @JvmStatic
     fun urlDecode(value: String): String {
         return try {
             URLDecoder.decode(value, "UTF8")

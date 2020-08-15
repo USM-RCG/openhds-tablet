@@ -5,7 +5,6 @@ package org.cimsbioko.utilities
  */
 object SQLUtils {
 
-    @JvmStatic
     fun makePlaceholders(len: Int) =
             if (len < 1) ""
             else buildString {

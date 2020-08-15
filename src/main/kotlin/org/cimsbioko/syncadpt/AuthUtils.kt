@@ -30,7 +30,6 @@ object AuthUtils {
      * @throws IOException   when url is bad, or io fails
      * @throws JSONException when construction of the response object fails
      */
-    @JvmStatic
     @Throws(IOException::class, JSONException::class)
     fun register(ctx: Context, name: String, secret: String) = getRegistrationEndpoint(ctx).openConnection()
             .apply {
@@ -65,7 +64,6 @@ object AuthUtils {
      * @throws IOException   when url is bad, or io fails
      * @throws JSONException when construction of the response object fails
      */
-    @JvmStatic
     @Throws(IOException::class, JSONException::class)
     fun token(ctx: Context, name: String, secret: String) = getTokenEndpoint(ctx).openConnection()
             .let { it as HttpURLConnection }

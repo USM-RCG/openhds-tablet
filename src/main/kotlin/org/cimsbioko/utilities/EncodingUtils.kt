@@ -10,7 +10,6 @@ object EncodingUtils {
      * @param bytes the array to convert
      * @return the array contents encoded as a base-16 string
      */
-    @JvmStatic
     fun toHex(bytes: ByteArray): String {
         val hexChars = CharArray(bytes.size * 2)
         for (j in bytes.indices) {

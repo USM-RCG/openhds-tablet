@@ -4,7 +4,6 @@ import org.cimsbioko.navconfig.UsedByJSConfig
 
 object StringUtils {
 
-    @JvmStatic
     fun join(separator: String, vararg strings: String) = buildString {
         for ((index, str) in strings.withIndex()) {
             append(str)

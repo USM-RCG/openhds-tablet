@@ -110,10 +110,8 @@ class App : Application() {
         lateinit var instance: App
             private set
 
-        @JvmStatic
         fun getApp() = instance
 
-        @JvmField
         val CONTENT_BASE_URI: Uri = Uri.parse(CONTENT_BASE)
     }
 }

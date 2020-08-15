@@ -71,7 +71,6 @@ open class FormInstance(
          * @param data form data as in-memory dom object, possibly containing binding information
          * @return the configured form binding, or null if none is available for the data
          */
-        @JvmStatic
         fun getBinding(data: Document): Binding? =
                 if (isBound(data)) NavigatorConfig.instance.getBinding(data.rootElement.getAttribute(BINDING_ATTR).value)
                 else null
@@ -90,7 +89,6 @@ open class FormInstance(
          * @param uri the uri of the instance to lookup
          * @return a [FormInstance] object if found, null otherwise
          */
-        @JvmStatic
         fun lookup(uri: Uri): FormInstance? = getInstance(uri)
 
         /**
@@ -102,7 +100,6 @@ open class FormInstance(
          * @return the [Uri] to a new form instance, registered with Forms
          * @throws IOException
          */
-        @JvmStatic
         @Throws(IOException::class, JDOMException::class)
         fun generate(template: Form, binding: Binding, ctx: LaunchContext): Uri = template.newDataDoc().apply {
             rootElement.apply {

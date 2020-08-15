@@ -43,12 +43,10 @@ class IndexingService : JobIntentService() {
             enqueueWork(context, IndexingService::class.java, JOB_ID, intent)
         }
 
-        @JvmStatic
         fun queueFullReindex(ctx: Context) {
             enqueueWork(ctx.applicationContext, Intent(ctx, IndexingService::class.java))
         }
 
-        @JvmStatic
         fun queueReindex(ctx: Context, type: EntityType, uuid: String) {
             enqueueWork(ctx.applicationContext, Intent(ctx, IndexingService::class.java).apply {
                 putExtra(ENTITY_TYPE, type.toString())

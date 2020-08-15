@@ -15,11 +15,9 @@ object CampaignUtils {
 
     private val TAG = CampaignUtils::class.java.simpleName
 
-    @JvmStatic
     val campaignUrl: String?
         get() = buildServerUrl(App.instance, "/api/rest/campaign")
 
-    @JvmStatic
     fun getCampaignUrl(uuid: String): String? {
         return buildServerUrl(App.instance, "/api/rest/campaign/$uuid")
     }
@@ -30,26 +28,21 @@ object CampaignUtils {
     private val externalCampaignFile: File
         get() = File(IOUtils.externalDir, SetupUtils.CAMPAIGN_FILENAME)
 
-    @JvmStatic
     val downloadedCampaignFile: File
         get() = App.instance.getFileStreamPath(SetupUtils.CAMPAIGN_FILENAME)
 
-    @JvmStatic
     val campaignTempFingerprintFile: File
         get() = FileUtils.getFingerprintFile(campaignTempFile)
 
-    @JvmStatic
     val campaignTempFile: File
         get() = FileUtils.getTempFile(downloadedCampaignFile)
 
-    @JvmStatic
     val campaignHash: String?
         get() = IOUtils.loadFirstLine(downloadedCampaignFingerprintFile)
 
     private val downloadedCampaignFingerprintFile: File
         get() = FileUtils.getFingerprintFile(downloadedCampaignFile)
 
-    @JvmStatic
     fun updateCampaign(campaignId: String?, clearActiveModules: Boolean) {
         val newFile = campaignTempFile
         val newFingerprintFile = campaignTempFingerprintFile
@@ -92,10 +85,8 @@ object CampaignUtils {
             return CampaignUtils::class.java.classLoader!!
         }
 
-    @JvmStatic
     fun downloadedCampaignExists() = downloadedCampaignFile.canRead()
 
-    @JvmStatic
     @Throws(MalformedURLException::class, URISyntaxException::class)
     fun loadCampaign(): JsConfig = JsConfig(loader).load()
 
@@ -107,7 +98,6 @@ object CampaignUtils {
      * @throws IOException   when url is bad, or io fails
      * @throws JSONException when construction of the response object fails
      */
-    @JvmStatic
     @Throws(IOException::class, JSONException::class)
     fun getCampaigns(token: String): JSONArray {
         val urlConn = URL(myCampaignsUrl).openConnection() as HttpURLConnection
@@ -141,7 +131,6 @@ object CampaignUtils {
      * @return a [File] to the downloaded campaign file.
      * @throws IOException when url is bad, or io fails
      */
-    @JvmStatic
     @Throws(IOException::class)
     fun downloadCampaignFile(token: String, uuid: String, targetFile: File): CampaignDownloadResult {
         val urlConn = HttpUtils.get(URL(getCampaignUrl(uuid)), null, HttpUtils.encodeBearerCreds(token), null)
