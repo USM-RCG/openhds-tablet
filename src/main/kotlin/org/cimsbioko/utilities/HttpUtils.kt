@@ -14,22 +14,15 @@ object HttpUtils {
      *
      * FIXME: password exposed to memory scan as String via constant pool
      */
-    @JvmStatic
-    fun encodeBasicCreds(username: String, password: String): String {
-        return String.format("Basic %s",
-                Base64.encodeToString("$username:$password".toByteArray(), Base64.DEFAULT)
-        )
-    }
+    fun encodeBasicCreds(username: String, password: String): String =
+            "Basic ${Base64.encodeToString("$username:$password".toByteArray(), Base64.DEFAULT)}"
 
     /**
      * Encodes an HTTP Bearer authentication header for the specified token.
      *
      * FIXME: password exposed to memory scan as String via constant pool
      */
-    @JvmStatic
-    fun encodeBearerCreds(token: String): String {
-        return String.format("Bearer %s", token)
-    }
+    fun encodeBearerCreds(token: String): String = "Bearer $token"
 
     /**
      * Constructs an [HttpURLConnection] with the given request headers.

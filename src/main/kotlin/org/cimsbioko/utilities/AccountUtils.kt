@@ -16,13 +16,9 @@ object AccountUtils {
     private val accounts: Array<Account>
         get() = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE)
 
-    @JvmStatic
     val firstAccount: Account?
-        get() {
-            return accounts.firstOrNull()
-        }
+        get() = accounts.firstOrNull()
 
-    @JvmStatic
     @get:Throws(AuthenticatorException::class, OperationCanceledException::class, IOException::class)
     val token: String
         get() = accountManager.blockingGetAuthToken(firstAccount, Constants.AUTHTOKEN_TYPE_DEVICE, true)

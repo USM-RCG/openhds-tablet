@@ -42,7 +42,6 @@ object SetupUtils {
     const val CAMPAIGN_DOWNLOADED_ACTION = "CAMPAIGN_DOWNLOADED"
     const val CAMPAIGN_FILENAME = "campaign.zip"
 
-    @JvmStatic
     fun setupRequirementsMet(ctx: Context): Boolean {
         return (hasRequiredPermissions(ctx)
                 && isFormsAppInstalled(ctx.packageManager)
@@ -52,7 +51,6 @@ object SetupUtils {
                 && hasCampaignForms())
     }
 
-    @JvmStatic
     fun hasRequiredPermissions(ctx: Context?): Boolean {
         for (perm in REQUIRED_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(ctx!!, perm) != PackageManager.PERMISSION_GRANTED) {
@@ -62,13 +60,10 @@ object SetupUtils {
         return true
     }
 
-    @JvmStatic
     fun startApp(source: Activity) = launchLogin(source)
 
-    @JvmStatic
     fun createNotificationChannels(ctx: Context) = createChannels(ctx.applicationContext)
 
-    @JvmStatic
     fun askForPermissions(activity: Activity, requestCode: Int) {
         if (needsPermissions(activity)) {
             ActivityCompat.requestPermissions(activity, REQUIRED_PERMISSIONS, requestCode)
@@ -77,25 +72,20 @@ object SetupUtils {
 
     private fun needsPermissions(ctx: Context): Boolean = !hasRequiredPermissions(ctx)
 
-    @JvmStatic
     val isConfigAvailable: Boolean
         get() = downloadedCampaignExists()
 
-    @JvmStatic
     fun isDataAvailable(ctx: Context): Boolean = SyncUtils.downloadedContentBefore(ctx)
 
-    @JvmStatic
     val isAccountInstalled: Boolean
         get() = firstAccount != null
 
-    @JvmStatic
     fun isFormsAppInstalled(manager: PackageManager): Boolean {
         val formsIntent = Intent(Intent.ACTION_EDIT, FormsProviderAPI.FormsColumns.CONTENT_URI)
         val intentMatches = manager.queryIntentActivities(formsIntent, 0)
         return !intentMatches.isEmpty()
     }
 
-    @JvmStatic
     fun promptFormsAppInstall(activity: Activity) {
         val clickListener: DialogInterface.OnClickListener = object : DialogInterface.OnClickListener {
             override fun onClick(dialog: DialogInterface, which: Int) {
@@ -122,7 +112,6 @@ object SetupUtils {
                 .show()
     }
 
-    @JvmStatic
     fun getToken(activity: Activity, callback: AccountManagerCallback<Bundle>?) {
         AccountManager
                 .get(activity.applicationContext)
@@ -174,7 +163,6 @@ object SetupUtils {
         })
     }
 
-    @JvmStatic
     var campaignId: String?
         get() = getSharedPrefs(App.instance).getString(CampaignUpdateService.CIMS_CAMPAIGN_ID, null)
         set(campaignId) {
@@ -182,10 +170,8 @@ object SetupUtils {
             getSharedPrefs(App.instance).edit().putString(CampaignUpdateService.CIMS_CAMPAIGN_ID, campaignId).apply()
         }
 
-    @JvmStatic
     fun hasCampaignForms(): Boolean = hasFormsWithIds(NavigatorConfig.instance.formIds)
 
-    @JvmStatic
     fun downloadForms(ctx: Context) {
         val i = Intent("org.cimsbioko.forms.FORM_DOWNLOAD")
         i.type = "vnd.android.cursor.dir/vnd.cimsforms.form"

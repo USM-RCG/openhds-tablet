@@ -115,11 +115,8 @@ fun View.configureFormListItem(instance: LoadedFormInstance) {
 
     // Extract and set values contained within the form instance
     with(doc.rootElement) {
-        findViewById<TextView>(R.id.form_instance_list_id)
-                ?.text = getChildText(KnownFields.ENTITY_EXTID) ?: ""
-        findViewById<TextView>(R.id.form_instance_list_fieldworker)
-                ?.text = getChildText(KnownFields.FIELD_WORKER_EXTID) ?: ""
-        findViewById<TextView>(R.id.form_instance_list_date)
-                ?.text = getChildText(KnownFields.COLLECTION_DATE_TIME) ?: ""
+        findViewById<TextView>(R.id.form_instance_list_id)?.text = getChildText(KnownFields.ENTITY_EXTID) ?: ""
+        findViewById<TextView>(R.id.form_instance_list_fieldworker)?.text = getChildText(KnownFields.FIELD_WORKER_EXTID) ?: ""
+        findViewById<TextView>(R.id.form_instance_list_date)?.text = getChildText(KnownFields.COLLECTION_DATE_TIME) ?: ""
     }
 }
