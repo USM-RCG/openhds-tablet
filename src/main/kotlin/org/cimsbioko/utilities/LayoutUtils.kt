@@ -10,7 +10,11 @@ import android.widget.TextView
 import org.cimsbioko.R
 import org.cimsbioko.model.form.FormInstance
 import org.cimsbioko.model.form.LoadedFormInstance
+import org.cimsbioko.navconfig.forms.FormDisplay
+import org.cimsbioko.navconfig.forms.FormFormatter
 import org.cimsbioko.navconfig.forms.KnownFields
+import org.jdom2.Document
+import org.jdom2.Element
 
 
 // Create a new Layout that contains two text views and optionally several "payload" text views beneath.
@@ -80,8 +84,8 @@ private val CharSequence?.isBlank: Boolean
 
 // Pass new data to text views created with makeLargeTextWithValueAndLabel().
 fun RelativeLayout.configureTextWithLabel(labelId: Int, valueText: String?,
-                                                  labelColorId: Int = R.color.Black, valueColorId: Int = R.color.Black,
-                                                  missingColorId: Int = R.color.LightGray) {
+                                          labelColorId: Int = R.color.Black, valueColorId: Int = R.color.Black,
+                                          missingColorId: Int = R.color.LightGray) {
     val resources = context.resources
     findViewById<TextView>(R.id.label_text)?.apply {
         setText(labelId)
@@ -107,16 +111,29 @@ fun View.configureFormListItem(instance: LoadedFormInstance) {
     })
 
     val doc = instance.document
+    val binding = FormInstance.getBinding(doc)
 
     // Set form name based on its embedded binding
     findViewById<TextView>(R.id.form_instance_list_type)?.apply {
-        text = FormInstance.getBinding(doc)?.label ?: instance.formName
+        text = binding?.label ?: instance.formName
     }
 
-    // Extract and set values contained within the form instance
-    with(doc.rootElement) {
-        findViewById<TextView>(R.id.form_instance_list_id)?.text = getChildText(KnownFields.ENTITY_EXTID) ?: ""
-        findViewById<TextView>(R.id.form_instance_list_fieldworker)?.text = getChildText(KnownFields.FIELD_WORKER_EXTID) ?: ""
-        findViewById<TextView>(R.id.form_instance_list_date)?.text = getChildText(KnownFields.COLLECTION_DATE_TIME) ?: ""
+    (binding?.formatter ?: LegacyFormatter).format(doc).also {
+        findViewById<TextView>(R.id.form_instance_list_id)?.text = it.entity ?: ""
+        findViewById<TextView>(R.id.form_instance_list_fieldworker)?.text = it.fieldworker ?: ""
+        findViewById<TextView>(R.id.form_instance_list_date)?.text = it.dateTimeCollected ?: ""
     }
+}
+
+/**
+ * Provided for older campaigns that do not define their formatter. This can be retired once we migrate older campaigns.
+ */
+object LegacyFormatter : FormFormatter {
+    override fun format(dataDoc: Document): FormDisplay = LegacyDisplay(dataDoc.rootElement)
+}
+
+class LegacyDisplay(e: Element) : FormDisplay {
+    override val fieldworker: String? = e.getChildText(KnownFields.FIELD_WORKER_EXTID)
+    override val entity: String? = e.getChildText(KnownFields.ENTITY_EXTID)
+    override val dateTimeCollected: String? = e.getChildText(KnownFields.COLLECTION_DATE_TIME)
 }

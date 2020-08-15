@@ -9,10 +9,7 @@ import org.cimsbioko.model.core.LocationHierarchy
 import org.cimsbioko.navconfig.Gateways
 import org.cimsbioko.navconfig.Hierarchy
 import org.cimsbioko.navconfig.NavigatorModule
-import org.cimsbioko.navconfig.forms.Binding
-import org.cimsbioko.navconfig.forms.FormBuilder
-import org.cimsbioko.navconfig.forms.FormConsumer
-import org.cimsbioko.navconfig.forms.Launcher
+import org.cimsbioko.navconfig.forms.*
 import org.cimsbioko.utilities.DateUtils
 import org.cimsbioko.utilities.FormUtils
 import org.cimsbioko.utilities.IdHelper
@@ -148,7 +145,9 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
 
         private fun installInterfaces(scope: ScriptableObject) {
             putClasses(scope, Hierarchy::class.java, NavigatorModule::class.java, FormBuilder::class.java,
-                    FormConsumer::class.java, Binding::class.java, Launcher::class.java)
+                    FormConsumer::class.java, Binding::class.java, Launcher::class.java, FormFormatter::class.java,
+                    FormDisplay::class.java
+            )
         }
 
         private fun putClasses(scope: ScriptableObject, vararg classes: Class<*>) {
