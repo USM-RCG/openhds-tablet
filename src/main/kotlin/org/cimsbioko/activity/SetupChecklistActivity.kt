@@ -16,7 +16,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.navigation.NavigationView
 import org.cimsbioko.R
 import org.cimsbioko.utilities.MessageUtils.showShortToast
-import org.cimsbioko.utilities.NetUtils.isConnected
 import org.cimsbioko.utilities.SetupUtils.CAMPAIGN_DOWNLOADED_ACTION
 import org.cimsbioko.utilities.SetupUtils.askForPermissions
 import org.cimsbioko.utilities.SetupUtils.downloadConfig
