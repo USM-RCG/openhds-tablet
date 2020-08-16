@@ -86,7 +86,6 @@ class DataSelectionFragment : Fragment() {
                             primaryText = item?.name,
                             secondaryText = item?.extId,
                             stringsPayload = item?.stringsPayload,
-                            stringsIdsPayload = item?.stringIdsPayload,
                             centerText = false)
                 }
             }

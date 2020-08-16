@@ -32,7 +32,7 @@ fun makeText(activity: Activity, layoutTag: Any? = null, listener: View.OnClickL
 // Pass new data to a layout that was created with makeTextWithPayload().
 fun RelativeLayout.configureText(activity: Activity, primaryText: String? = null,
                                  secondaryText: String? = null, stringsPayload: Map<Int, String?>? = null,
-                                 stringsIdsPayload: Map<Int, Int>? = null, centerText: Boolean = true) {
+                                 centerText: Boolean = true) {
 
     fun TextView.configure(s: String?) {
         s?.let { text = it }
@@ -51,16 +51,6 @@ fun RelativeLayout.configureText(activity: Activity, primaryText: String? = null
                     configureTextWithLabel(labelId = key, valueText = sp[key])
                     layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 })
-            }
-        }
-        stringsIdsPayload?.also { sip ->
-            for (key in sip.keys) {
-                sip[key]?.let { activity.resources.getString(it) }?.also {
-                    addView(makeSmallTextWithLabel(activity).apply {
-                        configureTextWithLabel(labelId = key, valueText = it)
-                        layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                    })
-                }
             }
         }
         visibility = if (childCount == 0) View.GONE else View.VISIBLE

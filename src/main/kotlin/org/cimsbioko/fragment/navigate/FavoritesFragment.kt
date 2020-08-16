@@ -134,7 +134,6 @@ class FavoritesFragment : Fragment() {
                                 primaryText = name,
                                 secondaryText = extId,
                                 stringsPayload = stringsPayload,
-                                stringsIdsPayload = stringIdsPayload,
                                 centerText = false)
                     }
                 }

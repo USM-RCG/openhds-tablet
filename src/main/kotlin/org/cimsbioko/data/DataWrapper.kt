@@ -25,7 +25,6 @@ data class DataWrapper(
 ) : Parcelable {
 
     var stringsPayload: MutableMap<Int, String?> = HashMap()
-    var stringIdsPayload: MutableMap<Int, Int> = HashMap()
 
     override fun toString(): String =
             "QueryResult[name: $name extId: $extId category: $category + payload size: ${stringsPayload.size}]"
@@ -48,15 +47,6 @@ data class DataWrapper(
                 }
             }
         }
-        stringIdsPayload = HashMap<Int, Int>().also { map ->
-            ArrayList<Int>().also { parcel.readList(it, null) }.let { list ->
-                parcel.readBundle(DataWrapper::class.java.classLoader)?.let { bundle ->
-                    for (key in list) {
-                        map[key] = bundle.getInt(key.toString())
-                    }
-                }
-            }
-        }
     }
 
     // for Parcelable
@@ -72,10 +62,6 @@ data class DataWrapper(
             stringsPayload.keys.toList().let { list ->
                 writeList(list)
                 writeBundle(Bundle().apply { for (key in list) putString(key.toString(), stringsPayload[key]) })
-            }
-            stringIdsPayload.keys.toList().let { list ->
-                writeList(list)
-                writeBundle(Bundle().apply { for (key in list) putInt(key.toString(), stringIdsPayload[key] ?: 0) })
             }
         }
     }

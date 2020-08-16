@@ -116,8 +116,8 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun setButtonLabel(level: String, name: String?, id: String?, centerText: Boolean) {
-        levelViews[level]?.configureText(requireActivity(), name, id, null, null, centerText)
+    private fun setButtonLabel(level: String, name: String?, id: String?, center: Boolean) {
+        levelViews[level]?.configureText(requireActivity(), primaryText = name, secondaryText = id, centerText = center)
     }
 
     override fun onClick(v: View) {
