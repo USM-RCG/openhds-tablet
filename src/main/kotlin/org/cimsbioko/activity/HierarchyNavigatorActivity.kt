@@ -50,7 +50,6 @@ import org.cimsbioko.utilities.LoginUtils.login
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 import java.io.IOException
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 
 class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, HierarchyButtonListener, DetailToggleListener,
@@ -117,7 +116,6 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
             pathHistory = Stack()
             intent.getParcelableExtra<HierarchyPath?>(HIERARCHY_PATH_KEY)?.also {
                 hierarchyPath = it
-                currentResults = intent.getParcelableArrayListExtra(CURRENT_RESULTS_KEY) ?: emptyList()
             }
             fragmentManager.beginTransaction()
                     .add(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG)
@@ -125,7 +123,6 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         } else {
             with(savedInstanceState) {
                 hierarchyPath = getParcelable(HIERARCHY_PATH_KEY) ?: HierarchyPath()
-                currentResults = getParcelableArrayList(CURRENT_RESULTS_KEY) ?: emptyList()
                 pathHistory = getSerializable(HISTORY_KEY)?.let { it as Stack<HierarchyPath> } ?: Stack()
                 fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG)?.also { valueFragment = it as DataSelectionFragment }
                 fragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG)?.also { detailFragment = it as DetailFragment }
@@ -151,7 +148,6 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
     public override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState.apply {
             putParcelable(HIERARCHY_PATH_KEY, hierarchyPath)
-            putParcelableArrayList(CURRENT_RESULTS_KEY, ArrayList(currentResults))
             putSerializable(HISTORY_KEY, pathHistory)
         })
     }
@@ -195,7 +191,6 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
                     setClass(this@HierarchyNavigatorActivity, HierarchyNavigatorActivity::class.java)
                     putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, menuModule)
                     putExtra(HIERARCHY_PATH_KEY, hierarchyPath)
-                    putParcelableArrayListExtra(CURRENT_RESULTS_KEY, ArrayList(currentResults))
                 })
             } ?: return super.onOptionsItemSelected(item)
         }
@@ -421,7 +416,6 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         private const val FORM_ACTIVITY_REQUEST_CODE = 0
         private const val VALUE_FRAGMENT_TAG = "hierarchyValueFragment"
         private const val DETAIL_FRAGMENT_TAG = "hierarchyDetailFragment"
-        private const val CURRENT_RESULTS_KEY = "currentResults"
         private const val HISTORY_KEY = "navHistory"
         const val HIERARCHY_PATH_KEY = "hierarchyPathKeys"
         private const val ROOT_LEVEL = "root"
