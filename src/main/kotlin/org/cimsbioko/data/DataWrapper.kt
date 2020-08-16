@@ -3,6 +3,7 @@ package org.cimsbioko.data
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
+import org.cimsbioko.navconfig.UsedByJSConfig
 import org.cimsbioko.navconfig.db.DefaultQueryHelper.get
 import java.util.*
 
@@ -19,7 +20,8 @@ data class DataWrapper(
         val uuid: String,
         val category: String,
         val extId: String,
-        val name: String
+        @set:UsedByJSConfig
+        var name: String
 ) : Parcelable {
 
     var stringsPayload: MutableMap<Int, String?> = HashMap()
