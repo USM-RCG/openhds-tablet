@@ -45,6 +45,8 @@ interface FormDisplay {
     val fieldworker: String?
     val entity: String?
     val dateTimeCollected: String?
+    val extra1: String?
+    val extra2: String?
 }
 
 interface Launcher {

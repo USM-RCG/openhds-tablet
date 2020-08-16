@@ -44,4 +44,20 @@
         android:layout_below="@+id/form_instance_list_type"
         tools:text="Identifier" />
 
+    <TextView
+            android:id="@+id/form_instance_list_extra1"
+            style="@style/FormText"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/form_instance_list_fieldworker"
+            tools:text="Extra1" />
+
+    <TextView
+            android:id="@+id/form_instance_list_extra2"
+            style="@style/FormText"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/form_instance_list_extra1"
+            tools:text="Extra2" />
+
 </RelativeLayout>

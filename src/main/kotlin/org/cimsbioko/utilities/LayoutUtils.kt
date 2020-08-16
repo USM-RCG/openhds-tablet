@@ -122,6 +122,8 @@ fun View.configureFormListItem(instance: LoadedFormInstance) {
         findViewById<TextView>(R.id.form_instance_list_id)?.text = it.entity ?: ""
         findViewById<TextView>(R.id.form_instance_list_fieldworker)?.text = it.fieldworker ?: ""
         findViewById<TextView>(R.id.form_instance_list_date)?.text = it.dateTimeCollected ?: ""
+        findViewById<TextView>(R.id.form_instance_list_extra1)?.text = it.extra1 ?: ""
+        findViewById<TextView>(R.id.form_instance_list_extra2)?.text = it.extra2 ?: ""
     }
 }
 
@@ -136,4 +138,6 @@ class LegacyDisplay(e: Element) : FormDisplay {
     override val fieldworker: String? = e.getChildText(KnownFields.FIELD_WORKER_EXTID)
     override val entity: String? = e.getChildText(KnownFields.ENTITY_EXTID)
     override val dateTimeCollected: String? = e.getChildText(KnownFields.COLLECTION_DATE_TIME)
+    override val extra1: String? = null
+    override val extra2: String? = null
 }
