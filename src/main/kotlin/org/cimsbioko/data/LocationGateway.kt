@@ -15,7 +15,7 @@ class LocationGateway internal constructor()
     : Gateway<Location>(Locations.CONTENT_ID_URI_BASE, Locations.COLUMN_LOCATION_UUID) {
 
     fun findByHierarchy(hierarchyId: String): Query<Location> =
-            Query<Location>(this, tableUri, Locations.COLUMN_LOCATION_HIERARCHY_UUID, hierarchyId, Locations.COLUMN_LOCATION_EXTID)
+            Query(this, tableUri, Locations.COLUMN_LOCATION_HIERARCHY_UUID, hierarchyId, Locations.COLUMN_LOCATION_EXTID)
 
     override fun getId(entity: Location): String = entity.uuid!!
 

@@ -15,7 +15,7 @@ class IndividualGateway internal constructor()
     : Gateway<Individual>(Individuals.CONTENT_ID_URI_BASE, Individuals.COLUMN_INDIVIDUAL_UUID) {
 
     fun findByResidency(residencyId: String): Query<Individual> =
-            Query<Individual>(this, tableUri, Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, residencyId, Individuals.COLUMN_INDIVIDUAL_EXTID)
+            Query(this, tableUri, Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, residencyId, Individuals.COLUMN_INDIVIDUAL_EXTID)
 
     override fun getId(entity: Individual): String = entity.uuid!!
 
