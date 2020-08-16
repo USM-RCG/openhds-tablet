@@ -54,10 +54,6 @@ class DataSelectionFragment : Fragment() {
         listView.adapter = dataWrapperAdapter
     }
 
-    fun clearData() {
-        dataWrapperAdapter?.clear()
-    }
-
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
         if (v.id == R.id.data_fragment_listview) {
             requireActivity().menuInflater.inflate(R.menu.data_selection_menu, menu)
