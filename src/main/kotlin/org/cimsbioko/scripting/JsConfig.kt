@@ -1,14 +1,10 @@
 package org.cimsbioko.scripting
 
 import android.util.Log
-import org.cimsbioko.fragment.navigate.detail.DetailFragment
-import org.cimsbioko.fragment.navigate.detail.IndividualDetailFragment
 import org.cimsbioko.model.core.Individual
 import org.cimsbioko.model.core.Location
 import org.cimsbioko.model.core.LocationHierarchy
-import org.cimsbioko.navconfig.Gateways
-import org.cimsbioko.navconfig.Hierarchy
-import org.cimsbioko.navconfig.NavigatorModule
+import org.cimsbioko.navconfig.*
 import org.cimsbioko.navconfig.forms.*
 import org.cimsbioko.utilities.DateUtils
 import org.cimsbioko.utilities.FormUtils
@@ -59,7 +55,6 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
         installDbService(scope)
         installInterfaces(scope)
         installDomainClasses(scope)
-        installDetailFragments(scope, IndividualDetailFragment::class.java)
         installUtilityObjects(scope)
     }
 
@@ -134,11 +129,6 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
             putObjects(scope, DateUtils, IdHelper, FormUtils, StringUtils)
         }
 
-        @SafeVarargs
-        private fun installDetailFragments(scope: ScriptableObject, vararg classes: Class<out DetailFragment?>) {
-            putClasses(scope, *classes)
-        }
-
         private fun installDomainClasses(scope: ScriptableObject) {
             putClasses(scope, LocationHierarchy::class.java, Location::class.java, Individual::class.java)
         }
@@ -146,7 +136,8 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
         private fun installInterfaces(scope: ScriptableObject) {
             putClasses(scope, Hierarchy::class.java, NavigatorModule::class.java, FormBuilder::class.java,
                     FormConsumer::class.java, Binding::class.java, Launcher::class.java, FormFormatter::class.java,
-                    FormDisplay::class.java
+                    FormDisplay::class.java, ItemFormatter::class.java, ItemDetails::class.java,
+                    DetailsSection::class.java
             )
         }
 

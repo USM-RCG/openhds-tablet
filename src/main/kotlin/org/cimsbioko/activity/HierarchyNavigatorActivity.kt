@@ -25,17 +25,17 @@ import org.cimsbioko.fragment.FormSelectionFragment
 import org.cimsbioko.fragment.FormSelectionFragment.FormSelectionListener
 import org.cimsbioko.fragment.navigate.DetailToggleFragment
 import org.cimsbioko.fragment.navigate.DetailToggleFragment.DetailToggleListener
+import org.cimsbioko.fragment.navigate.GenericDetailFragment
 import org.cimsbioko.fragment.navigate.HierarchyButtonFragment
 import org.cimsbioko.fragment.navigate.HierarchyButtonFragment.HierarchyButtonListener
 import org.cimsbioko.fragment.navigate.HierarchyFormsFragment
-import org.cimsbioko.fragment.navigate.detail.DefaultDetailFragment
-import org.cimsbioko.fragment.navigate.detail.DetailFragment
 import org.cimsbioko.model.core.FieldWorker
 import org.cimsbioko.model.form.Form.Companion.lookup
 import org.cimsbioko.model.form.FormInstance.Companion.generate
 import org.cimsbioko.model.form.FormInstance.Companion.getBinding
 import org.cimsbioko.model.form.FormInstance.Companion.lookup
 import org.cimsbioko.navconfig.HierarchyPath
+import org.cimsbioko.navconfig.ItemFormatter
 import org.cimsbioko.navconfig.NavigatorConfig
 import org.cimsbioko.navconfig.NavigatorModule
 import org.cimsbioko.navconfig.db.DefaultQueryHelper
@@ -64,8 +64,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
     private lateinit var valueFragment: DataSelectionFragment
     private lateinit var formFragment: FormSelectionFragment
     private lateinit var detailToggleFragment: DetailToggleFragment
-    private lateinit var defaultDetailFragment: DetailFragment
-    private lateinit var detailFragment: DetailFragment
+    private lateinit var detailFragment: GenericDetailFragment
     private lateinit var formsFragment: HierarchyFormsFragment
 
     private lateinit var config: NavigatorConfig
@@ -109,7 +108,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         formFragment = fragmentManager.findFragmentById(R.id.form_selection_fragment) as FormSelectionFragment
         formsFragment = fragmentManager.findFragmentById(R.id.form_list_fragment) as HierarchyFormsFragment
 
-        defaultDetailFragment = DefaultDetailFragment()
+        detailFragment = GenericDetailFragment()
         valueFragment = DataSelectionFragment()
 
         if (savedInstanceState == null) {
@@ -125,7 +124,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
                 hierarchyPath = getParcelable(HIERARCHY_PATH_KEY) ?: HierarchyPath()
                 pathHistory = getSerializable(HISTORY_KEY)?.let { it as Stack<HierarchyPath> } ?: Stack()
                 fragmentManager.findFragmentByTag(VALUE_FRAGMENT_TAG)?.also { valueFragment = it as DataSelectionFragment }
-                fragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG)?.also { detailFragment = it as DetailFragment }
+                fragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG)?.also { detailFragment = it as GenericDetailFragment }
             }
         }
     }
@@ -273,12 +272,14 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
     }
 
     override fun onDetailToggled() {
-        if (valueFragment.isAdded) {
-            showDetailFragment()
-            detailToggleFragment.setHighlighted(true)
-        } else if (detailFragment.isAdded) {
-            showValueFragment()
-            detailToggleFragment.setHighlighted(false)
+        launch {
+            if (valueFragment.isAdded) {
+                showDetailFragment()
+                detailToggleFragment.setHighlighted(true)
+            } else if (detailFragment.isAdded) {
+                showValueFragment()
+                detailToggleFragment.setHighlighted(false)
+            }
         }
     }
 
@@ -294,19 +295,21 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         valueFragment.populateData(currentResults)
     }
 
-    private fun showDetailFragment() {
-        detailFragment = (detailForCurrentLevel ?: defaultDetailFragment).also {
+    private suspend fun showDetailFragment() {
+        detailFragment = GenericDetailFragment().also { fragment ->
             supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.middle_column, it, DETAIL_FRAGMENT_TAG)
+                    .replace(R.id.middle_column, fragment, DETAIL_FRAGMENT_TAG)
                     .commit()
             supportFragmentManager.executePendingTransactions()
-            it.setUpDetails(currentSelection)
+            withContext(Dispatchers.IO) { currentSelection?.unwrapped }
+                    ?.let { itemFormatterForCurrentLevel?.format(it) }
+                    ?.also { fragment.showItemDetails(it) }
         }
     }
 
-    private val detailForCurrentLevel: DetailFragment?
-        get() = currentModule.getDetailFragment(level)
+    private val itemFormatterForCurrentLevel: ItemFormatter?
+        get() = currentModule.getItemFormatter(level)
 
     override fun onHierarchyButtonClicked(level: String) = jumpUp(level)
 
@@ -377,18 +380,18 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
                 } ?: emptyList()
     }
 
-    private fun updateMiddle() = if (shouldShowDetail()) showDetailFragment() else showValueFragment()
+    private suspend fun updateMiddle() = if (shouldShowDetail()) showDetailFragment() else showValueFragment()
 
     private fun updateDetailToggle() {
         detailToggleFragment.apply {
-            if (detailForCurrentLevel != null && !shouldShowDetail()) {
+            if (itemFormatterForCurrentLevel != null && !shouldShowDetail()) {
                 setEnabled(true)
                 if (!valueFragment.isAdded) setHighlighted(true)
             } else setEnabled(false)
         }
     }
 
-    private fun shouldShowDetail(): Boolean = currentResults.isEmpty()
+    private fun shouldShowDetail(): Boolean = itemFormatterForCurrentLevel != null && currentResults.isEmpty()
 
     private fun updateFormLaunchers() {
         currentModule.getLaunchers(level)

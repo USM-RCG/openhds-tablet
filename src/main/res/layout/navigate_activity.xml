@@ -19,24 +19,25 @@
             android:animateLayoutChanges="true"
             android:orientation="horizontal">
 
-        <LinearLayout
-                style="@style/FieldworkerSideColumn"
-                android:orientation="vertical">
+        <RelativeLayout style="@style/FieldworkerSideColumn">
 
             <fragment
                     android:name="org.cimsbioko.fragment.navigate.HierarchyButtonFragment"
                     android:id="@+id/hierarchy_button_fragment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/toggle_fragment_spacing"
+                    android:layout_alignParentTop="true"
+                    android:layout_above="@id/detail_toggle_fragment"/>
 
             <fragment
                     android:name="org.cimsbioko.fragment.navigate.DetailToggleFragment"
                     android:id="@+id/detail_toggle_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/toggle_fragment_spacing"/>
+                    android:layout_alignParentBottom="true"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <FrameLayout
                 android:id="@+id/middle_column"

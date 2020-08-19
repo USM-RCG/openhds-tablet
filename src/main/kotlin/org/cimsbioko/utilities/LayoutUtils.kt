@@ -91,6 +91,24 @@ fun RelativeLayout.configureTextWithLabel(labelId: Int, valueText: String?,
     }
 }
 
+fun RelativeLayout.configureTextWithLabel(labelText: String, valueText: String?,
+                                          labelColorId: Int = R.color.Black, valueColorId: Int = R.color.Black,
+                                          missingColorId: Int = R.color.LightGray) {
+    val resources = context.resources
+    findViewById<TextView>(R.id.label_text)?.apply {
+        text = labelText
+        setTextColor(resources.getColor(if (valueText.isBlank) missingColorId else labelColorId))
+    }
+    findViewById<TextView>(R.id.delimiter_text)?.apply {
+        setTextColor(resources.getColor(if (valueText.isBlank) missingColorId else labelColorId))
+    }
+    findViewById<TextView>(R.id.value_text)?.apply {
+        text = valueText
+        setTextColor(resources.getColor(if (valueText.isBlank) missingColorId else valueColorId))
+        if (valueText.isBlank) setText(R.string.not_available)
+    }
+}
+
 // Set up a form list item based on a given form instance.
 fun View.configureFormListItem(instance: LoadedFormInstance) {
 

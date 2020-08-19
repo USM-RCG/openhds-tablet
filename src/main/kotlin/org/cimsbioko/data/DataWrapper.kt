@@ -3,7 +3,9 @@ package org.cimsbioko.data
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
+import org.cimsbioko.model.core.HierarchyItem
 import org.cimsbioko.navconfig.UsedByJSConfig
+import org.cimsbioko.navconfig.db.DefaultQueryHelper
 import org.cimsbioko.navconfig.db.DefaultQueryHelper.get
 import java.util.*
 
@@ -28,6 +30,9 @@ data class DataWrapper(
 
     override fun toString(): String =
             "QueryResult[name: $name extId: $extId category: $category + payload size: ${stringsPayload.size}]"
+
+    val unwrapped: HierarchyItem?
+        get() = DefaultQueryHelper.getUnwrapped(category, uuid)
 
     val hierarchyId: String
         get() = "$category:$uuid"

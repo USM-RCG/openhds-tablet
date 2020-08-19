@@ -6,6 +6,7 @@ import org.cimsbioko.data.GatewayRegistry.individualGateway
 import org.cimsbioko.data.GatewayRegistry.locationGateway
 import org.cimsbioko.data.GatewayRegistry.locationHierarchyGateway
 import org.cimsbioko.data.LocationHierarchyGateway
+import org.cimsbioko.model.core.HierarchyItem
 import org.cimsbioko.navconfig.Hierarchy
 import org.cimsbioko.navconfig.NavigatorConfig
 
@@ -13,6 +14,7 @@ interface QueryHelper {
     fun getAll(level: String): List<DataWrapper>
     fun getChildren(parent: DataWrapper, childLevel: String): List<DataWrapper>
     operator fun get(level: String, uuid: String): DataWrapper?
+    fun getUnwrapped(level: String, uuid: String): HierarchyItem?
     fun getParent(level: String, uuid: String): DataWrapper?
 }
 
@@ -47,6 +49,10 @@ object DefaultQueryHelper : QueryHelper {
     } ?: emptyList()
 
     override fun get(level: String, uuid: String): DataWrapper? = getLevelGateway(level)?.findById(uuid)?.firstWrapper
+
+    override fun getUnwrapped(level: String, uuid: String) =
+            getLevelGateway(level)?.findById(uuid)?.first as? HierarchyItem
+
 
     override fun getParent(level: String, uuid: String): DataWrapper? =
             NavigatorConfig.instance.getParentLevel(level)?.let { pl ->

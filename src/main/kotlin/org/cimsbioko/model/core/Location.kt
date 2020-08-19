@@ -11,4 +11,4 @@ data class Location(
         var hierarchyUuid: String? = null,
         var description: String? = null,
         var attrs: String? = null
-) : Serializable
+) : HierarchyItem, Serializable

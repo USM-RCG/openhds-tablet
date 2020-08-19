@@ -49,7 +49,7 @@ class DetailToggleFragment : Fragment(), View.OnClickListener {
         this.isEnabled = isEnabled
         with(layout) {
             if (!isEnabled) {
-                visibility = ViewGroup.INVISIBLE
+                visibility = ViewGroup.GONE
             } else {
                 visibility = ViewGroup.VISIBLE
                 isClickable = true
@@ -62,10 +62,10 @@ class DetailToggleFragment : Fragment(), View.OnClickListener {
         requireActivity().also { activity ->
             with(layout) {
                 if (isEnabled && isHighlighted) {
-                    setBackgroundColor(resources.getColor(R.color.LightGreen, activity.theme))
+                    setBackgroundColor(resources.getColor(R.color.LightGreen))
                     configureText(activity, getString(R.string.toggle_fragment_button_show_children))
                 } else if (isEnabled && !isHighlighted) {
-                    setBackgroundColor(resources.getColor(R.color.DarkGreen, activity.theme))
+                    setBackgroundColor(resources.getColor(R.color.DarkGreen))
                     configureText(activity, getString(R.string.toggle_fragment_button_show_details))
                 }
             }

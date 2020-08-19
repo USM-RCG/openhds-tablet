@@ -9,4 +9,4 @@ data class LocationHierarchy(
         var level: String? = null,
         var uuid: String? = null,
         var attrs: String? = null
-) : Serializable
+) : HierarchyItem, Serializable

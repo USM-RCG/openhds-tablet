@@ -22,7 +22,7 @@ data class Individual(
         var status: String? = null,
         var nationality: String? = null,
         var attrs: String? = null
-) : Serializable {
+) : HierarchyItem, Serializable {
     companion object {
         @UsedByJSConfig
         @JvmStatic
