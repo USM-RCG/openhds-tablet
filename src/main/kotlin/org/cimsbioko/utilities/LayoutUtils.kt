@@ -10,10 +10,6 @@ import android.widget.TextView
 import org.cimsbioko.R
 import org.cimsbioko.model.form.FormInstance
 import org.cimsbioko.model.form.LoadedFormInstance
-import org.cimsbioko.navconfig.forms.FormDisplay
-import org.cimsbioko.navconfig.forms.FormFormatter
-import org.jdom2.Document
-import org.jdom2.Element
 
 
 // Create a new Layout that contains two text views and optionally several "payload" text views beneath.
