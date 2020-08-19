@@ -12,7 +12,6 @@ import org.cimsbioko.model.form.FormInstance
 import org.cimsbioko.model.form.LoadedFormInstance
 import org.cimsbioko.navconfig.forms.FormDisplay
 import org.cimsbioko.navconfig.forms.FormFormatter
-import org.cimsbioko.navconfig.forms.KnownFields
 import org.jdom2.Document
 import org.jdom2.Element
 
@@ -126,26 +125,11 @@ fun View.configureFormListItem(instance: LoadedFormInstance) {
         text = binding?.label ?: instance.formName
     }
 
-    (binding?.formatter ?: LegacyFormatter).format(doc).also {
+    binding?.formatter?.format(doc)?.also {
         findViewById<TextView>(R.id.form_instance_list_id)?.text = it.entity ?: ""
         findViewById<TextView>(R.id.form_instance_list_fieldworker)?.text = it.fieldworker ?: ""
         findViewById<TextView>(R.id.form_instance_list_date)?.text = it.dateTimeCollected ?: ""
         findViewById<TextView>(R.id.form_instance_list_extra1)?.text = it.extra1 ?: ""
         findViewById<TextView>(R.id.form_instance_list_extra2)?.text = it.extra2 ?: ""
     }
-}
-
-/**
- * Provided for older campaigns that do not define their formatter. This can be retired once we migrate older campaigns.
- */
-object LegacyFormatter : FormFormatter {
-    override fun format(dataDoc: Document): FormDisplay = LegacyDisplay(dataDoc.rootElement)
-}
-
-class LegacyDisplay(e: Element) : FormDisplay {
-    override val fieldworker: String? = e.getChildText(KnownFields.FIELD_WORKER_EXTID)
-    override val entity: String? = e.getChildText(KnownFields.ENTITY_EXTID)
-    override val dateTimeCollected: String? = e.getChildText(KnownFields.COLLECTION_DATE_TIME)
-    override val extra1: String? = null
-    override val extra2: String? = null
 }
