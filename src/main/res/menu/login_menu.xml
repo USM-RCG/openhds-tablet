@@ -18,7 +18,7 @@
 		app:showAsAction="ifRoom|withText" />
 	<item
 		android:id="@+id/download_forms"
-		android:icon="@drawable/download_form"
+		android:icon="@drawable/ic_download_form"
 		android:title="@string/download_forms"
 		app:showAsAction="ifRoom|withText" />
 	<item
