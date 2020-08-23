@@ -102,7 +102,7 @@ fun View.configureFormListItem(instance: LoadedFormInstance) {
 
     // Set form name based on its embedded binding
     findViewById<TextView>(R.id.form_instance_list_type)?.apply {
-        text = binding?.label ?: instance.formName
+        setTextWithIcon(binding?.label ?: instance.formName, R.drawable.ic_form)
     }
 
     binding?.formatter?.format(doc)?.also {
