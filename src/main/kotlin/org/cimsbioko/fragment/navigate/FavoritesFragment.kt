@@ -2,7 +2,6 @@ package org.cimsbioko.fragment.navigate
 
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
@@ -13,26 +12,32 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
+import kotlinx.coroutines.*
 import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.activity.HierarchyNavigatorActivity
-import org.cimsbioko.data.DataWrapper
-import org.cimsbioko.data.DataWrapper.Companion.getByHierarchyId
+import org.cimsbioko.model.core.HierarchyItem
 import org.cimsbioko.navconfig.HierarchyPath.Companion.fromString
+import org.cimsbioko.navconfig.NavigatorConfig
+import org.cimsbioko.navconfig.db.DefaultQueryHelper.getByHierarchyId
 import org.cimsbioko.provider.DatabaseAdapter
 import org.cimsbioko.utilities.ConfigUtils.getActiveModules
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 import org.cimsbioko.utilities.configureText
 import org.cimsbioko.utilities.makeText
+import kotlin.coroutines.CoroutineContext
 
-class FavoritesFragment : Fragment() {
+class FavoritesFragment : Fragment(), CoroutineScope {
+
+    private lateinit var job: Job
+
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.Main
 
     private lateinit var list: ListView
     private lateinit var progressLayout: View
     private lateinit var listLayout: View
     private lateinit var dataAdapter: FavoriteAdapter
-
-    private var loader: FavoriteLoader? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.favorites_fragment, container, false).also { view ->
@@ -47,19 +52,15 @@ class FavoritesFragment : Fragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        job = Job()
         loadData()
+        super.onResume()
     }
 
-    override fun onStop() {
-        super.onStop()
-        cancelLoad()
-    }
-
-    override fun onDestroy() {
-        loader?.detach()
-        super.onDestroy()
+    override fun onPause() {
+        job.cancel("fragment paused")
+        super.onPause()
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
@@ -77,7 +78,7 @@ class FavoritesFragment : Fragment() {
             }
             R.id.forget_favorite -> {
                 getItem(info.position)?.let {
-                    DatabaseAdapter.removeFavorite(it)
+                    DatabaseAdapter.removeFavorite(it.hierarchyId)
                     showShortToast(requireContext(), R.string.removed_favorite)
                     loadData()
                 }
@@ -87,11 +88,11 @@ class FavoritesFragment : Fragment() {
         return super.onContextItemSelected(item)
     }
 
-    private fun getItem(position: Int): DataWrapper? {
-        return list.getItemAtPosition(position) as DataWrapper?
+    private fun getItem(position: Int): HierarchyItem? {
+        return list.getItemAtPosition(position) as? HierarchyItem
     }
 
-    private fun selectFavorite(selected: DataWrapper) {
+    private fun selectFavorite(selected: HierarchyItem) {
         val ctx = requireContext()
         fromString(selected.hierarchyId)?.let { path ->
             getActiveModules(ctx).firstOrNull()?.also { firstModule ->
@@ -108,59 +109,47 @@ class FavoritesFragment : Fragment() {
         listLayout.visibility = if (loading) View.GONE else View.VISIBLE
     }
 
-    private fun loadData() {
-        loader = FavoriteLoader(this).also { it.execute() }
-    }
-
-    private fun cancelLoad() {
-        loader?.cancel(true)
-    }
-
     private inner class ClickListener : OnItemClickListener {
         override fun onItemClick(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
             getItem(position)?.let { selectFavorite(it) }
         }
     }
 
-    private inner class FavoriteAdapter internal constructor(
+    private inner class FavoriteAdapter(
             context: Context
-    ) : ArrayAdapter<DataWrapper>(context, R.layout.generic_list_item_white_text) {
+    ) : ArrayAdapter<HierarchyItem>(context, R.layout.generic_list_item_white_text) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             return requireActivity().let { activity ->
                 (convertView as? RelativeLayout
                         ?: makeText(activity, background = R.drawable.data_selector)).also { view ->
                     getItem(position)?.apply {
-                        view.configureText(activity,
-                                primaryText = name,
-                                secondaryText = extId,
-                                stringsPayload = stringsPayload,
-                                centerText = false)
+                        NavigatorConfig.instance.modules
+                                .firstOrNull()
+                                ?.getHierFormatter(level)
+                                ?.formatItem(this)
+                                ?.also {
+                                    view.configureText(activity,
+                                            primaryText = it.heading,
+                                            secondaryText = it.subheading,
+                                            stringsPayload = it.details,
+                                            centerText = false
+                                    )
+                                }
                     }
                 }
             }
         }
     }
 
-    private class FavoriteLoader(fragment: FavoritesFragment) : AsyncTask<Void, Void, List<DataWrapper>>() {
+    private fun loadData() = launch {
 
-        private var host: FavoritesFragment?
+        showLoading(true)
+        dataAdapter.clear()
 
-        override fun onPreExecute() {
-            host?.apply {
-                showLoading(true)
-                dataAdapter.clear()
-            }
-        }
-
-        override fun onCancelled() {
-            host?.showLoading(false)
-            super.onCancelled()
-        }
-
-        override fun doInBackground(vararg params: Void): List<DataWrapper> {
-            return DatabaseAdapter.let { db ->
+        val items = withContext(Dispatchers.IO) {
+            DatabaseAdapter.let { db ->
                 db.favoriteIds
-                        .map { it to getByHierarchyId(it) }
+                        .map { it to getByHierarchyId(it)?.first }
                         .partition { (_, item) -> item != null }
                         .let { (found, lost) ->
                             lost.forEach { (id, _) -> db.removeFavorite(id) }
@@ -169,20 +158,8 @@ class FavoritesFragment : Fragment() {
             }
         }
 
-        fun detach() {
-            host = null
-            cancel(true)
-        }
-
-        override fun onPostExecute(dataWrappers: List<DataWrapper>) {
-            host?.apply {
-                dataAdapter.addAll(dataWrappers)
-                showLoading(false)
-            }
-        }
-
-        init {
-            host = fragment
-        }
+        dataAdapter.addAll(items)
+        showLoading(false)
     }
+
 }

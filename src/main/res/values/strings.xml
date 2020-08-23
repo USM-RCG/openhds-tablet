@@ -3,7 +3,6 @@
 
     <string name="app_name" translatable="false">CIMS</string>
     <string name="login_btn">Login</string>
-    <string name="gender_lbl">Gender</string>
     <string name="login_username">Username</string>
     <string name="login_password">Password</string>
     <string name="fieldworker_login">Fieldworker Login</string>
@@ -26,42 +25,6 @@
     <!-- Details Fragment Values -->
     <string name="toggle_fragment_button_show_details">Show Details</string>
     <string name="toggle_fragment_button_show_children">Hide Details</string>
-    <string name="not_available">N/A</string>
-
-    <!-- Database/Form Values -->
-    <string name="db_val_true">True</string>
-    <string name="db_val_false">False</string>
-    <string name="db_val_gender_male">Male</string>
-    <string name="db_val_gender_female">Female</string>
-    <string name="db_val_language_pref_spanish">Spanish</string>
-    <string name="db_val_language_pref_fang">Fang</string>
-    <string name="db_val_language_pref_bubi">Bubi</string>
-    <string name="db_val_language_pref_english">English</string>
-    <string name="db_val_language_pref_french">French</string>
-    <string name="db_val_language_pref_other">Other</string>
-    <string name="db_val_status_permanent">Permanent</string>
-    <string name="db_val_status_visitor">Visitor</string>
-    <string name="db_val_relation_to_head_type_head">Head</string>
-    <string name="db_val_relation_to_head_type_spouse">Spouse</string>
-    <string name="db_val_relation_to_head_type_son_daughter">Son/Daughter</string>
-    <string name="db_val_relation_to_head_type_brother_sister">Brother/Sister</string>
-    <string name="db_val_relation_to_head_type_cousin">Cousin</string>
-    <string name="db_val_relation_to_head_type_nephew_niece">Nephew/Niece</string>
-    <string name="db_val_relation_to_head_type_parent">Parent</string>
-    <string name="db_val_relation_to_head_type_grandchild">Grandchild</string>
-    <string name="db_val_relation_to_head_type_not_related">Not Related</string>
-    <string name="db_val_relation_to_head_type_other_relative">Other Relative</string>
-    <string name="db_val_relation_to_head_type_dont_know">Don\'t Know</string>
-    <string name="db_val_nationality_equato_guinean">Equato Guinean</string>
-    <string name="db_val_nationality_other_african_country">Other African Country</string>
-    <string name="db_val_nationality_asian">Asian</string>
-    <string name="db_val_nationality_other_non_african_country">Other Non-African Country</string>
-    <string name="db_val_nationality_other">Other</string>
-
-    <!--Location DB val -->
-    <string name="db_val_location_status_never_available">Never Available</string>
-    <string name="db_val_location_status_rejected_intervention">Rejected Intervention</string>
-    <string name="db_val_location_status_uninhabited">Uninhabited</string>
 
     <!-- Sync Labels-->
     <string name="sync_database_updated_never">Never</string>
@@ -90,24 +53,6 @@
     <string name="sync_stage_building">Building file</string>
     <string name="sync_downloading">Downloading file</string>
 
-    <!-- Individual Labels -->
-    <string name="individual_full_name_label">Name</string>
-    <string name="individual_other_names_label">Other Names</string>
-    <string name="individual_date_of_birth_label">Date of Birth</string>
-    <string name="individual_relationship_to_head_label">Relationship to Head</string>
-    <string name="individual_personal_phone_number_label">Personal Phone Number</string>
-    <string name="individual_other_phone_number_label">Other Phone Number</string>
-    <string name="individual_point_of_contact_label">Point of Contact</string>
-    <string name="individual_point_of_contact_phone_number_label">Point of Contact Phone Number</string>
-    <string name="individual_language_preference_label">Language Preference</string>
-    <string name="individual_nationality_label">Nationality</string>
-    <string name="individual_status_label">Status</string>
-
-    <!-- Fieldworker Labels -->
-
-    <!-- Location Labels -->
-    <string name="location_description_label">Description</string>
-
     <string name="unsent_forms">Unsent Forms</string>
     <string name="field_worker_home">Fieldworker Home</string>
     <string name="logout">Logout</string>
@@ -121,7 +66,6 @@
     <string name="delete_forms_dialog_warning">Deleting forms may cause unexpected behavior. Are you sure?</string>
     <string name="cancel_label">Cancel</string>
     <string name="delete_dialog_warning_title">Warning</string>
-    <string name="uuid">UUID</string>
     <string name="form_not_found">Form not found</string>
 
     <string name="forms_app_required">Forms App Required</string>

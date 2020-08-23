@@ -137,7 +137,7 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
             putClasses(scope, Hierarchy::class.java, NavigatorModule::class.java, FormBuilder::class.java,
                     FormConsumer::class.java, Binding::class.java, Launcher::class.java, FormFormatter::class.java,
                     FormDisplay::class.java, ItemFormatter::class.java, ItemDetails::class.java,
-                    DetailsSection::class.java
+                    DetailsSection::class.java, HierFormatter::class.java, HierItemDisplay::class.java
             )
         }
 

@@ -11,4 +11,5 @@ interface NavigatorModule {
     val bindings: Map<String, Binding>
     fun getLaunchers(level: String): List<Launcher>
     fun getItemFormatter(level: String): ItemFormatter?
+    fun getHierFormatter(level: String): HierFormatter?
 }

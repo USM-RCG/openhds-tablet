@@ -13,6 +13,8 @@ import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import org.cimsbioko.R
 import org.cimsbioko.data.DataWrapper
+import org.cimsbioko.model.core.HierarchyItem
+import org.cimsbioko.navconfig.HierFormatter
 import org.cimsbioko.provider.DatabaseAdapter
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 import org.cimsbioko.utilities.configureText
@@ -22,7 +24,8 @@ class DataSelectionFragment : Fragment() {
 
     private lateinit var listView: ListView
     private var listener: DataSelectionListener? = null
-    private var dataWrapperAdapter: DataSelectionListAdapter? = null
+    private var adapter: DataSelectionListAdapter? = null
+    private var itemFormatter: HierFormatter? = null
 
     interface DataSelectionListener {
         fun onDataSelected(data: DataWrapper)
@@ -49,9 +52,10 @@ class DataSelectionFragment : Fragment() {
         }
     }
 
-    fun populateData(data: List<DataWrapper>) {
-        dataWrapperAdapter = DataSelectionListAdapter(requireContext(), R.layout.generic_list_item_white_text, data)
-        listView.adapter = dataWrapperAdapter
+    fun populateData(data: List<HierarchyItem>, formatter: HierFormatter) {
+        itemFormatter = formatter
+        adapter = DataSelectionListAdapter(requireContext(), R.layout.generic_list_item_white_text, data)
+        listView.adapter = adapter
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
@@ -63,7 +67,7 @@ class DataSelectionFragment : Fragment() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.save_favorite) {
             getItem((item.menuInfo as AdapterContextMenuInfo).position)?.let { selected ->
-                DatabaseAdapter.addFavorite(selected)
+                DatabaseAdapter.addFavorite(selected.wrapped)
                 showShortToast(requireContext(), R.string.saved_favorite)
             }
             return true
@@ -73,26 +77,31 @@ class DataSelectionFragment : Fragment() {
 
     private inner class DataClickListener : OnItemClickListener {
         override fun onItemClick(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
-            getItem(position)?.also { listener?.onDataSelected(it) }
+            getItem(position)?.also { listener?.onDataSelected(it.wrapped) }
         }
     }
 
-    private inner class DataSelectionListAdapter(context: Context, resource: Int, objects: List<DataWrapper>) : ArrayAdapter<DataWrapper>(context, resource, objects) {
+    private inner class DataSelectionListAdapter(
+            context: Context,
+            resource: Int,
+            objects: List<HierarchyItem>
+    ) : ArrayAdapter<HierarchyItem>(context, resource, objects) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             return getItem(position).let { item ->
+                val formatted = item?.let { itemFormatter?.formatItem(item) }
                 (convertView as? RelativeLayout
-                        ?: makeText(requireActivity(), layoutTag = item?.name, background = R.drawable.data_selector)).apply {
+                        ?: makeText(requireActivity(), layoutTag = formatted?.heading, background = R.drawable.data_selector)).apply {
                     configureText(requireActivity(),
-                            primaryText = item?.name,
-                            secondaryText = item?.extId,
-                            stringsPayload = item?.stringsPayload,
+                            primaryText = formatted?.heading,
+                            secondaryText = formatted?.subheading,
+                            stringsPayload = formatted?.details,
                             centerText = false)
                 }
             }
         }
     }
 
-    private fun getItem(position: Int): DataWrapper? {
-        return dataWrapperAdapter?.getItem(position)
+    private fun getItem(position: Int): HierarchyItem? {
+        return adapter?.getItem(position)
     }
 }

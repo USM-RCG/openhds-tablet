@@ -284,7 +284,7 @@ class SearchableActivity : AppCompatActivity() {
             }
         }
 
-        private fun getParent(item: DataWrapper): DataWrapper? = getParent(item.category, item.uuid)
+        private fun getParent(item: DataWrapper): DataWrapper? = getParent(item.category, item.uuid)?.firstWrapper
 
     }
 
@@ -346,7 +346,7 @@ class SearchableActivity : AppCompatActivity() {
             val helper: QueryHelper = DefaultQueryHelper
             search(query, limit).scoreDocs
                     .map { doc(it.doc) }
-                    .mapNotNull { helper[it["level"], it["uuid"]] }
+                    .mapNotNull { helper[it["level"], it["uuid"]]?.firstWrapper }
                     .forEach { items.add(it) }
         }
 

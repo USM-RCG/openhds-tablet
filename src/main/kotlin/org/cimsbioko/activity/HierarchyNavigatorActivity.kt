@@ -30,14 +30,12 @@ import org.cimsbioko.fragment.navigate.HierarchyButtonFragment
 import org.cimsbioko.fragment.navigate.HierarchyButtonFragment.HierarchyButtonListener
 import org.cimsbioko.fragment.navigate.HierarchyFormsFragment
 import org.cimsbioko.model.core.FieldWorker
+import org.cimsbioko.model.core.HierarchyItem
 import org.cimsbioko.model.form.Form.Companion.lookup
 import org.cimsbioko.model.form.FormInstance.Companion.generate
 import org.cimsbioko.model.form.FormInstance.Companion.getBinding
 import org.cimsbioko.model.form.FormInstance.Companion.lookup
-import org.cimsbioko.navconfig.HierarchyPath
-import org.cimsbioko.navconfig.ItemFormatter
-import org.cimsbioko.navconfig.NavigatorConfig
-import org.cimsbioko.navconfig.NavigatorModule
+import org.cimsbioko.navconfig.*
 import org.cimsbioko.navconfig.db.DefaultQueryHelper
 import org.cimsbioko.navconfig.db.QueryHelper
 import org.cimsbioko.navconfig.forms.Binding
@@ -75,7 +73,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
     private lateinit var menuItemTags: HashMap<MenuItem, String>
     private lateinit var queryHelper: QueryHelper
 
-    private var currentResults: List<DataWrapper> = emptyList()
+    private var currentResults: List<HierarchyItem> = emptyList()
     override var hierarchyPath: HierarchyPath = HierarchyPath()
         private set
 
@@ -292,7 +290,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
                     .commit()
             supportFragmentManager.executePendingTransactions()
         }
-        valueFragment.populateData(currentResults)
+        hierFormatterForCurrentLevel?.also { valueFragment.populateData(currentResults, it) }
     }
 
     private suspend fun showDetailFragment() {
@@ -310,6 +308,9 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
 
     private val itemFormatterForCurrentLevel: ItemFormatter?
         get() = currentModule.getItemFormatter(level)
+
+    private val hierFormatterForCurrentLevel: HierFormatter?
+        get() = currentModule.getHierFormatter(level)
 
     override fun onHierarchyButtonClicked(level: String) = jumpUp(level)
 
@@ -365,7 +366,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
 
     private suspend fun updateData() {
         currentResults =
-                if (ROOT_LEVEL == level) config.topLevel?.let { withContext(Dispatchers.IO) { queryHelper.getAll(it) } }
+                if (ROOT_LEVEL == level) config.topLevel?.let { withContext(Dispatchers.IO) { queryHelper.getAll(it)?.list } }
                 else {
                     hierarchyPath.depth()
                             .takeIf { it in config.levels.indices }
@@ -373,7 +374,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
                             ?.let { nextLevel ->
                                 currentSelection?.let { currentItem ->
                                     withContext(Dispatchers.IO) {
-                                        queryHelper.getChildren(parent = currentItem, childLevel = nextLevel)
+                                        queryHelper.getChildren(parent = currentItem, childLevel = nextLevel)?.list
                                     }
                                 }
                             }

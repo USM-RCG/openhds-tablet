@@ -6,16 +6,17 @@ import org.cimsbioko.data.GatewayRegistry.individualGateway
 import org.cimsbioko.data.GatewayRegistry.locationGateway
 import org.cimsbioko.data.GatewayRegistry.locationHierarchyGateway
 import org.cimsbioko.data.LocationHierarchyGateway
+import org.cimsbioko.data.Query
 import org.cimsbioko.model.core.HierarchyItem
 import org.cimsbioko.navconfig.Hierarchy
 import org.cimsbioko.navconfig.NavigatorConfig
 
 interface QueryHelper {
-    fun getAll(level: String): List<DataWrapper>
-    fun getChildren(parent: DataWrapper, childLevel: String): List<DataWrapper>
-    operator fun get(level: String, uuid: String): DataWrapper?
-    fun getUnwrapped(level: String, uuid: String): HierarchyItem?
-    fun getParent(level: String, uuid: String): DataWrapper?
+    fun getAll(level: String): Query<out HierarchyItem>?
+    fun getChildren(parent: DataWrapper, childLevel: String): Query<out HierarchyItem>?
+    operator fun get(level: String, uuid: String): Query<out HierarchyItem>?
+    fun getParent(level: String, uuid: String): Query<out HierarchyItem>?
+    fun getByHierarchyId(id: String): Query<out HierarchyItem>?
 }
 
 object DefaultQueryHelper : QueryHelper {
@@ -27,34 +28,32 @@ object DefaultQueryHelper : QueryHelper {
     private fun isLastAdminLevel(level: String): Boolean =
             NavigatorConfig.instance.adminLevels.let { it.isNotEmpty() && it[it.lastIndex] == level }
 
-    private fun getLevelGateway(level: String): Gateway<*>? = when {
+    private fun getLevelGateway(level: String): Gateway<out HierarchyItem>? = when {
         Hierarchy.HOUSEHOLD == level -> locationGateway
         Hierarchy.INDIVIDUAL == level -> individualGateway
         isAdminLevel(level) -> locationHierarchyGateway
         else -> null
     }
 
-    override fun getAll(level: String): List<DataWrapper> = when (val gateway = getLevelGateway(level)) {
-        is LocationHierarchyGateway -> gateway.findByLevel(level).wrapperList
-        else -> gateway?.findAll()?.wrapperList ?: emptyList()
+    override fun getAll(level: String): Query<out HierarchyItem>? = when (val gateway = getLevelGateway(level)) {
+        is LocationHierarchyGateway -> gateway.findByLevel(level)
+        else -> gateway?.findAll()
     }
 
-    override fun getChildren(parent: DataWrapper, childLevel: String): List<DataWrapper> = parent.category.let { lvl ->
+    override fun getChildren(parent: DataWrapper, childLevel: String): Query<out HierarchyItem>? = parent.category.let { lvl ->
         when {
-            isLastAdminLevel(lvl) -> locationGateway.findByHierarchy(parent.uuid).wrapperList
-            isAdminLevel(lvl) -> locationHierarchyGateway.findByParent(parent.uuid).wrapperList
-            Hierarchy.HOUSEHOLD == lvl -> individualGateway.findByResidency(parent.uuid).wrapperList
+            isLastAdminLevel(lvl) -> locationGateway.findByHierarchy(parent.uuid)
+            isAdminLevel(lvl) -> locationHierarchyGateway.findByParent(parent.uuid)
+            Hierarchy.HOUSEHOLD == lvl -> individualGateway.findByResidency(parent.uuid)
             else -> null
         }
-    } ?: emptyList()
+    }
 
-    override fun get(level: String, uuid: String): DataWrapper? = getLevelGateway(level)?.findById(uuid)?.firstWrapper
+    override fun get(level: String, uuid: String): Query<out HierarchyItem>? {
+        return getLevelGateway(level)?.findById(uuid)
+    }
 
-    override fun getUnwrapped(level: String, uuid: String) =
-            getLevelGateway(level)?.findById(uuid)?.first as? HierarchyItem
-
-
-    override fun getParent(level: String, uuid: String): DataWrapper? =
+    override fun getParent(level: String, uuid: String): Query<out HierarchyItem>? =
             NavigatorConfig.instance.getParentLevel(level)?.let { pl ->
                 when {
                     level.let { isAdminLevel(it) && !isTopLevel(it) } -> locationHierarchyGateway.findById(uuid).first?.parentUuid
@@ -63,4 +62,8 @@ object DefaultQueryHelper : QueryHelper {
                     else -> null
                 }?.let { get(pl, it) }
             }
+
+    override fun getByHierarchyId(id: String): Query<out HierarchyItem>? = id.split(":".toRegex()).let { parts ->
+        if (parts.size == 2) parts.let { (level, uuid) -> get(level, uuid) } else null
+    }
 }

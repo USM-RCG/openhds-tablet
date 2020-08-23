@@ -3,7 +3,6 @@
 
     <string name="login_btn">Entrar</string>
     <string name="send_forms">Enviar Formularios</string>
-    <string name="gender_lbl">Género</string>
     <string name="login_username">Nombre de Usuario</string>
     <string name="login_password">Contraseña</string>
     <string name="fieldworker_login">Inicio de sesión de trabajador</string>
@@ -16,61 +15,6 @@
     <!-- Details Fragment Values -->
     <string name="toggle_fragment_button_show_details">Mostrar Detalles</string>
     <string name="toggle_fragment_button_show_children">Esconder Detalles</string>
-    <string name="not_available">No Aplicable</string>
-
-    <!-- Database/Form Values -->
-    <string name="db_val_true">True</string>
-    <string name="db_val_false">False</string>
-    <string name="db_val_gender_male">Masculino</string>
-    <string name="db_val_gender_female">Femenino</string>
-    <string name="db_val_language_pref_spanish">Español</string>
-    <string name="db_val_language_pref_fang">Fang</string>
-    <string name="db_val_language_pref_bubi">Bubi</string>
-    <string name="db_val_language_pref_english">Inglés</string>
-    <string name="db_val_language_pref_french">Francés</string>
-    <string name="db_val_language_pref_other">Otra</string>
-    <string name="db_val_status_permanent">Permanente</string>
-    <string name="db_val_status_visitor">Visitante</string>
-    <string name="db_val_relation_to_head_type_head">Jefe de Hogar</string>
-    <string name="db_val_relation_to_head_type_spouse">Esposo/Esposa</string>
-    <string name="db_val_relation_to_head_type_son_daughter">Hijo/Hija</string>
-    <string name="db_val_relation_to_head_type_brother_sister">Hermano/Hermana</string>
-    <string name="db_val_relation_to_head_type_cousin">Primo/Prima</string>
-    <string name="db_val_relation_to_head_type_nephew_niece">Sobrino/Sobrina</string>
-    <string name="db_val_relation_to_head_type_parent">Padre/Madre</string>
-    <string name="db_val_relation_to_head_type_grandchild">Nieto/Nieta</string>
-    <string name="db_val_relation_to_head_type_not_related">Sin relacion familiar</string>
-    <string name="db_val_relation_to_head_type_other_relative">Otro Pariente</string>
-    <string name="db_val_relation_to_head_type_dont_know">No sabe</string>
-    <string name="db_val_nationality_equato_guinean">Ecuatoguineano</string>
-    <string name="db_val_nationality_other_african_country">Otro país Africano</string>
-    <string name="db_val_nationality_asian">Asiatico</string>
-    <string name="db_val_nationality_other_non_african_country">Otro país No-Africano</string>
-    <string name="db_val_nationality_other">Otro</string>
-
-
-    <!--Location DB val -->
-    <string name="db_val_location_status_never_available">No Están Disponibles</string>
-    <string name="db_val_location_status_rejected_intervention">Rechazó la Intervención</string>
-    <string name="db_val_location_status_uninhabited">Está Deshabitada</string>
-
-
-    <!-- Individual Labels -->
-    <string name="individual_full_name_label">Nombre </string>
- 	<string name="individual_other_names_label">Nombre de casa (sobrenombre)</string>
-    <string name="individual_date_of_birth_label">Fecha de Nacimiento</string>
-    <string name="individual_relationship_to_head_label">Relación al Jefe del Hogar</string>
-    <string name="individual_personal_phone_number_label">Numero de Teléfono Personal</string>
-    <string name="individual_other_phone_number_label">Otro Numero de Teléfono</string>
-    <string name="individual_point_of_contact_label">Punto de Contacto</string>
-    <string name="individual_point_of_contact_phone_number_label">Número de Teléfono de Punto de Contacto</string>
-    <string name="individual_language_preference_label">Idioma de Preferencia</string>
-    <string name="individual_nationality_label">Nacionalidad</string>
-
-    <!-- Fieldworker Labels -->
-
-    <!-- Location Labels -->
-    <string name="location_description_label">Descripción</string>
 
     <!-- UpdateActivity Labels -->
     <string name="field_worker_home">Trabajador de campo Inicio</string>
@@ -86,7 +30,6 @@
     <string name="cancel_label">Cancelar</string>
     <string name="delete_dialog_warning_title">¡Aviso!</string>
     <string name="delete_forms">Eliminar Formularios</string>
-    <string name="uuid">UUID</string>
     <string name="sync_database_updated_never">Nunca</string>
     <string name="sync_database_updated">Base de datos actualizada</string>
     <string name="sync_database_new_data">Los nuevos datos disponibles</string>
@@ -152,7 +95,6 @@
     <string name="saved_favorite">Recuerdo favorito</string>
     <string name="removed_favorite">Olvidado favorito</string>
     <string name="no_active_modules">No hay módulo activo</string>
-    <string name="individual_status_label">Estado</string>
 
     <string name="form_not_editable">Formulario no editable después de la finalización. Puede ser encriptado.</string>
 

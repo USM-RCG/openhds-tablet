@@ -3,7 +3,6 @@ package org.cimsbioko.data
 import android.content.ContentValues
 import android.database.Cursor
 import org.cimsbioko.App.Locations
-import org.cimsbioko.R
 import org.cimsbioko.data.CursorConvert.extractString
 import org.cimsbioko.model.core.Location
 import org.cimsbioko.navconfig.Hierarchy
@@ -17,7 +16,7 @@ class LocationGateway internal constructor()
     fun findByHierarchy(hierarchyId: String): Query<Location> =
             Query(this, tableUri, Locations.COLUMN_LOCATION_HIERARCHY_UUID, hierarchyId, Locations.COLUMN_LOCATION_EXTID)
 
-    override fun getId(entity: Location): String = entity.uuid!!
+    override fun getId(entity: Location): String = entity.uuid
 
     override val entityConverter: CursorConverter<Location> by lazy { LocationEntityConverter() }
     override val wrapperConverter: CursorConverter<DataWrapper> by lazy { LocationWrapperConverter() }
@@ -25,13 +24,14 @@ class LocationGateway internal constructor()
 }
 
 private class LocationEntityConverter : CursorConverter<Location> {
-    override fun convert(c: Cursor): Location = Location().apply {
-        uuid = extractString(c, Locations.COLUMN_LOCATION_UUID)
-        extId = extractString(c, Locations.COLUMN_LOCATION_EXTID)
+    override fun convert(c: Cursor): Location = Location(
+            uuid = extractString(c, Locations.COLUMN_LOCATION_UUID)!!,
+            extId = extractString(c, Locations.COLUMN_LOCATION_EXTID)!!,
+            name = extractString(c, Locations.COLUMN_LOCATION_NAME)!!
+    ).apply {
         hierarchyUuid = extractString(c, Locations.COLUMN_LOCATION_HIERARCHY_UUID)
         latitude = extractString(c, Locations.COLUMN_LOCATION_LATITUDE)
         longitude = extractString(c, Locations.COLUMN_LOCATION_LONGITUDE)
-        name = extractString(c, Locations.COLUMN_LOCATION_NAME)
         description = extractString(c, Locations.COLUMN_LOCATION_DESCRIPTION)
         longitude = extractString(c, Locations.COLUMN_LOCATION_LONGITUDE)
         latitude = extractString(c, Locations.COLUMN_LOCATION_LATITUDE)
@@ -45,9 +45,7 @@ private class LocationWrapperConverter : CursorConverter<DataWrapper> {
             Hierarchy.HOUSEHOLD,
             extractString(c, Locations.COLUMN_LOCATION_EXTID)!!,
             extractString(c, Locations.COLUMN_LOCATION_NAME)!!
-    ).apply {
-        stringsPayload[R.string.location_description_label] = extractString(c, Locations.COLUMN_LOCATION_DESCRIPTION)
-    }
+    )
 }
 
 private class LocationContentValuesConverter : ContentValuesConverter<Location> {

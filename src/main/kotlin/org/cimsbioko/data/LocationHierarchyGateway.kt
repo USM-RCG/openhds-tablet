@@ -18,7 +18,7 @@ class LocationHierarchyGateway internal constructor()
     fun findByParent(parentId: String?): Query<LocationHierarchy> =
             Query(this, tableUri, HierarchyItems.COLUMN_HIERARCHY_PARENT, parentId, HierarchyItems.COLUMN_HIERARCHY_EXTID)
 
-    override fun getId(entity: LocationHierarchy): String = entity.uuid!!
+    override fun getId(entity: LocationHierarchy): String = entity.uuid
 
     override val entityConverter: CursorConverter<LocationHierarchy> by lazy { LocationHierarchyEntityConverter() }
     override val wrapperConverter: CursorConverter<DataWrapper> by lazy { LocationHierarchyWrapperConverter() }
@@ -26,11 +26,12 @@ class LocationHierarchyGateway internal constructor()
 }
 
 private class LocationHierarchyEntityConverter : CursorConverter<LocationHierarchy> {
-    override fun convert(c: Cursor): LocationHierarchy = LocationHierarchy().apply {
-        uuid = extractString(c, HierarchyItems.COLUMN_HIERARCHY_UUID)
-        extId = extractString(c, HierarchyItems.COLUMN_HIERARCHY_EXTID)
-        name = extractString(c, HierarchyItems.COLUMN_HIERARCHY_NAME)
-        level = extractString(c, HierarchyItems.COLUMN_HIERARCHY_LEVEL)
+    override fun convert(c: Cursor): LocationHierarchy = LocationHierarchy(
+            uuid = extractString(c, HierarchyItems.COLUMN_HIERARCHY_UUID)!!,
+            extId = extractString(c, HierarchyItems.COLUMN_HIERARCHY_EXTID)!!,
+            name = extractString(c, HierarchyItems.COLUMN_HIERARCHY_NAME)!!,
+            level = extractString(c, HierarchyItems.COLUMN_HIERARCHY_LEVEL)!!
+    ).apply {
         parentUuid = extractString(c, HierarchyItems.COLUMN_HIERARCHY_PARENT)
         attrs = extractString(c, HierarchyItems.COLUMN_HIERARCHY_ATTRS)
     }

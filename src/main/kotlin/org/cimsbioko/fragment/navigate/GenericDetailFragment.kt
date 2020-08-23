@@ -12,12 +12,12 @@ import org.cimsbioko.R
 import org.cimsbioko.navconfig.DetailsSection
 import org.cimsbioko.navconfig.ItemDetails
 import org.cimsbioko.utilities.configureTextWithLabel
+import org.cimsbioko.utilities.isBlank
 import org.cimsbioko.utilities.makeLargeTextWithLabel
 import java.util.*
 
 private const val LABEL_COLOR = R.color.DarkGray
 private const val VALUE_COLOR = R.color.White
-private const val MISSING_COLOR = R.color.Gray
 
 class GenericDetailFragment : Fragment() {
 
@@ -41,7 +41,7 @@ class GenericDetailFragment : Fragment() {
                     ?.let { sectionLayout ->
                         detailContainer.addView(sectionLayout)
                         section.banner?.let { sectionLayout.findViewById<TextView>(R.id.generic_detail_fragment_section_banner).text = it }
-                        section.details?.forEach { sectionLayout.addTextView(it.key, it.value) }
+                        section.details?.forEach { if (!it.value.isBlank) sectionLayout.addTextView(it.key, it.value) }
                     }
         }
     }
@@ -53,7 +53,7 @@ class GenericDetailFragment : Fragment() {
     private fun LinearLayout.addTextView(label: String, value: String?) {
         activity?.let {
             addView(makeLargeTextWithLabel(it).apply {
-                configureTextWithLabel(label, value, LABEL_COLOR, VALUE_COLOR, MISSING_COLOR)
+                configureTextWithLabel(label, value, LABEL_COLOR, VALUE_COLOR)
             })
         }
     }

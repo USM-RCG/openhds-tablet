@@ -26,7 +26,7 @@ fun makeText(activity: Activity, layoutTag: Any? = null, listener: View.OnClickL
 
 // Pass new data to a layout that was created with makeTextWithPayload().
 fun RelativeLayout.configureText(activity: Activity, primaryText: String? = null,
-                                 secondaryText: String? = null, stringsPayload: Map<Int, String?>? = null,
+                                 secondaryText: String? = null, stringsPayload: Map<String, String?>? = null,
                                  centerText: Boolean = true) {
 
     fun TextView.configure(s: String?) {
@@ -41,11 +41,13 @@ fun RelativeLayout.configureText(activity: Activity, primaryText: String? = null
     findViewById<LinearLayout>(R.id.pay_load_container).apply {
         removeAllViews()
         stringsPayload?.also { sp ->
-            for (key in sp.keys) {
-                addView(makeSmallTextWithLabel(activity).apply {
-                    configureTextWithLabel(labelId = key, valueText = sp[key])
-                    layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                })
+            for ((key, value) in sp) {
+                if (!value.isBlank) {
+                    addView(makeSmallTextWithLabel(activity).apply {
+                        configureTextWithLabel(labelText = key, valueText = value)
+                        layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    })
+                }
             }
         }
         visibility = if (childCount == 0) View.GONE else View.VISIBLE
@@ -64,43 +66,22 @@ private fun makeSmallTextWithLabel(activity: Activity): RelativeLayout =
         activity.layoutInflater.inflate(R.layout.value_with_label_small, null)
                 .let { it as RelativeLayout }
 
-private val CharSequence?.isBlank: Boolean
+val CharSequence?.isBlank: Boolean
     get() = this == null || isEmpty() || this == "null"
 
-// Pass new data to text views created with makeLargeTextWithValueAndLabel().
-fun RelativeLayout.configureTextWithLabel(labelId: Int, valueText: String?,
-                                          labelColorId: Int = R.color.Black, valueColorId: Int = R.color.Black,
-                                          missingColorId: Int = R.color.LightGray) {
-    val resources = context.resources
-    findViewById<TextView>(R.id.label_text)?.apply {
-        setText(labelId)
-        setTextColor(resources.getColor(if (valueText.isBlank) missingColorId else labelColorId))
-    }
-    findViewById<TextView>(R.id.delimiter_text)?.apply {
-        setTextColor(resources.getColor(if (valueText.isBlank) missingColorId else labelColorId))
-    }
-    findViewById<TextView>(R.id.value_text)?.apply {
-        text = valueText
-        setTextColor(resources.getColor(if (valueText.isBlank) missingColorId else valueColorId))
-        if (valueText.isBlank) setText(R.string.not_available)
-    }
-}
-
 fun RelativeLayout.configureTextWithLabel(labelText: String, valueText: String?,
-                                          labelColorId: Int = R.color.Black, valueColorId: Int = R.color.Black,
-                                          missingColorId: Int = R.color.LightGray) {
+                                          labelColorId: Int = R.color.Black, valueColorId: Int = R.color.Black) {
     val resources = context.resources
     findViewById<TextView>(R.id.label_text)?.apply {
         text = labelText
-        setTextColor(resources.getColor(if (valueText.isBlank) missingColorId else labelColorId))
+        setTextColor(resources.getColor(labelColorId))
     }
     findViewById<TextView>(R.id.delimiter_text)?.apply {
-        setTextColor(resources.getColor(if (valueText.isBlank) missingColorId else labelColorId))
+        setTextColor(resources.getColor(labelColorId))
     }
     findViewById<TextView>(R.id.value_text)?.apply {
         text = valueText
-        setTextColor(resources.getColor(if (valueText.isBlank) missingColorId else valueColorId))
-        if (valueText.isBlank) setText(R.string.not_available)
+        setTextColor(resources.getColor(valueColorId))
     }
 }
 

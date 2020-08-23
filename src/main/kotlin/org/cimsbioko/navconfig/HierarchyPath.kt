@@ -122,7 +122,7 @@ class HierarchyPath(path: Map<String, DataWrapper> = emptyMap()) : Parcelable {
 
         fun fromString(pathStr: String?): HierarchyPath? = pathStr?.let { path ->
             with(LEAF_PATTERN.matcher(path)) {
-                if (matches()) DefaultQueryHelper[group(1), group(2)]?.let { fromLeafString(it) }
+                if (matches()) DefaultQueryHelper[group(1), group(2)]?.firstWrapper?.let { fromLeafString(it) }
                 else fromPathString(path)
             }
         }
@@ -135,7 +135,7 @@ class HierarchyPath(path: Map<String, DataWrapper> = emptyMap()) : Parcelable {
                     HierarchyPath().apply {
                         for ((i, p) in path.withIndex()) {
                             levels[i].let { level ->
-                                helper[level, p]?.let { value ->
+                                helper[level, p]?.firstWrapper?.let { value ->
                                     down(level, value)
                                 } ?: return null
                             }
@@ -152,7 +152,7 @@ class HierarchyPath(path: Map<String, DataWrapper> = emptyMap()) : Parcelable {
             var child: DataWrapper = leaf
             var parent: DataWrapper?
             do {
-                parent = child.let { helper.getParent(it.category, it.uuid) }?.also {
+                parent = child.let { helper.getParent(it.category, it.uuid) }?.firstWrapper?.also {
                     traversed.push(it)
                     child = it
                 }
