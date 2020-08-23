@@ -20,5 +20,5 @@ data class LocationHierarchy(
                 name = name
         )
     override val hierarchyId: String
-        get() = "${Hierarchy.HOUSEHOLD}:$uuid"
+        get() = "$level:$uuid"
 }
