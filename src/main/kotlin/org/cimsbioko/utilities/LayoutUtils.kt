@@ -15,7 +15,7 @@ import org.cimsbioko.model.form.LoadedFormInstance
 // Create a new Layout that contains two text views and optionally several key-value text views beneath.
 fun makeText(activity: Activity, layoutTag: Any? = null, listener: View.OnClickListener? = null,
              container: ViewGroup? = null, background: Int = 0): RelativeLayout =
-        activity.layoutInflater.inflate(R.layout.generic_list_item_white_text, null)
+        activity.layoutInflater.inflate(R.layout.generic_list_item, null)
                 .let { it as RelativeLayout }
                 .apply {
                     tag = layoutTag

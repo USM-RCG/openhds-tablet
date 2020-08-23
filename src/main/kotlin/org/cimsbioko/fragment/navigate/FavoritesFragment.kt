@@ -117,7 +117,7 @@ class FavoritesFragment : Fragment(), CoroutineScope {
 
     private inner class FavoriteAdapter(
             context: Context
-    ) : ArrayAdapter<HierarchyItem>(context, R.layout.generic_list_item_white_text) {
+    ) : ArrayAdapter<HierarchyItem>(context, R.layout.generic_list_item) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             return requireActivity().let { activity ->
                 (convertView as? RelativeLayout

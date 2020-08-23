@@ -41,7 +41,7 @@ class FormSelectionFragment : Fragment() {
 
     fun createFormButtons(values: List<Launcher>) {
         activity?.let { activity ->
-            formListAdapter = FormSelectionListAdapter(activity, R.layout.generic_list_item_white_text, values)
+            formListAdapter = FormSelectionListAdapter(activity, R.layout.generic_list_item, values)
             activity.findViewById<ListView>(R.id.form_fragment_listview).apply {
                 adapter = formListAdapter
                 onItemClickListener = FormClickListener()

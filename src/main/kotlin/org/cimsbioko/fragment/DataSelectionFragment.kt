@@ -54,7 +54,7 @@ class DataSelectionFragment : Fragment() {
 
     fun populateData(data: List<HierarchyItem>, formatter: HierFormatter) {
         itemFormatter = formatter
-        adapter = DataSelectionListAdapter(requireContext(), R.layout.generic_list_item_white_text, data)
+        adapter = DataSelectionListAdapter(requireContext(), R.layout.generic_list_item, data)
         listView.adapter = adapter
     }
 
