@@ -25,6 +25,7 @@ import org.cimsbioko.utilities.ConfigUtils.getActiveModules
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 import org.cimsbioko.utilities.configureText
 import org.cimsbioko.utilities.makeText
+import org.cimsbioko.utilities.toLevelIcon
 import kotlin.coroutines.CoroutineContext
 
 class FavoritesFragment : Fragment(), CoroutineScope {
@@ -132,7 +133,8 @@ class FavoritesFragment : Fragment(), CoroutineScope {
                                             primaryText = it.heading,
                                             secondaryText = it.subheading,
                                             stringsPayload = it.details,
-                                            centerText = false
+                                            centerText = false,
+                                            iconRes = level.toLevelIcon()
                                     )
                                 }
                     }

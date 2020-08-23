@@ -18,6 +18,7 @@ import org.cimsbioko.navconfig.NavigatorConfig
 import org.cimsbioko.navconfig.NavigatorConfig.Companion.instance
 import org.cimsbioko.utilities.configureText
 import org.cimsbioko.utilities.makeText
+import org.cimsbioko.utilities.toLevelIcon
 
 class HierarchyButtonFragment : Fragment(), View.OnClickListener {
 
@@ -94,10 +95,10 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
 
     private fun updateButton(level: String, data: DataWrapper?) {
         if (data == null) {
-            setButtonLabel(level, config.getLevelLabel(level), null, true)
+            setButtonLabel(level, config.getLevelLabel(level), center = true)
             setHighlighted(level, true)
         } else {
-            setButtonLabel(level, data.name, data.extId, false)
+            setButtonLabel(level, data.name, data.extId, center = false, showIcon = true)
             setHighlighted(level, false)
         }
     }
@@ -116,8 +117,14 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun setButtonLabel(level: String, name: String?, id: String?, center: Boolean) {
-        levelViews[level]?.configureText(requireActivity(), primaryText = name, secondaryText = id, centerText = center)
+    private fun setButtonLabel(level: String, name: String?, id: String? = null, center: Boolean, showIcon: Boolean = false) {
+        levelViews[level]?.configureText(
+                requireActivity(),
+                primaryText = name,
+                secondaryText = id,
+                centerText = center,
+                iconRes = if (showIcon) level.toLevelIcon() else null
+        )
     }
 
     override fun onClick(v: View) {

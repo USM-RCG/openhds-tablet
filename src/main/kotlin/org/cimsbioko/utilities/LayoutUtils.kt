@@ -1,6 +1,8 @@
 package org.cimsbioko.utilities
 
 import android.app.Activity
+import android.text.SpannableString
+import android.text.style.ImageSpan
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import android.widget.TextView
 import org.cimsbioko.R
 import org.cimsbioko.model.form.FormInstance
 import org.cimsbioko.model.form.LoadedFormInstance
+import org.cimsbioko.navconfig.Hierarchy
 
 
 // Create a new Layout that contains two text views and optionally several key-value text views beneath.
@@ -27,16 +30,16 @@ fun makeText(activity: Activity, layoutTag: Any? = null, listener: View.OnClickL
 // Pass new data to a layout that was created with makeTextWithPayload().
 fun RelativeLayout.configureText(activity: Activity, primaryText: String? = null,
                                  secondaryText: String? = null, stringsPayload: Map<String, String?>? = null,
-                                 centerText: Boolean = true) {
+                                 centerText: Boolean = true, iconRes: Int? = null) {
 
-    fun TextView.configure(s: String?) {
-        s?.let { text = it }
+    fun TextView.configure(s: String?, iconRes: Int? = null) {
+        s?.let { str -> setTextWithIcon(str, iconRes) }
         visibility = if (s == null) View.GONE else View.VISIBLE
         gravity = Gravity.CENTER
         setPadding(0, 0, 0, 0)
     }
 
-    findViewById<TextView>(R.id.primary_text).configure(primaryText)
+    findViewById<TextView>(R.id.primary_text).configure(primaryText, iconRes)
     findViewById<TextView>(R.id.secondary_text).configure(secondaryText)
     findViewById<LinearLayout>(R.id.details_container).apply {
         removeAllViews()
@@ -109,4 +112,24 @@ fun View.configureFormListItem(instance: LoadedFormInstance) {
         findViewById<TextView>(R.id.form_instance_list_extra1)?.text = it.extra1 ?: ""
         findViewById<TextView>(R.id.form_instance_list_extra2)?.text = it.extra2 ?: ""
     }
+}
+
+
+fun String?.toLevelIcon(): Int? {
+    return this?.let {
+        when (it) {
+            Hierarchy.HOUSEHOLD -> R.drawable.location_logo
+            Hierarchy.INDIVIDUAL -> R.drawable.individual_logo
+            else -> R.drawable.hierarchy_logo
+        }
+    }
+}
+
+fun TextView.setTextWithIcon(str: String, iconRes: Int?) {
+    text = iconRes?.let {
+        resources.getDrawable(iconRes)
+                .apply { setBounds(0, 0, lineHeight, lineHeight) }
+                .let { ImageSpan(it) }
+                .let { SpannableString("  $str").apply { setSpan(it, 0, 1, 0) } }
+    } ?: str
 }

@@ -302,7 +302,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
             supportFragmentManager.executePendingTransactions()
             withContext(Dispatchers.IO) { currentSelection?.unwrapped }
                     ?.let { itemFormatterForCurrentLevel?.format(it) }
-                    ?.also { fragment.showItemDetails(it) }
+                    ?.also { fragment.showItemDetails(it, level) }
         }
     }
 

@@ -19,6 +19,7 @@ import org.cimsbioko.provider.DatabaseAdapter
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 import org.cimsbioko.utilities.configureText
 import org.cimsbioko.utilities.makeText
+import org.cimsbioko.utilities.toLevelIcon
 
 class DataSelectionFragment : Fragment() {
 
@@ -90,12 +91,16 @@ class DataSelectionFragment : Fragment() {
             return getItem(position).let { item ->
                 val formatted = item?.let { itemFormatter?.formatItem(item) }
                 (convertView as? RelativeLayout
-                        ?: makeText(requireActivity(), layoutTag = formatted?.heading, background = R.drawable.data_selector)).apply {
+                        ?: makeText(
+                                requireActivity(), layoutTag = formatted?.heading, background = R.drawable.data_selector
+                        )).apply {
                     configureText(requireActivity(),
                             primaryText = formatted?.heading,
                             secondaryText = formatted?.subheading,
                             stringsPayload = formatted?.details,
-                            centerText = false)
+                            centerText = false,
+                            iconRes = item.level.toLevelIcon()
+                    )
                 }
             }
         }

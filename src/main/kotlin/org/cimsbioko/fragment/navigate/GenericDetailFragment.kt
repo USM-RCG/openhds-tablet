@@ -11,9 +11,7 @@ import androidx.fragment.app.Fragment
 import org.cimsbioko.R
 import org.cimsbioko.navconfig.DetailsSection
 import org.cimsbioko.navconfig.ItemDetails
-import org.cimsbioko.utilities.configureTextWithLabel
-import org.cimsbioko.utilities.isBlank
-import org.cimsbioko.utilities.makeLargeTextWithLabel
+import org.cimsbioko.utilities.*
 import java.util.*
 
 private const val LABEL_COLOR = R.color.DarkGray
@@ -27,8 +25,8 @@ class GenericDetailFragment : Fragment() {
             (inflater.inflate(R.layout.generic_detail_fragment, container, false) as ScrollView)
                     .also { detailContainer = it.findViewById(R.id.generic_detail_fragment_container) }
 
-    fun showItemDetails(details: ItemDetails) {
-        details.banner?.let { setBannerText(it) }
+    fun showItemDetails(details: ItemDetails, level: String) {
+        details.banner?.let { setBannerText(it, level) }
         details.sections?.let { rebuildSections(it) }
     }
 
@@ -40,14 +38,17 @@ class GenericDetailFragment : Fragment() {
                     ?.inflate(R.layout.generic_detail_fragment_section, detailContainer, false) as? LinearLayout)
                     ?.let { sectionLayout ->
                         detailContainer.addView(sectionLayout)
-                        section.banner?.let { sectionLayout.findViewById<TextView>(R.id.generic_detail_fragment_section_banner).text = it }
+                        section.banner?.let {
+                            sectionLayout.findViewById<TextView>(R.id.generic_detail_fragment_section_banner).text = it
+                        }
                         section.details?.forEach { if (!it.value.isBlank) sectionLayout.addTextView(it.key, it.value) }
                     }
         }
     }
 
-    private fun setBannerText(text: String) {
-        detailContainer.findViewById<TextView>(R.id.generic_detail_fragment_banner).text = text
+    private fun setBannerText(text: String, level: String) {
+        detailContainer.findViewById<TextView>(R.id.generic_detail_fragment_banner)
+                .setTextWithIcon(text, level.toLevelIcon())
     }
 
     private fun LinearLayout.addTextView(label: String, value: String?) {
