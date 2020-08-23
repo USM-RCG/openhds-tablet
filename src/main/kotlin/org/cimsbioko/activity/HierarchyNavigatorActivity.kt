@@ -115,7 +115,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
                 hierarchyPath = it
             }
             fragmentManager.beginTransaction()
-                    .add(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG)
+                    .add(R.id.middle_column_data, valueFragment, VALUE_FRAGMENT_TAG)
                     .commit()
         } else {
             with(savedInstanceState) {
@@ -273,10 +273,10 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         launch {
             if (valueFragment.isAdded) {
                 showDetailFragment()
-                detailToggleFragment.setHighlighted(true)
+                detailToggleFragment.setDetailsShown(true)
             } else if (detailFragment.isAdded) {
                 showValueFragment()
-                detailToggleFragment.setHighlighted(false)
+                detailToggleFragment.setDetailsShown(false)
             }
         }
     }
@@ -286,7 +286,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         if (!valueFragment.isAdded) {
             supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.middle_column, valueFragment, VALUE_FRAGMENT_TAG)
+                    .replace(R.id.middle_column_data, valueFragment, VALUE_FRAGMENT_TAG)
                     .commit()
             supportFragmentManager.executePendingTransactions()
         }
@@ -297,7 +297,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         detailFragment = GenericDetailFragment().also { fragment ->
             supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.middle_column, fragment, DETAIL_FRAGMENT_TAG)
+                    .replace(R.id.middle_column_data, fragment, DETAIL_FRAGMENT_TAG)
                     .commit()
             supportFragmentManager.executePendingTransactions()
             withContext(Dispatchers.IO) { currentSelection?.unwrapped }
@@ -387,7 +387,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         detailToggleFragment.apply {
             if (itemFormatterForCurrentLevel != null && !shouldShowDetail()) {
                 setEnabled(true)
-                if (!valueFragment.isAdded) setHighlighted(true)
+                if (!valueFragment.isAdded) setDetailsShown(true)
             } else setEnabled(false)
         }
     }

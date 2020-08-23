@@ -19,29 +19,36 @@
             android:animateLayoutChanges="true"
             android:orientation="horizontal">
 
-        <RelativeLayout style="@style/FieldworkerSideColumn">
+        <FrameLayout style="@style/FieldworkerSideColumn">
 
             <fragment
                     android:name="org.cimsbioko.fragment.navigate.HierarchyButtonFragment"
                     android:id="@+id/hierarchy_button_fragment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/toggle_fragment_spacing"
+                    android:layout_height="wrap_content"/>
+
+        </FrameLayout>
+
+        <RelativeLayout
+                android:id="@+id/middle_column"
+                style="@style/FieldworkerMiddleColumn">
+
+            <FrameLayout
+                    android:id="@+id/middle_column_data"
                     android:layout_alignParentTop="true"
-                    android:layout_above="@id/detail_toggle_fragment"/>
+                    android:layout_above="@id/detail_toggle_fragment"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"/>
 
             <fragment
                     android:name="org.cimsbioko.fragment.navigate.DetailToggleFragment"
                     android:id="@+id/detail_toggle_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"/>
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="@dimen/toggle_fragment_spacing"/>
 
         </RelativeLayout>
-
-        <FrameLayout
-                android:id="@+id/middle_column"
-                style="@style/FieldworkerMiddleColumn"/>
 
         <LinearLayout
                 style="@style/FieldworkerSideColumn"

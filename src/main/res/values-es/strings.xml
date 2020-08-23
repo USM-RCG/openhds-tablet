@@ -14,7 +14,7 @@
 
     <!-- Details Fragment Values -->
     <string name="toggle_fragment_button_show_details">Mostrar Detalles</string>
-    <string name="toggle_fragment_button_show_children">Esconder Detalles</string>
+    <string name="toggle_fragment_button_hide_details">Esconder Detalles</string>
 
     <!-- UpdateActivity Labels -->
     <string name="field_worker_home">Trabajador de campo Inicio</string>

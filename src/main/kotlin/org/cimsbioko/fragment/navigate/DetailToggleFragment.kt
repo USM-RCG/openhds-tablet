@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import org.cimsbioko.R
 import org.cimsbioko.utilities.configureText
@@ -35,9 +36,7 @@ class DetailToggleFragment : Fragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return (inflater.inflate(R.layout.detail_toggle_fragment, container, false) as LinearLayout).also { df ->
-            layout = makeText(requireActivity(), listener = this, container = df).apply {
-                (layoutParams as LinearLayout.LayoutParams).apply { setMargins(0, 0, 0, BUTTON_MARGIN) }
-            }
+            layout = makeText(requireActivity(), listener = this, container = df)
         }
     }
 
@@ -50,29 +49,25 @@ class DetailToggleFragment : Fragment(), View.OnClickListener {
         with(layout) {
             if (!isEnabled) {
                 visibility = ViewGroup.GONE
+                background = null
             } else {
                 visibility = ViewGroup.VISIBLE
+                background = ContextCompat.getDrawable(context, R.drawable.detail_toggle)
                 isClickable = true
-                setHighlighted(false)
+                setDetailsShown(false)
             }
         }
     }
 
-    fun setHighlighted(isHighlighted: Boolean) {
+    fun setDetailsShown(detailsShown: Boolean) {
         requireActivity().also { activity ->
             with(layout) {
-                if (isEnabled && isHighlighted) {
-                    setBackgroundColor(resources.getColor(R.color.LightGreen))
-                    configureText(activity, getString(R.string.toggle_fragment_button_show_children))
-                } else if (isEnabled && !isHighlighted) {
-                    setBackgroundColor(resources.getColor(R.color.DarkGreen))
+                if (isEnabled && detailsShown) {
+                    configureText(activity, getString(R.string.toggle_fragment_button_hide_details))
+                } else if (isEnabled && !detailsShown) {
                     configureText(activity, getString(R.string.toggle_fragment_button_show_details))
                 }
             }
         }
-    }
-
-    companion object {
-        private const val BUTTON_MARGIN = 5
     }
 }
