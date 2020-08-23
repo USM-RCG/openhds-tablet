@@ -18,7 +18,7 @@
         tools:text="b12345" />
 
     <LinearLayout
-        android:id="@+id/pay_load_container"
+        android:id="@+id/details_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/secondary_text"

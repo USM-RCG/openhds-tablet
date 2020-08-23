@@ -12,7 +12,7 @@ import org.cimsbioko.model.form.FormInstance
 import org.cimsbioko.model.form.LoadedFormInstance
 
 
-// Create a new Layout that contains two text views and optionally several "payload" text views beneath.
+// Create a new Layout that contains two text views and optionally several key-value text views beneath.
 fun makeText(activity: Activity, layoutTag: Any? = null, listener: View.OnClickListener? = null,
              container: ViewGroup? = null, background: Int = 0): RelativeLayout =
         activity.layoutInflater.inflate(R.layout.generic_list_item_white_text, null)
@@ -38,7 +38,7 @@ fun RelativeLayout.configureText(activity: Activity, primaryText: String? = null
 
     findViewById<TextView>(R.id.primary_text).configure(primaryText)
     findViewById<TextView>(R.id.secondary_text).configure(secondaryText)
-    findViewById<LinearLayout>(R.id.pay_load_container).apply {
+    findViewById<LinearLayout>(R.id.details_container).apply {
         removeAllViews()
         stringsPayload?.also { sp ->
             for ((key, value) in sp) {
