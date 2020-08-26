@@ -61,7 +61,6 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
                             background = R.drawable.data_selector).apply {
                         configureText(activity, primaryText = config.getLevelLabel(level))
                         visibility = View.GONE
-                        (layoutParams as LinearLayout.LayoutParams).setMargins(0, 0, 0, resources.getDimensionPixelSize(R.dimen.hier_button_spacing))
                     }
                 }.toMap()
             }
@@ -85,9 +84,9 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
         if (path.depth() < config.levels.size) {
             config.levels[path.depth()].let { nextLevel ->
                 updateButton(nextLevel, path[nextLevel])
-                setVisible(nextLevel, true)
+                setVisible(nextLevel, true, isLast = true)
             }
-        }
+        } else setVisible(config.levels.last(), true, isLast = true)
 
         // Scroll to the bottom when the buttons overflow
         scrollView.apply { post { if (canScrollVertically(1)) fullScroll(View.FOCUS_DOWN) } }
@@ -103,8 +102,12 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun setVisible(level: String, visible: Boolean) {
-        levelViews[level]?.visibility = if (visible) View.VISIBLE else View.GONE
+    private fun setVisible(level: String, visible: Boolean, isLast: Boolean = false) {
+        levelViews[level]?.apply {
+            visibility = if (visible) View.VISIBLE else View.GONE
+            (layoutParams as LinearLayout.LayoutParams)
+                    .setMargins(0, 0, 0, if (isLast) 0 else resources.getDimensionPixelSize(R.dimen.hier_button_spacing))
+        }
     }
 
     private fun setHighlighted(level: String, highlighted: Boolean) {
