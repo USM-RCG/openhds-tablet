@@ -97,9 +97,10 @@ class DataSelectionFragment : Fragment() {
                     configureText(requireActivity(),
                             primaryText = formatted?.heading,
                             secondaryText = formatted?.subheading,
-                            stringsPayload = formatted?.details,
+                            details = formatted?.details,
                             centerText = false,
-                            iconRes = item.level.toLevelIcon()
+                            iconRes = item.level.toLevelIcon(),
+                            detailsPadding = resources.getDimensionPixelSize(R.dimen.detail_padding)
                     )
                 }
             }

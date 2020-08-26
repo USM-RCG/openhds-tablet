@@ -83,6 +83,11 @@
         <item name="android:gravity">center</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium.Inverse</item>
     </style>
+    <style name="DetailSectionDetails">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/detail_padding</item>
+    </style>
     <style name="ProgressBarContainer">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>

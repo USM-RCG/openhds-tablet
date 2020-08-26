@@ -61,7 +61,7 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
                             background = R.drawable.data_selector).apply {
                         configureText(activity, primaryText = config.getLevelLabel(level))
                         visibility = View.GONE
-                        (layoutParams as LinearLayout.LayoutParams).setMargins(0, 0, 0, BUTTON_MARGIN)
+                        (layoutParams as LinearLayout.LayoutParams).setMargins(0, 0, 0, resources.getDimensionPixelSize(R.dimen.hier_button_spacing))
                     }
                 }.toMap()
             }
@@ -129,9 +129,5 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         listener?.onHierarchyButtonClicked(v.tag as String)
-    }
-
-    companion object {
-        private const val BUTTON_MARGIN = 5 // margin in layout XML is ignored for some reason
     }
 }

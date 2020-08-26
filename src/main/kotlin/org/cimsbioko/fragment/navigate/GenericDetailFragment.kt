@@ -41,7 +41,12 @@ class GenericDetailFragment : Fragment() {
                         section.banner?.let {
                             sectionLayout.findViewById<TextView>(R.id.generic_detail_fragment_section_banner).text = it
                         }
-                        section.details?.forEach { if (!it.value.isBlank) sectionLayout.addTextView(it.key, it.value) }
+                        sectionLayout.findViewById<LinearLayout>(R.id.generic_detail_fragment_section_details)
+                                .let { detailLayout ->
+                                    section.details?.forEach {
+                                        if (!it.value.isBlank) detailLayout.addTextView(it.key, it.value)
+                                    }
+                                }
                     }
         }
     }

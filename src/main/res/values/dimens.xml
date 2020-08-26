@@ -38,6 +38,8 @@
 
     <dimen name="sync_button_spacing">10dp</dimen>
 
+    <dimen name="hier_button_spacing">5dp</dimen>
+
     <dimen name="instance_checkbox_padding">5dp</dimen>
 
     <dimen name="toggle_fragment_spacing">10dp</dimen>

@@ -5,11 +5,16 @@
         android:id="@+id/generic_detail_fragment_section"
         style="@style/DetailSection"
         android:orientation="vertical"
-        android:tag="detail_section" >
+        android:tag="detail_section">
 
     <TextView
             android:id="@+id/generic_detail_fragment_section_banner"
             style="@style/DetailSectionHeading"
-            tools:text="Details Section Heading" />
+            tools:text="Details Section Heading"/>
+
+    <LinearLayout
+            android:id="@+id/generic_detail_fragment_section_details"
+            android:orientation="vertical"
+            style="@style/DetailSectionDetails"/>
 
 </LinearLayout>

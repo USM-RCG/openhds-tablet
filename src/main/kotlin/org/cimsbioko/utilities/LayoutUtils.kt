@@ -29,21 +29,20 @@ fun makeText(activity: Activity, layoutTag: Any? = null, listener: View.OnClickL
 
 // Pass new data to a layout that was created with makeTextWithPayload().
 fun RelativeLayout.configureText(activity: Activity, primaryText: String? = null,
-                                 secondaryText: String? = null, stringsPayload: Map<String, String?>? = null,
-                                 centerText: Boolean = true, iconRes: Int? = null) {
+                                 secondaryText: String? = null, details: Map<String, String?>? = null,
+                                 centerText: Boolean = true, iconRes: Int? = null, detailsPadding: Int = 0) {
 
     fun TextView.configure(s: String?, iconRes: Int? = null) {
         s?.let { str -> setTextWithIcon(str, iconRes) }
         visibility = if (s == null) View.GONE else View.VISIBLE
         gravity = Gravity.CENTER
-        setPadding(0, 0, 0, 0)
     }
 
     findViewById<TextView>(R.id.primary_text).configure(primaryText, iconRes)
     findViewById<TextView>(R.id.secondary_text).configure(secondaryText)
     findViewById<LinearLayout>(R.id.details_container).apply {
         removeAllViews()
-        stringsPayload?.also { sp ->
+        details?.also { sp ->
             for ((key, value) in sp) {
                 if (!value.isBlank) {
                     addView(makeSmallTextWithLabel(activity).apply {
@@ -55,7 +54,7 @@ fun RelativeLayout.configureText(activity: Activity, primaryText: String? = null
         }
         visibility = if (childCount == 0) View.GONE else View.VISIBLE
         gravity = if (centerText) Gravity.CENTER else Gravity.NO_GRAVITY
-        setPadding(if (centerText) 0 else 15, 0, 0, 0)
+        detailsPadding.takeIf { it > 0 }?.also { setPadding(it, it, it, it) }
     }
 }
 

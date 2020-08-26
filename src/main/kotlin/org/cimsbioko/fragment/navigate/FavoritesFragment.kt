@@ -132,9 +132,10 @@ class FavoritesFragment : Fragment(), CoroutineScope {
                                     view.configureText(activity,
                                             primaryText = it.heading,
                                             secondaryText = it.subheading,
-                                            stringsPayload = it.details,
+                                            details = it.details,
                                             centerText = false,
-                                            iconRes = level.toLevelIcon()
+                                            iconRes = level.toLevelIcon(),
+                                            detailsPadding = resources.getDimensionPixelSize(R.dimen.detail_padding)
                                     )
                                 }
                     }
