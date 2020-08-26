@@ -15,7 +15,8 @@ import org.cimsbioko.utilities.makeText
 
 class DetailToggleFragment : Fragment(), View.OnClickListener {
 
-    private lateinit var layout: RelativeLayout
+    private lateinit var layout: View
+    private lateinit var buttonLayout: RelativeLayout
 
     private var isEnabled = false
     private var listener: DetailToggleListener? = null
@@ -35,9 +36,12 @@ class DetailToggleFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return (inflater.inflate(R.layout.detail_toggle_fragment, container, false) as LinearLayout).also { df ->
-            layout = makeText(requireActivity(), listener = this, container = df)
-        }
+        return inflater.inflate(R.layout.detail_toggle_fragment, container, false)
+                .let { it as LinearLayout }
+                .also {
+                    layout = it
+                    buttonLayout = makeText(requireActivity(), listener = this, container = it)
+                }
     }
 
     override fun onClick(v: View) {
@@ -46,22 +50,21 @@ class DetailToggleFragment : Fragment(), View.OnClickListener {
 
     fun setEnabled(isEnabled: Boolean) {
         this.isEnabled = isEnabled
-        with(layout) {
-            if (!isEnabled) {
-                visibility = ViewGroup.GONE
-                background = null
-            } else {
-                visibility = ViewGroup.VISIBLE
-                background = ContextCompat.getDrawable(context, R.drawable.detail_toggle)
+        if (!isEnabled) {
+            layout.visibility = ViewGroup.GONE
+        } else {
+            with (buttonLayout) {
+                background = ContextCompat.getDrawable(requireContext(), R.drawable.detail_toggle)
                 isClickable = true
-                setDetailsShown(false)
             }
+            setDetailsShown(false)
+            layout.visibility = ViewGroup.VISIBLE
         }
     }
 
     fun setDetailsShown(detailsShown: Boolean) {
         requireActivity().also { activity ->
-            with(layout) {
+            with(buttonLayout) {
                 if (isEnabled && detailsShown) {
                     configureText(activity, getString(R.string.toggle_fragment_button_hide_details))
                 } else if (isEnabled && !detailsShown) {
