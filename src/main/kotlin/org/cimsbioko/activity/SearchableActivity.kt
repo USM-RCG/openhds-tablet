@@ -335,7 +335,7 @@ class SearchableActivity : AppCompatActivity() {
         (if (advancedSelected) advancedQuery else basicQuery).requestFocus()
     }
 
-    private inner class BoundedSearch internal constructor(private val query: Query, private val limit: Int) : SearchJob() {
+    private inner class BoundedSearch(private val query: Query, private val limit: Int) : SearchJob() {
 
         private val items: MutableList<DataWrapper> = ArrayList()
 
@@ -364,16 +364,18 @@ class SearchableActivity : AppCompatActivity() {
         private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View =
                 (convertView ?: inflater.inflate(R.layout.search_result, null)).also { view ->
-                    getItem(position)?.apply {
-                        view.findViewById<ImageView>(R.id.icon).apply {
-                            when (category) {
-                                Hierarchy.HOUSEHOLD -> setImageResource(R.drawable.location_logo)
-                                Hierarchy.INDIVIDUAL -> setImageResource(R.drawable.individual_logo)
-                                else -> setImageResource(R.drawable.hierarchy_logo)
+                    view.toViewHolder().let { vh ->
+                        getItem(position)?.apply {
+                            vh.icon.apply {
+                                when (category) {
+                                    Hierarchy.HOUSEHOLD -> setImageResource(R.drawable.location_logo)
+                                    Hierarchy.INDIVIDUAL -> setImageResource(R.drawable.individual_logo)
+                                    else -> setImageResource(R.drawable.hierarchy_logo)
+                                }
                             }
+                            vh.text1.text = name
+                            vh.text2.text = extId
                         }
-                        view.findViewById<TextView>(android.R.id.text1).text = name
-                        view.findViewById<TextView>(android.R.id.text2).text = extId
                     }
                 }
     }
@@ -390,3 +392,15 @@ class SearchableActivity : AppCompatActivity() {
         const val BASIC_POS = 0
     }
 }
+
+private fun View.toViewHolder(): ViewHolder = tag as? ViewHolder ?: ViewHolder(
+        icon = findViewById(R.id.icon),
+        text1 = findViewById(android.R.id.text1),
+        text2 = findViewById(android.R.id.text2)
+).also { tag = it }
+
+private class ViewHolder(
+        val icon: ImageView,
+        val text1: TextView,
+        val text2: TextView
+)
