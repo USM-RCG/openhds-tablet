@@ -10,8 +10,6 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import org.cimsbioko.R
-import org.cimsbioko.model.form.FormInstance
-import org.cimsbioko.model.form.LoadedFormInstance
 import org.cimsbioko.navconfig.Hierarchy
 
 
@@ -86,33 +84,6 @@ fun RelativeLayout.configureTextWithLabel(labelText: String, valueText: String?,
         setTextColor(resources.getColor(valueColorId))
     }
 }
-
-// Set up a form list item based on a given form instance.
-fun View.configureFormListItem(instance: LoadedFormInstance) {
-
-    setBackgroundResource(when {
-        instance.isComplete && instance.isEditable -> R.drawable.form_list
-        instance.isComplete && !instance.isEditable -> R.drawable.form_list_locked
-        else -> R.drawable.form_list_gray
-    })
-
-    val doc = instance.document
-    val binding = FormInstance.getBinding(doc)
-
-    // Set form name based on its embedded binding
-    findViewById<TextView>(R.id.form_instance_list_type)?.apply {
-        setTextWithIcon(binding?.label ?: instance.formName, R.drawable.ic_form)
-    }
-
-    binding?.formatter?.format(doc)?.also {
-        findViewById<TextView>(R.id.form_instance_list_id)?.text = it.entity ?: ""
-        findViewById<TextView>(R.id.form_instance_list_fieldworker)?.text = it.fieldworker ?: ""
-        findViewById<TextView>(R.id.form_instance_list_date)?.text = it.dateTimeCollected ?: ""
-        findViewById<TextView>(R.id.form_instance_list_extra1)?.text = it.extra1 ?: ""
-        findViewById<TextView>(R.id.form_instance_list_extra2)?.text = it.extra2 ?: ""
-    }
-}
-
 
 fun String?.toLevelIcon(): Int? {
     return this?.let {

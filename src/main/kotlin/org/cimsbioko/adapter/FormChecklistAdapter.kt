@@ -13,7 +13,6 @@ import org.cimsbioko.model.form.FormInstance
 import org.cimsbioko.model.form.LoadedFormInstance
 import org.cimsbioko.utilities.FormUtils.editIntent
 import org.cimsbioko.utilities.MessageUtils.showShortToast
-import org.cimsbioko.utilities.configureFormListItem
 
 class FormChecklistAdapter(
         context: Context,
