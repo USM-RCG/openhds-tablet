@@ -57,11 +57,6 @@ fun RelativeLayout.configureText(activity: Activity, primaryText: String? = null
 }
 
 // Create a pair of text views to represent some value plus its label, with given colors.
-fun makeLargeTextWithLabel(activity: Activity): RelativeLayout =
-        activity.layoutInflater.inflate(R.layout.value_with_label_large, null)
-                .let { it as RelativeLayout }
-
-// Create a pair of text views to represent some value plus its label, with given colors.
 private fun makeSmallTextWithLabel(activity: Activity): RelativeLayout =
         activity.layoutInflater.inflate(R.layout.value_with_label_small, null)
                 .let { it as RelativeLayout }

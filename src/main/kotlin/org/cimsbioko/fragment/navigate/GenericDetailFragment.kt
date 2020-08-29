@@ -1,17 +1,22 @@
 package org.cimsbioko.fragment.navigate
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import org.cimsbioko.R
 import org.cimsbioko.navconfig.DetailsSection
 import org.cimsbioko.navconfig.ItemDetails
-import org.cimsbioko.utilities.*
+import org.cimsbioko.utilities.configureTextWithLabel
+import org.cimsbioko.utilities.isBlank
+import org.cimsbioko.utilities.setTextWithIcon
+import org.cimsbioko.utilities.toLevelIcon
 import java.util.*
 
 private const val LABEL_COLOR = R.color.DarkGray
@@ -64,6 +69,10 @@ class GenericDetailFragment : Fragment() {
         }
     }
 }
+
+fun makeLargeTextWithLabel(activity: Activity): RelativeLayout =
+        activity.layoutInflater.inflate(R.layout.value_with_label_large, null)
+                .let { it as RelativeLayout }
 
 private fun ViewGroup.findViewsByTag(tag: String): List<View> {
     val views = ArrayList<View>()
