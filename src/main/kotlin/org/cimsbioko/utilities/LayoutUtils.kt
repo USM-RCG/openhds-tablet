@@ -2,6 +2,7 @@ package org.cimsbioko.utilities
 
 import android.app.Activity
 import android.text.SpannableString
+import android.text.style.DynamicDrawableSpan.ALIGN_BASELINE
 import android.text.style.ImageSpan
 import android.view.Gravity
 import android.view.View
@@ -92,9 +93,13 @@ fun String?.toLevelIcon(): Int? {
 
 fun TextView.setTextWithIcon(str: String, iconRes: Int?) {
     text = iconRes?.let {
-        resources.getDrawable(iconRes)
-                .apply { setBounds(0, 0, lineHeight, lineHeight) }
-                .let { ImageSpan(it) }
-                .let { SpannableString("  $str").apply { setSpan(it, 0, 1, 0) } }
+        paint.fontMetricsInt
+                .let { -it.ascent }
+                .let { dim ->
+                    resources.getDrawable(iconRes)
+                            .apply { setBounds(0, 0, dim, dim) }
+                            .let { ImageSpan(it, ALIGN_BASELINE) }
+                            .let { SpannableString("  $str").apply { setSpan(it, 0, 1, 0) } }
+                }
     } ?: str
 }
