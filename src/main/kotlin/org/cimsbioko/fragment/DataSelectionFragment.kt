@@ -99,7 +99,7 @@ class DataSelectionFragment : Fragment() {
                             secondaryText = formatted?.subheading,
                             details = formatted?.details,
                             centerText = false,
-                            iconRes = item.level.toLevelIcon(),
+                            iconRes = item?.level?.toLevelIcon(),
                             detailsPadding = resources.getDimensionPixelSize(R.dimen.detail_padding)
                     )
                 }
