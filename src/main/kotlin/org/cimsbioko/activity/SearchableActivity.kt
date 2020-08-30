@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.SpannableString
-import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ImageSpan
 import android.util.Log
@@ -17,7 +16,9 @@ import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.drawable.DrawableCompat
 import org.apache.lucene.index.Term
 import org.apache.lucene.queryparser.flexible.core.QueryNodeException
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
@@ -81,9 +82,9 @@ class SearchableActivity : AppCompatActivity() {
         searchButton.setOnClickListener(SearchOnClickHandler())
         SearchOnEnterKeyHandler().also { listOf(basicQuery, advancedQuery).forEach { q -> q.setOnKeyListener(it) } }
 
-        hierarchyToggle = findViewById<ToggleButton>(R.id.hierarchy_toggle).apply { setToggleImage(R.drawable.sm_hierarchy_logo) }
-        locationToggle = findViewById<ToggleButton>(R.id.location_toggle).apply { setToggleImage(R.drawable.sm_location_logo) }
-        individualToggle = findViewById<ToggleButton>(R.id.individual_toggle).apply { setToggleImage(R.drawable.sm_individual_logo) }
+        hierarchyToggle = findViewById<ToggleButton>(R.id.hierarchy_toggle).apply { setToggleImage(R.drawable.ic_hierarchy_sm) }
+        locationToggle = findViewById<ToggleButton>(R.id.location_toggle).apply { setToggleImage(R.drawable.ic_household_sm) }
+        individualToggle = findViewById<ToggleButton>(R.id.individual_toggle).apply { setToggleImage(R.drawable.ic_individual_sm) }
 
         EntityToggleHandler().let {
             listOf(hierarchyToggle, locationToggle, individualToggle).forEach { t -> t.setOnCheckedChangeListener(it) }
@@ -122,10 +123,16 @@ class SearchableActivity : AppCompatActivity() {
     }
 
     private fun ToggleButton.setToggleImage(drawableId: Int) {
-        SpannableString("X").also {
-            it.setSpan(ImageSpan(this@SearchableActivity, drawableId), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            text = it; textOn = it; textOff = it
-        }
+        AppCompatResources.getDrawable(context, drawableId)
+                ?.let { DrawableCompat.wrap(it) }
+                ?.mutate()
+                ?.also { DrawableCompat.setTint(it, R.color.Black) }
+                ?.apply { setBounds(0, 0, intrinsicWidth, intrinsicHeight) }
+                ?.let { ImageSpan(it) }
+                ?.let { SpannableString("X").apply { setSpan(it, 0, 1, 0) } }
+                ?.also {
+                    text = it; textOn = it; textOff = it
+                }
     }
 
     private val selectedLevels: Set<String>
@@ -368,9 +375,9 @@ class SearchableActivity : AppCompatActivity() {
                         getItem(position)?.apply {
                             vh.icon.apply {
                                 when (category) {
-                                    Hierarchy.HOUSEHOLD -> setImageResource(R.drawable.location_logo)
-                                    Hierarchy.INDIVIDUAL -> setImageResource(R.drawable.individual_logo)
-                                    else -> setImageResource(R.drawable.hierarchy_logo)
+                                    Hierarchy.HOUSEHOLD -> setImageResource(R.drawable.ic_household)
+                                    Hierarchy.INDIVIDUAL -> setImageResource(R.drawable.ic_individual)
+                                    else -> setImageResource(R.drawable.ic_hierarchy)
                                 }
                             }
                             vh.text1.text = name

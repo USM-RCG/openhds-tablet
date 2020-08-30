@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.DrawableCompat
 import org.cimsbioko.R
 import org.cimsbioko.navconfig.Hierarchy
 
@@ -81,22 +83,26 @@ fun RelativeLayout.configureTextWithLabel(labelText: String, valueText: String?,
 fun String?.toLevelIcon(): Int? {
     return this?.let {
         when (it) {
-            Hierarchy.HOUSEHOLD -> R.drawable.location_logo
-            Hierarchy.INDIVIDUAL -> R.drawable.individual_logo
-            else -> R.drawable.hierarchy_logo
+            Hierarchy.HOUSEHOLD -> R.drawable.ic_household
+            Hierarchy.INDIVIDUAL -> R.drawable.ic_individual
+            else -> R.drawable.ic_hierarchy
         }
     }
 }
 
-fun TextView.setTextWithIcon(str: String, iconRes: Int?) {
-    text = iconRes?.let {
+fun TextView.setTextWithIcon(str: String, iconRes: Int?, color: Int? = null) {
+    text = iconRes?.let { res ->
         paint.fontMetricsInt
                 .let { -it.ascent }
                 .let { dim ->
-                    resources.getDrawable(iconRes)
-                            .apply { setBounds(0, 0, dim, dim) }
-                            .let { ImageSpan(it, ALIGN_BASELINE) }
-                            .let { SpannableString("  $str").apply { setSpan(it, 0, 1, 0) } }
+                    AppCompatResources.getDrawable(context, res)
+                            ?.let { DrawableCompat.wrap(it) }
+                            ?.let { drawable ->
+                                color?.let { drawable.mutate().also { DrawableCompat.setTint(it, color) } } ?: drawable
+                            }
+                            ?.apply { setBounds(0, 0, dim, dim) }
+                            ?.let { ImageSpan(it, ALIGN_BASELINE) }
+                            ?.let { SpannableString("  $str").apply { setSpan(it, 0, 1, 0) } }
                 }
     } ?: str
 }

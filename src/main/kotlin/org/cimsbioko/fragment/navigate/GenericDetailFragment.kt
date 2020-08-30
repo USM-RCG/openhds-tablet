@@ -54,7 +54,7 @@ class GenericDetailFragment : Fragment() {
 
     private fun setBannerText(text: String, level: String) {
         detailContainer.findViewById<TextView>(R.id.generic_detail_fragment_banner)
-                .setTextWithIcon(text, level.toLevelIcon())
+                .setTextWithIcon(text, level.toLevelIcon(), resources.getColor(R.color.Black))
     }
 
     private fun LinearLayout.addTextView(label: String, value: String?) {
