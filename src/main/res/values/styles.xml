@@ -71,17 +71,18 @@
     </style>
     <style name="DetailHeading" parent="DetailSection">
         <item name="android:gravity">center</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large.Inverse</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
     </style>
     <style name="DetailSection">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">@dimen/detail_spacing</item>
-        <item name="android:background">@drawable/detail_fragment</item>
+        <item name="android:background">@drawable/detail_section</item>
     </style>
     <style name="DetailSectionHeading" parent="DetailSection">
         <item name="android:gravity">center</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium.Inverse</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:background">@drawable/detail_section_heading</item>
     </style>
     <style name="DetailSectionDetails">
         <item name="android:layout_width">match_parent</item>
@@ -143,23 +144,15 @@
     <style name="SearchResultPrimaryText" parent="SearchResultSecondaryText">
         <item name="android:textAppearance">?attr/textAppearanceListItem</item>
     </style>
-    <style name="LabelValueLargeLabel" parent="LabelValueLargeValue">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
+    <style name="LabelValueLabel" parent="LabelValueValue">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
     </style>
-    <style name="LabelValueLargeValue">
+    <style name="LabelValueValue">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">20sp</item>
-    </style>
-    <style name="LabelValueSmallLabel" parent="LabelValueSmallValue">
-        <item name="android:textSize">17sp</item>
         <item name="android:textStyle">bold</item>
-    </style>
-    <style name="LabelValueSmallValue">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     </style>
     <style name="SyncDBColumn">
         <item name="android:padding">5dp</item>

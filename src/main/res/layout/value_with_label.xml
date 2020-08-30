@@ -3,21 +3,14 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
 
-    <CheckedTextView
+    <TextView
         android:id="@+id/label_text"
-        style="@style/LabelValueLargeLabel"
+        style="@style/LabelValueLabel"
         tools:text="Label" />
 
-    <CheckedTextView
-        android:id="@+id/delimiter_text"
-        style="@style/LabelValueLargeLabel"
-        android:layout_toEndOf="@id/label_text"
-        android:layout_toRightOf="@id/label_text"
-        android:text=":" />
-
-    <CheckedTextView
+    <TextView
         android:id="@+id/value_text"
-        style="@style/LabelValueLargeValue"
+        style="@style/LabelValueValue"
         android:layout_below="@id/label_text"
         tools:text="Value" />
 

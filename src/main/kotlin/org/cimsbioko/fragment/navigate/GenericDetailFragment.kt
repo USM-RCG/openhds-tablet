@@ -59,16 +59,12 @@ class GenericDetailFragment : Fragment() {
 
     private fun LinearLayout.addTextView(label: String, value: String?) {
         activity?.let {
-            addView(makeLargeTextWithLabel(it).apply {
-                configureTextWithLabel(label, value, LABEL_COLOR, VALUE_COLOR)
+            addView(makeTextWithLabel(it).apply {
+                configureTextWithLabel(label, value)
             })
         }
     }
 }
-
-fun makeLargeTextWithLabel(activity: Activity): RelativeLayout =
-        activity.layoutInflater.inflate(R.layout.value_with_label_large, null)
-                .let { it as RelativeLayout }
 
 private fun ViewGroup.findViewsByTag(tag: String): List<View> {
     val views = ArrayList<View>()

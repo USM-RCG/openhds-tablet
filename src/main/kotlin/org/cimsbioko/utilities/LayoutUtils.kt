@@ -44,7 +44,7 @@ fun RelativeLayout.configureText(activity: Activity, primaryText: String? = null
         details?.also { sp ->
             for ((key, value) in sp) {
                 if (!value.isBlank) {
-                    addView(makeSmallTextWithLabel(activity).apply {
+                    addView(makeTextWithLabel(activity).apply {
                         configureTextWithLabel(labelText = key, valueText = value)
                         layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                     })
@@ -58,8 +58,8 @@ fun RelativeLayout.configureText(activity: Activity, primaryText: String? = null
 }
 
 // Create a pair of text views to represent some value plus its label, with given colors.
-private fun makeSmallTextWithLabel(activity: Activity): RelativeLayout =
-        activity.layoutInflater.inflate(R.layout.value_with_label_small, null)
+fun makeTextWithLabel(activity: Activity): RelativeLayout =
+        activity.layoutInflater.inflate(R.layout.value_with_label, null)
                 .let { it as RelativeLayout }
 
 val CharSequence?.isBlank: Boolean
@@ -70,9 +70,6 @@ fun RelativeLayout.configureTextWithLabel(labelText: String, valueText: String?,
     val resources = context.resources
     findViewById<TextView>(R.id.label_text)?.apply {
         text = labelText
-        setTextColor(resources.getColor(labelColorId))
-    }
-    findViewById<TextView>(R.id.delimiter_text)?.apply {
         setTextColor(resources.getColor(labelColorId))
     }
     findViewById<TextView>(R.id.value_text)?.apply {
