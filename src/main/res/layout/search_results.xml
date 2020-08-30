@@ -27,13 +27,15 @@
         <EditText
             android:id="@+id/basic_query_text"
             style="@style/SearchBox"
-            android:hint="@string/search_hint" />
+            android:hint="@string/search_hint"
+            android:imeOptions="actionSearch"/>
 
         <EditText
             android:id="@+id/advanced_query_text"
             style="@style/SearchBox"
             android:hint="@string/search_hint"
-            android:visibility="gone" />
+            android:imeOptions="actionSearch"
+            android:visibility="gone"/>
 
         <ToggleButton
             android:id="@+id/hierarchy_toggle"
