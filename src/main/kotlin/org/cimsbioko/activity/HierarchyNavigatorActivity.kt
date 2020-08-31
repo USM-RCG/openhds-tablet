@@ -314,16 +314,17 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
 
     override fun onHierarchyButtonClicked(level: String) = jumpUp(level)
 
+    private val isRootLevel
+        get() = ROOT_LEVEL == level
+
     private fun jumpUp(level: String) {
-        val isRootLevel = ROOT_LEVEL == level
-        check(isRootLevel || hierarchyPath.levels.contains(level)) { "invalid level: $level" }
-        pushHistory()
-        if (isRootLevel) {
-            hierarchyPath.clear()
-        } else {
-            hierarchyPath.truncate(level)
+        isRootLevel.also { isRoot ->
+            if (isRoot || hierarchyPath.levels.contains(level)) {
+                pushHistory()
+                if (isRoot) hierarchyPath.clear() else hierarchyPath.truncate(level)
+                update()
+            }
         }
-        update()
     }
 
     private fun stepDown(selected: DataWrapper) {
