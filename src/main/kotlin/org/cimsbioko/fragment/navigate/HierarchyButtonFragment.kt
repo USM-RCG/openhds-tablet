@@ -112,10 +112,9 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
 
     private fun setHighlighted(level: String, highlighted: Boolean) {
         levelViews[level]?.let { layout ->
-            // Defer setting pressed state so it isn't overwritten when run within a click handler
+            layout.isClickable = !highlighted // block repeated clicks immediately
             Handler(Looper.getMainLooper()).postDelayed({
-                layout.isClickable = !highlighted
-                layout.isPressed = highlighted
+                layout.isPressed = highlighted // deferred to prevent getting overridden
             }, 100)
         }
     }
