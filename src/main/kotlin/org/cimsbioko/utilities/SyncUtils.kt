@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.content.SyncResult
 import android.net.nsd.NsdServiceInfo
 import android.os.Bundle
 import android.util.Log
@@ -175,7 +176,7 @@ object SyncUtils {
      * @param endpoint url of the remote http endpoint to sync with
      * @param accessToken bearer token to use when contacting server
      */
-    fun downloadUpdate(ctx: Context, endpoint: URL, accessToken: String?) {
+    fun downloadUpdate(ctx: Context, endpoint: URL, accessToken: String? = null, syncResult: SyncResult) {
         val broadcastManager = LocalBroadcastManager.getInstance(ctx)
         val notificationManager = getNotificationManager(ctx)
         val dbFile = getDatabaseFile(ctx)
@@ -183,6 +184,7 @@ object SyncUtils {
         val dbTempFile = getTempFile(dbFile)
         if (!dbDir.exists() && !dbDir.mkdirs()) {
             Log.w(TAG, "failed to create missing dir $dbDir, sync cancelled")
+            syncResult.databaseError = true
             return
         }
         val existingFingerprint = loadFirstLine(getFingerprintFile(if (dbTempFile.exists()) dbTempFile else dbFile))
@@ -219,6 +221,7 @@ object SyncUtils {
                     if (accessToken != null) {
                         Log.i(TAG, "received unauthorized, invalidating access token")
                         AccountManager.get(ctx).invalidateAuthToken(Constants.ACCOUNT_TYPE, accessToken)
+                        syncResult.stats.numAuthExceptions += 1
                     }
                     Log.i(TAG, "no update found")
                 }
@@ -256,7 +259,7 @@ object SyncUtils {
                         }
                         val factory: RangeRequestFactory = RangeRequestFactoryImpl(endpoint, SQLITE_MIME_TYPE, creds)
                         Log.i(TAG, "syncing incrementally")
-                        incrementalSync(responseBody, dbTempFile, scratch, factory, builder, notificationManager, ctx)
+                        incrementalSync(responseBody, dbTempFile, scratch, factory, builder, notificationManager, ctx, syncResult)
                         if (!scratch.renameTo(dbTempFile)) {
                             Log.e(TAG, "failed to install sync result $scratch")
                         }
@@ -273,6 +276,7 @@ object SyncUtils {
                                     streamed += bytes
                                     val nextValue = if (totalSize <= 0) 100 else (streamed.toDouble() / totalSize * 100).toInt()
                                     if (nextValue != fileProgress) {
+                                        syncResult.stats.numUpdates += 1
                                         builder.setProgress(totalSize, nextValue, false)
                                         builder.setContentText(ctx.getString(R.string.sync_downloading))
                                         notificationManager.notify(SYNC_NOTIFICATION_ID, builder.build())
@@ -301,6 +305,7 @@ object SyncUtils {
                             .build())
                 } catch (e: IOException) {
                     Log.e(TAG, "sync io failure", e)
+                    syncResult.stats.numIoExceptions += 1
                     db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "error: $httpResult")
                     builder.mActions.clear()
                     notificationManager.notify(SYNC_NOTIFICATION_ID, builder
@@ -310,7 +315,8 @@ object SyncUtils {
                             .setOngoing(false)
                             .build())
                 } catch (e: NoSuchAlgorithmException) {
-                    Log.e(TAG, "sync io failure", e)
+                    Log.e(TAG, "sync failure", e)
+                    syncResult.stats.numParseExceptions += 1
                     db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "error: $httpResult")
                     builder.mActions.clear()
                     notificationManager.notify(SYNC_NOTIFICATION_ID, builder
@@ -328,6 +334,7 @@ object SyncUtils {
             }
         } catch (e: IOException) {
             Log.e(TAG, "sync failed: " + e.message)
+            syncResult.stats.numIoExceptions += 1
         }
         db.pruneSyncResults(getHistoryRetention(ctx))
 
@@ -381,7 +388,7 @@ object SyncUtils {
     @Throws(NoSuchAlgorithmException::class, IOException::class, InterruptedException::class)
     private fun incrementalSync(responseBody: InputStream, basis: File, target: File, factory: RangeRequestFactory,
                                 builder: NotificationCompat.Builder, manager: NotificationManager,
-                                ctx: Context) {
+                                ctx: Context, syncResult: SyncResult) {
         val metadata = readMetadata(responseBody)
         val tracker: ProgressTracker = object : ProgressTracker {
             var lastUpdate: Long = 0
@@ -389,6 +396,7 @@ object SyncUtils {
             var percent = -1
             override fun onProgress(stage: ProgressTracker.Stage, percentComplete: Int) {
                 val thisUpdate = System.currentTimeMillis()
+                syncResult.stats.numUpdates += 1
                 if (thisUpdate - lastUpdate > PROGRESS_NOTIFICATION_RATE_MILLIS) {
                     if (text != stage.name || percent != percentComplete) {
                         text = stage.name
@@ -524,7 +532,7 @@ object SyncUtils {
      * A wrapper around android's [HttpURLConnection] to make them usable
      * with sync range requests.
      */
-    private class RangeRequestImpl internal constructor(private val c: HttpURLConnection) : RangeRequest {
+    private class RangeRequestImpl(private val c: HttpURLConnection) : RangeRequest {
 
         @Throws(IOException::class)
         override fun getResponseCode(): Int {

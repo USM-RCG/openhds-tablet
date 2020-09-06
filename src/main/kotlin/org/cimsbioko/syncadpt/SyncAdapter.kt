@@ -34,17 +34,19 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
                     val info = Sidecar.discover(ctx.getSystemService(Context.NSD_SERVICE) as NsdManager, 30)
                     val endpoint = getLocalSyncEndpoint(ctx, info)
                     Log.i(TAG, "local sync $endpoint")
-                    downloadUpdate(ctx, endpoint, null)
+                    downloadUpdate(ctx, endpoint, syncResult = syncResult)
                 } else {
                     val endpoint = getRemoteSyncEndpoint(ctx)
                     Log.i(TAG, "remote sync $endpoint")
                     val token = AccountManager.get(ctx).blockingGetAuthToken(account, Constants.AUTHTOKEN_TYPE_DEVICE, true)
-                    downloadUpdate(ctx, endpoint, token)
+                    downloadUpdate(ctx, endpoint, token, syncResult)
                 }
             } catch (e: MalformedURLException) {
                 Log.w(TAG, "bad endpoint url", e)
+                syncResult.stats.numParseExceptions += 1
             } catch (e: Exception) {
                 Log.w(TAG, e.message)
+                syncResult.stats.numParseExceptions += 1
             }
         } else {
             Log.d(TAG, "sync adapter ran, but ignored - auto-sync disabled by user")
