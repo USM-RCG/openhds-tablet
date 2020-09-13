@@ -13,7 +13,12 @@
 }
 -keep class org.jdom2.* { *; }
 
+# not sure which lib references these, but we don't use it
+-dontwarn javax.swing.**
+-dontwarn java.awt.**
+
 # jdom (xml)
+-dontwarn org.jaxen.**
 -dontwarn org.jdom2.xpath.jaxen.**
 -dontwarn org.jdom2.input.StAXEventBuilder
 -dontwarn org.jdom2.input.StAXStreamBuilder
@@ -32,6 +37,7 @@
 -keep class com.androidplot.** { *; }
 
 # lucene (full-text search)
+-dontwarn org.apache.regexp.**
 -dontwarn org.apache.lucene.util.RamUsageEstimator
 -dontwarn org.apache.lucene.sandbox.queries.regex.**
 -keep class * extends org.apache.lucene.codecs.Codec
