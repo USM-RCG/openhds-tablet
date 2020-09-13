@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import org.cimsbioko.R
 import org.cimsbioko.databinding.GenericListItemBinding
@@ -70,14 +71,13 @@ val CharSequence?.isBlank: Boolean
 
 fun ValueWithLabelBinding.configureTextWithLabel(label: String, value: String?,
                                                  labelColorId: Int = R.color.Black, valueColorId: Int = R.color.Black) {
-    val resources = root.context.resources
     labelText.apply {
         text = label
-        setTextColor(resources.getColor(labelColorId))
+        setTextColor(ContextCompat.getColor(context, labelColorId))
     }
     valueText.apply {
         text = value
-        setTextColor(resources.getColor(valueColorId))
+        setTextColor(ContextCompat.getColor(context, valueColorId))
     }
 }
 

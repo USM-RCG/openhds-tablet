@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import org.cimsbioko.R
 import org.cimsbioko.databinding.GenericDetailFragmentBinding
@@ -59,7 +60,7 @@ class GenericDetailFragment : Fragment() {
     }
 
     private fun setBannerText(text: String, level: String) {
-        bannerText?.setTextWithIcon(text, level.toLevelIcon(), resources.getColor(R.color.Black))
+        bannerText?.apply { setTextWithIcon(text, level.toLevelIcon(), ContextCompat.getColor(context, R.color.Black)) }
     }
 
     private fun LinearLayout.addTextView(label: String, value: String?) {
