@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import org.cimsbioko.R
+import org.cimsbioko.databinding.FormInstanceListItemBinding
 import org.cimsbioko.model.FormInstance
 import org.cimsbioko.model.LoadedFormInstance
 import org.cimsbioko.utilities.setTextWithIcon
@@ -19,34 +19,35 @@ class FormInstanceAdapter(
 
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View =
-            (convertView ?: inflater.inflate(R.layout.form_instance_list_item, null)).also {
-                it.configureFormListItem(instances[position])
-            }
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        val binding = convertView?.tag as? FormInstanceListItemBinding
+                ?: FormInstanceListItemBinding.inflate(inflater).apply {
+                    root.tag = this
+                    configureForInstance(instances[position])
+                }
+        return binding.root
+    }
 }
 
-// Set up a form list item based on a given form instance.
-fun View.configureFormListItem(instance: LoadedFormInstance) {
+fun FormInstanceListItemBinding.configureForInstance(instance: LoadedFormInstance) {
 
-    setBackgroundResource(when {
+    root.setBackgroundResource(when {
         instance.isComplete && instance.isEditable -> R.drawable.form_list
         instance.isComplete && !instance.isEditable -> R.drawable.form_list_locked
         else -> R.drawable.form_list_gray
     })
 
     val doc = instance.document
-    val binding = FormInstance.getBinding(doc)
+    val formBinding = FormInstance.getBinding(doc)
 
     // Set form name based on its embedded binding
-    findViewById<TextView>(R.id.form_instance_list_type)?.apply {
-        setTextWithIcon(binding?.label ?: instance.formName, R.drawable.ic_form)
-    }
+    formInstanceListType.setTextWithIcon(formBinding?.label ?: instance.formName, R.drawable.ic_form)
 
-    binding?.formatter?.format(doc)?.also {
-        findViewById<TextView>(R.id.form_instance_list_id)?.text = it.entity ?: ""
-        findViewById<TextView>(R.id.form_instance_list_fieldworker)?.text = it.fieldworker ?: ""
-        findViewById<TextView>(R.id.form_instance_list_date)?.text = it.dateTimeCollected ?: ""
-        findViewById<TextView>(R.id.form_instance_list_extra1)?.text = it.extra1 ?: ""
-        findViewById<TextView>(R.id.form_instance_list_extra2)?.text = it.extra2 ?: ""
+    formBinding?.formatter?.format(doc)?.also {
+        formInstanceListId.text = it.entity ?: ""
+        formInstanceListFieldworker.text = it.fieldworker ?: ""
+        formInstanceListDate.text = it.dateTimeCollected ?: ""
+        formInstanceListExtra1.text = it.extra1 ?: ""
+        formInstanceListExtra2.text = it.extra2 ?: ""
     }
 }
