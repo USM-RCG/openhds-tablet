@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.androidplot.xy.*
-import org.cimsbioko.R
+import org.cimsbioko.databinding.SyncHistoryFragmentBinding
 import org.cimsbioko.provider.DatabaseAdapter
 import java.text.FieldPosition
 import java.text.Format
@@ -23,8 +23,8 @@ private const val MAX_DIVISIONS = 15.0f
 class SyncHistoryFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.sync_history_fragment, container, false).also { graphView: View ->
-            graphView.findViewById<XYPlot>(R.id.sync_history_plot).apply {
+        return SyncHistoryFragmentBinding.inflate(inflater, container, false).also {
+            it.syncHistoryPlot.apply {
                 SimpleXYSeries(SimpleXYSeries.ArrayFormat.XY_VALS_INTERLEAVED, "", *DatabaseAdapter.syncResults).also { series ->
                     addSeries(series, LineAndPointFormatter().apply {
                         fillPaint = null
@@ -49,7 +49,7 @@ class SyncHistoryFragment : Fragment() {
                     }
                 }
             }
-        }
+        }.root
     }
 
     private fun getMidnightOfDay(epochTime: Long): Long =

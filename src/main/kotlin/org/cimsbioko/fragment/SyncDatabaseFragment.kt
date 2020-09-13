@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import org.cimsbioko.App
 import org.cimsbioko.App.Companion.getApp
 import org.cimsbioko.R
+import org.cimsbioko.databinding.SyncDatabaseFragmentBinding
 import org.cimsbioko.offlinedb.OfflineDbService
 import org.cimsbioko.offlinedb.OfflineDbService.Companion.enqueueWork
 import org.cimsbioko.search.IndexingService.Companion.queueFullReindex
@@ -36,22 +37,29 @@ import java.io.File
  */
 class SyncDatabaseFragment : Fragment(), View.OnClickListener, DatabaseInstallationListener {
 
-    private lateinit var lastUpdated: TextView
-    private lateinit var fingerprint: TextView
-    private lateinit var checkButton: Button
-    private lateinit var updateButton: Button
     private lateinit var observer: ContentObserver
 
+    private var lastUpdated: TextView? = null
+    private var fingerprint: TextView? = null
+    private var checkButton: Button? = null
+    private var updateButton: Button? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.sync_database_fragment, container, false).apply {
-            lastUpdated = findViewById(R.id.sync_updated_column)
-            fingerprint = findViewById(R.id.sync_fingerprint_column)
-            checkButton = findViewById(R.id.sync_check_button)
-            checkButton.setOnClickListener(this@SyncDatabaseFragment)
-            updateButton = findViewById(R.id.sync_update_button)
-            updateButton.setOnClickListener(this@SyncDatabaseFragment)
+        return SyncDatabaseFragmentBinding.inflate(inflater, container, false).also {
+            lastUpdated = it.syncUpdatedColumn
+            fingerprint = it.syncFingerprintColumn
+            checkButton = it.syncCheckButton.apply { setOnClickListener(this@SyncDatabaseFragment) }
+            updateButton = it.syncUpdateButton.apply { setOnClickListener(this@SyncDatabaseFragment) }
             updateStatus()
-        }
+        }.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        lastUpdated = null
+        fingerprint = null
+        checkButton = null
+        updateButton = null
     }
 
     override fun onAttach(ctx: Context) {
@@ -87,9 +95,9 @@ class SyncDatabaseFragment : Fragment(), View.OnClickListener, DatabaseInstallat
     private fun updateStatus() {
         activity?.let { ctx ->
             val fpVal = getDatabaseFingerprint(ctx)
-            fingerprint.text = if (fpVal.length > 8) fpVal.substring(0, 8) + '\u2026' else fpVal
-            lastUpdated.text = getLastUpdated()
-            updateButton.isEnabled = canUpdateDatabase(ctx)
+            fingerprint?.text = if (fpVal.length > 8) fpVal.substring(0, 8) + '\u2026' else fpVal
+            lastUpdated?.text = getLastUpdated()
+            updateButton?.isEnabled = canUpdateDatabase(ctx)
         }
     }
 

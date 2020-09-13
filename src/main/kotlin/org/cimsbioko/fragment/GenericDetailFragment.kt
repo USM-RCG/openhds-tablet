@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.ScrollView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import org.cimsbioko.R
+import org.cimsbioko.databinding.GenericDetailFragmentBinding
+import org.cimsbioko.databinding.GenericDetailFragmentSectionBinding
 import org.cimsbioko.navconfig.DetailsSection
 import org.cimsbioko.navconfig.ItemDetails
 import org.cimsbioko.utilities.*
@@ -17,11 +18,20 @@ import java.util.*
 
 class GenericDetailFragment : Fragment() {
 
-    private lateinit var detailContainer: LinearLayout
+    private var detailContainer: LinearLayout? = null
+    private var bannerText: TextView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            (inflater.inflate(R.layout.generic_detail_fragment, container, false) as ScrollView)
-                    .also { detailContainer = it.findViewById(R.id.generic_detail_fragment_container) }
+            GenericDetailFragmentBinding.inflate(inflater, container, false).also {
+                bannerText = it.genericDetailFragmentBanner
+                detailContainer = it.genericDetailFragmentContainer
+            }.root
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        bannerText = null
+        detailContainer = null
+    }
 
     fun showItemDetails(details: ItemDetails, level: String) {
         details.banner?.let { setBannerText(it, level) }
@@ -29,39 +39,32 @@ class GenericDetailFragment : Fragment() {
     }
 
     private fun rebuildSections(sections: List<DetailsSection>) {
-        detailContainer.apply { findViewsByTag("detail_section").forEach { removeView(it) } }
+        detailContainer?.apply { findViewsByTag("detail_section").forEach { removeView(it) } }
         sections
                 .map { section -> section to section.details?.filter { !it.value.isBlank } }
                 .filter { (_, details) -> details?.isNotEmpty() == true }
                 .forEach { (section, details) ->
-                    (activity
-                            ?.layoutInflater
-                            ?.inflate(R.layout.generic_detail_fragment_section, detailContainer, false) as? LinearLayout)
-                            ?.let { sectionLayout ->
-                                detailContainer.addView(sectionLayout)
+                    activity?.layoutInflater
+                            ?.let { GenericDetailFragmentSectionBinding.inflate(it, detailContainer, false) }
+                            ?.also { sectionBinding ->
+                                detailContainer?.addView(sectionBinding.root)
                                 section.banner?.let {
-                                    sectionLayout.findViewById<TextView>(R.id.generic_detail_fragment_section_banner).text = it
+                                    sectionBinding.genericDetailFragmentSectionBanner.text = it
                                 }
-                                sectionLayout.findViewById<LinearLayout>(R.id.generic_detail_fragment_section_details)
-                                        .let { detailLayout ->
-                                            details?.forEach {
-                                                detailLayout.addTextView(it.key, it.value)
-                                            }
-                                        }
+                                details?.forEach {
+                                    sectionBinding.genericDetailFragmentSectionDetails.addTextView(it.key, it.value)
+                                }
                             }
                 }
     }
 
     private fun setBannerText(text: String, level: String) {
-        detailContainer.findViewById<TextView>(R.id.generic_detail_fragment_banner)
-                .setTextWithIcon(text, level.toLevelIcon(), resources.getColor(R.color.Black))
+        bannerText?.setTextWithIcon(text, level.toLevelIcon(), resources.getColor(R.color.Black))
     }
 
     private fun LinearLayout.addTextView(label: String, value: String?) {
         activity?.let {
-            addView(makeTextWithLabel(it).apply {
-                configureTextWithLabel(label, value)
-            })
+            addView(makeTextWithLabel(it).apply { configureTextWithLabel(label, value) }.root)
         }
     }
 }

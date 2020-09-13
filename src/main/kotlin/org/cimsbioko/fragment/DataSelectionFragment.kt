@@ -9,10 +9,11 @@ import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import org.cimsbioko.R
 import org.cimsbioko.data.DataWrapper
+import org.cimsbioko.databinding.DataSelectionFragmentBinding
+import org.cimsbioko.databinding.GenericListItemBinding
 import org.cimsbioko.model.HierarchyItem
 import org.cimsbioko.navconfig.HierFormatter
 import org.cimsbioko.provider.DatabaseAdapter
@@ -23,7 +24,7 @@ import org.cimsbioko.utilities.toLevelIcon
 
 class DataSelectionFragment : Fragment() {
 
-    private lateinit var listView: ListView
+    private var listView: ListView? = null
     private var listener: DataSelectionListener? = null
     private var adapter: DataSelectionListAdapter? = null
     private var itemFormatter: HierFormatter? = null
@@ -45,18 +46,24 @@ class DataSelectionFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return (inflater.inflate(R.layout.data_selection_fragment, container, false) as ViewGroup).also { viewGroup: ViewGroup ->
-            listView = viewGroup.findViewById<ListView>(R.id.data_fragment_listview).also { listView ->
+        return DataSelectionFragmentBinding.inflate(inflater, container, false).also {
+            listView = it.dataFragmentListview.also { listView ->
                 listView.onItemClickListener = DataClickListener()
                 registerForContextMenu(listView)
             }
-        }
+        }.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        listView?.let { unregisterForContextMenu(it) }
+        listView = null
     }
 
     fun populateData(data: List<HierarchyItem>, formatter: HierFormatter) {
         itemFormatter = formatter
         adapter = DataSelectionListAdapter(requireContext(), R.layout.generic_list_item, data)
-        listView.adapter = adapter
+        listView?.adapter = adapter
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
@@ -90,20 +97,18 @@ class DataSelectionFragment : Fragment() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             return getItem(position).let { item ->
                 val formatted = item?.let { itemFormatter?.formatItem(item) }
-                (convertView as? RelativeLayout
-                        ?: makeText(
-                                requireActivity(), layoutTag = formatted?.heading, background = R.drawable.data_selector
-                        )).apply {
+                (convertView?.let { GenericListItemBinding.bind(it) }
+                        ?: makeText(requireActivity(), layoutTag = formatted?.heading, background = R.drawable.data_selector)).apply {
                     configureText(requireActivity(),
-                            primaryText = formatted?.heading,
-                            secondaryText = formatted?.subheading,
+                            text1 = formatted?.heading,
+                            text2 = formatted?.subheading,
                             details = formatted?.details,
                             centerText = false,
                             iconRes = item?.level?.toLevelIcon(),
                             detailsPadding = resources.getDimensionPixelSize(R.dimen.detail_padding)
                     )
                 }
-            }
+            }.root
         }
     }
 

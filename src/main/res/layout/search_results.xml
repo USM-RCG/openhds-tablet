@@ -15,7 +15,7 @@
     <LinearLayout
         android:id="@+id/progress_container"
         style="@style/ProgressBarContainer">
-        <ProgressBar style="@style/ProgressBar" />
+        <ProgressBar style="@style/ProgressBar" android:visibility="visible"/>
         <TextView style="@style/ProgressCaption" android:text="@string/searching" />
     </LinearLayout>
 

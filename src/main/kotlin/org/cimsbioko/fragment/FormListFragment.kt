@@ -18,6 +18,7 @@ import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.activity.HierarchyNavigatorActivity
 import org.cimsbioko.adapter.FormInstanceAdapter
+import org.cimsbioko.databinding.FormListFragmentBinding
 import org.cimsbioko.model.FormInstance
 import org.cimsbioko.model.FormInstance.Companion.getBinding
 import org.cimsbioko.model.LoadedFormInstance
@@ -40,22 +41,30 @@ abstract class FormListFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private lateinit var headerView: TextView
-    private lateinit var listView: ListView
-    protected lateinit var adapter: FormInstanceAdapter
+    private var headerView: TextView? = null
+    private var listView: ListView? = null
+    protected var adapter: FormInstanceAdapter? = null
 
     var isFindEnabled = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.form_list_fragment, container, false).also { view ->
-            headerView = view.findViewById(R.id.form_list_header)
+        return FormListFragmentBinding.inflate(inflater, container, false).also { binding ->
+            headerView = binding.formListHeader
             adapter = FormInstanceAdapter(requireActivity(), R.id.form_instance_list_item, ArrayList())
-            listView = view.findViewById<ListView>(R.id.form_list).also { listView ->
+            listView = binding.formList.also { listView ->
                 listView.adapter = adapter
                 listView.onItemClickListener = ClickListener()
                 registerForContextMenu(listView)
             }
-        }
+        }.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        headerView = null
+        listView?.let { unregisterForContextMenu(it) }
+        listView = null
+        adapter = null
     }
 
     override fun onResume() {
@@ -83,20 +92,20 @@ abstract class FormListFragment : Fragment(), CoroutineScope {
 
     fun setHeaderText(resourceId: Int?) {
         if (resourceId != null) {
-            headerView.setText(resourceId)
-            headerView.visibility = View.VISIBLE
+            headerView?.setText(resourceId)
+            headerView?.visibility = View.VISIBLE
         } else {
-            headerView.visibility = View.GONE
+            headerView?.visibility = View.GONE
         }
     }
 
     fun populate(instances: Flow<FormInstance>) = launch {
-        adapter.clear()
-        instances.map { it.load() }.flowOn(Dispatchers.IO).collect { instance -> adapter.add(instance) }
+        adapter?.clear()
+        instances.map { it.load() }.flowOn(Dispatchers.IO).collect { instance -> adapter?.add(instance) }
     }
 
     private fun getItem(pos: Int): LoadedFormInstance {
-        return listView.getItemAtPosition(pos) as LoadedFormInstance // accounts for offset shifts from added headers
+        return listView?.getItemAtPosition(pos) as LoadedFormInstance // accounts for offset shifts from added headers
     }
 
     private fun editForm(selected: FormInstance) {
@@ -110,7 +119,7 @@ abstract class FormListFragment : Fragment(), CoroutineScope {
 
     private fun removeForm(selected: LoadedFormInstance) {
         if (deleteFormInstances(listOf(selected)) == 1) {
-            adapter.remove(selected)
+            adapter?.remove(selected)
             showShortToast(activity, R.string.deleted)
         }
     }

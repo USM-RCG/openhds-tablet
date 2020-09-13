@@ -10,12 +10,14 @@ import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import android.widget.RelativeLayout
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.*
 import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.activity.HierarchyNavigatorActivity
+import org.cimsbioko.databinding.FavoritesFragmentBinding
+import org.cimsbioko.databinding.GenericListItemBinding
 import org.cimsbioko.model.HierarchyItem
 import org.cimsbioko.navconfig.DefaultQueryHelper.getByHierarchyId
 import org.cimsbioko.navconfig.HierarchyPath.Companion.fromString
@@ -35,22 +37,28 @@ class FavoritesFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Main
 
-    private lateinit var list: ListView
-    private lateinit var progressLayout: View
-    private lateinit var listLayout: View
-    private lateinit var dataAdapter: FavoriteAdapter
+    private var list: ListView? = null
+    private var progress: ProgressBar? = null
+    private var dataAdapter: FavoriteAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.favorites_fragment, container, false).also { view ->
+        return FavoritesFragmentBinding.inflate(inflater, container, false).apply {
             dataAdapter = FavoriteAdapter(requireActivity())
-            list = view.findViewById<ListView>(R.id.favorites_list).apply {
+            list = favoritesList.apply {
                 adapter = dataAdapter
                 onItemClickListener = ClickListener()
                 registerForContextMenu(this)
             }
-            progressLayout = view.findViewById(R.id.progress_container)
-            listLayout = view.findViewById(R.id.list_container)
-        }
+            progress = progressBar
+        }.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        list?.let { unregisterForContextMenu(it) }
+        list = null
+        progress = null
+        dataAdapter = null
     }
 
     override fun onResume() {
@@ -90,7 +98,7 @@ class FavoritesFragment : Fragment(), CoroutineScope {
     }
 
     private fun getItem(position: Int): HierarchyItem? {
-        return list.getItemAtPosition(position) as? HierarchyItem
+        return list?.getItemAtPosition(position) as? HierarchyItem
     }
 
     private fun selectFavorite(selected: HierarchyItem) {
@@ -106,8 +114,8 @@ class FavoritesFragment : Fragment(), CoroutineScope {
     }
 
     private fun showLoading(loading: Boolean) {
-        progressLayout.visibility = if (loading) View.VISIBLE else View.GONE
-        listLayout.visibility = if (loading) View.GONE else View.VISIBLE
+        progress?.visibility = if (loading) View.VISIBLE else View.GONE
+        list?.visibility = if (loading) View.GONE else View.VISIBLE
     }
 
     private inner class ClickListener : OnItemClickListener {
@@ -121,17 +129,17 @@ class FavoritesFragment : Fragment(), CoroutineScope {
     ) : ArrayAdapter<HierarchyItem>(context, R.layout.generic_list_item) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             return requireActivity().let { activity ->
-                (convertView as? RelativeLayout
-                        ?: makeText(activity, background = R.drawable.data_selector)).also { view ->
+                (convertView?.let { GenericListItemBinding.bind(it) }
+                        ?: makeText(activity, background = R.drawable.data_selector)).also { binding ->
                     getItem(position)?.apply {
                         NavigatorConfig.instance.modules
                                 .firstOrNull()
                                 ?.getHierFormatter(level)
                                 ?.formatItem(this)
                                 ?.also {
-                                    view.configureText(activity,
-                                            primaryText = it.heading,
-                                            secondaryText = it.subheading,
+                                    binding.configureText(activity,
+                                            text1 = it.heading,
+                                            text2 = it.subheading,
                                             details = it.details,
                                             centerText = false,
                                             iconRes = level.toLevelIcon(),
@@ -139,7 +147,7 @@ class FavoritesFragment : Fragment(), CoroutineScope {
                                     )
                                 }
                     }
-                }
+                }.root
             }
         }
     }
@@ -147,7 +155,7 @@ class FavoritesFragment : Fragment(), CoroutineScope {
     private fun loadData() = launch {
 
         showLoading(true)
-        dataAdapter.clear()
+        dataAdapter?.clear()
 
         val items = withContext(Dispatchers.IO) {
             DatabaseAdapter.let { db ->
@@ -161,7 +169,7 @@ class FavoritesFragment : Fragment(), CoroutineScope {
             }
         }
 
-        dataAdapter.addAll(items)
+        dataAdapter?.addAll(items)
         showLoading(false)
     }
 

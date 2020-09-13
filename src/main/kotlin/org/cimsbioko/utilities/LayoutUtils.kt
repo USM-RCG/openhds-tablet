@@ -7,31 +7,33 @@ import android.text.style.ImageSpan
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.DrawableCompat
 import org.cimsbioko.R
+import org.cimsbioko.databinding.GenericListItemBinding
+import org.cimsbioko.databinding.ValueWithLabelBinding
 import org.cimsbioko.navconfig.Hierarchy
 
 
 // Create a new Layout that contains two text views and optionally several key-value text views beneath.
 fun makeText(activity: Activity, layoutTag: Any? = null, listener: View.OnClickListener? = null,
-             container: ViewGroup? = null, background: Int = 0): RelativeLayout =
-        activity.layoutInflater.inflate(R.layout.generic_list_item, null)
-                .let { it as RelativeLayout }
-                .apply {
-                    tag = layoutTag
-                    listener?.also { setOnClickListener(it) }
-                    container?.addView(this)
-                    background.takeIf { it != 0 }?.also { setBackgroundResource(it) }
+             container: ViewGroup? = null, background: Int = 0): GenericListItemBinding =
+        GenericListItemBinding.inflate(activity.layoutInflater)
+                .also { binding ->
+                    binding.root.apply {
+                        tag = layoutTag
+                        listener?.also { setOnClickListener(it) }
+                        container?.addView(this)
+                        background.takeIf { it != 0 }?.also { setBackgroundResource(it) }
+                    }
                 }
 
+
 // Pass new data to a layout that was created with makeTextWithPayload().
-fun RelativeLayout.configureText(activity: Activity, primaryText: String? = null,
-                                 secondaryText: String? = null, details: Map<String, String?>? = null,
-                                 centerText: Boolean = true, iconRes: Int? = null, detailsPadding: Int = 0) {
+fun GenericListItemBinding.configureText(activity: Activity, text1: String? = null,
+                                         text2: String? = null, details: Map<String, String?>? = null,
+                                         centerText: Boolean = true, iconRes: Int? = null, detailsPadding: Int = 0) {
 
     fun TextView.configure(s: String?, iconRes: Int? = null) {
         s?.let { str -> setTextWithIcon(str, iconRes) }
@@ -39,15 +41,16 @@ fun RelativeLayout.configureText(activity: Activity, primaryText: String? = null
         gravity = Gravity.CENTER
     }
 
-    findViewById<TextView>(R.id.primary_text).configure(primaryText, iconRes)
-    findViewById<TextView>(R.id.secondary_text).configure(secondaryText)
-    findViewById<LinearLayout>(R.id.details_container).apply {
+    primaryText.configure(text1, iconRes)
+    secondaryText.configure(text2)
+    detailsContainer.apply {
         removeAllViews()
         details?.also { sp ->
             for ((key, value) in sp) {
                 if (!value.isBlank) {
                     addView(makeTextWithLabel(activity).apply {
-                        configureTextWithLabel(labelText = key, valueText = value)
+                        configureTextWithLabel(label = key, value = value)
+                    }.root.apply {
                         layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                     })
                 }
@@ -60,22 +63,20 @@ fun RelativeLayout.configureText(activity: Activity, primaryText: String? = null
 }
 
 // Create a pair of text views to represent some value plus its label, with given colors.
-fun makeTextWithLabel(activity: Activity): RelativeLayout =
-        activity.layoutInflater.inflate(R.layout.value_with_label, null)
-                .let { it as RelativeLayout }
+fun makeTextWithLabel(activity: Activity): ValueWithLabelBinding = ValueWithLabelBinding.inflate(activity.layoutInflater)
 
 val CharSequence?.isBlank: Boolean
     get() = this == null || isEmpty() || this == "null"
 
-fun RelativeLayout.configureTextWithLabel(labelText: String, valueText: String?,
-                                          labelColorId: Int = R.color.Black, valueColorId: Int = R.color.Black) {
-    val resources = context.resources
-    findViewById<TextView>(R.id.label_text)?.apply {
-        text = labelText
+fun ValueWithLabelBinding.configureTextWithLabel(label: String, value: String?,
+                                                 labelColorId: Int = R.color.Black, valueColorId: Int = R.color.Black) {
+    val resources = root.context.resources
+    labelText.apply {
+        text = label
         setTextColor(resources.getColor(labelColorId))
     }
-    findViewById<TextView>(R.id.value_text)?.apply {
-        text = valueText
+    valueText.apply {
+        text = value
         setTextColor(resources.getColor(valueColorId))
     }
 }

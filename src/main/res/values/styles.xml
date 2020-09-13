@@ -99,6 +99,8 @@
     <style name="ProgressBar" parent="Widget.AppCompat.ProgressBar">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:visibility">gone</item>
     </style>
     <style name="ProgressCaption">
         <item name="android:layout_width">wrap_content</item>

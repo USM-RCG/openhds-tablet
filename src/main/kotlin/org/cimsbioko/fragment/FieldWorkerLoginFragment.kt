@@ -10,12 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.*
 import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.data.GatewayRegistry.fieldWorkerGateway
+import org.cimsbioko.databinding.FieldworkerLoginFragmentBinding
 import org.cimsbioko.utilities.LoginUtils.login
 import org.cimsbioko.utilities.MessageUtils.showLongToast
 import org.mindrot.jbcrypt.BCrypt
@@ -28,9 +28,9 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private lateinit var usernameEditText: EditText
-    private lateinit var passwordEditText: EditText
-    private lateinit var loginButton: Button
+    private var usernameEditText: EditText? = null
+    private var passwordEditText: EditText? = null
+    private var loginButton: Button? = null
 
     override fun onResume() {
         job = Job()
@@ -43,17 +43,22 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fieldworker_login_fragment, container, false).also { vg ->
-            vg.findViewById<TextView>(R.id.titleTextView).apply {
-                setText(R.string.fieldworker_login)
-            }
-            usernameEditText = vg.findViewById<EditText>(R.id.usernameEditText).also {
-                it.setOnKeyListener(this)
+        return FieldworkerLoginFragmentBinding.inflate(inflater, container, false).also { binding ->
+            binding.titleTextView.setText(R.string.fieldworker_login)
+            usernameEditText = binding.usernameEditText.also {
+                it.setOnKeyListener(this@FieldWorkerLoginFragment)
                 it.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
             }
-            passwordEditText = vg.findViewById<EditText>(R.id.passwordEditText).also { it.setOnKeyListener(this) }
-            loginButton = vg.findViewById<Button>(R.id.loginButton).also { it.setOnClickListener(this) }
-        }
+            passwordEditText = binding.passwordEditText.also { it.setOnKeyListener(this) }
+            loginButton = binding.loginButton.also { it.setOnClickListener(this) }
+        }.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        usernameEditText = null
+        passwordEditText = null
+        loginButton = null
     }
 
     override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
@@ -69,10 +74,10 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
     override fun onClick(view: View) {
         launch {
             try {
-                loginButton.isEnabled = false
+                loginButton?.isEnabled = false
                 authenticateFieldWorker()
             } finally {
-                loginButton.isEnabled = true
+                loginButton?.isEnabled = true
             }
         }
     }
@@ -83,10 +88,10 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
 
     private suspend fun authenticateFieldWorker() {
         val activity: Activity = requireActivity()
-        val (username, password) = Pair(getTextString(usernameEditText), getTextString(passwordEditText))
+        val (username, password) = Pair(usernameEditText?.let { getTextString(it) }, passwordEditText?.let { getTextString(it) })
         val login = login
         val fieldWorkerGateway = fieldWorkerGateway
-        val fieldWorker = withContext(Dispatchers.IO) { fieldWorkerGateway.findByExtId(username).first }
+        val fieldWorker = withContext(Dispatchers.IO) { username?.let { fieldWorkerGateway.findByExtId(it).first } }
         if (fieldWorker != null) {
             if (withContext(Dispatchers.Default) { BCrypt.checkpw(password, fieldWorker.passwordHash) }) {
                 login.authenticatedUser = fieldWorker

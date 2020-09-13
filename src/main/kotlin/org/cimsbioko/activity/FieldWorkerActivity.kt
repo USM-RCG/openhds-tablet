@@ -44,12 +44,13 @@ class FieldWorkerActivity : AppCompatActivity(), View.OnClickListener {
                         .apply {
                             configureText(
                                     this@FieldWorkerActivity,
-                                    primaryText = module.launchLabel,
-                                    secondaryText = module.launchDescription
+                                    text1 = module.launchLabel,
+                                    text2 = module.launchDescription
                             )
                         }
                         .takeIf { index != lastIndex }
-                        ?.let { it.layoutParams as LinearLayout.LayoutParams }
+                        ?.root
+                        ?.let { it.layoutParams as? LinearLayout.LayoutParams }
                         ?.setMargins(0, 0, 0, resources.getDimensionPixelSize(R.dimen.module_button_spacing))
             }
         }

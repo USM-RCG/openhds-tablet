@@ -6,12 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.ScrollView
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import androidx.fragment.app.Fragment
 import org.cimsbioko.R
 import org.cimsbioko.data.DataWrapper
+import org.cimsbioko.databinding.GenericListItemBinding
+import org.cimsbioko.databinding.HierarchyButtonFragmentBinding
 import org.cimsbioko.navconfig.HierarchyPath
 import org.cimsbioko.navconfig.NavigatorConfig
 import org.cimsbioko.navconfig.NavigatorConfig.Companion.instance
@@ -21,9 +22,10 @@ import org.cimsbioko.utilities.toLevelIcon
 
 class HierarchyButtonFragment : Fragment(), View.OnClickListener {
 
-    private lateinit var scrollView: ScrollView
-    private lateinit var levelViews: Map<String, RelativeLayout>
     private lateinit var config: NavigatorConfig
+
+    private var scrollView: ScrollView? = null
+    private var levelViews: Map<String, GenericListItemBinding>? = null
 
     private var listener: HierarchyButtonListener? = null
 
@@ -47,9 +49,9 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.hierarchy_button_fragment, container, false).apply {
-            scrollView = findViewById(R.id.hierbutton_scroll)
-            levelViews = findViewById<ViewGroup>(R.id.hierbutton_layout).let { buttonLayout ->
+        return HierarchyButtonFragmentBinding.inflate(inflater, container, false).also { binding ->
+            scrollView = binding.hierbuttonScroll
+            levelViews = binding.hierbuttonLayout.let { buttonLayout ->
                 val activity = requireActivity()
                 config.levels.map { level ->
                     level to makeText(
@@ -58,12 +60,18 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
                             listener = this@HierarchyButtonFragment,
                             container = buttonLayout,
                             background = R.drawable.data_selector).apply {
-                        configureText(activity, primaryText = config.getLevelLabel(level))
-                        visibility = View.GONE
+                        configureText(activity, text1 = config.getLevelLabel(level))
+                        root.visibility = View.GONE
                     }
                 }.toMap()
             }
-        }
+        }.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        scrollView = null
+        levelViews = null
     }
 
     fun update(path: HierarchyPath) {
@@ -88,7 +96,7 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
         } else setVisible(config.levels.last(), true, isLast = true)
 
         // Scroll to the bottom when the buttons overflow
-        scrollView.apply { post { if (canScrollVertically(1)) fullScroll(View.FOCUS_DOWN) } }
+        scrollView?.apply { post { if (canScrollVertically(1)) fullScroll(View.FOCUS_DOWN) } }
     }
 
     private fun updateButton(level: String, data: DataWrapper?) {
@@ -102,19 +110,20 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setVisible(level: String, visible: Boolean, isLast: Boolean = false) {
-        levelViews[level]?.apply {
+        levelViews?.get(level)?.root?.apply {
             visibility = if (visible) View.VISIBLE else View.GONE
-            (layoutParams as LinearLayout.LayoutParams)
-                    .setMargins(0, 0, 0, if (isLast) 0 else resources.getDimensionPixelSize(R.dimen.hier_button_spacing))
+            (layoutParams as? LinearLayout.LayoutParams)?.setMargins(0, 0, 0, if (isLast) 0 else resources.getDimensionPixelSize(R.dimen.hier_button_spacing))
         }
     }
 
     private fun setHighlighted(level: String, highlighted: Boolean) {
-        levelViews[level]?.apply {
-            isClickable = !highlighted // block repeated clicks
-            setBackgroundResource(if (highlighted) R.drawable.form_list_header else R.drawable.data_selector)
+        levelViews?.get(level)?.apply {
+            root.apply {
+                isClickable = !highlighted // block repeated clicks
+                setBackgroundResource(if (highlighted) R.drawable.form_list_header else R.drawable.data_selector)
+            }
             setTextAppearance(
-                    findViewById(R.id.primary_text),
+                    primaryText,
                     if (highlighted) R.style.TextAppearance_AppCompat_Large
                     else R.style.TextAppearance_AppCompat_Large_Inverse
             )
@@ -122,10 +131,10 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setButtonLabel(level: String, name: String?, id: String? = null, center: Boolean, showIcon: Boolean = false) {
-        levelViews[level]?.configureText(
+        levelViews?.get(level)?.configureText(
                 requireActivity(),
-                primaryText = name,
-                secondaryText = id,
+                text1 = name,
+                text2 = id,
                 centerText = center,
                 iconRes = if (showIcon) level.toLevelIcon() else null
         )
