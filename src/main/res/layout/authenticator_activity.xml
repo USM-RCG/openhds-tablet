@@ -33,7 +33,7 @@
             app:layout_constraintTop_toBottomOf="@id/usernameEditText"/>
 
     <ImageButton
-            android:src="@drawable/ic_camera"
+            app:srcCompat="@drawable/ic_camera"
             android:id="@+id/scanButton"
             style="@style/ImageButton"
             android:contentDescription="@string/scan_btn"
