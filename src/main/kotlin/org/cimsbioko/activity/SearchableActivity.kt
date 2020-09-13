@@ -17,7 +17,6 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.drawable.DrawableCompat
 import org.apache.lucene.index.Term
 import org.apache.lucene.queryparser.flexible.core.QueryNodeException
@@ -25,6 +24,8 @@ import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
 import org.apache.lucene.search.*
 import org.cimsbioko.R
 import org.cimsbioko.data.DataWrapper
+import org.cimsbioko.databinding.SearchResultBinding
+import org.cimsbioko.databinding.SearchResultsBinding
 import org.cimsbioko.navconfig.DefaultQueryHelper
 import org.cimsbioko.navconfig.DefaultQueryHelper.getParent
 import org.cimsbioko.navconfig.Hierarchy
@@ -61,17 +62,20 @@ class SearchableActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.search_results)
+        val binding = SearchResultsBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+            setSupportActionBar(searchToolbar)
+        }
+
         setTitle(R.string.search_label)
 
-        findViewById<Toolbar>(R.id.search_toolbar).also { setSupportActionBar(it) }
+        listContainer = binding.listContainer
+        basicQuery = binding.basicQueryText
+        advancedQuery = binding.advancedQueryText
+        searchButton = binding.searchButton
+        listView = binding.list
+        progressContainer = binding.progressContainer
 
-        listContainer = findViewById(R.id.list_container)
-        basicQuery = listContainer.findViewById(R.id.basic_query_text)
-        advancedQuery = listContainer.findViewById(R.id.advanced_query_text)
-        searchButton = listContainer.findViewById(R.id.search_button)
-        listView = listContainer.findViewById(android.R.id.list)
-        progressContainer = findViewById(R.id.progress_container)
         basicQuery.addTextChangedListener(BasicQueryTranslator())
 
         val config = instance
@@ -82,9 +86,9 @@ class SearchableActivity : AppCompatActivity() {
         searchButton.setOnClickListener(SearchOnClickHandler())
         SearchOnEnterKeyHandler().also { listOf(basicQuery, advancedQuery).forEach { q -> q.setOnKeyListener(it) } }
 
-        hierarchyToggle = findViewById<ToggleButton>(R.id.hierarchy_toggle).apply { setToggleImage(R.drawable.ic_hierarchy_sm) }
-        locationToggle = findViewById<ToggleButton>(R.id.location_toggle).apply { setToggleImage(R.drawable.ic_household_sm) }
-        individualToggle = findViewById<ToggleButton>(R.id.individual_toggle).apply { setToggleImage(R.drawable.ic_individual_sm) }
+        hierarchyToggle = binding.hierarchyToggle.apply { setToggleImage(R.drawable.ic_hierarchy_sm) }
+        locationToggle = binding.locationToggle.apply { setToggleImage(R.drawable.ic_household_sm) }
+        individualToggle = binding.individualToggle.apply { setToggleImage(R.drawable.ic_individual_sm) }
 
         EntityToggleHandler().let {
             listOf(hierarchyToggle, locationToggle, individualToggle).forEach { t -> t.setOnCheckedChangeListener(it) }
@@ -369,9 +373,10 @@ class SearchableActivity : AppCompatActivity() {
 
     private class ResultsAdapter(context: Context, objects: List<DataWrapper>) : ArrayAdapter<DataWrapper>(context, -1, objects) {
         private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View =
-                (convertView ?: inflater.inflate(R.layout.search_result, null)).also { view ->
-                    view.toViewHolder().let { vh ->
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            return (convertView?.tag as? SearchResultBinding
+                    ?: SearchResultBinding.inflate(inflater).apply { root.tag = this })
+                    .also { vh ->
                         getItem(position)?.apply {
                             vh.icon.apply {
                                 when (category) {
@@ -383,8 +388,8 @@ class SearchableActivity : AppCompatActivity() {
                             vh.text1.text = name
                             vh.text2.text = extId
                         }
-                    }
-                }
+                    }.root
+        }
     }
 
     companion object {
@@ -399,15 +404,3 @@ class SearchableActivity : AppCompatActivity() {
         const val BASIC_POS = 0
     }
 }
-
-private fun View.toViewHolder(): ViewHolder = tag as? ViewHolder ?: ViewHolder(
-        icon = findViewById(R.id.icon),
-        text1 = findViewById(android.R.id.text1),
-        text2 = findViewById(android.R.id.text2)
-).also { tag = it }
-
-private class ViewHolder(
-        val icon: ImageView,
-        val text1: TextView,
-        val text2: TextView
-)

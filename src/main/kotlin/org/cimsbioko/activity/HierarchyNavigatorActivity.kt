@@ -12,13 +12,13 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.Toolbar
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import org.cimsbioko.R
 import org.cimsbioko.data.DataWrapper
+import org.cimsbioko.databinding.NavigateActivityBinding
 import org.cimsbioko.fragment.*
 import org.cimsbioko.fragment.DataSelectionFragment.DataSelectionListener
 import org.cimsbioko.fragment.DetailToggleFragment.DetailToggleListener
@@ -72,7 +72,10 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.navigate_activity)
+
+        val binding = NavigateActivityBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+        }
 
         config = NavigatorConfig.instance
         currentModuleName = intent.extras?.let { it[FieldWorkerActivity.ACTIVITY_MODULE_EXTRA] as String }
@@ -80,7 +83,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         currentModule = config.getModule(currentModuleName) ?: error("no module for name $currentModuleName")
         title = currentModule.activityTitle
 
-        findViewById<Toolbar>(R.id.navigate_toolbar)?.also { setSupportActionBar(it) }
+        setSupportActionBar(binding.navigateToolbar)
 
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)

@@ -13,7 +13,6 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +21,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 import org.cimsbioko.App
 import org.cimsbioko.App.Companion.getApp
 import org.cimsbioko.R
+import org.cimsbioko.databinding.AuthenticatorActivityBinding
 import org.cimsbioko.syncadpt.AuthUtils.register
 import org.cimsbioko.syncadpt.Constants
 import org.cimsbioko.syncadpt.Constants.KEY_AUTH_TOKEN_TYPE
@@ -45,21 +45,20 @@ class DeviceAuthenticatorActivity : AppCompatActivity(), LoginTaskListener, View
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.authenticator_activity)
-        findViewById<TextView>(R.id.title).setText(R.string.device_login)
+        val binding = AuthenticatorActivityBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+            title.setText(R.string.device_login)
+            loginButton.setOnClickListener { submit() }
+            scanButton.setOnClickListener { scan() }
+        }
+        usernameEditText = binding.usernameEditText.apply { setOnKeyListener(this@DeviceAuthenticatorActivity) }
+        passwordEditText = binding.passwordEditText.apply { setOnKeyListener(this@DeviceAuthenticatorActivity) }
         authResponse = intent
                 .getParcelableExtra<AccountAuthenticatorResponse?>(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE)
                 ?.apply { onRequestContinued() }
         tokenType = intent.getStringExtra(KEY_AUTH_TOKEN_TYPE) ?: Constants.AUTHTOKEN_TYPE_DEVICE
-        usernameEditText = findViewById<EditText>(R.id.usernameEditText)
-                .apply { setOnKeyListener(this@DeviceAuthenticatorActivity) }
-        passwordEditText = findViewById<EditText>(R.id.passwordEditText)
-                .apply { setOnKeyListener(this@DeviceAuthenticatorActivity) }
-        findViewById<View>(R.id.loginButton).setOnClickListener { submit() }
-        findViewById<View>(R.id.scanButton).setOnClickListener { scan() }
         accountManager = AccountManager.get(baseContext)
-        intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)
-                ?.also { findViewById<TextView>(R.id.usernameEditText).text = it }
+        intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)?.also { binding.usernameEditText.setText(it) }
     }
 
     override fun onPause() {

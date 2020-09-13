@@ -10,11 +10,10 @@ import android.widget.Button
 import android.widget.CheckBox
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.navigation.NavigationView
 import org.cimsbioko.R
+import org.cimsbioko.databinding.SetupChecklistBinding
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 import org.cimsbioko.utilities.SetupUtils.CAMPAIGN_DOWNLOADED_ACTION
 import org.cimsbioko.utilities.SetupUtils.askForPermissions
@@ -47,26 +46,29 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
         super.onCreate(savedInstanceState)
 
         setTitle(R.string.cims_setup)
-        setContentView(R.layout.setup_checklist)
 
-        val toolbar = findViewById<Toolbar>(R.id.setup_toolbar).also { setSupportActionBar(it) }
-        findViewById<DrawerLayout>(R.id.setup_drawer_layout).also {
-            ActionBarDrawerToggle(this, it, toolbar, 0, 0).apply {
+        val binding = SetupChecklistBinding.inflate(layoutInflater)
+
+        setContentView(binding.root)
+
+        val toolbar = binding.setupToolbar.also { setSupportActionBar(it) }
+
+        binding.setupDrawerLayout.also {
+            ActionBarDrawerToggle(this@SetupChecklistActivity, it, toolbar, 0, 0).apply {
                 it.addDrawerListener(this)
                 syncState()
             }
         }
-        findViewById<NavigationView>(R.id.setup_navigation_view).also {
-            it.setNavigationItemSelectedListener(this)
-        }
 
-        permissionsCheckbox = findViewById(R.id.grantPermsCheckbox)
-        appsCheckbox = findViewById(R.id.installAppsCheckbox)
-        connectCheckbox = findViewById(R.id.serverConnectCheckbox)
-        configCheckbox = findViewById(R.id.configDownloadCheckbox)
-        dataCheckbox = findViewById(R.id.dataDownloadCheckbox)
-        formsCheckbox = findViewById(R.id.formsCheckbox)
-        setupButton = findViewById(R.id.setup_button)
+        binding.setupNavigationView.setNavigationItemSelectedListener(this@SetupChecklistActivity)
+
+        permissionsCheckbox = binding.grantPermsCheckbox
+        appsCheckbox = binding.installAppsCheckbox
+        connectCheckbox = binding.serverConnectCheckbox
+        configCheckbox = binding.configDownloadCheckbox
+        dataCheckbox = binding.dataDownloadCheckbox
+        formsCheckbox = binding.formsCheckbox
+        setupButton = binding.setupButton
 
         broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {

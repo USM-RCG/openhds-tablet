@@ -11,8 +11,8 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.Toolbar
 import org.cimsbioko.R
+import org.cimsbioko.databinding.FieldworkerActivityBinding
 import org.cimsbioko.search.Utils.isSearchEnabled
 import org.cimsbioko.utilities.ConfigUtils.getActiveModules
 import org.cimsbioko.utilities.LoginUtils.login
@@ -23,14 +23,16 @@ class FieldWorkerActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fieldworker_activity)
+        val binding = FieldworkerActivityBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+        }
         title = getText(R.string.field_worker_home)
-        findViewById<Toolbar>(R.id.fieldworker_toolbar).also { setSupportActionBar(it) }
+        setSupportActionBar(binding.fieldworkerToolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeButtonEnabled(true)
         }
-        val activitiesLayout = findViewById<LinearLayout>(R.id.portal_middle_column)
+        val activitiesLayout = binding.portalMiddleColumn
         getActiveModules(this).also { modules ->
             val lastIndex = modules.indices.last
             for ((index, module) in modules.withIndex()) {
@@ -39,7 +41,13 @@ class FieldWorkerActivity : AppCompatActivity(), View.OnClickListener {
                         listener = this,
                         container = activitiesLayout,
                         background = R.drawable.data_selector)
-                        .apply { configureText(this@FieldWorkerActivity, primaryText = module.launchLabel, secondaryText = module.launchDescription) }
+                        .apply {
+                            configureText(
+                                    this@FieldWorkerActivity,
+                                    primaryText = module.launchLabel,
+                                    secondaryText = module.launchDescription
+                            )
+                        }
                         .takeIf { index != lastIndex }
                         ?.let { it.layoutParams as LinearLayout.LayoutParams }
                         ?.setMargins(0, 0, 0, resources.getDimensionPixelSize(R.dimen.module_button_spacing))

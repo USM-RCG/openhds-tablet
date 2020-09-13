@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +19,8 @@ import com.google.android.material.navigation.NavigationView
 import org.cimsbioko.R
 import org.cimsbioko.campaign.CampaignUpdateService
 import org.cimsbioko.campaign.CampaignUpdateService.Companion.enqueueWork
+import org.cimsbioko.databinding.FieldworkerLoginActivityBinding
+import org.cimsbioko.databinding.NavHeaderBinding
 import org.cimsbioko.fragment.AdminSecretFragment
 import org.cimsbioko.navconfig.NavigatorConfig.Companion.instance
 import org.cimsbioko.search.IndexingService.Companion.queueFullReindex
@@ -40,25 +41,32 @@ class FieldWorkerLoginActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fieldworker_login_activity)
+        val binding = FieldworkerLoginActivityBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+        }
         title = getAppFullName(this)
-        navView = findViewById<NavigationView>(R.id.fieldworker_login_navigation_view).apply {
+        navView = binding.fieldworkerLoginNavigationView.apply {
             setNavigationItemSelectedListener(this@FieldWorkerLoginActivity)
         }
-        toolbar = findViewById<Toolbar>(R.id.fieldworker_login_toolbar).also { setSupportActionBar(it) }
+        toolbar = binding.fieldworkerLoginToolbar.also { setSupportActionBar(it) }
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeButtonEnabled(true)
         }
-        drawerLayout = findViewById<DrawerLayout>(R.id.fieldworker_login_drawer_layout).also { dl ->
+        drawerLayout = binding.fieldworkerLoginDrawerLayout.also { dl ->
             dl.addDrawerListener(DrawerToggle(dl).also { it.syncState() })
         }
-        navView.getHeaderView(0)?.findViewById<TextView>(R.id.nav_header_text)?.let { textView ->
-            AccountManager.get(this).getAccountsByType(ACCOUNT_TYPE).firstOrNull().let { account ->
-                textView.text = account?.name ?: getString(R.string.app_name)
-                textView.visibility = if (account != null) View.VISIBLE else View.GONE
-            }
-        }
+        NavHeaderBinding.bind(navView.getHeaderView(0))
+                .navHeaderText
+                .apply {
+                    AccountManager.get(this@FieldWorkerLoginActivity)
+                            .getAccountsByType(ACCOUNT_TYPE)
+                            .firstOrNull()
+                            .let { account ->
+                                text = account?.name ?: getString(R.string.app_name)
+                                visibility = if (account != null) View.VISIBLE else View.GONE
+                            }
+                }
         updatePrompter = UpdatePrompter()
     }
 
