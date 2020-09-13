@@ -2,14 +2,13 @@ package org.cimsbioko.fragment.navigate
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.ScrollView
+import androidx.core.widget.TextViewCompat.setTextAppearance
 import androidx.fragment.app.Fragment
 import org.cimsbioko.R
 import org.cimsbioko.data.DataWrapper
@@ -111,11 +110,14 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setHighlighted(level: String, highlighted: Boolean) {
-        levelViews[level]?.let { layout ->
-            layout.isClickable = !highlighted // block repeated clicks immediately
-            Handler(Looper.getMainLooper()).postDelayed({
-                layout.isPressed = highlighted // deferred to prevent getting overridden
-            }, 100)
+        levelViews[level]?.apply {
+            isClickable = !highlighted // block repeated clicks
+            setBackgroundResource(if (highlighted) R.drawable.form_list_header else R.drawable.data_selector)
+            setTextAppearance(
+                    findViewById(R.id.primary_text),
+                    if (highlighted) R.style.TextAppearance_AppCompat_Large
+                    else R.style.TextAppearance_AppCompat_Large_Inverse
+            )
         }
     }
 
