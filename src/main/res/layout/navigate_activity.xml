@@ -22,7 +22,7 @@
         <FrameLayout style="@style/FieldworkerSideColumn">
 
             <fragment
-                    android:name="org.cimsbioko.fragment.navigate.HierarchyButtonFragment"
+                    android:name="org.cimsbioko.fragment.HierarchyButtonFragment"
                     android:id="@+id/hierarchy_button_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
@@ -41,7 +41,7 @@
                     android:layout_width="match_parent"/>
 
             <fragment
-                    android:name="org.cimsbioko.fragment.navigate.DetailToggleFragment"
+                    android:name="org.cimsbioko.fragment.DetailToggleFragment"
                     android:id="@+id/detail_toggle_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"/>
 
             <fragment
-                    android:name="org.cimsbioko.fragment.navigate.HierarchyFormsFragment"
+                    android:name="org.cimsbioko.fragment.HierarchyFormsFragment"
                     android:id="@+id/form_list_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>

@@ -9,8 +9,8 @@ import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import org.cimsbioko.R
-import org.cimsbioko.model.form.FormInstance
-import org.cimsbioko.model.form.LoadedFormInstance
+import org.cimsbioko.model.FormInstance
+import org.cimsbioko.model.LoadedFormInstance
 import org.cimsbioko.utilities.FormUtils.editIntent
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 

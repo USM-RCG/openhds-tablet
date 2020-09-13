@@ -1,8 +1,5 @@
 package org.cimsbioko.navconfig
 
-import org.cimsbioko.navconfig.forms.Binding
-import org.cimsbioko.navconfig.forms.Launcher
-
 interface NavigatorModule {
     val name: String
     val activityTitle: String

@@ -1,12 +1,12 @@
-package org.cimsbioko.model.form
+package org.cimsbioko.model
 
 import android.content.ContentUris
 import android.net.Uri
 import androidx.core.content.FileProvider
 import org.cimsbioko.App
+import org.cimsbioko.navconfig.Binding
+import org.cimsbioko.navconfig.LaunchContext
 import org.cimsbioko.navconfig.NavigatorConfig
-import org.cimsbioko.navconfig.forms.Binding
-import org.cimsbioko.navconfig.forms.LaunchContext
 import org.cimsbioko.provider.InstanceProviderAPI
 import org.cimsbioko.utilities.FormUtils.detachDataDoc
 import org.cimsbioko.utilities.FormUtils.domFromStream

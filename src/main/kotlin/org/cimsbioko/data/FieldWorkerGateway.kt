@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.cimsbioko.App.FieldWorkers
 import org.cimsbioko.data.CursorConvert.extractString
-import org.cimsbioko.model.core.FieldWorker
+import org.cimsbioko.model.FieldWorker
 
 const val FIELDWORKER = "fieldworker"
 

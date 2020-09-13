@@ -1,4 +1,4 @@
-package org.cimsbioko.fragment.navigate
+package org.cimsbioko.fragment
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -18,9 +18,9 @@ import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.activity.HierarchyNavigatorActivity
 import org.cimsbioko.adapter.FormInstanceAdapter
-import org.cimsbioko.model.form.FormInstance
-import org.cimsbioko.model.form.FormInstance.Companion.getBinding
-import org.cimsbioko.model.form.LoadedFormInstance
+import org.cimsbioko.model.FormInstance
+import org.cimsbioko.model.FormInstance.Companion.getBinding
+import org.cimsbioko.model.LoadedFormInstance
 import org.cimsbioko.navconfig.HierarchyPath
 import org.cimsbioko.navconfig.HierarchyPath.Companion.fromString
 import org.cimsbioko.provider.DatabaseAdapter

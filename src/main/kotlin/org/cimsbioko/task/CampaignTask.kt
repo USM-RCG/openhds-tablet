@@ -1,4 +1,4 @@
-package org.cimsbioko.task.campaign
+package org.cimsbioko.task
 
 import android.os.AsyncTask
 import android.util.Log

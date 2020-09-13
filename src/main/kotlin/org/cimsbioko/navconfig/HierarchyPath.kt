@@ -4,8 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import org.cimsbioko.data.DataWrapper
 import org.cimsbioko.navconfig.NavigatorConfig.Companion.instance
-import org.cimsbioko.navconfig.db.DefaultQueryHelper
-import org.cimsbioko.navconfig.db.QueryHelper
 import java.util.*
 import java.util.regex.Pattern
 

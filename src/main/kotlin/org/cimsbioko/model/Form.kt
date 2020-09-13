@@ -1,9 +1,9 @@
-package org.cimsbioko.model.form
+package org.cimsbioko.model
 
 import android.content.ContentUris
 import android.net.Uri
 import org.cimsbioko.App
-import org.cimsbioko.navconfig.forms.Binding
+import org.cimsbioko.navconfig.Binding
 import org.cimsbioko.provider.FormsProviderAPI
 import org.cimsbioko.utilities.FormsHelper.getForm
 import java.io.FileNotFoundException

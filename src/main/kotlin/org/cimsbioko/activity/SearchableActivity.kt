@@ -25,12 +25,12 @@ import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
 import org.apache.lucene.search.*
 import org.cimsbioko.R
 import org.cimsbioko.data.DataWrapper
+import org.cimsbioko.navconfig.DefaultQueryHelper
+import org.cimsbioko.navconfig.DefaultQueryHelper.getParent
 import org.cimsbioko.navconfig.Hierarchy
 import org.cimsbioko.navconfig.HierarchyPath
 import org.cimsbioko.navconfig.NavigatorConfig.Companion.instance
-import org.cimsbioko.navconfig.db.DefaultQueryHelper
-import org.cimsbioko.navconfig.db.DefaultQueryHelper.getParent
-import org.cimsbioko.navconfig.db.QueryHelper
+import org.cimsbioko.navconfig.QueryHelper
 import org.cimsbioko.search.SearchJob
 import org.cimsbioko.search.SearchQueue
 import org.cimsbioko.utilities.ConfigUtils.getActiveModules

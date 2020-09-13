@@ -13,7 +13,7 @@ import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import org.cimsbioko.R
 import org.cimsbioko.data.DataWrapper
-import org.cimsbioko.model.core.HierarchyItem
+import org.cimsbioko.model.HierarchyItem
 import org.cimsbioko.navconfig.HierFormatter
 import org.cimsbioko.provider.DatabaseAdapter
 import org.cimsbioko.utilities.MessageUtils.showShortToast

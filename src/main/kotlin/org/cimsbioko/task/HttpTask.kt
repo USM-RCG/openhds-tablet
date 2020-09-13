@@ -1,4 +1,4 @@
-package org.cimsbioko.task.http
+package org.cimsbioko.task
 
 import android.os.AsyncTask
 import org.cimsbioko.utilities.HttpUtils.get

@@ -1,4 +1,4 @@
-package org.cimsbioko.fragment.navigate
+package org.cimsbioko.fragment
 
 import android.content.Context
 import android.content.Intent
@@ -16,10 +16,10 @@ import kotlinx.coroutines.*
 import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.activity.HierarchyNavigatorActivity
-import org.cimsbioko.model.core.HierarchyItem
+import org.cimsbioko.model.HierarchyItem
+import org.cimsbioko.navconfig.DefaultQueryHelper.getByHierarchyId
 import org.cimsbioko.navconfig.HierarchyPath.Companion.fromString
 import org.cimsbioko.navconfig.NavigatorConfig
-import org.cimsbioko.navconfig.db.DefaultQueryHelper.getByHierarchyId
 import org.cimsbioko.provider.DatabaseAdapter
 import org.cimsbioko.utilities.ConfigUtils.getActiveModules
 import org.cimsbioko.utilities.MessageUtils.showShortToast

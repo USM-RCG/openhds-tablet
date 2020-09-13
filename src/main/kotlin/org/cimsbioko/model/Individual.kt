@@ -1,4 +1,4 @@
-package org.cimsbioko.model.core
+package org.cimsbioko.model
 
 import org.cimsbioko.data.DataWrapper
 import org.cimsbioko.navconfig.Hierarchy

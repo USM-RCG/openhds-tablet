@@ -1,6 +1,6 @@
 package org.cimsbioko.navconfig
 
-import org.cimsbioko.model.core.HierarchyItem
+import org.cimsbioko.model.HierarchyItem
 
 interface HierFormatter {
     fun formatItem(item: HierarchyItem): HierItemDisplay

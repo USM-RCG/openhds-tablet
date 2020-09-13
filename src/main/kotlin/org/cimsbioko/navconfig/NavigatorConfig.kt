@@ -1,7 +1,6 @@
 package org.cimsbioko.navconfig
 
 import android.util.Log
-import org.cimsbioko.navconfig.forms.Binding
 import org.cimsbioko.scripting.JsConfig
 import org.cimsbioko.utilities.CampaignUtils.loadCampaign
 

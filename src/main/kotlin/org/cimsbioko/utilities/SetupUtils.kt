@@ -21,7 +21,7 @@ import org.cimsbioko.campaign.CampaignUpdateService
 import org.cimsbioko.navconfig.NavigatorConfig
 import org.cimsbioko.provider.FormsProviderAPI
 import org.cimsbioko.syncadpt.Constants
-import org.cimsbioko.task.campaign.CampaignTask
+import org.cimsbioko.task.CampaignTask
 import org.cimsbioko.utilities.AccountUtils.firstAccount
 import org.cimsbioko.utilities.CampaignDownloadResult.Success
 import org.cimsbioko.utilities.CampaignUtils.downloadedCampaignExists

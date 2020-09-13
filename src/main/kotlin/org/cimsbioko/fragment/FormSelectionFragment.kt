@@ -9,8 +9,8 @@ import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import androidx.fragment.app.Fragment
 import org.cimsbioko.R
-import org.cimsbioko.navconfig.forms.Binding
-import org.cimsbioko.navconfig.forms.Launcher
+import org.cimsbioko.navconfig.Binding
+import org.cimsbioko.navconfig.Launcher
 import org.cimsbioko.utilities.configureText
 import org.cimsbioko.utilities.makeText
 

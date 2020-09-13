@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.cimsbioko.App
-import org.cimsbioko.model.form.Form
-import org.cimsbioko.model.form.FormInstance
+import org.cimsbioko.model.Form
+import org.cimsbioko.model.FormInstance
 import org.cimsbioko.provider.FormsProviderAPI
 import org.cimsbioko.provider.InstanceProviderAPI
 import org.cimsbioko.provider.InstanceProviderAPI.InstanceColumns

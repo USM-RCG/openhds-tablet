@@ -1,11 +1,10 @@
 package org.cimsbioko.scripting
 
 import android.util.Log
-import org.cimsbioko.model.core.Individual
-import org.cimsbioko.model.core.Location
-import org.cimsbioko.model.core.LocationHierarchy
+import org.cimsbioko.model.Individual
+import org.cimsbioko.model.Location
+import org.cimsbioko.model.LocationHierarchy
 import org.cimsbioko.navconfig.*
-import org.cimsbioko.navconfig.forms.*
 import org.cimsbioko.utilities.DateUtils
 import org.cimsbioko.utilities.FormUtils
 import org.cimsbioko.utilities.IdHelper
@@ -93,7 +92,7 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
         ResourceBundle.clearCache(loader)
     }
 
-    private class NonCachingModuleSourceProvider internal constructor(privilegedUris: Iterable<URI?>?) : UrlModuleSourceProvider(privilegedUris, null) {
+    private class NonCachingModuleSourceProvider(privilegedUris: Iterable<URI?>?) : UrlModuleSourceProvider(privilegedUris, null) {
         @Throws(IOException::class)
         override fun openUrlConnection(url: URL): URLConnection = super.openUrlConnection(url).apply { useCaches = false }
     }

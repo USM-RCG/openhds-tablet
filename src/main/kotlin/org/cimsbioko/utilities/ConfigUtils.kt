@@ -6,9 +6,9 @@ import android.content.pm.PackageManager.NameNotFoundException
 import android.util.Log
 import org.cimsbioko.App
 import org.cimsbioko.R
+import org.cimsbioko.navconfig.Binding
 import org.cimsbioko.navconfig.NavigatorConfig
 import org.cimsbioko.navconfig.NavigatorModule
-import org.cimsbioko.navconfig.forms.Binding
 import java.util.*
 
 object ConfigUtils {

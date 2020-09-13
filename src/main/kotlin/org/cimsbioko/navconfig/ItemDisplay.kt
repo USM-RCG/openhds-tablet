@@ -1,6 +1,6 @@
 package org.cimsbioko.navconfig
 
-import org.cimsbioko.model.core.HierarchyItem
+import org.cimsbioko.model.HierarchyItem
 
 interface ItemFormatter {
     fun format(item: HierarchyItem): ItemDetails

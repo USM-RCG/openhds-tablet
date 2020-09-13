@@ -2,9 +2,9 @@ package org.cimsbioko.data
 
 import android.os.Parcel
 import android.os.Parcelable
-import org.cimsbioko.model.core.HierarchyItem
+import org.cimsbioko.model.HierarchyItem
+import org.cimsbioko.navconfig.DefaultQueryHelper
 import org.cimsbioko.navconfig.UsedByJSConfig
-import org.cimsbioko.navconfig.db.DefaultQueryHelper
 
 /**
  * Generic representation of a result from any query.

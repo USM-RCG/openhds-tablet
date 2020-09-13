@@ -1,4 +1,4 @@
-package org.cimsbioko.fragment.navigate
+package org.cimsbioko.fragment
 
 import android.content.Context
 import android.os.Bundle

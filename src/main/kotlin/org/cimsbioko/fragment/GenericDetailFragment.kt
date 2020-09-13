@@ -1,4 +1,4 @@
-package org.cimsbioko.fragment.navigate
+package org.cimsbioko.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -3,7 +3,7 @@ package org.cimsbioko.utilities
 import android.app.Activity
 import android.content.Intent
 import org.cimsbioko.activity.FieldWorkerLoginActivity
-import org.cimsbioko.model.core.FieldWorker
+import org.cimsbioko.model.FieldWorker
 
 object LoginUtils {
 

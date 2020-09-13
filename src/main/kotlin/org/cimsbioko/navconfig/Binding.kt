@@ -1,9 +1,7 @@
-package org.cimsbioko.navconfig.forms
+package org.cimsbioko.navconfig
 
 import org.cimsbioko.data.DataWrapper
-import org.cimsbioko.model.core.FieldWorker
-import org.cimsbioko.navconfig.HierarchyPath
-import org.cimsbioko.navconfig.UsedByJSConfig
+import org.cimsbioko.model.FieldWorker
 import org.jdom2.Document
 
 interface Binding {

@@ -1,17 +1,14 @@
-package org.cimsbioko.model.core
+package org.cimsbioko.model
 
 import org.cimsbioko.data.DataWrapper
-import org.cimsbioko.navconfig.Hierarchy
 import java.io.Serializable
 
-data class Location(
+data class LocationHierarchy(
         var uuid: String,
         var extId: String,
         var name: String,
-        var latitude: String? = null,
-        var longitude: String? = null,
-        var hierarchyUuid: String? = null,
-        var description: String? = null,
+        var parentUuid: String? = null,
+        override var level: String,
         var attrs: String? = null
 ) : HierarchyItem, Serializable {
     override val wrapped: DataWrapper
@@ -21,7 +18,6 @@ data class Location(
                 extId = extId,
                 name = name
         )
-    override val level: String = Hierarchy.HOUSEHOLD
     override val hierarchyId: String
         get() = "$level:$uuid"
 }

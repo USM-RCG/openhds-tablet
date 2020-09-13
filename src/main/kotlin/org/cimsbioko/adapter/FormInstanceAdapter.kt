@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import org.cimsbioko.R
-import org.cimsbioko.model.form.FormInstance
-import org.cimsbioko.model.form.LoadedFormInstance
+import org.cimsbioko.model.FormInstance
+import org.cimsbioko.model.LoadedFormInstance
 import org.cimsbioko.utilities.setTextWithIcon
 
 class FormInstanceAdapter(

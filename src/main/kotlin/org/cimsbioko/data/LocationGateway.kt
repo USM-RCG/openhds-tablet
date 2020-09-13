@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.cimsbioko.App.Locations
 import org.cimsbioko.data.CursorConvert.extractString
-import org.cimsbioko.model.core.Location
+import org.cimsbioko.model.Location
 import org.cimsbioko.navconfig.Hierarchy
 
 /**

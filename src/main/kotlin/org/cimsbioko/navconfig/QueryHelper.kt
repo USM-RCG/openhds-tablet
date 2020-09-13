@@ -1,4 +1,4 @@
-package org.cimsbioko.navconfig.db
+package org.cimsbioko.navconfig
 
 import org.cimsbioko.data.DataWrapper
 import org.cimsbioko.data.Gateway
@@ -7,9 +7,7 @@ import org.cimsbioko.data.GatewayRegistry.locationGateway
 import org.cimsbioko.data.GatewayRegistry.locationHierarchyGateway
 import org.cimsbioko.data.LocationHierarchyGateway
 import org.cimsbioko.data.Query
-import org.cimsbioko.model.core.HierarchyItem
-import org.cimsbioko.navconfig.Hierarchy
-import org.cimsbioko.navconfig.NavigatorConfig
+import org.cimsbioko.model.HierarchyItem
 
 interface QueryHelper {
     fun getAll(level: String): Query<out HierarchyItem>?

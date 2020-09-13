@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.cimsbioko.App.HierarchyItems
 import org.cimsbioko.data.CursorConvert.extractString
-import org.cimsbioko.model.core.LocationHierarchy
+import org.cimsbioko.model.LocationHierarchy
 
 /**
  * Convert LocationHierarchy items to and from database.  LocationHierarchy-specific queries.

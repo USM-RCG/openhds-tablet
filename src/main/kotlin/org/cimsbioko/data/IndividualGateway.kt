@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.cimsbioko.App.Individuals
 import org.cimsbioko.data.CursorConvert.extractString
-import org.cimsbioko.model.core.Individual
+import org.cimsbioko.model.Individual
 import org.cimsbioko.navconfig.Hierarchy
 
 /**

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.cimsbioko.App
 import org.cimsbioko.data.DataWrapper
-import org.cimsbioko.model.form.FormInstance
+import org.cimsbioko.model.FormInstance
 import org.cimsbioko.utilities.FormsHelper
 import org.cimsbioko.utilities.SQLUtils.makePlaceholders
 import java.util.*
