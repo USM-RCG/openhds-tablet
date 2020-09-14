@@ -11,22 +11,24 @@
         tools:text="Extra-extra long sample login heading" />
 
     <EditText
-        android:id="@+id/usernameEditText"
-        style="@style/LoginText"
-        android:layout_below="@id/titleTextView"
-        android:hint="@string/login_username"
-        android:nextFocusForward="@+id/passwordEditText"
-        android:inputType="textNoSuggestions">
-        <requestFocus />
+            android:id="@+id/usernameEditText"
+            style="@style/LoginText"
+            android:layout_below="@id/titleTextView"
+            android:hint="@string/login_username"
+            android:nextFocusForward="@+id/passwordEditText"
+            android:inputType="textNoSuggestions"
+            android:autofillHints="username">
+        <requestFocus/>
     </EditText>
 
     <EditText
-        android:id="@+id/passwordEditText"
-        style="@style/LoginText"
-        android:layout_below="@id/usernameEditText"
-        android:hint="@string/login_password"
-        android:inputType="textPassword"
-        android:nextFocusForward="@+id/loginButton" />
+            android:id="@+id/passwordEditText"
+            style="@style/LoginText"
+            android:layout_below="@id/usernameEditText"
+            android:hint="@string/login_password"
+            android:inputType="textPassword"
+            android:nextFocusForward="@+id/loginButton"
+            android:autofillHints="password"/>
 
     <Button
         android:id="@+id/loginButton"
