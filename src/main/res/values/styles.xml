@@ -131,20 +131,18 @@
     <style name="SearchResultIcon">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:layout_alignParentStart" tools:targetApi="jelly_bean_mr1">true</item>
-        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/search_results_spacing</item>
-        <item name="android:layout_marginRight">@dimen/search_results_spacing</item>
         <item name="android:padding">@dimen/list_icon_padding</item>
     </style>
     <style name="SearchResultSecondaryText">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">2dp</item>
         <item name="android:textAppearance">?attr/textAppearanceListItemSecondary</item>
     </style>
     <style name="SearchResultPrimaryText" parent="SearchResultSecondaryText">
         <item name="android:textAppearance">?attr/textAppearanceListItem</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/search_results_spacing</item>
+        <item name="android:layout_marginLeft">@dimen/search_results_spacing</item>
     </style>
     <style name="LabelValueLabel" parent="LabelValueValue">
         <item name="android:textStyle">normal</item>

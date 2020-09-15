@@ -1,63 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/form_instance_list_item"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:background="@color/RedOrange">
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/form_instance_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:background="@color/RedOrange">
 
     <TextView
-        android:id="@+id/form_instance_list_type"
-        style="@style/FormText"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="false"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        tools:text="Form Type" />
+            android:id="@+id/form_instance_list_type"
+            style="@style/FormText"
+            tools:text="Form Type"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
-        android:id="@+id/form_instance_list_fieldworker"
-        style="@style/FormText"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        tools:text="FWID" />
+            android:id="@+id/form_instance_list_id"
+            style="@style/FormText"
+            tools:text="Identifier"
+            app:layout_constraintStart_toStartOf="@id/form_instance_list_type"
+            app:layout_constraintTop_toBottomOf="@+id/form_instance_list_type"/>
 
     <TextView
-        android:id="@+id/form_instance_list_date"
-        style="@style/FormText"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/form_instance_list_id"
-        tools:text="Date/Time" />
+            android:id="@+id/form_instance_list_date"
+            style="@style/FormText"
+            tools:text="Date/Time"
+            app:layout_constraintStart_toStartOf="@id/form_instance_list_id"
+            app:layout_constraintTop_toBottomOf="@+id/form_instance_list_id"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
-        android:id="@+id/form_instance_list_id"
-        style="@style/FormText"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="false"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="false"
-        android:layout_below="@+id/form_instance_list_type"
-        tools:text="Identifier" />
+            android:id="@+id/form_instance_list_fieldworker"
+            style="@style/FormText"
+            tools:text="FWID"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
             android:id="@+id/form_instance_list_extra1"
             style="@style/FormText"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/form_instance_list_fieldworker"
-            tools:text="Extra1" />
+            tools:text="Extra1"
+            app:layout_constraintTop_toBottomOf="@id/form_instance_list_fieldworker"
+            app:layout_constraintEnd_toEndOf="@id/form_instance_list_fieldworker"/>
 
     <TextView
             android:id="@+id/form_instance_list_extra2"
             style="@style/FormText"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/form_instance_list_extra1"
-            tools:text="Extra2" />
+            tools:text="Extra2"
+            app:layout_constraintTop_toBottomOf="@id/form_instance_list_extra1"
+            app:layout_constraintEnd_toEndOf="@id/form_instance_list_extra1"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

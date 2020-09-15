@@ -1,28 +1,32 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/manage_forms_fragment_listview_header"
-        style="@style/ListHeader"
-        tools:text="Sample Heading" />
+            android:id="@+id/manage_forms_fragment_listview_header"
+            style="@style/ListHeader"
+            tools:text="Sample Heading"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
     <ListView
-        android:id="@+id/manage_forms_fragment_listview"
-        style="@style/FormList"
-        android:layout_above="@+id/manage_forms_fragment_primary_button"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/manage_forms_fragment_listview_header"
-        android:layout_marginBottom="@dimen/heading_spacing" />
+            android:id="@+id/manage_forms_fragment_listview"
+            style="@style/FormList"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/heading_spacing"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/manage_forms_fragment_listview_header"
+            app:layout_constraintBottom_toTopOf="@id/manage_forms_fragment_primary_button"
+    />
 
     <Button
-        android:id="@+id/manage_forms_fragment_primary_button"
-        style="@style/Button"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        tools:text="Delete Button" />
+            android:id="@+id/manage_forms_fragment_primary_button"
+            style="@style/Button"
+            android:layout_width="match_parent"
+            tools:text="Delete Button"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
