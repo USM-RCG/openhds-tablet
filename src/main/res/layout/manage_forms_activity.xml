@@ -3,7 +3,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/manage_forms_toolbar"
@@ -26,6 +27,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:name="org.cimsbioko.fragment.ManageFormsFragment"
             android:layout_margin="@dimen/activity_margin"
+            tools:layout="@layout/manage_forms_fragment"
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

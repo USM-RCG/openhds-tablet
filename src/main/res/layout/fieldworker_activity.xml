@@ -3,6 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -21,7 +22,8 @@
                     android:name="org.cimsbioko.fragment.FavoritesFragment"
                     android:id="@+id/favorites_fragment"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    tools:layout="@layout/favorites_fragment"/>
         </FrameLayout>
         <ScrollView style="@style/FieldworkerMiddleColumn">
             <LinearLayout
@@ -35,7 +37,8 @@
                     android:name="org.cimsbioko.fragment.UnsentFormsFragment"
                     android:id="@+id/portal_form_list"
                     android:layout_height="wrap_content"
-                    android:layout_width="match_parent"/>
+                    android:layout_width="match_parent"
+                    tools:layout="@layout/form_list_fragment"/>
         </FrameLayout>
     </LinearLayout>
 
