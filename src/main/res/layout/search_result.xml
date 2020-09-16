@@ -13,23 +13,22 @@
             tools:src="@drawable/ic_household"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-    />
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
             android:id="@android:id/text1"
             style="@style/SearchResultPrimaryText"
             tools:text="Sample Text 1"
+            android:layout_marginStart="@dimen/search_results_spacing"
+            android:layout_marginLeft="@dimen/search_results_spacing"
             app:layout_constraintStart_toEndOf="@id/icon"
-            app:layout_constraintTop_toTopOf="@id/icon"
-    />
+            app:layout_constraintTop_toTopOf="@id/icon"/>
 
     <TextView
             android:id="@android:id/text2"
             style="@style/SearchResultSecondaryText"
             tools:text="Sample Text 2"
             app:layout_constraintTop_toBottomOf="@android:id/text1"
-            app:layout_constraintStart_toStartOf="@android:id/text1"
-    />
+            app:layout_constraintStart_toStartOf="@android:id/text1"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

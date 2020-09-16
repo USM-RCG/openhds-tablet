@@ -1,81 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical">
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/search_toolbar"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:minHeight="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"/>
+            android:background="?attr/colorPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    <LinearLayout
-        android:id="@+id/progress_container"
-        style="@style/ProgressBarContainer">
-        <ProgressBar style="@style/ProgressBar" android:visibility="visible"/>
-        <TextView style="@style/ProgressCaption" android:text="@string/searching" />
-    </LinearLayout>
+    <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressGroup"
+            app:constraint_referenced_ids="progressBar,progressCaption"/>
 
-    <RelativeLayout
-        android:id="@+id/list_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <ProgressBar style="@style/ProgressBar"
+                 android:id="@+id/progressBar"
+                 app:layout_constraintTop_toTopOf="parent"
+                 app:layout_constraintBottom_toBottomOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintEnd_toEndOf="parent"/>
 
-        <EditText
+    <TextView style="@style/ProgressCaption"
+              android:id="@+id/progressCaption"
+              android:text="@string/searching"
+              app:layout_constraintTop_toBottomOf="@id/progressBar"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"/>
+
+    <EditText
             android:id="@+id/basic_query_text"
             style="@style/SearchBox"
-            android:hint="@string/search_hint"
-            android:imeOptions="actionSearch"/>
-
-        <EditText
-            android:id="@+id/advanced_query_text"
-            style="@style/SearchBox"
+            android:layout_width="0dp"
             android:hint="@string/search_hint"
             android:imeOptions="actionSearch"
-            android:visibility="gone"/>
+            app:layout_constraintTop_toBottomOf="@id/search_toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/hierarchy_toggle"
+            android:importantForAutofill="no"/>
 
-        <ToggleButton
+    <EditText
+            android:id="@+id/advanced_query_text"
+            style="@style/SearchBox"
+            android:layout_width="0dp"
+            android:hint="@string/search_hint"
+            android:imeOptions="actionSearch"
+            android:visibility="gone"
+            android:importantForAutofill="no"
+            app:layout_constraintTop_toBottomOf="@id/search_toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/hierarchy_toggle"/>
+
+    <ToggleButton
             android:id="@+id/hierarchy_toggle"
             style="@style/SearchToggle"
-            android:layout_toLeftOf="@+id/location_toggle"
-            android:layout_toStartOf="@+id/location_toggle" />
+            app:layout_constraintTop_toBottomOf="@id/search_toolbar"
+            app:layout_constraintEnd_toStartOf="@id/location_toggle"/>
 
-        <ToggleButton
+    <ToggleButton
             android:id="@+id/location_toggle"
             style="@style/SearchToggle"
-            android:layout_toLeftOf="@+id/individual_toggle"
-            android:layout_toStartOf="@+id/individual_toggle" />
+            app:layout_constraintTop_toBottomOf="@id/search_toolbar"
+            app:layout_constraintEnd_toStartOf="@id/individual_toggle"/>
 
-        <ToggleButton
+    <ToggleButton
             android:id="@+id/individual_toggle"
             style="@style/SearchToggle"
-            android:layout_toLeftOf="@+id/search_button"
-            android:layout_toStartOf="@+id/search_button" />
+            app:layout_constraintTop_toBottomOf="@id/search_toolbar"
+            app:layout_constraintEnd_toStartOf="@id/search_button"/>
 
-        <Button
+    <Button
             android:id="@+id/search_button"
             style="@style/Button"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:text="@string/search_label" />
+            android:text="@string/search_label"
+            app:layout_constraintTop_toBottomOf="@id/search_toolbar"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-        <FrameLayout
+    <ListView
+            android:id="@android:id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/search_button"
-            android:layout_marginTop="@dimen/search_results_spacing">
+            android:layout_height="0dp"
+            android:drawSelectorOnTop="false"
+            app:layout_constraintTop_toBottomOf="@id/search_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <ListView
-                android:id="@android:id/list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawSelectorOnTop="false"/>
-
-        </FrameLayout>
-
-    </RelativeLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

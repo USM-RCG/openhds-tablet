@@ -17,6 +17,7 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.constraintlayout.widget.Group
 import androidx.core.graphics.drawable.DrawableCompat
 import org.apache.lucene.index.Term
 import org.apache.lucene.queryparser.flexible.core.QueryNodeException
@@ -46,8 +47,7 @@ class SearchableActivity : AppCompatActivity() {
 
     private lateinit var searchQueue: SearchQueue
     private lateinit var handler: Handler
-    private lateinit var listContainer: View
-    private lateinit var progressContainer: View
+    private lateinit var progressGroup: Group
     private lateinit var listView: ListView
     private lateinit var basicQuery: EditText
     private lateinit var advancedQuery: EditText
@@ -69,12 +69,11 @@ class SearchableActivity : AppCompatActivity() {
 
         setTitle(R.string.search_label)
 
-        listContainer = binding.listContainer
         basicQuery = binding.basicQueryText
         advancedQuery = binding.advancedQueryText
         searchButton = binding.searchButton
         listView = binding.list
-        progressContainer = binding.progressContainer
+        progressGroup = binding.progressGroup
 
         basicQuery.addTextChangedListener(BasicQueryTranslator())
 
@@ -331,8 +330,8 @@ class SearchableActivity : AppCompatActivity() {
     }
 
     private fun showLoading(loading: Boolean) {
-        progressContainer.visibility = if (loading) View.VISIBLE else View.GONE
-        listContainer.visibility = if (loading) View.GONE else View.VISIBLE
+        progressGroup.visibility = if (loading) View.VISIBLE else View.GONE
+        listView.visibility = if (loading) View.GONE else View.VISIBLE
     }
 
     private fun executeQuery(query: Query) {
