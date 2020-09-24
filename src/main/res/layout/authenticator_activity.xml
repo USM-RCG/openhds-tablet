@@ -21,7 +21,8 @@
             android:nextFocusForward="@+id/passwordEditText"
             android:inputType="textNoSuggestions"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title"/>
+            app:layout_constraintTop_toBottomOf="@id/title"
+            android:autofillHints="username"/>
 
     <EditText
             android:id="@+id/passwordEditText"
@@ -30,7 +31,8 @@
             android:inputType="textPassword"
             android:nextFocusForward="@+id/loginButton"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/usernameEditText"/>
+            app:layout_constraintTop_toBottomOf="@id/usernameEditText"
+            android:autofillHints="password"/>
 
     <ImageButton
             app:srcCompat="@drawable/ic_camera"
