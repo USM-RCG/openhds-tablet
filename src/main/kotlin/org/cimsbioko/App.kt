@@ -24,26 +24,14 @@ class App : Application() {
 
         const val ID = BaseColumns._ID
 
-        // general individual columns
         const val COLUMN_INDIVIDUAL_EXTID = "extId"
         const val COLUMN_INDIVIDUAL_FIRST_NAME = "firstName"
+        const val COLUMN_INDIVIDUAL_OTHER_NAMES = "otherNames" // middle name on server
         const val COLUMN_INDIVIDUAL_LAST_NAME = "lastName"
         const val COLUMN_INDIVIDUAL_DOB = "dob"
         const val COLUMN_INDIVIDUAL_GENDER = "gender"
         const val COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID = "currentResidence"
         const val COLUMN_INDIVIDUAL_ATTRS = "attrs"
-
-        // extensions for bioko project
-        const val COLUMN_INDIVIDUAL_OTHER_ID = "otherId"
-        const val COLUMN_INDIVIDUAL_OTHER_NAMES = "otherNames"
-        const val COLUMN_INDIVIDUAL_PHONE_NUMBER = "phoneNumber"
-        const val COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER = "otherPhoneNumber"
-        const val COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME = "pointOfContactName"
-        const val COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER = "pointOfContactPhoneNumber"
-        const val COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE = "languagePreference"
-        const val COLUMN_INDIVIDUAL_STATUS = "status"
-        const val COLUMN_INDIVIDUAL_NATIONALITY = "nationality"
-        const val COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD = "relationshipToHead"
     }
 
     object Locations : BaseColumns {

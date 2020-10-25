@@ -33,16 +33,7 @@ private class IndividualEntityConverter : CursorConverter<Individual> {
         dob = extractString(c, Individuals.COLUMN_INDIVIDUAL_DOB)
         gender = extractString(c, Individuals.COLUMN_INDIVIDUAL_GENDER)
         currentResidenceUuid = extractString(c, Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID)
-        otherId = extractString(c, Individuals.COLUMN_INDIVIDUAL_OTHER_ID)
         otherNames = extractString(c, Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES)
-        phoneNumber = extractString(c, Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER)
-        otherPhoneNumber = extractString(c, Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER)
-        pointOfContactName = extractString(c, Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME)
-        status = extractString(c, Individuals.COLUMN_INDIVIDUAL_STATUS)
-        pointOfContactPhoneNumber = extractString(c, Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER)
-        languagePreference = extractString(c, Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE)
-        nationality = extractString(c, Individuals.COLUMN_INDIVIDUAL_NATIONALITY)
-        relationshipToHead = extractString(c, Individuals.COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD)
         attrs = extractString(c, Individuals.COLUMN_INDIVIDUAL_ATTRS)
     }
 }
@@ -66,16 +57,7 @@ private class IndividualContentValuesConverter : ContentValuesConverter<Individu
             put(Individuals.COLUMN_INDIVIDUAL_DOB, dob)
             put(Individuals.COLUMN_INDIVIDUAL_GENDER, gender)
             put(Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID, currentResidenceUuid)
-            put(Individuals.COLUMN_INDIVIDUAL_OTHER_ID, otherId)
             put(Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES, otherNames)
-            put(Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER, phoneNumber)
-            put(Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER, otherPhoneNumber)
-            put(Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME, pointOfContactName)
-            put(Individuals.COLUMN_INDIVIDUAL_STATUS, status)
-            put(Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER, pointOfContactPhoneNumber)
-            put(Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE, languagePreference)
-            put(Individuals.COLUMN_INDIVIDUAL_NATIONALITY, nationality)
-            put(Individuals.COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD, relationshipToHead)
             put(Individuals.COLUMN_INDIVIDUAL_ATTRS, attrs)
         }
     }

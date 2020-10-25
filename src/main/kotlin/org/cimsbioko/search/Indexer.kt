@@ -89,7 +89,7 @@ class Indexer private constructor() {
 
     @Throws(IOException::class)
     private fun IndexWriter.bulkIndexIndividuals() {
-        bulkIndex(R.string.indexing_individuals, IndividualCursorDocumentSource(database.rawQuery(INDIVIDUAL_INDEX_QUERY, arrayOf()), "name", "phone"))
+        bulkIndex(R.string.indexing_individuals, IndividualCursorDocumentSource(database.rawQuery(INDIVIDUAL_INDEX_QUERY, arrayOf()), "name", "attrs"))
     }
 
     @Throws(IOException::class)
@@ -152,7 +152,7 @@ class Indexer private constructor() {
                 "'${Hierarchy.INDIVIDUAL}' as level, " +
                 "${App.Individuals.COLUMN_INDIVIDUAL_EXTID}, " +
                 "ifnull(${App.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME},'') || ' ' || ifnull(${App.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES},'') || ' ' || ifnull(${App.Individuals.COLUMN_INDIVIDUAL_LAST_NAME},'') as name, " +
-                "ifnull(${App.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER},'') || ' ' || ifnull(${App.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER},'') || ' ' || ifnull(${App.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER},'') as phone " +
+                "${App.Individuals.COLUMN_INDIVIDUAL_ATTRS} as attrs " +
                 "from ${App.Individuals.TABLE_NAME}"
         private const val INDIVIDUAL_UPDATE_QUERY = "$INDIVIDUAL_INDEX_QUERY where ${App.Individuals.COLUMN_INDIVIDUAL_UUID} = ?"
         private const val LOCATION_INDEX_QUERY = "select ${App.Locations.COLUMN_LOCATION_UUID}, " +

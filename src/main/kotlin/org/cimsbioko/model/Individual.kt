@@ -13,16 +13,7 @@ data class Individual(
         var gender: String? = null,
         var dob: String? = null,
         var currentResidenceUuid: String? = null,
-        var relationshipToHead: String? = null,
-        var otherId: String? = null,
         var otherNames: String? = null,
-        var phoneNumber: String? = null,
-        var otherPhoneNumber: String? = null,
-        var pointOfContactName: String? = null,
-        var pointOfContactPhoneNumber: String? = null,
-        var languagePreference: String? = null,
-        var status: String? = null,
-        var nationality: String? = null,
         var attrs: String? = null
 ) : HierarchyItem, Serializable {
     override val wrapped: DataWrapper

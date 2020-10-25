@@ -4,6 +4,7 @@ import android.content.Context
 import org.apache.lucene.search.spell.JaroWinklerDistance
 import org.cimsbioko.R
 import org.cimsbioko.utilities.ConfigUtils.getSharedPrefs
+import org.json.JSONObject
 import java.util.*
 
 object Utils {
@@ -11,7 +12,10 @@ object Utils {
     private const val MAX_SIMILARITY = 0.99f
     private val jwd = JaroWinklerDistance()
 
-    fun extractUniquePhones(phoneValue: String): Set<String> = phoneValue.trim { it <= ' ' }.split("\\s+".toRegex()).toSet()
+    // FIXME: Migrate this to some form of campaign configuration
+    private val phoneAttrs = listOf("phone1", "phone2", "contact_phone")
+
+    fun extractUniquePhones(attrs: String): Set<String> = with(JSONObject(attrs)) { phoneAttrs.mapNotNull { optString(it, null) }.toSet() }
 
     fun extractDissimilarNames(nameValue: String): Set<String> {
 

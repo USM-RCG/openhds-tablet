@@ -23,7 +23,7 @@ class ContentProvider : ContentProvider() {
     companion object {
 
         const val DATABASE_NAME = "cims.db"
-        const val DATABASE_VERSION = 15
+        const val DATABASE_VERSION = 16
 
         private const val TAG = "ContentProvider"
 
@@ -49,17 +49,7 @@ class ContentProvider : ContentProvider() {
                 App.Individuals.COLUMN_INDIVIDUAL_LAST_NAME to App.Individuals.COLUMN_INDIVIDUAL_LAST_NAME,
                 App.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID to App.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID,
                 App.Individuals.COLUMN_INDIVIDUAL_ATTRS to App.Individuals.COLUMN_INDIVIDUAL_ATTRS,
-                App.Individuals.COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD to App.Individuals.COLUMN_INDIVIDUAL_RELATIONSHIP_TO_HEAD,
-                // extensions for bioko project
-                App.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES to App.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES,
-                App.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER to App.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER,
-                App.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER to App.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER,
-                App.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME to App.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME,
-                App.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER to App.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER,
-                App.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE to App.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE,
-                App.Individuals.COLUMN_INDIVIDUAL_STATUS to App.Individuals.COLUMN_INDIVIDUAL_STATUS,
-                App.Individuals.COLUMN_INDIVIDUAL_NATIONALITY to App.Individuals.COLUMN_INDIVIDUAL_NATIONALITY,
-                App.Individuals.COLUMN_INDIVIDUAL_OTHER_ID to App.Individuals.COLUMN_INDIVIDUAL_OTHER_ID
+                App.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES to App.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES
         )
 
         private val locationProjection = mapOf(
@@ -336,14 +326,6 @@ class ContentProvider : ContentProvider() {
                            ${App.Individuals.COLUMN_INDIVIDUAL_LAST_NAME} TEXT NOT NULL,
                            ${App.Individuals.COLUMN_INDIVIDUAL_RESIDENCE_LOCATION_UUID} TEXT,
                            ${App.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES} TEXT,
-                           ${App.Individuals.COLUMN_INDIVIDUAL_PHONE_NUMBER} TEXT,
-                           ${App.Individuals.COLUMN_INDIVIDUAL_OTHER_PHONE_NUMBER} TEXT,
-                           ${App.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_NAME} TEXT,
-                           ${App.Individuals.COLUMN_INDIVIDUAL_POINT_OF_CONTACT_PHONE_NUMBER} TEXT,
-                           ${App.Individuals.COLUMN_INDIVIDUAL_LANGUAGE_PREFERENCE} TEXT,
-                           ${App.Individuals.COLUMN_INDIVIDUAL_STATUS} TEXT,
-                           ${App.Individuals.COLUMN_INDIVIDUAL_NATIONALITY} TEXT,
-                           ${App.Individuals.COLUMN_INDIVIDUAL_OTHER_ID} TEXT,
                            ${App.Individuals.COLUMN_INDIVIDUAL_ATTRS} TEXT);""".trimMargin())
                 execSQL("CREATE INDEX INDIVIDUAL_UUID_INDEX ON ${App.Individuals.TABLE_NAME}(${App.Individuals.COLUMN_INDIVIDUAL_UUID});")
                 execSQL("CREATE INDEX INDIVIDUAL_EXTID_INDEX ON ${App.Individuals.TABLE_NAME}(${App.Individuals.COLUMN_INDIVIDUAL_EXTID});")
@@ -391,7 +373,7 @@ class ContentProvider : ContentProvider() {
         }
 
         override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-            if (oldVersion < 15) {
+            if (oldVersion < 16) {
                 throw SQLiteException("Can't upgrade database from version $oldVersion to $newVersion")
             } else {
                 Log.w(TAG, "Upgrading database from version $oldVersion to $newVersion")
