@@ -5,9 +5,10 @@ import org.cimsbioko.navconfig.Hierarchy
 import org.cimsbioko.navconfig.UsedByJSConfig
 import java.io.Serializable
 
+@UsedByJSConfig
 data class Individual(
-        var uuid: String,
-        var extId: String,
+        var uuid: String = "",
+        var extId: String = "",
         var firstName: String? = null,
         var lastName: String? = null,
         var gender: String? = null,
@@ -16,6 +17,7 @@ data class Individual(
         var otherNames: String? = null,
         var attrs: String? = null
 ) : HierarchyItem, Serializable {
+
     override val wrapped: DataWrapper
         get() = DataWrapper(
                 uuid = uuid,
@@ -28,8 +30,8 @@ data class Individual(
         get() = "$level:$uuid"
 
     companion object {
-        @UsedByJSConfig
         @JvmStatic
+        @UsedByJSConfig
         fun Individual.getFullName(): String = "$firstName $lastName"
     }
 }

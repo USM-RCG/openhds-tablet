@@ -8,9 +8,10 @@
 -keep class org.cimsbioko.R$* { *; }
 
 # app's scriptable classes
--keep class * {
-    @org.cimsbioko.navconfig.UsedByJSConfig *;
-}
+-keep @org.cimsbioko.navconfig.UsedByJSConfig public class * { <methods>; }
+-keep class * { @org.cimsbioko.navconfig.UsedByJSConfig *; }
+
+# keep jdom classes
 -keep class org.jdom2.* { *; }
 
 # not sure which lib references these, but we don't use it
