@@ -74,13 +74,10 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = NavigateActivityBinding.inflate(layoutInflater).apply {
-            setContentView(root)
-        }
+        val binding = NavigateActivityBinding.inflate(layoutInflater).apply { setContentView(root) }
 
         config = NavigatorConfig.instance
-        currentModuleName = intent.extras?.let { it[FieldWorkerActivity.ACTIVITY_MODULE_EXTRA] as String }
-                ?: "unspecified"
+        currentModuleName = intent.extras?.let { it[FieldWorkerActivity.ACTIVITY_MODULE_EXTRA] as String } ?: "unspecified"
         currentModule = config.getModule(currentModuleName) ?: error("no module for name $currentModuleName")
         title = currentModule.activityTitle
 
@@ -148,8 +145,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
      * A hack to inject extra context when starting the search activity, onSearchRequested was not being called.
      */
     override fun startActivity(intent: Intent) {
-        intent.takeIf { it.action == Intent.ACTION_SEARCH }
-                ?.putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, currentModuleName)
+        intent.takeIf { it.action == Intent.ACTION_SEARCH }?.putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, currentModuleName)
         super.startActivity(intent)
     }
 
@@ -235,9 +231,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
                                     try {
                                         loadedInstance.store(dataDoc)
                                     } catch (ue: IOException) {
-                                        withContext(Dispatchers.Main) {
-                                            showShortToast(activity, "Update failed: " + ue.message)
-                                        }
+                                        withContext(Dispatchers.Main) { showShortToast(activity, "Update failed: " + ue.message) }
                                     }
                                 }
                             }
@@ -295,9 +289,9 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
                     .replace(R.id.middle_column_data, fragment, DETAIL_FRAGMENT_TAG)
                     .commit()
             supportFragmentManager.executePendingTransactions()
-            withContext(Dispatchers.IO) { currentSelection?.unwrapped }
-                    ?.let { itemFormatterForCurrentLevel?.format(it) }
-                    ?.also { fragment.showItemDetails(it, level) }
+            withContext(Dispatchers.IO) {
+                currentSelection?.unwrapped?.let { itemFormatterForCurrentLevel?.format(it) }
+            }?.also { fragment.showItemDetails(it, level) }
         }
     }
 
