@@ -16,6 +16,7 @@ import org.cimsbioko.App
 import org.cimsbioko.search.IndexingService.Companion.queueReindex
 import org.cimsbioko.search.IndexingService.EntityType
 import org.cimsbioko.search.Utils.isSearchEnabled
+import org.cimsbioko.utilities.logTime
 
 
 class ContentProvider : ContentProvider() {
@@ -154,15 +155,20 @@ class ContentProvider : ContentProvider() {
             }
             else -> throw IllegalArgumentException("Unknown URI $uri")
         }
-        query(databaseHelper.readableDatabase,  // The database to query
-                projection,  // The columns to return from the query
-                selection,  // The columns for the where clause
-                selectionArgs,  // The values for the where clause
-                null,  // don't group the rows
-                null,  // don't filter by row groups
-                if (TextUtils.isEmpty(sortOrder)) App.DEFAULT_SORT_ORDER else sortOrder // The sort order
-        ).apply {
-            setNotificationUri(context!!.contentResolver, uri)
+        logTime("""tables: $tables
+               projection: $projection
+               selection: $selection
+               selectionArgs: ${selectionArgs?.joinToString() ?: "none"}
+               sortOrder: $sortOrder""".trimMargin()) {
+            query(databaseHelper.readableDatabase,  // The database to query
+                    projection,  // The columns to return from the query
+                    selection,  // The columns for the where clause
+                    selectionArgs,  // The values for the where clause
+                    null,  // don't group the rows
+                    null,  // don't filter by row groups
+                    if (TextUtils.isEmpty(sortOrder)) App.DEFAULT_SORT_ORDER else sortOrder).apply {
+                setNotificationUri(context!!.contentResolver, uri)
+            }
         }
     }
 
