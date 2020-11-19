@@ -37,6 +37,7 @@ import org.cimsbioko.utilities.ConfigUtils.getActiveModules
 import org.cimsbioko.utilities.FormUtils.editIntent
 import org.cimsbioko.utilities.LoginUtils.login
 import org.cimsbioko.utilities.MessageUtils.showShortToast
+import org.cimsbioko.utilities.logTime
 import java.io.IOException
 import java.util.*
 import kotlin.coroutines.CoroutineContext
@@ -344,15 +345,17 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
         get() = if (hierarchyPath.depth() <= 0) ROOT_LEVEL else config.levels[hierarchyPath.depth() - 1]
 
     private fun update() = launch {
-        val level = level
-        check(ROOT_LEVEL == level || level in config.levels) { "no such level: $level" }
-        handleFormResultIfPresent()
-        updatePathButtons()
-        updateData()
-        updateMiddle()
-        updateDetailToggle()
-        updateFormLaunchers()
-        updateForms()
+        logTime("update") {
+            val level = level
+            check(ROOT_LEVEL == level || level in config.levels) { "no such level: $level" }
+            handleFormResultIfPresent()
+            updatePathButtons()
+            logTime("updateData") { updateData() }
+            async { logTime("updateMiddle") { updateMiddle() } }
+            async { logTime("updateDetailToggle") { updateDetailToggle() } }
+            async { logTime("updateFormLaunchers") { updateFormLaunchers() } }
+            async { logTime("updateForms") { updateForms() } }
+        }
     }
 
     private fun updatePathButtons() {
@@ -389,12 +392,18 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
 
     private fun shouldShowDetail(): Boolean = itemFormatterForCurrentLevel != null && currentResults.isEmpty()
 
-    private fun updateFormLaunchers() {
-        currentModule.getLaunchers(level)
-                .filter { it.relevantFor(this@HierarchyNavigatorActivity) }
-                .let { relevantLaunchers ->
-                    formFragment.createFormButtons(relevantLaunchers)
-                }
+    private suspend fun updateFormLaunchers() = coroutineScope {
+        formFragment.createFormButtons(emptyList())
+        logTime("filter relevant launchers") {
+            currentModule.getLaunchers(level)
+                    .mapIndexed { index, launcher ->
+                        logTime("launcher $index relevant") {
+                            async(Dispatchers.IO) { launcher.takeIf { it.relevantFor(this@HierarchyNavigatorActivity) } }
+                        }
+                    }
+                    .awaitAll()
+                    .filterNotNull()
+        }.let { relevantLaunchers -> formFragment.createFormButtons(relevantLaunchers) }
     }
 
     /**
