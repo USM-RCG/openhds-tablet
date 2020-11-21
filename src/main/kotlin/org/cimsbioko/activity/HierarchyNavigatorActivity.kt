@@ -271,7 +271,6 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
     }
 
     private fun showValueFragment() {
-        // there is only 1 value fragment that can be added
         if (!valueFragment.isAdded) {
             supportFragmentManager
                     .beginTransaction()
