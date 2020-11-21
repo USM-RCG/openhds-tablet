@@ -275,8 +275,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
             supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.middle_column_data, valueFragment, VALUE_FRAGMENT_TAG)
-                    .commit()
-            supportFragmentManager.executePendingTransactions()
+                    .commitNow()
         }
         hierFormatterForCurrentLevel?.also { valueFragment.populateData(currentResults, it) }
     }
@@ -286,8 +285,7 @@ class HierarchyNavigatorActivity : AppCompatActivity(), LaunchContext, Hierarchy
             supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.middle_column_data, fragment, DETAIL_FRAGMENT_TAG)
-                    .commit()
-            supportFragmentManager.executePendingTransactions()
+                    .commitNow()
             withContext(Dispatchers.IO) {
                 currentSelection?.unwrapped?.let { itemFormatterForCurrentLevel?.format(it) }
             }?.also { fragment.showItemDetails(it, level) }
