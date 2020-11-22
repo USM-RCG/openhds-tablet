@@ -65,6 +65,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
     packagingOptions {
         exclude 'org/apache/lucene/analysis/**/stopwords.txt'
         exclude 'org/apache/lucene/analysis/**/*.rslp'
