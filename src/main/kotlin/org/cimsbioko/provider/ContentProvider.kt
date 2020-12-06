@@ -159,11 +159,13 @@ class ContentProvider : ContentProvider() {
             }
             else -> throw IllegalArgumentException("Unknown URI $uri")
         }
-        logTime("""tables: $tables
-               projection: $projection
-               selection: $selection
-               selectionArgs: ${selectionArgs?.joinToString() ?: "none"}
-               sortOrder: $sortOrder""".trimMargin()) {
+        logTime({
+            """tables: $tables
+            projection: $projection
+            selection: $selection
+            selectionArgs: ${selectionArgs?.joinToString() ?: "none"}
+            sortOrder: $sortOrder""".trimMargin()
+        }) {
             query(databaseHelper.readableDatabase,  // The database to query
                     projection,  // The columns to return from the query
                     selection,  // The columns for the where clause
