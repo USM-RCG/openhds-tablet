@@ -29,14 +29,12 @@ class Query<T : Any> internal constructor(
     private val columnNames: Array<String>? = columnName?.let { arrayOf(it) }
     private val columnValues: Array<String>? = columnValue?.let { arrayOf(it) }
 
-    private fun select(): Cursor? {
-        return App.instance
-                .contentResolver
-                .query(tableUri, null, buildWhereStatement(columnNames ?: emptyArray(), operator), columnValues, columnOrderBy)
-    }
+    private fun select(single: Boolean = false): Cursor? = App.instance.contentResolver
+            .query(tableUri, null, buildWhereStatement(columnNames ?: emptyArray(), operator), columnValues,
+                    if (single) "$columnOrderBy limit 1" else columnOrderBy)
 
     val first: T?
-        get() = one(select(), gateway.entityConverter)
+        get() = one(select(single = true), gateway.entityConverter)
 
     @get:UsedByJSConfig
     val list: List<T>
@@ -44,15 +42,13 @@ class Query<T : Any> internal constructor(
 
     // get the first result from a query as a QueryResult or null
     val firstWrapper: DataWrapper?
-        get() = one(select(), gateway.wrapperConverter)
+        get() = one(select(single = true), gateway.wrapperConverter)
 
     // get all results from a query as a list of QueryResults
     val wrapperList: List<DataWrapper>
         get() = list(select(), gateway.wrapperConverter)
 
-    fun exists(): Boolean {
-        return select()?.moveToFirst() == true
-    }
+    fun exists(): Boolean = select(single = true).use { c -> c?.moveToFirst() == true }
 }
 
 internal object WhereUtils {
