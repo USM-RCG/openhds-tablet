@@ -12,7 +12,10 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
-import kotlinx.coroutines.*
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.activity.HierarchyNavigatorActivity
@@ -28,20 +31,14 @@ import org.cimsbioko.utilities.MessageUtils.showShortToast
 import org.cimsbioko.utilities.configureText
 import org.cimsbioko.utilities.makeText
 import org.cimsbioko.utilities.toLevelIcon
-import kotlin.coroutines.CoroutineContext
 
-class FavoritesFragment : Fragment(), CoroutineScope {
-
-    private lateinit var job: Job
-
-    override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
+class FavoritesFragment : Fragment() {
 
     private var list: ListView? = null
     private var progress: ProgressBar? = null
     private var dataAdapter: FavoriteAdapter? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return FavoritesFragmentBinding.inflate(inflater, container, false).apply {
             dataAdapter = FavoriteAdapter(requireActivity())
             list = favoritesList.apply {
@@ -62,14 +59,8 @@ class FavoritesFragment : Fragment(), CoroutineScope {
     }
 
     override fun onResume() {
-        job = Job()
         loadData()
         super.onResume()
-    }
-
-    override fun onPause() {
-        job.cancel("fragment paused")
-        super.onPause()
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
@@ -152,7 +143,7 @@ class FavoritesFragment : Fragment(), CoroutineScope {
         }
     }
 
-    private fun loadData() = launch {
+    private fun loadData() = lifecycleScope.launch {
 
         showLoading(true)
         dataAdapter?.clear()

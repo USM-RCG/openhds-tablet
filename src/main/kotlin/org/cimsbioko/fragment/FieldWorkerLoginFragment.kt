@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
 import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
@@ -19,14 +20,10 @@ import org.cimsbioko.databinding.FieldworkerLoginFragmentBinding
 import org.cimsbioko.utilities.LoginUtils.login
 import org.cimsbioko.utilities.MessageUtils.showLongToast
 import org.mindrot.jbcrypt.BCrypt
-import kotlin.coroutines.CoroutineContext
 
-class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyListener, CoroutineScope {
+class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyListener {
 
     private lateinit var job: Job
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
     private var usernameEditText: EditText? = null
     private var passwordEditText: EditText? = null
@@ -64,7 +61,7 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
     override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
         if (event.action == KeyEvent.ACTION_DOWN) {
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                launch { authenticateFieldWorker() }
+                lifecycleScope.launch { authenticateFieldWorker() }
                 return true
             }
         }
@@ -72,7 +69,7 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
     }
 
     override fun onClick(view: View) {
-        launch {
+        lifecycleScope.launch {
             try {
                 loginButton?.isEnabled = false
                 authenticateFieldWorker()

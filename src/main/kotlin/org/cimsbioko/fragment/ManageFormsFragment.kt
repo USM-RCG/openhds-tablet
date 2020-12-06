@@ -8,36 +8,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import kotlinx.coroutines.*
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import org.cimsbioko.R
 import org.cimsbioko.adapter.FormChecklistAdapter
 import org.cimsbioko.databinding.ManageFormsFragmentBinding
 import org.cimsbioko.utilities.FormsHelper.allUnsentFormInstances
 import org.cimsbioko.utilities.FormsHelper.deleteFormInstances
-import kotlin.coroutines.CoroutineContext
 
-class ManageFormsFragment : Fragment(), CoroutineScope {
-
-    private lateinit var job: Job
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
+class ManageFormsFragment : Fragment() {
 
     private var adapter: FormChecklistAdapter? = null
     private var deleteConfirmDialog: AlertDialog? = null
 
     override fun onResume() {
-        job = Job()
         updateForms()
         super.onResume()
-    }
-
-    override fun onPause() {
-        job.cancel("fragment paused")
-        super.onPause()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -67,7 +57,7 @@ class ManageFormsFragment : Fragment(), CoroutineScope {
     }
 
     private fun updateForms() {
-        launch { allUnsentFormInstances.map { it.load() }.flowOn(Dispatchers.IO).collect { form -> adapter?.add(form) } }
+        lifecycleScope.launch { allUnsentFormInstances.map { it.load() }.flowOn(Dispatchers.IO).collect { form -> adapter?.add(form) } }
     }
 
     private fun deleteSelected() {
