@@ -5,12 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.AdapterView
 import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -40,29 +44,37 @@ import java.util.*
 abstract class FormListFragment : Fragment() {
 
     private var headerView: TextView? = null
-    private var listView: ListView? = null
-    protected var adapter: FormInstanceAdapter? = null
+    private var list: ListView? = null
+    private var progress: ProgressBar? = null
+    protected var dataAdapter: FormInstanceAdapter? = null
 
     var isFindEnabled = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return FormListFragmentBinding.inflate(inflater, container, false).also { binding ->
             headerView = binding.formListHeader
-            adapter = FormInstanceAdapter(requireActivity(), R.id.form_instance_list_item, ArrayList())
-            listView = binding.formList.also { listView ->
-                listView.adapter = adapter
-                listView.onItemClickListener = ClickListener()
-                registerForContextMenu(listView)
-            }
+            dataAdapter = FormInstanceAdapter(requireActivity(), R.id.form_instance_list_item, ArrayList())
+            list = binding.formList
+            progress = binding.progressBar
         }.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        list?.apply {
+            adapter = dataAdapter
+            onItemClickListener = ClickListener()
+            registerForContextMenu(this)
+        }
+        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         headerView = null
-        listView?.let { unregisterForContextMenu(it) }
-        listView = null
-        adapter = null
+        list?.let { unregisterForContextMenu(it) }
+        list = null
+        dataAdapter = null
+        progress = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -75,26 +87,35 @@ abstract class FormListFragment : Fragment() {
         savedInstanceState?.apply { isFindEnabled = getBoolean(FIND_ENABLED_KEY) }
     }
 
+    private var isLoading: Boolean
+        get() = progress?.isVisible ?: false
+        set(loading) {
+            progress?.visibility = if (loading) VISIBLE else GONE
+            list?.visibility = if (loading) GONE else VISIBLE
+        }
+
     fun setHeaderText(resourceId: Int?) {
         if (resourceId != null) {
             headerView?.setText(resourceId)
-            headerView?.visibility = View.VISIBLE
+            headerView?.visibility = VISIBLE
         } else {
-            headerView?.visibility = View.GONE
+            headerView?.visibility = GONE
         }
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
     protected fun populate(instances: Flow<FormInstance>) {
-        adapter?.clear()
+        isLoading = true
+        dataAdapter?.clear()
         instances.map { it.load() }
                 .flowOn(Dispatchers.IO)
-                .onEach { instance -> adapter?.add(instance) }
+                .onEach { instance -> dataAdapter?.add(instance) }
+                .onCompletion { isLoading = false }
                 .launchIn(lifecycleScope)
     }
 
     private fun getItem(pos: Int): LoadedFormInstance {
-        return listView?.getItemAtPosition(pos) as LoadedFormInstance // accounts for offset shifts from added headers
+        return list?.getItemAtPosition(pos) as LoadedFormInstance // accounts for offset shifts from added headers
     }
 
     private fun editForm(selected: FormInstance) {
@@ -108,7 +129,7 @@ abstract class FormListFragment : Fragment() {
 
     private fun removeForm(selected: LoadedFormInstance) {
         if (deleteFormInstances(listOf(selected)) == 1) {
-            adapter?.remove(selected)
+            dataAdapter?.remove(selected)
             showShortToast(activity, R.string.deleted)
         }
     }
@@ -193,11 +214,8 @@ class UnsentFormsFragment : FormListFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        lifecycleScope.launch { populateForms() }
-    }
-
-    private fun populateForms() {
-        populate(FormsHelper.allUnsentFormInstances)
+        super.onViewCreated(view, savedInstanceState)
+        lifecycleScope.launch { populate(FormsHelper.allUnsentFormInstances) }
     }
 }
 
@@ -207,6 +225,7 @@ class HierarchyFormsFragment : FormListFragment() {
 
     @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         model.hierarchyPath
                 .mapLatest { path -> DatabaseAdapter.findFormsForHierarchy(path.toString()).filterNot { it.isSubmitted } }
                 .onEach { populate(it) }

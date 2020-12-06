@@ -11,6 +11,7 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.ProgressBar
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -41,13 +42,18 @@ class FavoritesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return FavoritesFragmentBinding.inflate(inflater, container, false).apply {
             dataAdapter = FavoriteAdapter(requireActivity())
-            list = favoritesList.apply {
-                adapter = dataAdapter
-                onItemClickListener = ClickListener()
-                registerForContextMenu(this)
-            }
+            list = favoritesList
             progress = progressBar
         }.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        list?.apply {
+            adapter = dataAdapter
+            onItemClickListener = ClickListener()
+            registerForContextMenu(this)
+        }
     }
 
     override fun onDestroyView() {
@@ -104,10 +110,12 @@ class FavoritesFragment : Fragment() {
         } ?: showShortToast(ctx, R.string.no_active_modules)
     }
 
-    private fun showLoading(loading: Boolean) {
-        progress?.visibility = if (loading) View.VISIBLE else View.GONE
-        list?.visibility = if (loading) View.GONE else View.VISIBLE
-    }
+    private var isLoading: Boolean
+        get() = progress?.isVisible ?: false
+        set(loading) {
+            progress?.visibility = if (loading) View.VISIBLE else View.GONE
+            list?.visibility = if (loading) View.GONE else View.VISIBLE
+        }
 
     private inner class ClickListener : OnItemClickListener {
         override fun onItemClick(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
@@ -145,7 +153,7 @@ class FavoritesFragment : Fragment() {
 
     private fun loadData() = lifecycleScope.launch {
 
-        showLoading(true)
+        isLoading = true
         dataAdapter?.clear()
 
         val items = withContext(Dispatchers.IO) {
@@ -161,7 +169,7 @@ class FavoritesFragment : Fragment() {
         }
 
         dataAdapter?.addAll(items)
-        showLoading(false)
+        isLoading = false
     }
 
 }

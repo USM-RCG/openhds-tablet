@@ -36,7 +36,7 @@
             <fragment
                     android:name="org.cimsbioko.fragment.UnsentFormsFragment"
                     android:id="@+id/portal_form_list"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_width="match_parent"
                     tools:layout="@layout/form_list_fragment"/>
         </FrameLayout>
