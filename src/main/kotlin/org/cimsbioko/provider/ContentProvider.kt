@@ -94,6 +94,10 @@ class ContentProvider : ContentProvider() {
         private const val FIELDWORKERS = 13
         private const val FIELDWORKER_ID = 14
 
+        /**
+         * The [DatabaseHelper] for this content provider. Do not close databases retrieved from this helper or it will cause
+         * IllegalStateExceptions.
+         */
         val databaseHelper: DatabaseHelper by lazy { DatabaseHelper(App.instance.applicationContext) }
     }
 
