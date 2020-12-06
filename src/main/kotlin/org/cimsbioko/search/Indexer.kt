@@ -27,6 +27,8 @@ import java.io.IOException
 class Indexer private constructor() {
 
     private val indexFile = File(App.instance.applicationContext.filesDir, "search-index")
+
+    /* convenient access to the content provider's database, do not close the returned database! */
     private val database: SQLiteDatabase
         get() = ContentProvider.databaseHelper.readableDatabase
 
