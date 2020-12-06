@@ -21,12 +21,11 @@ import org.cimsbioko.search.Utils.isSearchEnabled
 import org.cimsbioko.utilities.ConfigUtils.getActiveModules
 import org.cimsbioko.utilities.LoginUtils.login
 import org.cimsbioko.viewmodel.NavModel
-import org.cimsbioko.viewmodel.NavModelFactory
 import java.util.*
 
 class HierarchyNavigatorActivity : AppCompatActivity() {
 
-    private val model: NavModel by viewModels { NavModelFactory(this, intent.extras) }
+    private val model: NavModel by viewModels()
 
     private lateinit var hierarchyButtonFragment: HierarchyButtonFragment
     private lateinit var valueFragment: DataSelectionFragment

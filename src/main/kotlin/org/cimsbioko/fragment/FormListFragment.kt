@@ -12,7 +12,7 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,7 +35,6 @@ import org.cimsbioko.utilities.FormsHelper
 import org.cimsbioko.utilities.FormsHelper.deleteFormInstances
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 import org.cimsbioko.viewmodel.NavModel
-import org.cimsbioko.viewmodel.NavModelFactory
 import java.util.*
 
 abstract class FormListFragment : Fragment() {
@@ -204,7 +203,7 @@ class UnsentFormsFragment : FormListFragment() {
 
 class HierarchyFormsFragment : FormListFragment() {
 
-    private val model: NavModel by viewModels({ requireActivity() }) { requireActivity().let { NavModelFactory(it, it.intent.extras) } }
+    private val model: NavModel by activityViewModels()
 
     @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
