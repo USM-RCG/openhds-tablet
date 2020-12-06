@@ -68,7 +68,7 @@ object DatabaseAdapter {
         }
     }.flowOn(Dispatchers.IO)
 
-    fun detachFromHierarchy(formIds: List<Long>) {
+    private fun detachFromHierarchy(formIds: List<Long>) {
         if (formIds.isNotEmpty()) {
             with(helper.writableDatabase) {
                 beginTransaction()
