@@ -1,6 +1,5 @@
 package org.cimsbioko.fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,63 +8,49 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.cimsbioko.R
 import org.cimsbioko.data.DataWrapper
 import org.cimsbioko.databinding.GenericListItemBinding
 import org.cimsbioko.databinding.HierarchyButtonFragmentBinding
 import org.cimsbioko.navconfig.HierarchyPath
-import org.cimsbioko.navconfig.NavigatorConfig
-import org.cimsbioko.navconfig.NavigatorConfig.Companion.instance
 import org.cimsbioko.utilities.configureText
 import org.cimsbioko.utilities.makeText
 import org.cimsbioko.utilities.toLevelIcon
+import org.cimsbioko.viewmodel.NavModel
 
 class HierarchyButtonFragment : Fragment(), View.OnClickListener {
 
-    private lateinit var config: NavigatorConfig
+    private val model: NavModel by activityViewModels()
 
     private var scrollView: ScrollView? = null
     private var levelViews: Map<String, GenericListItemBinding>? = null
 
-    private var listener: HierarchyButtonListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        config = instance
-    }
-
-    interface HierarchyButtonListener {
-        fun onHierarchyButtonClicked(level: String)
-    }
-
-    override fun onAttach(ctx: Context) {
-        super.onAttach(ctx)
-        if (ctx is HierarchyButtonListener) listener = ctx
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return HierarchyButtonFragmentBinding.inflate(inflater, container, false).also { binding ->
             scrollView = binding.hierbuttonScroll
             levelViews = binding.hierbuttonLayout.let { buttonLayout ->
                 val activity = requireActivity()
-                config.levels.map { level ->
+                model.config.levels.map { level ->
                     level to makeText(
                             activity,
                             layoutTag = level,
                             listener = this@HierarchyButtonFragment,
                             container = buttonLayout,
                             background = R.drawable.data_selector).apply {
-                        configureText(activity, text1 = config.getLevelLabel(level))
+                        configureText(activity, text1 = model.config.getLevelLabel(level))
                         root.visibility = View.GONE
                     }
                 }.toMap()
             }
         }.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        model.hierarchyPath.onEach { path -> update(path) }.launchIn(lifecycleScope)
     }
 
     override fun onDestroyView() {
@@ -83,17 +68,17 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
         }
 
         // Hide all buttons not in path
-        for (i in path.depth() until config.levels.size) {
-            setVisible(config.levels[i], false)
+        for (i in path.depth() until model.config.levels.size) {
+            setVisible(model.config.levels[i], false)
         }
 
         // If we can go deeper, show the next level as disabled with the level name
-        if (path.depth() < config.levels.size) {
-            config.levels[path.depth()].let { nextLevel ->
+        if (path.depth() < model.config.levels.size) {
+            model.config.levels[path.depth()].let { nextLevel ->
                 updateButton(nextLevel, path[nextLevel])
                 setVisible(nextLevel, true, isLast = true)
             }
-        } else setVisible(config.levels.last(), true, isLast = true)
+        } else setVisible(model.config.levels.last(), true, isLast = true)
 
         // Scroll to the bottom when the buttons overflow
         scrollView?.apply { post { if (canScrollVertically(1)) fullScroll(View.FOCUS_DOWN) } }
@@ -101,7 +86,7 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
 
     private fun updateButton(level: String, data: DataWrapper?) {
         if (data == null) {
-            setButtonLabel(level, config.getLevelLabel(level), center = true)
+            setButtonLabel(level, model.config.getLevelLabel(level), center = true)
             setHighlighted(level, true)
         } else {
             setButtonLabel(level, data.name, data.extId, center = false, showIcon = true)
@@ -140,7 +125,5 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
         )
     }
 
-    override fun onClick(v: View) {
-        listener?.onHierarchyButtonClicked(v.tag as String)
-    }
+    override fun onClick(v: View) = model.jumpUp(v.tag as String)
 }

@@ -30,7 +30,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_margin="10dp"/>
 
-    <FrameLayout
+    <LinearLayout
             android:id="@+id/middle_column_data"
             android:layout_height="0dp"
             android:layout_width="0dp"
@@ -38,7 +38,8 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             app:layout_constraintTop_toBottomOf="@+id/navigate_toolbar"
             android:background="@drawable/gray_middle_column"
-            app:layout_constraintBottom_toTopOf="@+id/detail_toggle_fragment"/>
+            app:layout_constraintBottom_toTopOf="@+id/detail_toggle_fragment"
+            android:orientation="vertical"/>
 
     <fragment
             android:name="org.cimsbioko.fragment.DetailToggleFragment"

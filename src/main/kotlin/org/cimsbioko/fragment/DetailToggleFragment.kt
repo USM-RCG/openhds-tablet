@@ -1,41 +1,32 @@
 package org.cimsbioko.fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.cimsbioko.R
 import org.cimsbioko.databinding.DetailToggleFragmentBinding
 import org.cimsbioko.databinding.GenericListItemBinding
 import org.cimsbioko.utilities.configureText
 import org.cimsbioko.utilities.makeText
+import org.cimsbioko.viewmodel.NavModel
 
 class DetailToggleFragment : Fragment(), View.OnClickListener {
+
+    private val model: NavModel by activityViewModels()
 
     private var layout: View? = null
     private var buttonLayout: GenericListItemBinding? = null
 
     private var isEnabled = false
-    private var listener: DetailToggleListener? = null
 
-    interface DetailToggleListener {
-        fun onDetailToggled()
-    }
-
-    override fun onAttach(ctx: Context) {
-        super.onAttach(ctx)
-        if (ctx is DetailToggleListener) listener = ctx
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return DetailToggleFragmentBinding.inflate(inflater, container, false)
                 .root
                 .also {
@@ -44,17 +35,20 @@ class DetailToggleFragment : Fragment(), View.OnClickListener {
                 }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        model.detailsToggleShown.onEach { setEnabled(it) }.launchIn(lifecycleScope)
+        model.itemDetailsShown.onEach { setDetailsShown(it) }.launchIn(lifecycleScope)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         layout = null
         buttonLayout = null
     }
 
-    override fun onClick(v: View) {
-        listener?.onDetailToggled()
-    }
+    override fun onClick(v: View) = model.toggleDetail()
 
-    fun setEnabled(isEnabled: Boolean) {
+    private fun setEnabled(isEnabled: Boolean) {
         this.isEnabled = isEnabled
         if (!isEnabled) {
             layout?.visibility = ViewGroup.GONE
@@ -68,7 +62,7 @@ class DetailToggleFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    fun setDetailsShown(detailsShown: Boolean) {
+    private fun setDetailsShown(detailsShown: Boolean) {
         requireActivity().also { activity ->
             buttonLayout?.apply {
                 if (isEnabled && detailsShown) {

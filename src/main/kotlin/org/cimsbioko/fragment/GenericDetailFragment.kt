@@ -8,25 +8,44 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withContext
 import org.cimsbioko.R
 import org.cimsbioko.databinding.GenericDetailFragmentBinding
 import org.cimsbioko.databinding.GenericDetailFragmentSectionBinding
 import org.cimsbioko.navconfig.DetailsSection
 import org.cimsbioko.navconfig.ItemDetails
 import org.cimsbioko.utilities.*
+import org.cimsbioko.viewmodel.NavModel
 import java.util.*
 
 
 class GenericDetailFragment : Fragment() {
 
+    private val model: NavModel by activityViewModels()
+
     private var detailContainer: LinearLayout? = null
     private var bannerText: TextView? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             GenericDetailFragmentBinding.inflate(inflater, container, false).also {
                 bannerText = it.genericDetailFragmentBanner
                 detailContainer = it.genericDetailFragmentContainer
             }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        model.hierarchyPath.onEach {
+            model.selectionFormatter?.also { formatter ->
+                withContext(Dispatchers.IO) { model.selection?.unwrapped }?.also { selection ->
+                    showItemDetails(withContext(Dispatchers.IO) { formatter.format(selection) }, model.level)
+                }
+            }
+        }.launchIn(lifecycleScope)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -34,7 +53,7 @@ class GenericDetailFragment : Fragment() {
         detailContainer = null
     }
 
-    fun showItemDetails(details: ItemDetails, level: String) {
+    private fun showItemDetails(details: ItemDetails, level: String) {
         details.banner?.let { setBannerText(it, level) }
         details.sections?.let { rebuildSections(it) }
     }

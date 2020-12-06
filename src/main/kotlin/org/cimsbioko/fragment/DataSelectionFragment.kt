@@ -10,8 +10,12 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.cimsbioko.R
-import org.cimsbioko.data.DataWrapper
 import org.cimsbioko.databinding.DataSelectionFragmentBinding
 import org.cimsbioko.databinding.GenericListItemBinding
 import org.cimsbioko.model.HierarchyItem
@@ -21,29 +25,15 @@ import org.cimsbioko.utilities.MessageUtils.showShortToast
 import org.cimsbioko.utilities.configureText
 import org.cimsbioko.utilities.makeText
 import org.cimsbioko.utilities.toLevelIcon
+import org.cimsbioko.viewmodel.NavModel
 
 class DataSelectionFragment : Fragment() {
 
+    private val model: NavModel by activityViewModels()
+
     private var listView: ListView? = null
-    private var listener: DataSelectionListener? = null
     private var adapter: DataSelectionListAdapter? = null
     private var itemFormatter: HierFormatter? = null
-
-    interface DataSelectionListener {
-        fun onDataSelected(data: DataWrapper)
-    }
-
-    override fun onAttach(ctx: Context) {
-        super.onAttach(ctx)
-        if (ctx is DataSelectionListener) {
-            listener = ctx
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return DataSelectionFragmentBinding.inflate(inflater, container, false).also {
@@ -54,13 +44,19 @@ class DataSelectionFragment : Fragment() {
         }.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        model.childItems.onEach { results ->
+            model.childItemFormatter?.also { populateData(results, it) }
+        }.launchIn(lifecycleScope)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         listView?.let { unregisterForContextMenu(it) }
         listView = null
     }
 
-    fun populateData(data: List<HierarchyItem>, formatter: HierFormatter) {
+    private fun populateData(data: List<HierarchyItem>, formatter: HierFormatter) {
         itemFormatter = formatter
         adapter = DataSelectionListAdapter(requireContext(), R.layout.generic_list_item, data)
         listView?.adapter = adapter
@@ -85,7 +81,7 @@ class DataSelectionFragment : Fragment() {
 
     private inner class DataClickListener : OnItemClickListener {
         override fun onItemClick(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
-            getItem(position)?.also { listener?.onDataSelected(it.wrapped) }
+            lifecycleScope.launch { getItem(position)?.also { model.stepDown(it.wrapped) } }
         }
     }
 

@@ -12,8 +12,12 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import kotlinx.coroutines.*
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.activity.HierarchyNavigatorActivity
@@ -22,7 +26,6 @@ import org.cimsbioko.databinding.FormListFragmentBinding
 import org.cimsbioko.model.FormInstance
 import org.cimsbioko.model.FormInstance.Companion.getBinding
 import org.cimsbioko.model.LoadedFormInstance
-import org.cimsbioko.navconfig.HierarchyPath
 import org.cimsbioko.navconfig.HierarchyPath.Companion.fromString
 import org.cimsbioko.provider.DatabaseAdapter
 import org.cimsbioko.utilities.ConfigUtils.getActiveModuleForBinding
@@ -31,15 +34,11 @@ import org.cimsbioko.utilities.FormUtils.editIntent
 import org.cimsbioko.utilities.FormsHelper
 import org.cimsbioko.utilities.FormsHelper.deleteFormInstances
 import org.cimsbioko.utilities.MessageUtils.showShortToast
+import org.cimsbioko.viewmodel.NavModel
+import org.cimsbioko.viewmodel.NavModelFactory
 import java.util.*
-import kotlin.coroutines.CoroutineContext
 
-abstract class FormListFragment : Fragment(), CoroutineScope {
-
-    private lateinit var job: Job
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
+abstract class FormListFragment : Fragment() {
 
     private var headerView: TextView? = null
     private var listView: ListView? = null
@@ -67,19 +66,6 @@ abstract class FormListFragment : Fragment(), CoroutineScope {
         adapter = null
     }
 
-    override fun onResume() {
-        job = Job()
-        populateForms()
-        super.onResume()
-    }
-
-    abstract fun populateForms()
-
-    override fun onPause() {
-        job.cancel("fragment paused")
-        super.onPause()
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(FIND_ENABLED_KEY, isFindEnabled)
         super.onSaveInstanceState(outState)
@@ -99,9 +85,13 @@ abstract class FormListFragment : Fragment(), CoroutineScope {
         }
     }
 
-    fun populate(instances: Flow<FormInstance>) = launch {
+    @Suppress("BlockingMethodInNonBlockingContext")
+    protected fun populate(instances: Flow<FormInstance>) {
         adapter?.clear()
-        instances.map { it.load() }.flowOn(Dispatchers.IO).collect { instance -> adapter?.add(instance) }
+        instances.map { it.load() }
+                .flowOn(Dispatchers.IO)
+                .onEach { instance -> adapter?.add(instance) }
+                .launchIn(lifecycleScope)
     }
 
     private fun getItem(pos: Int): LoadedFormInstance {
@@ -203,22 +193,24 @@ class UnsentFormsFragment : FormListFragment() {
         }
     }
 
-    override fun populateForms() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        lifecycleScope.launch { populateForms() }
+    }
+
+    private fun populateForms() {
         populate(FormsHelper.allUnsentFormInstances)
     }
 }
 
 class HierarchyFormsFragment : FormListFragment() {
 
-    var job: Job? = null
-    var path: HierarchyPath = HierarchyPath()
-        set(value) {
-            field = value
-            populateForms()
-        }
+    private val model: NavModel by viewModels({ requireActivity() }) { requireActivity().let { NavModelFactory(it, it.intent.extras) } }
 
-    override fun populateForms() {
-        job?.takeIf { it.isActive }?.cancel()
-        job = populate(DatabaseAdapter.findFormsForHierarchy(path.toString()).filterNot { it.isSubmitted })
+    @ExperimentalCoroutinesApi
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        model.hierarchyPath
+                .mapLatest { path -> DatabaseAdapter.findFormsForHierarchy(path.toString()).filterNot { it.isSubmitted } }
+                .onEach { populate(it) }
+                .launchIn(lifecycleScope)
     }
 }
