@@ -18,12 +18,10 @@ interface Binding {
  * [org.cimsbioko.activity.HierarchyNavigatorActivity] implements this contract directly. However, this ensures that
  * that dependency can be easily identified and, if necessary, decoupled.
  */
+@UsedByJSConfig
 interface LaunchContext {
-    @get:UsedByJSConfig
     val currentFieldWorker: FieldWorker?
     val currentSelection: DataWrapper?
-
-    @get:UsedByJSConfig
     val hierarchyPath: HierarchyPath?
 }
 
