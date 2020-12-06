@@ -148,17 +148,6 @@ object DatabaseAdapter {
         }
     }
 
-    fun removeFavorite(item: DataWrapper): Long {
-        with(helper.writableDatabase) {
-            beginTransaction()
-            return try {
-                delete(FAVORITE_TABLE_NAME, "$KEY_HIER_PATH = ?", arrayOf(item.hierarchyId)).toLong().also { setTransactionSuccessful() }
-            } finally {
-                endTransaction()
-            }
-        }
-    }
-
     fun removeFavorite(hierarchyId: String): Long {
         with(helper.writableDatabase) {
             beginTransaction()
