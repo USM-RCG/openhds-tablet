@@ -16,7 +16,6 @@ import org.cimsbioko.App
 import org.cimsbioko.search.IndexingService.Companion.queueReindex
 import org.cimsbioko.search.IndexingService.EntityType
 import org.cimsbioko.search.Utils.isSearchEnabled
-import org.cimsbioko.utilities.logTime
 
 
 class ContentProvider : ContentProvider() {
@@ -159,22 +158,16 @@ class ContentProvider : ContentProvider() {
             }
             else -> throw IllegalArgumentException("Unknown URI $uri")
         }
-        logTime({
-            """tables: $tables
-            projection: $projection
-            selection: $selection
-            selectionArgs: ${selectionArgs?.joinToString() ?: "none"}
-            sortOrder: $sortOrder""".trimMargin()
-        }) {
-            query(databaseHelper.readableDatabase,  // The database to query
-                    projection,  // The columns to return from the query
-                    selection,  // The columns for the where clause
-                    selectionArgs,  // The values for the where clause
-                    null,  // don't group the rows
-                    null,  // don't filter by row groups
-                    if (TextUtils.isEmpty(sortOrder)) App.DEFAULT_SORT_ORDER else sortOrder).apply {
-                setNotificationUri(context!!.contentResolver, uri)
-            }
+        query(
+            databaseHelper.readableDatabase,  // The database to query
+            projection,  // The columns to return from the query
+            selection,  // The columns for the where clause
+            selectionArgs,  // The values for the where clause
+            null,  // don't group the rows
+            null,  // don't filter by row groups
+            if (TextUtils.isEmpty(sortOrder)) App.DEFAULT_SORT_ORDER else sortOrder
+        ).apply {
+            setNotificationUri(context!!.contentResolver, uri)
         }
     }
 
@@ -309,8 +302,7 @@ class ContentProvider : ContentProvider() {
                 reindexType = EntityType.HIERARCHY
                 uuid = values.getAsString(App.HierarchyItems.COLUMN_HIERARCHY_UUID)
             }
-            FIELDWORKERS -> count = db.update(App.FieldWorkers.TABLE_NAME, values, where,
-                    whereArgs)
+            FIELDWORKERS -> count = db.update(App.FieldWorkers.TABLE_NAME, values, where, whereArgs)
             FIELDWORKER_ID -> {
                 finalWhere = buildFinalWhere(uri, 1, where)
                 count = db.update(App.FieldWorkers.TABLE_NAME, values, finalWhere, whereArgs)
