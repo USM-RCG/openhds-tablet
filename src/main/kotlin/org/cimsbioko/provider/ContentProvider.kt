@@ -319,11 +319,6 @@ class ContentProvider : ContentProvider() {
 
     class DatabaseHelper internal constructor(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
-        override fun onConfigure(db: SQLiteDatabase?) {
-            super.onConfigure(db)
-            db?.enableWriteAheadLogging()
-        }
-
         override fun onCreate(db: SQLiteDatabase) {
             with(db) {
                 execSQL("""CREATE TABLE ${App.Individuals.TABLE_NAME} (
