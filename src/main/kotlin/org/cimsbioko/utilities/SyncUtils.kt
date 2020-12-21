@@ -445,7 +445,7 @@ object SyncUtils {
     @Throws(IOException::class, NoSuchAlgorithmException::class, InterruptedException::class)
     fun makeOfflineDbAvailable(ctx: Context) {
         if (offlineDbExists()) {
-            val offlineFile = offlineDbFile
+            val offlineFile = offlineDbFile ?: error("impossible: offline database file exists, but null")
             val installableFile = getTempFile(getDatabaseFile(ctx))
             copyWithFingerprint(ctx.cacheDir, offlineFile, installableFile)
             if (!offlineFile.delete()) {
@@ -501,15 +501,15 @@ object SyncUtils {
      *
      * @return true if an offline db file exists in its well-known location, otherwise false
      */
-    private fun offlineDbExists(): Boolean = offlineDbFile.isFile
+    private fun offlineDbExists(): Boolean = offlineDbFile?.isFile == true
 
     /**
      * Returns the well-known location for the offline database file.
      *
      * @return a [File] object indicating the external storage location referenced for offline db files
      */
-    private val offlineDbFile: File
-        get() = File(externalDir, ContentProvider.DATABASE_NAME)
+    private val offlineDbFile: File?
+        get() = externalDir?.let { File(it, ContentProvider.DATABASE_NAME) }
 
     /**
      * Interface for a simple status callback when a database update is successfully applied.

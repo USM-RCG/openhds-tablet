@@ -13,8 +13,8 @@ object IOUtils {
      *
      * @return a [File] indicating where cims-specific (public) files are/can be stored
      */
-    val externalDir: File
-        get() = File(App.instance.getExternalFilesDir(null), "cims")
+    val externalDir: File?
+        get() = App.instance.getExternalFilesDir(null)
 
     /**
      * Copies the contents from one stream to another.

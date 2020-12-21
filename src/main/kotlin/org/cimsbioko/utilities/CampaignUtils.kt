@@ -25,8 +25,8 @@ object CampaignUtils {
     private val myCampaignsUrl: String?
         get() = buildServerUrl(App.instance, "/api/rest/mycampaigns")
 
-    private val externalCampaignFile: File
-        get() = File(IOUtils.externalDir, SetupUtils.CAMPAIGN_FILENAME)
+    private val externalCampaignFile: File?
+        get() = IOUtils.externalDir?.let { File(it, SetupUtils.CAMPAIGN_FILENAME) }
 
     val downloadedCampaignFile: File
         get() = App.instance.getFileStreamPath(SetupUtils.CAMPAIGN_FILENAME)
@@ -75,7 +75,7 @@ object CampaignUtils {
     private val loader: ClassLoader
         get() {
             val possible = arrayOf(externalCampaignFile, downloadedCampaignFile)
-            for (file in possible) if (file.canRead()) {
+            for (file in possible) if (file != null && file.canRead()) {
                 Log.i(TAG, "loading campaign from $file")
                 val base = "jar:file:" + file.path + "!/"
                 val urls = arrayOf(URL(base + "mobile/"), URL(base + "shared/"))
