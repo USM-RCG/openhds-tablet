@@ -19,19 +19,22 @@ private const val WHERE_ALL = "1"
  * Represent a database query to be performed.  Might be saved and performed in pieces by an Iterator.
  */
 class Query<T : Any> internal constructor(
-        private val gateway: Gateway<T>,
-        private val tableUri: Uri,
-        columnName: String?,
-        columnValue: String?,
-        private val columnOrderBy: String,
-        private val operator: String = EQUALS) {
+    private val gateway: Gateway<T>,
+    private val tableUri: Uri,
+    columnName: String?,
+    columnValue: String?,
+    private val columnOrderBy: String,
+    private val operator: String = EQUALS
+) {
 
     private val columnNames: Array<String>? = columnName?.let { arrayOf(it) }
     private val columnValues: Array<String>? = columnValue?.let { arrayOf(it) }
 
-    private fun select(single: Boolean = false): Cursor? = App.instance.contentResolver
-            .query(tableUri, null, buildWhereStatement(columnNames ?: emptyArray(), operator), columnValues,
-                    if (single) "$columnOrderBy limit 1" else columnOrderBy)
+    private fun select(single: Boolean = false, exists: Boolean = false): Cursor? = App.instance.contentResolver
+        .query(
+            tableUri, if (exists) columnNames else null, buildWhereStatement(columnNames ?: emptyArray(), operator), columnValues,
+            if (exists) null else if (single) "$columnOrderBy limit 1" else columnOrderBy
+        )
 
     val first: T?
         get() = one(select(single = true), gateway.entityConverter)
@@ -48,7 +51,7 @@ class Query<T : Any> internal constructor(
     val wrapperList: List<DataWrapper>
         get() = list(select(), gateway.wrapperConverter)
 
-    fun exists(): Boolean = select(single = true).use { c -> c?.moveToFirst() == true }
+    fun exists(): Boolean = select(single = true, exists = true).use { c -> c?.moveToFirst() == true }
 }
 
 internal object WhereUtils {
