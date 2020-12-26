@@ -10,6 +10,7 @@ class ContextFactory private constructor() : org.mozilla.javascript.ContextFacto
     override fun makeContext(): Context = super.makeContext().apply {
         optimizationLevel = -1
         languageVersion = Context.VERSION_ES6
+        wrapFactory.isJavaPrimitiveWrap = false
     }
 
     companion object {
