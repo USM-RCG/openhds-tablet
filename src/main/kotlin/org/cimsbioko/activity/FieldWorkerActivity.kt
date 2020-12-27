@@ -11,6 +11,8 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import org.cimsbioko.R
 import org.cimsbioko.databinding.FieldworkerActivityBinding
 import org.cimsbioko.search.Utils.isSearchEnabled
@@ -32,26 +34,30 @@ class FieldWorkerActivity : AppCompatActivity(), View.OnClickListener {
             setDisplayHomeAsUpEnabled(true)
             setHomeButtonEnabled(true)
         }
-        val activitiesLayout = binding.portalMiddleColumn
-        getActiveModules(this).also { modules ->
-            val lastIndex = modules.indices.last
-            for ((index, module) in modules.withIndex()) {
-                makeText(this,
+
+        lifecycleScope.launch {
+            val activity = this@FieldWorkerActivity
+            val activitiesLayout = binding.portalMiddleColumn
+            getActiveModules(activity).also { modules ->
+                val lastIndex = modules.indices.last
+                for ((index, module) in modules.withIndex()) {
+                    makeText(
+                        activity,
                         layoutTag = module.name,
-                        listener = this,
+                        listener = activity,
                         container = activitiesLayout,
-                        background = R.drawable.data_selector)
-                        .apply {
-                            configureText(
-                                    this@FieldWorkerActivity,
-                                    text1 = module.launchLabel,
-                                    text2 = module.launchDescription
-                            )
-                        }
-                        .takeIf { index != lastIndex }
+                        background = R.drawable.data_selector
+                    ).apply {
+                        configureText(
+                            activity,
+                            text1 = module.launchLabel,
+                            text2 = module.launchDescription
+                        )
+                    }.takeIf { index != lastIndex }
                         ?.root
                         ?.let { it.layoutParams as? LinearLayout.LayoutParams }
                         ?.setMargins(0, 0, 0, resources.getDimensionPixelSize(R.dimen.module_button_spacing))
+                }
             }
         }
     }
