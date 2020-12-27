@@ -24,6 +24,7 @@ import org.cimsbioko.databinding.FavoritesFragmentBinding
 import org.cimsbioko.databinding.GenericListItemBinding
 import org.cimsbioko.model.HierarchyItem
 import org.cimsbioko.navconfig.DefaultQueryHelper.getByHierarchyId
+import org.cimsbioko.navconfig.HierItemDisplay
 import org.cimsbioko.navconfig.HierarchyPath.Companion.fromString
 import org.cimsbioko.navconfig.NavigatorConfig
 import org.cimsbioko.provider.DatabaseAdapter
@@ -79,12 +80,12 @@ class FavoritesFragment : Fragment() {
         val info = item.menuInfo as AdapterContextMenuInfo
         when (item.itemId) {
             R.id.find_favorite -> {
-                getItem(info.position)?.let { selectFavorite(it) }
+                getItem(info.position)?.let { selectFavorite(it.item) }
                 return true
             }
             R.id.forget_favorite -> {
                 getItem(info.position)?.let {
-                    DatabaseAdapter.removeFavorite(it.hierarchyId)
+                    DatabaseAdapter.removeFavorite(it.item.hierarchyId)
                     showShortToast(requireContext(), R.string.removed_favorite)
                     loadData()
                 }
@@ -94,8 +95,8 @@ class FavoritesFragment : Fragment() {
         return super.onContextItemSelected(item)
     }
 
-    private fun getItem(position: Int): HierarchyItem? {
-        return list?.getItemAtPosition(position) as? HierarchyItem
+    private fun getItem(position: Int): FormattedHierarchyItem? {
+        return list?.getItemAtPosition(position) as? FormattedHierarchyItem
     }
 
     private fun selectFavorite(selected: HierarchyItem) {
@@ -119,32 +120,32 @@ class FavoritesFragment : Fragment() {
 
     private inner class ClickListener : OnItemClickListener {
         override fun onItemClick(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
-            getItem(position)?.let { selectFavorite(it) }
+            getItem(position)?.let { selectFavorite(it.item) }
         }
     }
 
+    data class FormattedHierarchyItem(
+        val item: HierarchyItem,
+        val display: HierItemDisplay
+    )
+
     private inner class FavoriteAdapter(
-            context: Context
-    ) : ArrayAdapter<HierarchyItem>(context, R.layout.generic_list_item) {
+        context: Context
+    ) : ArrayAdapter<FormattedHierarchyItem>(context, R.layout.generic_list_item) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             return requireActivity().let { activity ->
                 (convertView?.let { GenericListItemBinding.bind(it) }
-                        ?: makeText(activity, background = R.drawable.data_selector)).also { binding ->
+                    ?: makeText(activity, background = R.drawable.data_selector)).also { binding ->
                     getItem(position)?.apply {
-                        NavigatorConfig.instance.modules
-                                .firstOrNull()
-                                ?.getHierFormatter(level)
-                                ?.formatItem(this)
-                                ?.also {
-                                    binding.configureText(activity,
-                                            text1 = it.heading,
-                                            text2 = it.subheading,
-                                            details = it.details,
-                                            centerText = false,
-                                            iconRes = level.toLevelIcon(),
-                                            detailsPadding = resources.getDimensionPixelSize(R.dimen.detail_padding)
-                                    )
-                                }
+                        binding.configureText(
+                            activity,
+                            text1 = display.heading,
+                            text2 = display.subheading,
+                            details = display.details,
+                            centerText = false,
+                            iconRes = item.level.toLevelIcon(),
+                            detailsPadding = resources.getDimensionPixelSize(R.dimen.detail_padding)
+                        )
                     }
                 }.root
             }
@@ -156,19 +157,25 @@ class FavoritesFragment : Fragment() {
         isLoading = true
         dataAdapter?.clear()
 
-        val items = withContext(Dispatchers.IO) {
-            DatabaseAdapter.let { db ->
-                db.favoriteIds
+        NavigatorConfig.instance.modules.firstOrNull()?.let { module ->
+            withContext(Dispatchers.IO) {
+                DatabaseAdapter.let { db ->
+                    db.favoriteIds
                         .map { it to getByHierarchyId(it)?.first }
                         .partition { (_, item) -> item != null }
                         .let { (found, lost) ->
                             lost.forEach { (id, _) -> db.removeFavorite(id) }
-                            found.mapNotNull { (_, item) -> item }
+                            found.mapNotNull { (_, item) ->
+                                item?.level
+                                    ?.let { module.getHierFormatter(it) }
+                                    ?.formatItem(item)
+                                    ?.let { FormattedHierarchyItem(item, it) }
+                            }
                         }
+                }
             }
-        }
+        }?.also { dataAdapter?.addAll(it) }
 
-        dataAdapter?.addAll(items)
         isLoading = false
     }
 
