@@ -50,22 +50,23 @@ object DatabaseAdapter {
         }
     }
 
-    fun findFormsForHierarchy(hierarchyPath: String): Flow<FormInstance> = flow {
+    fun findFormsForHierarchy(hierarchyPath: String): Flow<List<FormInstance>> = flow {
         val columns = arrayOf(KEY_FORM_ID)
         val where = String.format("%s = ?", KEY_HIER_PATH)
         val whereArgs = arrayOf(hierarchyPath)
         helper.readableDatabase.query(FORM_PATH_TABLE_NAME, columns, where, whereArgs, null, null, null)?.use { c ->
             with(c) {
+                val ids = mutableListOf<Long>()
                 while (moveToNext()) {
                     getColumnIndex(KEY_FORM_ID)
-                            .takeIf { it >= 0 }
-                            ?.let { getString(it) }
-                            ?.toLong()
-                            ?.let { FormsHelper.getById(it) }
-                            ?.let { emit(it) }
+                        .takeIf { it >= 0 }
+                        ?.let { getString(it) }
+                        ?.toLong()
+                        ?.also { ids.add(it) }
                 }
+                ids.toList()
             }
-        }
+        }?.let { emit(FormsHelper.getByIds(it)) }
     }.flowOn(Dispatchers.IO)
 
     private fun detachFromHierarchy(formIds: List<Long>) {

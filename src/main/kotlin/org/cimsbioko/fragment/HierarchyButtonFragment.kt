@@ -10,8 +10,8 @@ import androidx.core.widget.TextViewCompat.setTextAppearance
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.cimsbioko.R
 import org.cimsbioko.data.DataWrapper
 import org.cimsbioko.databinding.GenericListItemBinding
@@ -50,7 +50,7 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        model.hierarchyPath.onEach { path -> update(path) }.launchIn(lifecycleScope)
+        lifecycleScope.launch { model.hierarchyPath.collectLatest { path -> update(path) } }
     }
 
     override fun onDestroyView() {

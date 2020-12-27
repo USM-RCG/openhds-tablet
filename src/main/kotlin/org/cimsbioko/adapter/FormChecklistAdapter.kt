@@ -59,9 +59,14 @@ class FormChecklistAdapter(
     val checkedInstances: List<FormInstance>
         get() = ArrayList<FormInstance>().apply { for (i in checkStates.indices) if (checkStates[i]) add(getItem(i)!!) }
 
-    override fun add(`object`: LoadedFormInstance?) {
+    override fun add(`object`: LoadedFormInstance) {
         super.add(`object`)
         checkStates.add(false)
+    }
+
+    override fun addAll(collection: Collection<LoadedFormInstance>) {
+        super.addAll(collection)
+        checkStates.addAll(List(collection.size) { false })
     }
 
     fun removeAll(instances: List<FormInstance>): Boolean = try {

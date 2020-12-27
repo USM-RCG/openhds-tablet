@@ -5,14 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cimsbioko.R
 import org.cimsbioko.databinding.GenericDetailFragmentBinding
@@ -28,27 +31,44 @@ class GenericDetailFragment : Fragment() {
 
     private val model: NavModel by activityViewModels()
 
+    private var progressBar: ProgressBar? = null
+    private var scrollView: ScrollView? = null
     private var detailContainer: LinearLayout? = null
     private var bannerText: TextView? = null
 
+    private var isLoading: Boolean
+        get() = progressBar?.isVisible ?: false
+        set(loading) {
+            progressBar?.visibility = if (loading) View.VISIBLE else View.GONE
+            scrollView?.visibility = if (loading) View.GONE else View.VISIBLE
+        }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            GenericDetailFragmentBinding.inflate(inflater, container, false).also {
-                bannerText = it.genericDetailFragmentBanner
-                detailContainer = it.genericDetailFragmentContainer
-            }.root
+        GenericDetailFragmentBinding.inflate(inflater, container, false).also {
+            progressBar = it.progressBar
+            scrollView = it.scrollView
+            bannerText = it.genericDetailFragmentBanner
+            detailContainer = it.genericDetailFragmentContainer
+        }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        model.hierarchyPath.onEach {
-            model.selectionFormatter?.also { formatter ->
-                withContext(Dispatchers.IO) { model.selection?.unwrapped }?.also { selection ->
-                    showItemDetails(withContext(Dispatchers.IO) { formatter.format(selection) }, model.level)
+        lifecycleScope.launch {
+            model.hierarchyPath.collectLatest {
+                isLoading = true
+                model.selectionFormatter?.also { formatter ->
+                    withContext(Dispatchers.IO) { model.selection?.unwrapped?.let { formatter.format(it) } }?.also { details ->
+                        showItemDetails(details, model.level)
+                    }
                 }
+                isLoading = false
             }
-        }.launchIn(lifecycleScope)
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        progressBar = null
+        scrollView = null
         bannerText = null
         detailContainer = null
     }

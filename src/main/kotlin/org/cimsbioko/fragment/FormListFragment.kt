@@ -18,10 +18,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.activity.HierarchyNavigatorActivity
@@ -104,14 +102,18 @@ abstract class FormListFragment : Fragment() {
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    protected fun populate(instances: Flow<FormInstance>) {
+    protected fun populate(instances: Flow<List<FormInstance>>) {
         isLoading = true
         dataAdapter?.clear()
-        instances.map { it.load() }
-                .flowOn(Dispatchers.IO)
-                .onEach { instance -> dataAdapter?.add(instance) }
-                .onCompletion { isLoading = false }
-                .launchIn(lifecycleScope)
+        lifecycleScope.launch {
+            instances.map { list ->
+                list.map { item -> async(Dispatchers.IO) { item.load() } }.awaitAll()
+            }.onEach { loaded ->
+                dataAdapter?.addAll(loaded)
+            }.onCompletion {
+                isLoading = false
+            }.collect()
+        }
     }
 
     private fun getItem(pos: Int): LoadedFormInstance {
@@ -227,8 +229,11 @@ class HierarchyFormsFragment : FormListFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         model.hierarchyPath
-                .mapLatest { path -> DatabaseAdapter.findFormsForHierarchy(path.toString()).filterNot { it.isSubmitted } }
-                .onEach { populate(it) }
-                .launchIn(lifecycleScope)
+            .mapLatest { path ->
+                DatabaseAdapter.findFormsForHierarchy(path.toString()).map { instances ->
+                    instances.filterNot { instance -> instance.isSubmitted }
+                }
+            }.onEach { populate(it) }
+            .launchIn(lifecycleScope)
     }
 }

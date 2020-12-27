@@ -39,7 +39,7 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
         super.onPause()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return FieldworkerLoginFragmentBinding.inflate(inflater, container, false).also { binding ->
             binding.titleTextView.setText(R.string.fieldworker_login)
             usernameEditText = binding.usernameEditText.also {

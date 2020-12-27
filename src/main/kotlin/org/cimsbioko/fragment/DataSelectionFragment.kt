@@ -9,11 +9,12 @@ import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.ProgressBar
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.cimsbioko.R
 import org.cimsbioko.databinding.DataSelectionFragmentBinding
@@ -31,29 +32,47 @@ class DataSelectionFragment : Fragment() {
 
     private val model: NavModel by activityViewModels()
 
+    private var progressBar: ProgressBar? = null
     private var listView: ListView? = null
     private var adapter: DataSelectionListAdapter? = null
     private var itemFormatter: HierFormatter? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private var isLoading: Boolean
+        get() = progressBar?.isVisible == true
+        set(loading) {
+            progressBar?.visibility = if (loading) View.VISIBLE else View.GONE
+            listView?.visibility = if (loading) View.GONE else View.VISIBLE
+        }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return DataSelectionFragmentBinding.inflate(inflater, container, false).also {
             listView = it.dataFragmentListview.also { listView ->
                 listView.onItemClickListener = DataClickListener()
                 registerForContextMenu(listView)
             }
+            progressBar = it.progressBar
         }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        model.childItems.onEach { results ->
-            model.childItemFormatter?.also { populateData(results, it) }
-        }.launchIn(lifecycleScope)
+        lifecycleScope.launch {
+            model.childItems.collectLatest { result ->
+                isLoading = when (result) {
+                    NavModel.ChildItems.Loading -> true
+                    is NavModel.ChildItems.Loaded -> {
+                        model.childItemFormatter?.also { populateData(result.items, it) }
+                        false
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         listView?.let { unregisterForContextMenu(it) }
         listView = null
+        progressBar = null
     }
 
     private fun populateData(data: List<HierarchyItem>, formatter: HierFormatter) {

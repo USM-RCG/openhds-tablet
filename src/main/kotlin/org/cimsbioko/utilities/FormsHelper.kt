@@ -20,28 +20,33 @@ import java.util.*
 object FormsHelper {
 
     private val INSTANCE_COLUMNS = arrayOf(
-            BaseColumns._ID,
-            InstanceColumns.JR_FORM_ID,
-            InstanceColumns.DISPLAY_NAME,
-            InstanceColumns.JR_VERSION,
-            InstanceColumns.STATUS,
-            InstanceColumns.CAN_EDIT_WHEN_COMPLETE)
+        BaseColumns._ID,
+        InstanceColumns.JR_FORM_ID,
+        InstanceColumns.DISPLAY_NAME,
+        InstanceColumns.JR_VERSION,
+        InstanceColumns.STATUS,
+        InstanceColumns.CAN_EDIT_WHEN_COMPLETE
+    )
 
     private val contentResolver: ContentResolver
         get() = App.instance.contentResolver
 
-    val allUnsentFormInstances: Flow<FormInstance> = flow {
-        contentResolver.query(InstanceColumns.CONTENT_URI, INSTANCE_COLUMNS,
-                "${InstanceColumns.STATUS} != ?", arrayOf(InstanceProviderAPI.STATUS_SUBMITTED), null)?.use { c ->
+    val allUnsentFormInstances: Flow<List<FormInstance>> = flow {
+        contentResolver.query(
+            InstanceColumns.CONTENT_URI, INSTANCE_COLUMNS,
+            "${InstanceColumns.STATUS} != ?", arrayOf(InstanceProviderAPI.STATUS_SUBMITTED), null
+        )?.use { c ->
+            val result = ArrayList<FormInstance>()
             while (c.moveToNext()) {
-                emit(instanceFromCursor(c))
+                result.add(instanceFromCursor(c))
             }
+            emit(result)
         }
     }.flowOn(Dispatchers.IO)
 
     private fun instanceFromCursor(cursor: Cursor): FormInstance {
         return FormInstance(
-                cursor.getLong(cursor.getColumnIndex(BaseColumns._ID)),
+            cursor.getLong(cursor.getColumnIndex(BaseColumns._ID)),
                 cursor.getString(cursor.getColumnIndex(InstanceColumns.JR_FORM_ID)),
                 cursor.getString(cursor.getColumnIndex(InstanceColumns.DISPLAY_NAME)),
                 cursor.getString(cursor.getColumnIndex(InstanceColumns.JR_VERSION)),
@@ -77,13 +82,33 @@ object FormsHelper {
 
     fun getById(id: Long): FormInstance? {
         return contentResolver.query(
-                InstanceColumns.CONTENT_URI, INSTANCE_COLUMNS, "${BaseColumns._ID} = ?", arrayOf(id.toString()), null
+            InstanceColumns.CONTENT_URI, INSTANCE_COLUMNS, "${BaseColumns._ID} = ?", arrayOf(id.toString()), null
         )?.use { c ->
             if (c.moveToNext()) {
                 instanceFromCursor(c)
             } else null
         }
     }
+
+    fun getByIds(ids: Collection<Long>): List<FormInstance> {
+        val formInstances = ArrayList<FormInstance>()
+        if (!ids.isEmpty()) {
+            val where = String.format("%s IN (%s)", BaseColumns._ID, makePlaceholders(ids.size))
+            val idStrings: MutableList<String> = ArrayList(ids.size)
+            for (id in ids) {
+                idStrings.add(id.toString())
+            }
+            contentResolver.query(
+                InstanceColumns.CONTENT_URI, INSTANCE_COLUMNS, where, idStrings.toTypedArray(), null
+            )?.use { c ->
+                while (c.moveToNext()) {
+                    formInstances.add(instanceFromCursor(c))
+                }
+            }
+        }
+        return formInstances
+    }
+
 
     /**
      * Retrieves metadata for the blank form identified by the specified form id.

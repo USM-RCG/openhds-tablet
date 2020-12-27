@@ -21,7 +21,6 @@ import org.cimsbioko.provider.DatabaseAdapter
 import org.cimsbioko.utilities.FormUtils
 import org.cimsbioko.utilities.LoginUtils
 import org.cimsbioko.utilities.MessageUtils
-import org.cimsbioko.utilities.logTime
 import java.io.IOException
 import java.util.*
 
@@ -52,12 +51,13 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
     private val isRootLevel
         get() = ROOT_LEVEL == level
 
-    val hierarchyPath = MutableStateFlow(savedStateHandle[HierarchyNavigatorActivity.HIERARCHY_PATH_KEY] ?: HierarchyPath())
-
     val selection: DataWrapper?
         get() = hierarchyPath.value[level]
 
-    val childItems = MutableStateFlow<List<HierarchyItem>>(emptyList())
+    val hierarchyPath = MutableStateFlow(savedStateHandle[HierarchyNavigatorActivity.HIERARCHY_PATH_KEY] ?: HierarchyPath())
+    val childItems = MutableStateFlow<ChildItems>(ChildItems.Loading)
+    val detailsToggleShown = MutableStateFlow(false)
+    val itemDetailsShown = MutableStateFlow(false)
 
     private val pathHistory = Stack<HierarchyPath>()
 
@@ -67,44 +67,52 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
     val childItemFormatter: HierFormatter?
         get() = currentModule.getHierFormatter(level)
 
-    val launchContext = object : LaunchContext {
-        override val currentFieldWorker: FieldWorker?
-            get() = LoginUtils.login.authenticatedUser
-        override val currentSelection: DataWrapper?
-            get() = this@NavModel.hierarchyPath.value[this@NavModel.level]
-        override val hierarchyPath: HierarchyPath
-            get() = this@NavModel.hierarchyPath.value
-    }
+    val launchContext: LaunchContext
+        get() = object : LaunchContext {
+            override val currentFieldWorker: FieldWorker? = LoginUtils.login.authenticatedUser
+            override val currentSelection: DataWrapper? = this@NavModel.hierarchyPath.value[this@NavModel.level]
+            override val hierarchyPath: HierarchyPath = this@NavModel.hierarchyPath.value
+        }
 
     init {
         updatePath(hierarchyPath.value)
     }
 
     private fun updatePath(path: HierarchyPath) {
-        viewModelScope.launch(Dispatchers.IO) {
-            hierarchyPath.value = path
-            updateChildItems()
-            detailsToggleShown.value = selectionFormatter != null && childItems.value.isNotEmpty()
-            itemDetailsShown.value = selectionFormatter != null && childItems.value.isEmpty()
-        }
+        hierarchyPath.value = path
+        viewModelScope.launch { updateChildItems() }
     }
 
     private suspend fun updateChildItems() {
-        childItems.value =
-                if (ROOT_LEVEL == level) config.topLevel?.let { withContext(Dispatchers.IO) { queryHelper.getAll(it)?.list } }
-                else {
-                    hierarchyPath.value.depth()
-                            .takeIf { it in config.levels.indices }
-                            ?.let { depth -> config.levels[depth] }
-                            ?.let { nextLevel ->
-                                selection?.let { currentItem ->
-                                    withContext(Dispatchers.IO) {
-                                        queryHelper.getChildren(parent = currentItem, childLevel = nextLevel)?.list
-                                    }
-                                }
-                            }
-                } ?: emptyList()
+        detailsToggleShown.value = false
+        itemDetailsShown.value = false
+        childItems.value = ChildItems.Loading
+        getChildItems().also { children ->
+            detailsToggleShown.value = selectionFormatter != null && children.isNotEmpty()
+            itemDetailsShown.value = (selectionFormatter != null && children.isEmpty())
+            childItems.value = ChildItems.Loaded(children)
+        }
     }
+
+    sealed class ChildItems {
+        object Loading : ChildItems()
+        class Loaded(val items: List<HierarchyItem>) : ChildItems()
+    }
+
+    private suspend fun getChildItems() = if (ROOT_LEVEL == level) {
+        config.topLevel?.let { withContext(Dispatchers.IO) { queryHelper.getAll(it)?.list } }
+    } else {
+        hierarchyPath.value.depth()
+            .takeIf { it in config.levels.indices }
+            ?.let { depth -> config.levels[depth] }
+            ?.let { nextLevel ->
+                selection?.let { currentItem ->
+                    withContext(Dispatchers.IO) {
+                        queryHelper.getChildren(parent = currentItem, childLevel = nextLevel)?.list
+                    }
+                }
+            }
+    } ?: emptyList()
 
     private fun pushHistory() {
         pathHistory.push(hierarchyPath.value.clone())
@@ -124,19 +132,20 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
     }
 
     fun stepDown(selected: DataWrapper) {
-        logTime("push history") { pushHistory() }
-        val newPath = logTime("clone path") { hierarchyPath.value.clone() }
-        logTime("down") { newPath.down(selected.category, selected) }
-        logTime("update path") { updatePath(newPath) }
+        pushHistory()
+        hierarchyPath.value.clone().also { newPath ->
+            newPath.down(selected.category, selected)
+            updatePath(newPath)
+        }
     }
 
-    val detailsToggleShown = MutableStateFlow(false)
 
     fun toggleDetail() {
         itemDetailsShown.value = !itemDetailsShown.value
     }
 
     fun processNewFormResult(formInstanceUri: Uri) {
+        val ctx = launchContext
         viewModelScope.launch(Dispatchers.IO) {
             FormInstance.lookup(formInstanceUri)?.also { instance ->
                 DatabaseAdapter.attachFormToHierarchy(hierarchyPath.value.toString(), instance.id)
@@ -145,36 +154,37 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
                         val loadedInstance = instance.load()
                         val dataDoc = loadedInstance.document
                         FormInstance.getBinding(dataDoc)?.let { binding ->
-                            if (binding.consumer.consume(dataDoc, launchContext)) {
+                            if (binding.consumer.consume(dataDoc, ctx)) {
                                 try {
                                     loadedInstance.store(dataDoc)
                                 } catch (ue: IOException) {
                                     withContext(Dispatchers.Main) {
-                                        MessageUtils.showShortToast(getApplication(), "Update failed: " + ue.message)
+                                        MessageUtils.showShortToast(getApplication(), "Update failed: ${ue.message}")
                                     }
                                 }
                             }
                         }
                         updateChildItems()
                     } catch (e: Exception) {
-                        withContext(Dispatchers.Main) { MessageUtils.showShortToast(getApplication(), "Read failed: " + e.message) }
+                        withContext(Dispatchers.Main) {
+                            MessageUtils.showShortToast(getApplication(), "Read failed: ${e.message}")
+                        }
                     }
                 }
             }
-
         }
     }
 
-    fun generateFormInstance(binding: Binding): Intent {
+    @Suppress("BlockingMethodInNonBlockingContext")
+    suspend fun generateFormInstance(binding: Binding): Intent = withContext(Dispatchers.IO) {
         val form = Form.lookup(binding)
         val instanceUri = FormInstance.generate(form, binding, launchContext)
-        return FormUtils.editIntent(form.uri).apply {
+        FormUtils.editIntent(form.uri).apply {
             clipData = ClipData("generated form instance", arrayOf("application/xml"), ClipData.Item(instanceUri))
             flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
         }
     }
 
-    val itemDetailsShown = MutableStateFlow(false)
 
     companion object {
         private const val ROOT_LEVEL = "root"
