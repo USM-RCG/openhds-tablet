@@ -35,20 +35,16 @@
             android:layout_height="wrap_content"
             app:layout_constraintGuide_percent="0.31"/>
 
-    <androidx.core.widget.NestedScrollView
-            android:layout_height="0dp"
+    <fragment
+            android:id="@+id/modules_fragment"
+            android:name="org.cimsbioko.fragment.ModuleSelectionFragment"
             android:layout_width="0dp"
+            android:layout_height="0dp"
+            tools:layout="@layout/module_selection_fragment"
             app:layout_constraintTop_toBottomOf="@id/fieldworker_toolbar"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/guideline1"
             app:layout_constraintEnd_toStartOf="@id/guideline2"
-            android:background="@drawable/gray_middle_column">
-        <LinearLayout
-                android:id="@+id/portal_middle_column"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-    </androidx.core.widget.NestedScrollView>
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
@@ -58,6 +54,7 @@
             app:layout_constraintGuide_percent="0.69"/>
 
     <fragment
+            android:id="@+id/unsent_forms_fragment"
             android:name="org.cimsbioko.fragment.UnsentFormsFragment"
             android:layout_height="0dp"
             android:layout_width="0dp"
