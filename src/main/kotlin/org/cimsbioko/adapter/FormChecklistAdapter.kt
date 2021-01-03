@@ -2,7 +2,9 @@ package org.cimsbioko.adapter
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Rect
 import android.view.LayoutInflater
+import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -44,6 +46,17 @@ class FormChecklistAdapter(
                 this@FormChecklistAdapter.context.also { ctx ->
                     showShortToast(ctx, R.string.launching_form)
                     (ctx as Activity).startActivityForResult(editIntent(instance.uri), 0)
+                }
+            }
+
+            // expand checkbox touch target
+            binding.root.post {
+                binding.formInstanceCheckBox.also { checkbox ->
+                    (checkbox.parent as? View)?.apply {
+                        touchDelegate = TouchDelegate(Rect().also { checkbox.getHitRect(it) }.apply {
+                            context.resources.getDimensionPixelSize(R.dimen.instance_checkbox_padding).also { pad -> inset(-pad, -pad) }
+                        }, checkbox)
+                    }
                 }
             }
         }
