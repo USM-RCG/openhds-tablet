@@ -19,11 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
 import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.activity.HierarchyNavigatorActivity
@@ -101,21 +97,6 @@ abstract class FormListFragment : Fragment() {
             headerView?.visibility = VISIBLE
         } else {
             headerView?.visibility = GONE
-        }
-    }
-
-    @Suppress("BlockingMethodInNonBlockingContext")
-    protected fun populate(instances: Flow<List<FormInstance>>) {
-        isLoading = true
-        dataAdapter?.clear()
-        lifecycleScope.launch {
-            instances.map { list ->
-                list.map { item -> async(Dispatchers.IO) { item.load() } }.awaitAll()
-            }.onEach { loaded ->
-                dataAdapter?.addAll(loaded)
-            }.onCompletion {
-                isLoading = false
-            }.collect()
         }
     }
 
