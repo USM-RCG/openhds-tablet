@@ -38,6 +38,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            tools:listitem="@layout/form_instance_list_item"
+            tools:visibility="gone"
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
