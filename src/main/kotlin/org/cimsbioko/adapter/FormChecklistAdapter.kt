@@ -19,9 +19,9 @@ import org.cimsbioko.utilities.FormUtils.editIntent
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 
 class FormChecklistAdapter(
-        context: Context,
-        checklistItemId: Int,
-        formInstances: MutableList<LoadedFormInstance>
+    context: Context,
+    checklistItemId: Int,
+    formInstances: MutableList<LoadedFormInstance>
 ) : ArrayAdapter<LoadedFormInstance>(context, checklistItemId, formInstances) {
 
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -38,7 +38,7 @@ class FormChecklistAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val binding = convertView?.tag as? FormInstanceCheckItemBinding
-                ?: FormInstanceCheckItemBinding.inflate(inflater).apply { root.tag = this }
+            ?: FormInstanceCheckItemBinding.inflate(inflater).apply { root.tag = this }
 
         instances[position].also { instance ->
             binding.configureForInstance(instance)
