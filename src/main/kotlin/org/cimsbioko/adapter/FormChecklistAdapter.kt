@@ -81,16 +81,6 @@ class FormChecklistAdapter(
         super.addAll(collection)
         checkStates.addAll(List(collection.size) { false })
     }
-
-    fun removeAll(instances: List<FormInstance>): Boolean = try {
-        setNotifyOnChange(false)
-        this.instances.removeAll(instances).also {
-            initCheckStates()
-            notifyDataSetChanged()
-        }
-    } finally {
-        setNotifyOnChange(true)
-    }
 }
 
 private fun FormInstanceCheckItemBinding.configureForInstance(instance: LoadedFormInstance) {
