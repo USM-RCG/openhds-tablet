@@ -145,14 +145,14 @@ abstract class FormListFragment : Fragment() {
             try {
                 // launch the navigator using the first relevant module
                 (getBinding(selected.document)
-                        ?.let { getActiveModuleForBinding(ctx, it) }
-                        ?.takeIf { it.isNotEmpty() } ?: getActiveModules(ctx))
-                        .firstOrNull()?.also { firstModule ->
-                            startActivity(Intent(ctx, HierarchyNavigatorActivity::class.java).apply {
-                                putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, firstModule.name)
-                                putExtra(HierarchyNavigatorActivity.HIERARCHY_PATH_KEY, path)
-                            })
-                        } ?: showShortToast(ctx, R.string.no_active_modules)
+                    ?.let { getActiveModuleForBinding(ctx, it) }
+                    ?.takeIf { it.isNotEmpty() } ?: getActiveModules(ctx))
+                    .firstOrNull()?.also { firstModule ->
+                        startActivity(Intent(ctx, HierarchyNavigatorActivity::class.java).apply {
+                            putExtra(FieldWorkerActivity.ACTIVITY_MODULE_EXTRA, firstModule.name)
+                            putExtra(HierarchyNavigatorActivity.HIERARCHY_PATH_KEY, path)
+                        })
+                    } ?: showShortToast(ctx, R.string.no_active_modules)
 
             } catch (e: Exception) {
                 showShortToast(ctx, R.string.form_load_failed)
@@ -162,12 +162,12 @@ abstract class FormListFragment : Fragment() {
 
     private fun confirmDelete(selected: LoadedFormInstance) {
         AlertDialog.Builder(requireContext())
-                .setMessage(R.string.delete_forms_dialog_warning)
-                .setTitle(R.string.delete_dialog_warning_title)
-                .setPositiveButton(R.string.delete_forms) { _: DialogInterface?, _: Int -> removeForm(selected) }
-                .setNegativeButton(R.string.cancel_label, null)
-                .create()
-                .show()
+            .setMessage(R.string.delete_forms_dialog_warning)
+            .setTitle(R.string.delete_dialog_warning_title)
+            .setPositiveButton(R.string.delete_forms) { _: DialogInterface?, _: Int -> removeForm(selected) }
+            .setNegativeButton(R.string.cancel_label, null)
+            .create()
+            .show()
     }
 
     private inner class ClickListener : OnItemClickListener {
