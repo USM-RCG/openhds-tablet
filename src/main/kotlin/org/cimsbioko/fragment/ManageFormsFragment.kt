@@ -2,7 +2,6 @@ package org.cimsbioko.fragment
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,22 +11,62 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.cimsbioko.R
 import org.cimsbioko.adapter.FormChecklistAdapter
 import org.cimsbioko.databinding.ManageFormsFragmentBinding
+import org.cimsbioko.model.FormInstance
+import org.cimsbioko.model.LoadedFormInstance
 import org.cimsbioko.utilities.FormsHelper.allUnsentFormInstances
 import org.cimsbioko.utilities.FormsHelper.deleteFormInstances
 
+class ManageFormsViewModel : ViewModel() {
+
+    sealed class State {
+        object Loading : State()
+        data class Loaded(val forms: List<LoadedFormInstance>) : State()
+    }
+
+    private val mutableStateFlow = MutableStateFlow<State>(State.Loading)
+    val stateFlow = mutableStateFlow.asStateFlow()
+
+    init {
+        loadForms()
+    }
+
+    private fun loadForms() {
+        viewModelScope.launch(Dispatchers.IO) {
+            allUnsentFormInstances.map { instances ->
+                instances.map { instance -> async(Dispatchers.IO) { instance.load() } }.awaitAll()
+            }.onStart {
+                mutableStateFlow.value = State.Loading
+            }.onEach { loaded ->
+                mutableStateFlow.value = State.Loaded(loaded)
+            }.collect()
+        }
+    }
+
+    fun deleteForms(forms: List<FormInstance>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            mutableStateFlow.value = State.Loading
+            deleteFormInstances(forms)
+            loadForms()
+        }
+    }
+}
+
+
 class ManageFormsFragment : Fragment() {
+
+    private val model: ManageFormsViewModel by viewModels()
 
     private var progressBar: ProgressBar? = null
     private var listView: ListView? = null
@@ -43,6 +82,22 @@ class ManageFormsFragment : Fragment() {
             listView?.visibility = if (loading) View.GONE else View.VISIBLE
             deleteButton?.isEnabled = !loading
         }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycleScope.launchWhenStarted {
+            model.stateFlow.collect { state ->
+                isLoading = when (state) {
+                    ManageFormsViewModel.State.Loading -> true
+                    is ManageFormsViewModel.State.Loaded -> {
+                        adapter?.clear()
+                        adapter?.addAll(state.forms)
+                        false
+                    }
+                }
+            }
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return ManageFormsFragmentBinding.inflate(inflater, container, false).also { binding = it }.root
@@ -70,7 +125,6 @@ class ManageFormsFragment : Fragment() {
                 visibility = View.VISIBLE
             }
         }
-        lifecycleScope.launch { updateForms() }
     }
 
     override fun onDestroyView() {
@@ -83,29 +137,8 @@ class ManageFormsFragment : Fragment() {
         deleteConfirmDialog = null
     }
 
-    private fun updateForms() {
-        isLoading = true
-        adapter?.clear()
-        lifecycleScope.launch {
-            allUnsentFormInstances.map { instances ->
-                instances.map { instance -> async(Dispatchers.IO) { instance.load() } }.awaitAll()
-            }.onEach { loaded ->
-                adapter?.addAll(loaded)
-            }.onCompletion {
-                isLoading = false
-            }.collect()
-        }
-    }
-
     private fun deleteSelected() {
-        adapter?.checkedInstances?.also { selected ->
-            deleteFormInstances(selected).also { deleted ->
-                if (deleted != selected.size) {
-                    Log.w(TAG, "wrong number of forms deleted: expected ${selected.size}, got $deleted")
-                }
-            }
-            adapter?.removeAll(selected)
-        }
+        adapter?.checkedInstances?.also { selected -> model.deleteForms(selected) }
     }
 
     private inner class ButtonListener : View.OnClickListener {
@@ -113,9 +146,4 @@ class ManageFormsFragment : Fragment() {
             if (adapter?.checkedInstances?.isNotEmpty() == true) deleteConfirmDialog?.show()
         }
     }
-
-    companion object {
-        private val TAG = ManageFormsFragment::class.java.simpleName
-    }
-
 }
