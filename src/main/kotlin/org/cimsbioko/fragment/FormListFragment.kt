@@ -17,9 +17,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.activity.HierarchyNavigatorActivity
@@ -33,7 +37,6 @@ import org.cimsbioko.provider.DatabaseAdapter
 import org.cimsbioko.utilities.ConfigUtils.getActiveModuleForBinding
 import org.cimsbioko.utilities.ConfigUtils.getActiveModules
 import org.cimsbioko.utilities.FormUtils.editIntent
-import org.cimsbioko.utilities.FormsHelper
 import org.cimsbioko.utilities.FormsHelper.deleteFormInstances
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 import org.cimsbioko.viewmodel.NavModel
@@ -208,16 +211,29 @@ abstract class FormListFragment : Fragment() {
 
 class UnsentFormsFragment : FormListFragment() {
 
+    private val model: UnsentFormsViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycleScope.launchWhenStarted {
+            model.stateFlow.collect { state ->
+                isLoading = when (state) {
+                    UnsentFormsViewModel.State.Loading -> true
+                    is UnsentFormsViewModel.State.Loaded -> {
+                        dataAdapter?.clear()
+                        dataAdapter?.addAll(state.forms)
+                        false
+                    }
+                }
+            }
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return super.onCreateView(inflater, container, savedInstanceState).also {
             setHeaderText(R.string.unsent_forms)
             isFindEnabled = true
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launch { populate(FormsHelper.allUnsentFormInstances) }
     }
 }
 

@@ -28,7 +28,7 @@ import org.cimsbioko.model.LoadedFormInstance
 import org.cimsbioko.utilities.FormsHelper.allUnsentFormInstances
 import org.cimsbioko.utilities.FormsHelper.deleteFormInstances
 
-class ManageFormsViewModel : ViewModel() {
+class UnsentFormsViewModel : ViewModel() {
 
     sealed class State {
         object Loading : State()
@@ -66,7 +66,7 @@ class ManageFormsViewModel : ViewModel() {
 
 class ManageFormsFragment : Fragment() {
 
-    private val model: ManageFormsViewModel by viewModels()
+    private val model: UnsentFormsViewModel by viewModels()
 
     private var progressBar: ProgressBar? = null
     private var listView: ListView? = null
@@ -88,8 +88,8 @@ class ManageFormsFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             model.stateFlow.collect { state ->
                 isLoading = when (state) {
-                    ManageFormsViewModel.State.Loading -> true
-                    is ManageFormsViewModel.State.Loaded -> {
+                    UnsentFormsViewModel.State.Loading -> true
+                    is UnsentFormsViewModel.State.Loaded -> {
                         adapter?.clear()
                         adapter?.addAll(state.forms)
                         false
