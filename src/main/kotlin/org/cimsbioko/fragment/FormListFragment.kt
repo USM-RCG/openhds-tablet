@@ -85,7 +85,7 @@ abstract class FormListFragment : Fragment() {
         savedInstanceState?.apply { isFindEnabled = getBoolean(FIND_ENABLED_KEY) }
     }
 
-    private var isLoading: Boolean
+    protected var isLoading: Boolean
         get() = progress?.isVisible ?: false
         set(loading) {
             progress?.visibility = if (loading) VISIBLE else GONE
@@ -225,15 +225,19 @@ class HierarchyFormsFragment : FormListFragment() {
 
     private val model: NavModel by activityViewModels()
 
-    @ExperimentalCoroutinesApi
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        model.hierarchyPath
-            .mapLatest { path ->
-                DatabaseAdapter.findFormsForHierarchy(path.toString()).map { instances ->
-                    instances.filterNot { instance -> instance.isSubmitted }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycleScope.launchWhenStarted {
+            model.formItems.collect { state ->
+                isLoading = when (state) {
+                    NavModel.FormItems.Loading -> true
+                    is NavModel.FormItems.Loaded -> {
+                        dataAdapter?.clear()
+                        dataAdapter?.addAll(state.items)
+                        false
+                    }
                 }
-            }.onEach { populate(it) }
-            .launchIn(lifecycleScope)
+            }
+        }
     }
 }

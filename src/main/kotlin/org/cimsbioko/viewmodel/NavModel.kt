@@ -5,17 +5,12 @@ import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.activity.HierarchyNavigatorActivity
 import org.cimsbioko.data.DataWrapper
-import org.cimsbioko.model.FieldWorker
-import org.cimsbioko.model.Form
-import org.cimsbioko.model.FormInstance
-import org.cimsbioko.model.HierarchyItem
+import org.cimsbioko.model.*
 import org.cimsbioko.navconfig.*
 import org.cimsbioko.provider.DatabaseAdapter
 import org.cimsbioko.utilities.FormUtils
@@ -32,7 +27,8 @@ import java.util.*
  *   * hierarchy path
  *   * selection
  *   * child items
- *   * item formatter at path
+ *   * forms for path
+ *   * hierarchy item formatter at path
  *   * child items formatter at path
  *   * detail toggle shown
  *   * show item or children shown
@@ -56,6 +52,7 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
 
     val hierarchyPath = MutableStateFlow(savedStateHandle[HierarchyNavigatorActivity.HIERARCHY_PATH_KEY] ?: HierarchyPath())
     val childItems = MutableStateFlow<ChildItems>(ChildItems.Loading)
+    val formItems = MutableStateFlow<FormItems>(FormItems.Loading)
     val detailsToggleShown = MutableStateFlow(false)
     val itemDetailsShown = MutableStateFlow(false)
 
@@ -80,7 +77,26 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
 
     private fun updatePath(path: HierarchyPath) {
         hierarchyPath.value = path
-        viewModelScope.launch { updateChildItems() }
+        viewModelScope.launch {
+            updateChildItems()
+            updateFormItems()
+        }
+    }
+
+    private suspend fun updateFormItems() {
+        viewModelScope.launch {
+            DatabaseAdapter
+                .findFormsForHierarchy(hierarchyPath.value.toString())
+                .map { instances ->
+                    instances
+                        .filterNot { instance -> instance.isSubmitted }
+                        .map { instance -> async(Dispatchers.IO) { instance.load() } }
+                        .awaitAll()
+                }
+                .onStart { formItems.value = FormItems.Loading }
+                .onEach { list -> formItems.value = FormItems.Loaded(list) }
+                .collect()
+        }
     }
 
     private suspend fun updateChildItems() {
@@ -113,6 +129,12 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
                 }
             }
     } ?: emptyList()
+
+    sealed class FormItems {
+        object Loading : FormItems()
+        data class Loaded(val items: List<LoadedFormInstance>) : FormItems()
+    }
+
 
     private fun pushHistory() {
         pathHistory.push(hierarchyPath.value.clone())
