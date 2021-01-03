@@ -83,7 +83,7 @@ object SetupUtils {
     fun isFormsAppInstalled(manager: PackageManager): Boolean {
         val formsIntent = Intent(Intent.ACTION_EDIT, FormsProviderAPI.FormsColumns.CONTENT_URI)
         val intentMatches = manager.queryIntentActivities(formsIntent, 0)
-        return !intentMatches.isEmpty()
+        return intentMatches.isNotEmpty()
     }
 
     fun promptFormsAppInstall(activity: Activity) {
