@@ -77,6 +77,10 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
 
     private fun updatePath(path: HierarchyPath) {
         hierarchyPath.value = path
+        updateItems()
+    }
+
+    private fun updateItems() {
         viewModelScope.launch {
             updateChildItems()
             updateFormItems()
@@ -186,7 +190,7 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
                                 }
                             }
                         }
-                        updateChildItems()
+                        updateItems()
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
                             MessageUtils.showShortToast(getApplication(), "Read failed: ${e.message}")
