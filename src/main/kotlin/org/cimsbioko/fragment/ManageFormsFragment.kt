@@ -85,6 +85,8 @@ class ManageFormsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        adapter = FormChecklistAdapter(requireContext(), R.id.form_instance_check_item_orange, ArrayList())
+        savedInstanceState?.also { adapter?.restoreCheckStates(it) }
         lifecycleScope.launchWhenStarted {
             model.stateFlow.collect { state ->
                 isLoading = when (state) {
@@ -99,6 +101,11 @@ class ManageFormsFragment : Fragment() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        adapter?.saveCheckStates(outState)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return ManageFormsFragmentBinding.inflate(inflater, container, false).also { binding = it }.root
     }
@@ -108,7 +115,6 @@ class ManageFormsFragment : Fragment() {
         binding?.also {
             progressBar = it.progressBar
             listView = it.manageFormsFragmentListview
-            adapter = FormChecklistAdapter(requireContext(), R.id.form_instance_check_item_orange, ArrayList())
             deleteButton = it.manageFormsFragmentPrimaryButton
             deleteConfirmDialog = AlertDialog.Builder(requireActivity())
                 .setMessage(R.string.delete_forms_dialog_warning)
@@ -132,13 +138,17 @@ class ManageFormsFragment : Fragment() {
         binding = null
         progressBar = null
         listView = null
-        adapter = null
         deleteButton = null
         deleteConfirmDialog = null
     }
 
     private fun deleteSelected() {
-        adapter?.checkedInstances?.also { selected -> model.deleteForms(selected) }
+        adapter?.also { adapter ->
+            adapter.checkedInstances.also { selected ->
+                adapter.removeAll(selected)
+                model.deleteForms(selected)
+            }
+        }
     }
 
     private inner class ButtonListener : View.OnClickListener {
