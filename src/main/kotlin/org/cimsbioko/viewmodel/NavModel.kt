@@ -27,6 +27,7 @@ import java.util.*
  *   * hierarchy path
  *   * selection
  *   * child items
+ *   * relevant launchers for current launch context
  *   * forms for path
  *   * hierarchy item formatter at path
  *   * child items formatter at path
@@ -52,6 +53,7 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
 
     val hierarchyPath = MutableStateFlow(savedStateHandle[HierarchyNavigatorActivity.HIERARCHY_PATH_KEY] ?: HierarchyPath())
     val childItems = MutableStateFlow<ChildItems>(ChildItems.Loading)
+    val launcherItems = MutableStateFlow<LauncherItems>(LauncherItems.Loading)
     val formItems = MutableStateFlow<FormItems>(FormItems.Loading)
     val detailsToggleShown = MutableStateFlow(false)
     val itemDetailsShown = MutableStateFlow(false)
@@ -64,7 +66,7 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
     val childItemFormatter: HierFormatter?
         get() = currentModule.getHierFormatter(level)
 
-    val launchContext: LaunchContext
+    private val launchContext: LaunchContext
         get() = object : LaunchContext {
             override val currentFieldWorker: FieldWorker? = LoginUtils.login.authenticatedUser
             override val currentSelection: DataWrapper? = this@NavModel.hierarchyPath.value[this@NavModel.level]
@@ -83,7 +85,20 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
     private fun updateItems() {
         viewModelScope.launch {
             updateChildItems()
+            updateLauncherItems()
             updateFormItems()
+        }
+    }
+
+    private fun updateLauncherItems() {
+        viewModelScope.launch(Dispatchers.IO) {
+            currentModule.getLaunchers(level)
+                .map { launcher ->
+                    async { launcher.takeIf { l -> l.relevantFor(launchContext) } }
+                }
+                .awaitAll()
+                .filterNotNull()
+                .also { launcherItems.value = LauncherItems.Loaded(it) }
         }
     }
 
@@ -133,6 +148,11 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
                 }
             }
     } ?: emptyList()
+
+    sealed class LauncherItems {
+        object Loading : LauncherItems()
+        data class Loaded(val items: List<Launcher>) : LauncherItems()
+    }
 
     sealed class FormItems {
         object Loading : FormItems()

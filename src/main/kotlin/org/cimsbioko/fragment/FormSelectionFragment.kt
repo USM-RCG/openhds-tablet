@@ -16,8 +16,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.cimsbioko.R
 import org.cimsbioko.databinding.FormSelectionFragmentBinding
 import org.cimsbioko.databinding.GenericListItemBinding
@@ -40,6 +41,21 @@ class FormSelectionFragment : Fragment() {
     private var formListAdapter: FormSelectionListAdapter? = null
     private var listView: ListView? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycleScope.launchWhenStarted {
+            model.launcherItems.asStateFlow().collectLatest { state ->
+                isLoading = when (state) {
+                    NavModel.LauncherItems.Loading -> true
+                    is NavModel.LauncherItems.Loaded -> {
+                        createFormButtons(state.items)
+                        false
+                    }
+                }
+            }
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return FormSelectionFragmentBinding.inflate(inflater, container, false).also {
             listView = it.formFragmentListview
@@ -53,20 +69,6 @@ class FormSelectionFragment : Fragment() {
             progressBar?.visibility = if (loading) View.VISIBLE else View.GONE
             listView?.visibility = if (loading) View.GONE else View.VISIBLE
         }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            model.hierarchyPath.collectLatest {
-                withContext(Dispatchers.Main.immediate) { isLoading = true }
-                model.currentModule.getLaunchers(model.level).map { launcher ->
-                    lifecycleScope.async(Dispatchers.IO) { launcher.takeIf { l -> l.relevantFor(model.launchContext) } }
-                }.awaitAll().filterNotNull().also { launchers ->
-                    withContext(Dispatchers.Main.immediate) { createFormButtons(launchers) }
-                }
-                withContext(Dispatchers.Main.immediate) { isLoading = false }
-            }
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
