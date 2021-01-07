@@ -106,22 +106,23 @@ class DataSelectionFragment : Fragment() {
     }
 
     private inner class DataSelectionListAdapter(
-            context: Context,
-            resource: Int,
-            objects: List<HierarchyItem>
+        context: Context,
+        resource: Int,
+        objects: List<HierarchyItem>
     ) : ArrayAdapter<HierarchyItem>(context, resource, objects) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             return getItem(position).let { item ->
                 val formatted = item?.let { itemFormatter?.formatItem(item) }
                 (convertView?.let { GenericListItemBinding.bind(it) }
-                        ?: makeText(requireActivity(), layoutTag = formatted?.heading, background = R.drawable.data_selector)).apply {
-                    configureText(requireActivity(),
-                            text1 = formatted?.heading,
-                            text2 = formatted?.subheading,
-                            details = formatted?.details,
-                            centerText = false,
-                            iconRes = item?.level?.toLevelIcon(),
-                            detailsPadding = resources.getDimensionPixelSize(R.dimen.detail_padding)
+                    ?: makeText(requireActivity(), layoutTag = formatted?.heading, background = R.drawable.data_selector)).apply {
+                    configureText(
+                        requireActivity(),
+                        text1 = formatted?.heading,
+                        text2 = formatted?.subheading,
+                        details = formatted?.details,
+                        centerText = false,
+                        iconRes = item?.level?.toLevelIcon(),
+                        detailsPadding = resources.getDimensionPixelSize(R.dimen.detail_padding)
                     )
                 }
             }.root
