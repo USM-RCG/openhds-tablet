@@ -20,6 +20,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.activity.HierarchyNavigatorActivity
@@ -225,7 +226,7 @@ class HierarchyFormsFragment : FormListFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launchWhenStarted {
-            model.formItems.collect { state ->
+            model.formItems.collectLatest { state ->
                 isLoading = when (state) {
                     NavModel.FormItems.Loading -> true
                     is NavModel.FormItems.Loaded -> {
