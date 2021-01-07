@@ -14,6 +14,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.cimsbioko.R
@@ -56,7 +57,7 @@ class DataSelectionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         lifecycleScope.launch {
-            model.childItems.collectLatest { result ->
+            model.childItems.asStateFlow().collectLatest { result ->
                 isLoading = when (result) {
                     NavModel.ChildItems.Loading -> true
                     is NavModel.ChildItems.Loaded -> {
