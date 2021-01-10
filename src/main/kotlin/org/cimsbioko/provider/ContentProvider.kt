@@ -122,38 +122,38 @@ class ContentProvider : ContentProvider() {
         when (sUriMatcher.match(uri)) {
             INDIVIDUALS -> {
                 tables = App.Individuals.TABLE_NAME
-                setProjectionMap(individualProjection)
+                projectionMap = individualProjection
             }
             INDIVIDUAL_ID -> {
                 tables = App.Individuals.TABLE_NAME
-                setProjectionMap(individualProjection)
+                projectionMap = individualProjection
                 appendWhere("${App.Individuals.ID} = ${uri.pathSegments[1]}")
             }
             LOCATIONS -> {
                 tables = App.Locations.TABLE_NAME
-                setProjectionMap(locationProjection)
+                projectionMap = locationProjection
             }
             LOCATION_ID -> {
                 tables = App.Locations.TABLE_NAME
-                setProjectionMap(locationProjection)
+                projectionMap = locationProjection
                 appendWhere("${App.Locations.ID} = ${uri.pathSegments[1]}")
             }
             HIERARCHYITEMS -> {
                 tables = App.HierarchyItems.TABLE_NAME
-                setProjectionMap(hierarchyProjection)
+                projectionMap = hierarchyProjection
             }
             HIERARCHYITEM_ID -> {
                 tables = App.HierarchyItems.TABLE_NAME
-                setProjectionMap(hierarchyProjection)
+                projectionMap = hierarchyProjection
                 appendWhere("${App.HierarchyItems.ID} = ${uri.pathSegments[1]}")
             }
             FIELDWORKERS -> {
                 tables = App.FieldWorkers.TABLE_NAME
-                setProjectionMap(fieldworkerProjection)
+                projectionMap = fieldworkerProjection
             }
             FIELDWORKER_ID -> {
                 tables = App.FieldWorkers.TABLE_NAME
-                setProjectionMap(fieldworkerProjection)
+                projectionMap = fieldworkerProjection
                 appendWhere("${App.FieldWorkers.ID} = ${uri.pathSegments[1]}")
             }
             else -> throw IllegalArgumentException("Unknown URI $uri")
@@ -185,7 +185,10 @@ class ContentProvider : ContentProvider() {
         }
     }
 
-    override fun insert(uri: Uri, initialValues: ContentValues): Uri {
+    override fun insert(uri: Uri, initialValues: ContentValues?): Uri? {
+
+        if (initialValues == null) return null
+
         val table: String
         val contentUriBase: Uri
         var reindexType: EntityType? = null
@@ -228,7 +231,7 @@ class ContentProvider : ContentProvider() {
         throw SQLException("Failed to insert row into $uri for content $values")
     }
 
-    override fun delete(uri: Uri, where: String, whereArgs: Array<String>): Int = with(databaseHelper.writableDatabase) {
+    override fun delete(uri: Uri, where: String?, whereArgs: Array<String>?): Int = with(databaseHelper.writableDatabase) {
         val finalWhere: String
         when (sUriMatcher.match(uri)) {
             INDIVIDUALS -> delete(App.Individuals.TABLE_NAME, where, whereArgs)
@@ -262,7 +265,10 @@ class ContentProvider : ContentProvider() {
         }
     }
 
-    override fun update(uri: Uri, values: ContentValues, where: String, whereArgs: Array<String>): Int {
+    override fun update(uri: Uri, values: ContentValues?, where: String?, whereArgs: Array<String>?): Int {
+
+        if (values == null) return 0
+
         val db = databaseHelper.writableDatabase
         val count: Int
         val finalWhere: String

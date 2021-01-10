@@ -120,7 +120,7 @@ class HierarchyPath(path: Map<String, DataWrapper> = emptyMap()) : Parcelable {
 
         fun fromString(pathStr: String?): HierarchyPath? = pathStr?.let { path ->
             with(LEAF_PATTERN.matcher(path)) {
-                if (matches()) DefaultQueryHelper[group(1), group(2)]?.firstWrapper?.let { fromLeafString(it) }
+                if (matches()) DefaultQueryHelper[group(1)!!, group(2)!!]?.firstWrapper?.let { fromLeafString(it) }
                 else fromPathString(path)
             }
         }

@@ -15,7 +15,12 @@ object Utils {
     // FIXME: Migrate this to some form of campaign configuration
     private val phoneAttrs = listOf("phone1", "phone2", "contact_phone")
 
-    fun extractUniquePhones(attrs: String): Set<String> = with(JSONObject(attrs)) { phoneAttrs.mapNotNull { optString(it, null) }.toSet() }
+    fun extractUniquePhones(attrs: String): Set<String> = with(JSONObject(attrs)) {
+        phoneAttrs.mapNotNull {
+            if (isNull(it)) null
+            else getString(it)
+        }.toSet()
+    }
 
     fun extractDissimilarNames(nameValue: String): Set<String> {
 

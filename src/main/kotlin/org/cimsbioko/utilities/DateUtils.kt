@@ -9,9 +9,9 @@ import java.util.*
 object DateUtils {
 
     @UsedByJSConfig
-    fun formatTime(date: Date?): String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date)
+    fun formatTime(date: Date?): String = date?.let { SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(it) } ?: ""
 
     @UsedByJSConfig
-    fun formatDate(date: Date?): String = SimpleDateFormat("yyyy-MM-dd").format(date)
+    fun formatDate(date: Date?): String = date?.let { SimpleDateFormat("yyyy-MM-dd").format(date) } ?: ""
 
 }

@@ -182,7 +182,7 @@ object SyncUtils {
         val dbFile = getDatabaseFile(ctx)
         val dbDir = dbFile.parentFile
         val dbTempFile = getTempFile(dbFile)
-        if (!dbDir.exists() && !dbDir.mkdirs()) {
+        if (dbDir == null || !(dbDir.exists() || dbDir.mkdirs())) {
             Log.w(TAG, "failed to create missing dir $dbDir, sync cancelled")
             syncResult.databaseError = true
             return

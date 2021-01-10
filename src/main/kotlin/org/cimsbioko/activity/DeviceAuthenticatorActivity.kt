@@ -78,19 +78,19 @@ class DeviceAuthenticatorActivity : AppCompatActivity(), LoginTaskListener, View
         data?.let { IntentIntegrator.parseActivityResult(requestCode, resultCode, it) }?.also { result ->
             SCAN_PATTERN.matcher(result.contents ?: "").also { m ->
                 if (m.matches()) {
-                    usernameEditText.setText(urlDecode(m.group(2)))
-                    passwordEditText.setText(urlDecode(m.group(3)))
-                    urlDecode(m.group(1)).takeIf { buildServerUrl(this, "") != it }?.also { url ->
+                    usernameEditText.setText(urlDecode(m.group(2)!!))
+                    passwordEditText.setText(urlDecode(m.group(3)!!))
+                    urlDecode(m.group(1)!!).takeIf { buildServerUrl(this, "") != it }?.also { url ->
                         AlertDialog.Builder(this)
-                                .setTitle(R.string.update_server_title)
-                                .setMessage(getString(R.string.update_server_msg, url))
-                                .setPositiveButton(R.string.yes_btn) { _: DialogInterface?, _: Int ->
-                                    this@DeviceAuthenticatorActivity.also { ctx ->
-                                        setServerUrl(ctx, url)
-                                        showLongToast(ctx, R.string.server_updated_msg)
-                                    }
+                            .setTitle(R.string.update_server_title)
+                            .setMessage(getString(R.string.update_server_msg, url))
+                            .setPositiveButton(R.string.yes_btn) { _: DialogInterface?, _: Int ->
+                                this@DeviceAuthenticatorActivity.also { ctx ->
+                                    setServerUrl(ctx, url)
+                                    showLongToast(ctx, R.string.server_updated_msg)
                                 }
-                                .setNegativeButton(R.string.no_btn, null)
+                            }
+                            .setNegativeButton(R.string.no_btn, null)
                                 .show()
                     }
                 }

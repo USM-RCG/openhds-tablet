@@ -15,16 +15,20 @@ class IndexingService : JobIntentService() {
     override fun onHandleWork(intent: Intent) {
         with(Indexer.instance) {
             if (intent.hasExtra(ENTITY_UUID)) {
-                val type = EntityType.valueOf(intent.getStringExtra(ENTITY_TYPE))
-                val uuid = intent.getStringExtra(ENTITY_UUID)
-                try {
-                    when (type) {
-                        EntityType.HIERARCHY -> reindexHierarchy(uuid)
-                        EntityType.LOCATION -> reindexLocation(uuid)
-                        EntityType.INDIVIDUAL -> reindexIndividual(uuid)
+                val type: EntityType? = intent.getStringExtra(ENTITY_TYPE)?.let { EntityType.valueOf(it) }
+                val uuid: String? = intent.getStringExtra(ENTITY_UUID)
+                if (type != null && uuid != null) {
+                    try {
+                        when (type) {
+                            EntityType.HIERARCHY -> reindexHierarchy(uuid)
+                            EntityType.LOCATION -> reindexLocation(uuid)
+                            EntityType.INDIVIDUAL -> reindexIndividual(uuid)
+                        }
+                    } catch (e: IOException) {
+                        Log.e(TAG, "failed during reindex", e)
                     }
-                } catch (e: IOException) {
-                    Log.e(TAG, "failed during reindex", e)
+                } else {
+                    Log.w(TAG, "ignored indexing request, missing entity type or uuid")
                 }
             } else {
                 reindexAll()
