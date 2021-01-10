@@ -58,8 +58,8 @@ android {
         applicationId 'org.cimsbioko'
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 102
-        versionName '4.2'
+        versionCode 103
+        versionName '4.3'
         vectorDrawables.useSupportLibrary = true
     }
 
