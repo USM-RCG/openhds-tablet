@@ -193,8 +193,7 @@ object SyncUtils {
         var fingerprint = "?"
         val downloadedContentBefore = downloadedContentBefore(ctx)
         val useZsync = isZyncEnabled(ctx) && downloadedContentBefore
-        val accept: String
-        accept = if (useZsync) {
+        val accept: String = if (useZsync) {
             join(", ", SQLITE_MIME_TYPE, Metadata.MIME_TYPE)
         } else {
             SQLITE_MIME_TYPE
