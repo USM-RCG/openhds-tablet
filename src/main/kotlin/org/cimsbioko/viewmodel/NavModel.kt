@@ -103,33 +103,32 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
         }
     }
 
-    private fun updateLauncherItems() {
-        viewModelScope.launch(Dispatchers.IO) {
-            launcherItems.value = LauncherItems.Loading
+    private suspend fun updateLauncherItems() {
+        launcherItems.value = LauncherItems.Loading
+        withContext(Dispatchers.IO) {
             currentModule.getLaunchers(level)
                 .map { launcher ->
                     async { launcher.takeIf { l -> l.relevantFor(launchContext) } }
                 }
                 .awaitAll()
                 .filterNotNull()
-                .also { launcherItems.value = LauncherItems.Loaded(it) }
-        }
+        }.also { launcherItems.value = LauncherItems.Loaded(it) }
     }
 
     private suspend fun updateFormItems() {
-        viewModelScope.launch {
-            DatabaseAdapter
-                .findFormsForHierarchy(hierarchyPath.value.toString())
-                .map { instances ->
+        DatabaseAdapter
+            .findFormsForHierarchy(hierarchyPath.value.toString())
+            .map { instances ->
+                withContext(Dispatchers.IO) {
                     instances
                         .filterNot { instance -> instance.isSubmitted }
-                        .map { instance -> async(Dispatchers.IO) { instance.load() } }
+                        .map { instance -> async { instance.load() } }
                         .awaitAll()
                 }
-                .onStart { formItems.value = FormItems.Loading }
-                .onEach { list -> formItems.value = FormItems.Loaded(list) }
-                .collect()
-        }
+            }
+            .onStart { formItems.value = FormItems.Loading }
+            .onEach { list -> formItems.value = FormItems.Loaded(list) }
+            .collect()
     }
 
     private suspend fun updateChildItems() {
