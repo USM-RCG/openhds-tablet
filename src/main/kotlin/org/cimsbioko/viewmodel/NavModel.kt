@@ -84,12 +84,20 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
     }
 
     private fun updateItems() {
+        showAllLoading()
         viewModelScope.launch {
             updateChildItems()
             updateLauncherItems()
             updateFormItems()
             updateDetails()
         }
+    }
+
+    private fun showAllLoading() {
+        childItems.value = ChildItems.Loading
+        launcherItems.value = LauncherItems.Loading
+        formItems.value = FormItems.Loading
+        details.value = Details.Loading
     }
 
     private suspend fun updateDetails() {
