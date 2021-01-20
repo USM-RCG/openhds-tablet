@@ -48,7 +48,7 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
     private val isRootLevel
         get() = ROOT_LEVEL == level
 
-    val selection: DataWrapper?
+    private val selection: DataWrapper?
         get() = hierarchyPath.value[level]
 
     val hierarchyPath = MutableStateFlow(savedStateHandle[HierarchyNavigatorActivity.HIERARCHY_PATH_KEY] ?: HierarchyPath())
