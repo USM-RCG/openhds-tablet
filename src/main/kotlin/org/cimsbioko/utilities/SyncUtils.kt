@@ -539,11 +539,11 @@ object SyncUtils {
             return c.responseCode
         }
 
-        override fun getContentType(): String {
+        override fun getContentType(): String? {
             return c.contentType
         }
 
-        override fun getHeader(name: String): String {
+        override fun getHeader(name: String): String? {
             return c.getHeaderField(name)
         }
 
