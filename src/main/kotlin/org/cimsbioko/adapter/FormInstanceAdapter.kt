@@ -21,10 +21,8 @@ class FormInstanceAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val binding = convertView?.tag as? FormInstanceListItemBinding
-                ?: FormInstanceListItemBinding.inflate(inflater).apply {
-                    root.tag = this
-                    configureForInstance(instances[position])
-                }
+            ?: FormInstanceListItemBinding.inflate(inflater).apply { root.tag = this }
+        binding.configureForInstance(instances[position])
         return binding.root
     }
 }
