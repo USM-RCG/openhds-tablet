@@ -13,10 +13,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.cimsbioko.R
 import org.cimsbioko.databinding.GenericDetailFragmentBinding
 import org.cimsbioko.databinding.GenericDetailFragmentSectionBinding
@@ -43,6 +41,21 @@ class GenericDetailFragment : Fragment() {
             scrollView?.visibility = if (loading) View.GONE else View.VISIBLE
         }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycleScope.launchWhenStarted {
+            model.details.asStateFlow().collectLatest { state ->
+                isLoading = when (state) {
+                    NavModel.Details.Loading -> true
+                    is NavModel.Details.Loaded -> {
+                        showItemDetails(state.details, model.level)
+                        false
+                    }
+                }
+            }
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         GenericDetailFragmentBinding.inflate(inflater, container, false).also {
             progressBar = it.progressBar
@@ -50,20 +63,6 @@ class GenericDetailFragment : Fragment() {
             bannerText = it.genericDetailFragmentBanner
             detailContainer = it.genericDetailFragmentContainer
         }.root
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        lifecycleScope.launch {
-            model.hierarchyPath.collectLatest {
-                isLoading = true
-                model.selectionFormatter?.also { formatter ->
-                    withContext(Dispatchers.IO) { model.selection?.unwrapped?.let { formatter.format(it) } }?.also { details ->
-                        showItemDetails(details, model.level)
-                    }
-                }
-                isLoading = false
-            }
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

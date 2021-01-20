@@ -55,12 +55,13 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
     val childItems = MutableStateFlow<ChildItems>(ChildItems.Loading)
     val launcherItems = MutableStateFlow<LauncherItems>(LauncherItems.Loading)
     val formItems = MutableStateFlow<FormItems>(FormItems.Loading)
+    val details = MutableStateFlow<Details>(Details.Loading)
     val detailsToggleShown = MutableStateFlow(false)
     val itemDetailsShown = MutableStateFlow(false)
 
     private val pathHistory = Stack<HierarchyPath>()
 
-    val selectionFormatter: ItemFormatter?
+    private val selectionFormatter: ItemFormatter?
         get() = currentModule.getItemFormatter(level)
 
     val childItemFormatter: HierFormatter?
@@ -87,11 +88,24 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
             updateChildItems()
             updateLauncherItems()
             updateFormItems()
+            updateDetails()
+        }
+    }
+
+    private suspend fun updateDetails() {
+        details.value = Details.Loading
+        selectionFormatter?.also { formatter ->
+            withContext(Dispatchers.IO) {
+                selection?.unwrapped?.let { formatter.format(it) }
+            }?.also {
+                details.value = Details.Loaded(it)
+            }
         }
     }
 
     private fun updateLauncherItems() {
         viewModelScope.launch(Dispatchers.IO) {
+            launcherItems.value = LauncherItems.Loading
             currentModule.getLaunchers(level)
                 .map { launcher ->
                     async { launcher.takeIf { l -> l.relevantFor(launchContext) } }
@@ -119,9 +133,9 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
     }
 
     private suspend fun updateChildItems() {
+        childItems.value = ChildItems.Loading
         detailsToggleShown.value = false
         itemDetailsShown.value = false
-        childItems.value = ChildItems.Loading
         getChildItems().also { children ->
             detailsToggleShown.value = selectionFormatter != null && children.isNotEmpty()
             itemDetailsShown.value = (selectionFormatter != null && children.isEmpty())
@@ -159,6 +173,10 @@ class NavModel(application: Application, savedStateHandle: SavedStateHandle) : A
         data class Loaded(val items: List<LoadedFormInstance>) : FormItems()
     }
 
+    sealed class Details {
+        object Loading : Details()
+        data class Loaded(val details: ItemDetails) : Details()
+    }
 
     private fun pushHistory() {
         pathHistory.push(hierarchyPath.value.clone())
