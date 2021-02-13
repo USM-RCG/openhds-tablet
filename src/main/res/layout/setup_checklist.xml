@@ -25,7 +25,9 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp">
 
                 <ImageView
                         android:id="@+id/cims_logo"
@@ -36,8 +38,7 @@
                         app:tint="@color/CimsGreen"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="20dp"/>
+                        app:layout_constraintEnd_toEndOf="parent"/>
 
                 <TextView
                         android:id="@+id/initialSetupText"
