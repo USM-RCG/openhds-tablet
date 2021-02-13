@@ -83,7 +83,7 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
 
         supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
+            setDisplayHomeAsUpEnabled(false)
             setHomeButtonEnabled(true)
         }
     }
