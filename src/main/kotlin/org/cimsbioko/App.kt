@@ -3,14 +3,14 @@ package org.cimsbioko
 import android.app.Application
 import android.net.Uri
 import android.provider.BaseColumns
-import org.cimsbioko.scripting.ContextFactory.Companion.register
+import org.cimsbioko.scripting.ContextFactory
 
 class App : Application() {
 
     override fun onCreate() {
         instance = this
         super.onCreate()
-        register()
+        ContextFactory.register()
     }
 
     object Individuals {
