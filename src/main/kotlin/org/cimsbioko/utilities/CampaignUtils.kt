@@ -15,9 +15,6 @@ object CampaignUtils {
 
     private val TAG = CampaignUtils::class.java.simpleName
 
-    val campaignUrl: String?
-        get() = buildServerUrl(App.instance, "/api/rest/campaign")
-
     fun getCampaignUrl(uuid: String): String? {
         return buildServerUrl(App.instance, "/api/rest/campaign/$uuid")
     }
