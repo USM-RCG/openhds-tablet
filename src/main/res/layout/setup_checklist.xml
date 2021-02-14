@@ -46,8 +46,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/fix_permissions"
-                        android:singleLine="true"
-                        android:clickable="false"
+                        style="@style/ChecklistItem"
                         app:layout_constraintTop_toBottomOf="@+id/cims_logo"
                         app:layout_constraintStart_toStartOf="@+id/cims_logo"
                         android:layout_marginTop="20dp"/>
@@ -56,8 +55,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/install_apps"
-                        android:singleLine="true"
-                        android:clickable="false"
+                        style="@style/ChecklistItem"
                         app:layout_constraintTop_toBottomOf="@+id/grantPermsCheckbox"
                         app:layout_constraintStart_toStartOf="@+id/grantPermsCheckbox"/>
                 <CheckBox
@@ -65,8 +63,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/attach_to_server"
-                        android:singleLine="true"
-                        android:clickable="false"
+                        style="@style/ChecklistItem"
                         app:layout_constraintTop_toBottomOf="@+id/installAppsCheckbox"
                         app:layout_constraintStart_toStartOf="@+id/installAppsCheckbox"/>
                 <CheckBox
@@ -74,8 +71,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/download_campaign"
-                        android:singleLine="true"
-                        android:clickable="false"
+                        style="@style/ChecklistItem"
                         app:layout_constraintTop_toBottomOf="@+id/serverConnectCheckbox"
                         app:layout_constraintStart_toStartOf="@+id/serverConnectCheckbox"/>
                 <CheckBox
@@ -83,8 +79,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/download_data"
-                        android:singleLine="true"
-                        android:clickable="false"
+                        style="@style/ChecklistItem"
                         app:layout_constraintTop_toBottomOf="@+id/configDownloadCheckbox"
                         app:layout_constraintStart_toStartOf="@+id/configDownloadCheckbox"/>
                 <CheckBox
@@ -92,8 +87,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/download_forms"
-                        android:singleLine="true"
-                        android:clickable="false"
+                        style="@style/ChecklistItem"
                         app:layout_constraintTop_toBottomOf="@+id/dataDownloadCheckbox"
                         app:layout_constraintStart_toStartOf="@+id/dataDownloadCheckbox"/>
                 <Button
