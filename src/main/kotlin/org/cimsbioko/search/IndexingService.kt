@@ -4,13 +4,18 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.app.JobIntentService
+import org.cimsbioko.App.*
 import java.io.IOException
 
-class IndexingService : JobIntentService() {
+enum class EntityType(val entityId: String) {
+    HIERARCHY(HierarchyItems.COLUMN_HIERARCHY_UUID),
+    LOCATION(Locations.COLUMN_LOCATION_UUID),
+    INDIVIDUAL(Individuals.COLUMN_INDIVIDUAL_UUID);
 
-    enum class EntityType {
-        HIERARCHY, LOCATION, INDIVIDUAL
-    }
+    val configName = name.toLowerCase()
+}
+
+class IndexingService : JobIntentService() {
 
     override fun onHandleWork(intent: Intent) {
         with(Indexer.instance) {

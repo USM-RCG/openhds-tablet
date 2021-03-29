@@ -13,8 +13,8 @@ import android.provider.BaseColumns
 import android.text.TextUtils
 import android.util.Log
 import org.cimsbioko.App
+import org.cimsbioko.search.EntityType
 import org.cimsbioko.search.IndexingService.Companion.queueReindex
-import org.cimsbioko.search.IndexingService.EntityType
 import org.cimsbioko.search.Utils.isSearchEnabled
 
 

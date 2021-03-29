@@ -57,7 +57,7 @@ class Indexer private constructor() {
         }
     }
 
-    private fun SupportedEntity.reindexEntity(uuid: String) {
+    private fun EntityType.reindexEntity(uuid: String) {
         getDocSource(isBulk = false, uuid)?.let { docSource ->
             writer.use {
                 with(it) {
@@ -72,37 +72,35 @@ class Indexer private constructor() {
     }
 
     @Throws(IOException::class)
-    fun reindexHierarchy(uuid: String) = SupportedEntity.hierarchy.reindexEntity(uuid)
+    fun reindexHierarchy(uuid: String) = EntityType.HIERARCHY.reindexEntity(uuid)
 
     @Throws(IOException::class)
-    fun reindexLocation(uuid: String) = SupportedEntity.location.reindexEntity(uuid)
+    fun reindexLocation(uuid: String) = EntityType.LOCATION.reindexEntity(uuid)
 
     @Throws(IOException::class)
-    fun reindexIndividual(uuid: String) = SupportedEntity.individual.reindexEntity(uuid)
+    fun reindexIndividual(uuid: String) = EntityType.INDIVIDUAL.reindexEntity(uuid)
 
     @Throws(IOException::class)
     private fun IndexWriter.bulkIndexHierarchy() {
-        SupportedEntity.hierarchy.getDocSource()?.let { bulkIndex(R.string.indexing_hierarchy_items, it) }
+        EntityType.HIERARCHY.getDocSource()?.let { bulkIndex(R.string.indexing_hierarchy_items, it) }
     }
 
     @Throws(IOException::class)
     private fun IndexWriter.bulkIndexLocations() {
-        SupportedEntity.location.getDocSource()?.let { bulkIndex(R.string.indexing_locations, it) }
+        EntityType.LOCATION.getDocSource()?.let { bulkIndex(R.string.indexing_locations, it) }
     }
 
     @Throws(IOException::class)
     private fun IndexWriter.bulkIndexIndividuals() {
-        SupportedEntity.individual.getDocSource()?.let { bulkIndex(R.string.indexing_individuals, it) }
+        EntityType.INDIVIDUAL.getDocSource()?.let { bulkIndex(R.string.indexing_individuals, it) }
     }
 
-    enum class SupportedEntity { individual, location, hierarchy }
-
-    private fun SupportedEntity.getDocSource(isBulk: Boolean = true, vararg queryArgs: String): DocumentSource? {
-        return NavigatorConfig.instance.searchSources[name]?.let { source ->
+    private fun EntityType.getDocSource(isBulk: Boolean = true, vararg queryArgs: String): DocumentSource? {
+        return NavigatorConfig.instance.searchSources[configName]?.let { source ->
             var query: String? = source.query
             var args = emptyArray<String>()
             if (!isBulk) {
-                query = source.fields.firstOrNull { it.name == "uuid" }?.let { "${source.query} where $it = ?" }
+                query = source.fields.firstOrNull { it.name == entityId }?.let { "${source.query} where $it = ?" }
                 args = arrayOf(*queryArgs)
             }
             query?.let { CampaignDocumentSource(source, database.rawQuery(query, args)) }
