@@ -5,12 +5,16 @@ import org.cimsbioko.model.Individual
 import org.cimsbioko.model.Location
 import org.cimsbioko.model.LocationHierarchy
 import org.cimsbioko.navconfig.*
+import org.cimsbioko.search.SearchField
+import org.cimsbioko.search.SearchSource
+import org.cimsbioko.search.SearchUtils
 import org.cimsbioko.utilities.DateUtils
 import org.cimsbioko.utilities.FormUtils
 import org.cimsbioko.utilities.IdHelper
 import org.cimsbioko.utilities.StringUtils
 import org.mozilla.javascript.Context
 import org.mozilla.javascript.NativeJavaClass
+import org.mozilla.javascript.Scriptable
 import org.mozilla.javascript.ScriptableObject
 import org.mozilla.javascript.commonjs.module.Require
 import org.mozilla.javascript.commonjs.module.RequireBuilder
@@ -26,7 +30,9 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
 
     var hierarchy: Hierarchy = StubHierarchy()
         private set
-    var navigatorModules = arrayOf<NavigatorModule>()
+    var navigatorModules: Array<NavigatorModule> = emptyArray()
+        private set
+    var searchSources: Map<String, SearchSource> = emptyMap()
         private set
     var adminSecret: String? = null
         private set
@@ -40,9 +46,10 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
             val require = enableJsModules(ctx, scope)
             Log.i(TAG, "loading init module")
             val init = require.requireMain(ctx, MOBILE_INIT_MODULE)
-            hierarchy = ScriptableObject.getTypedProperty(init, "hierarchy", Hierarchy::class.java)
-            navigatorModules = ScriptableObject.getTypedProperty(init, "navmods", Array<NavigatorModule>::class.java)
-            adminSecret = ScriptableObject.getTypedProperty(init, "adminSecret", String::class.java)
+            hierarchy = init.getTypedProperty("hierarchy") ?: StubHierarchy()
+            navigatorModules = init.getTypedProperty("navmods") ?: emptyArray()
+            adminSecret = init.getTypedProperty("adminSecret")
+            searchSources = init.getTypedProperty("searchSources") ?: emptyMap()
             this
         } finally {
             Context.exit()
@@ -74,12 +81,14 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
 
     @Throws(URISyntaxException::class)
     private fun enableJsModules(ctx: Context, scope: ScriptableObject): Require = RequireBuilder()
-            .setSandboxed(true)
-            .setModuleScriptProvider(
-                    SoftCachingModuleScriptProvider(
-                            NonCachingModuleSourceProvider(jsModulePath)))
-            .createRequire(ctx, scope)
-            .apply { install(scope) }
+        .setSandboxed(true)
+        .setModuleScriptProvider(
+            SoftCachingModuleScriptProvider(
+                NonCachingModuleSourceProvider(jsModulePath)
+            )
+        )
+        .createRequire(ctx, scope)
+        .apply { install(scope) }
 
     @get:Throws(URISyntaxException::class)
     private val jsModulePath: List<URI?>
@@ -101,7 +110,7 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
 
         @Throws(IOException::class, IllegalAccessException::class, InstantiationException::class)
         override fun newBundle(baseName: String, locale: Locale, format: String, loader: ClassLoader, reload: Boolean): ResourceBundle? =
-                super.newBundle(baseName, locale, format, loader, true)
+            super.newBundle(baseName, locale, format, loader, true)
 
         companion object {
             val INSTANCE: Control = NonCachingResourceBundleControl()
@@ -125,7 +134,7 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
         }
 
         private fun installUtilityObjects(scope: ScriptableObject) {
-            putObjects(scope, DateUtils, IdHelper, FormUtils, StringUtils)
+            putObjects(scope, DateUtils, IdHelper, FormUtils, StringUtils, SearchUtils)
         }
 
         private fun installDomainClasses(scope: ScriptableObject) {
@@ -133,10 +142,12 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
         }
 
         private fun installInterfaces(scope: ScriptableObject) {
-            putClasses(scope, Hierarchy::class.java, NavigatorModule::class.java, FormBuilder::class.java,
-                    FormConsumer::class.java, Binding::class.java, Launcher::class.java, FormFormatter::class.java,
-                    FormDisplay::class.java, ItemFormatter::class.java, ItemDetails::class.java,
-                    DetailsSection::class.java, HierFormatter::class.java, HierItemDisplay::class.java
+            putClasses(
+                scope, Hierarchy::class.java, NavigatorModule::class.java, FormBuilder::class.java,
+                FormConsumer::class.java, Binding::class.java, Launcher::class.java, FormFormatter::class.java,
+                FormDisplay::class.java, ItemFormatter::class.java, ItemDetails::class.java,
+                DetailsSection::class.java, HierFormatter::class.java, HierItemDisplay::class.java,
+                SearchSource::class.java, SearchField::class.java
             )
         }
 
@@ -157,3 +168,6 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
         }
     }
 }
+
+private inline fun <reified T : Any> Scriptable.getTypedProperty(name: String): T? =
+    ScriptableObject.getTypedProperty(this, name, T::class.java)

@@ -2,6 +2,7 @@ package org.cimsbioko.navconfig
 
 import android.util.Log
 import org.cimsbioko.scripting.JsConfig
+import org.cimsbioko.search.SearchSource
 import org.cimsbioko.utilities.CampaignUtils.loadCampaign
 
 /**
@@ -30,6 +31,9 @@ class NavigatorConfig private constructor() {
     var adminSecret: String? = null
         private set
 
+    lateinit var searchSources: Map<String, SearchSource>
+        private set
+
     /**
      * Reloads the configuration, ensuring url resource caching doesn't get in the way.
      */
@@ -47,6 +51,7 @@ class NavigatorConfig private constructor() {
             hierarchy = config.hierarchy
             adminSecret = config.adminSecret
             mods = config.navigatorModules.associateBy { it.name }
+            searchSources = config.searchSources
         } catch (e: Exception) {
             Log.e(TAG, "failure initializing js config", e)
         }

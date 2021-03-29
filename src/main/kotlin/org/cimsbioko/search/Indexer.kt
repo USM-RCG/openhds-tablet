@@ -1,6 +1,5 @@
 package org.cimsbioko.search
 
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -14,7 +13,7 @@ import org.apache.lucene.store.FSDirectory
 import org.apache.lucene.util.Version
 import org.cimsbioko.App
 import org.cimsbioko.R
-import org.cimsbioko.navconfig.Hierarchy
+import org.cimsbioko.navconfig.NavigatorConfig
 import org.cimsbioko.provider.ContentProvider
 import org.cimsbioko.utilities.NotificationUtils.PROGRESS_NOTIFICATION_RATE_MILLIS
 import org.cimsbioko.utilities.NotificationUtils.SYNC_CHANNEL_ID
@@ -58,40 +57,56 @@ class Indexer private constructor() {
         }
     }
 
-    private fun reindexEntity(cursor: Cursor, idField: String) {
-        writer.use {
-            with(it) {
-                try {
-                    updateIndex(SimpleCursorDocumentSource(cursor), idField)
-                } finally {
-                    commit()
+    private fun SupportedEntity.reindexEntity(uuid: String) {
+        getDocSource(isBulk = false, uuid)?.let { docSource ->
+            writer.use {
+                with(it) {
+                    try {
+                        updateIndex(docSource, uuid)
+                    } finally {
+                        commit()
+                    }
                 }
             }
         }
     }
 
     @Throws(IOException::class)
-    fun reindexHierarchy(uuid: String) = reindexEntity(database.rawQuery(HIERARCHY_UPDATE_QUERY, arrayOf(uuid)), App.HierarchyItems.COLUMN_HIERARCHY_UUID)
+    fun reindexHierarchy(uuid: String) = SupportedEntity.hierarchy.reindexEntity(uuid)
 
     @Throws(IOException::class)
-    fun reindexLocation(uuid: String) = reindexEntity(database.rawQuery(LOCATION_UPDATE_QUERY, arrayOf(uuid)), App.Locations.COLUMN_LOCATION_UUID)
+    fun reindexLocation(uuid: String) = SupportedEntity.location.reindexEntity(uuid)
 
     @Throws(IOException::class)
-    fun reindexIndividual(uuid: String) = reindexEntity(database.rawQuery(INDIVIDUAL_UPDATE_QUERY, arrayOf(uuid)), App.Individuals.COLUMN_INDIVIDUAL_UUID)
+    fun reindexIndividual(uuid: String) = SupportedEntity.individual.reindexEntity(uuid)
 
     @Throws(IOException::class)
     private fun IndexWriter.bulkIndexHierarchy() {
-        bulkIndex(R.string.indexing_hierarchy_items, SimpleCursorDocumentSource(database.rawQuery(HIERARCHY_INDEX_QUERY, emptyArray())))
+        SupportedEntity.hierarchy.getDocSource()?.let { bulkIndex(R.string.indexing_hierarchy_items, it) }
     }
 
     @Throws(IOException::class)
     private fun IndexWriter.bulkIndexLocations() {
-        bulkIndex(R.string.indexing_locations, SimpleCursorDocumentSource(database.rawQuery(LOCATION_INDEX_QUERY, emptyArray())))
+        SupportedEntity.location.getDocSource()?.let { bulkIndex(R.string.indexing_locations, it) }
     }
 
     @Throws(IOException::class)
     private fun IndexWriter.bulkIndexIndividuals() {
-        bulkIndex(R.string.indexing_individuals, IndividualCursorDocumentSource(database.rawQuery(INDIVIDUAL_INDEX_QUERY, arrayOf()), "name", "attrs"))
+        SupportedEntity.individual.getDocSource()?.let { bulkIndex(R.string.indexing_individuals, it) }
+    }
+
+    enum class SupportedEntity { individual, location, hierarchy }
+
+    private fun SupportedEntity.getDocSource(isBulk: Boolean = true, vararg queryArgs: String): DocumentSource? {
+        return NavigatorConfig.instance.searchSources[name]?.let { source ->
+            var query: String? = source.query
+            var args = emptyArray<String>()
+            if (!isBulk) {
+                query = source.fields.firstOrNull { it.name == "uuid" }?.let { "${source.query} where $it = ?" }
+                args = arrayOf(*queryArgs)
+            }
+            query?.let { CampaignDocumentSource(source, database.rawQuery(query, args)) }
+        }
     }
 
     @Throws(IOException::class)
@@ -99,11 +114,11 @@ class Indexer private constructor() {
         val ctx = App.instance.applicationContext
         val notificationManager = getNotificationManager(ctx)
         val notificationBuilder = NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)
-                .setSmallIcon(notificationIcon)
-                .setColor(getNotificationColor(ctx))
-                .setContentTitle(ctx.getString(R.string.updating_index))
-                .setContentText(ctx.getString(label))
-                .setOngoing(true)
+            .setSmallIcon(notificationIcon)
+            .setColor(getNotificationColor(ctx))
+            .setContentTitle(ctx.getString(R.string.updating_index))
+            .setContentText(ctx.getString(label))
+            .setOngoing(true)
         var lastUpdate: Long = 0
         source.use {
             with(it) {
@@ -150,25 +165,6 @@ class Indexer private constructor() {
     }
 
     companion object {
-        private const val INDIVIDUAL_INDEX_QUERY = "select ${App.Individuals.COLUMN_INDIVIDUAL_UUID}, " +
-                "'${Hierarchy.INDIVIDUAL}' as level, " +
-                "${App.Individuals.COLUMN_INDIVIDUAL_EXTID}, " +
-                "ifnull(${App.Individuals.COLUMN_INDIVIDUAL_FIRST_NAME},'') || ' ' || ifnull(${App.Individuals.COLUMN_INDIVIDUAL_OTHER_NAMES},'') || ' ' || ifnull(${App.Individuals.COLUMN_INDIVIDUAL_LAST_NAME},'') as name, " +
-                "${App.Individuals.COLUMN_INDIVIDUAL_ATTRS} as attrs " +
-                "from ${App.Individuals.TABLE_NAME}"
-        private const val INDIVIDUAL_UPDATE_QUERY = "$INDIVIDUAL_INDEX_QUERY where ${App.Individuals.COLUMN_INDIVIDUAL_UUID} = ?"
-        private const val LOCATION_INDEX_QUERY = "select ${App.Locations.COLUMN_LOCATION_UUID}, " +
-                "'${Hierarchy.HOUSEHOLD}' as level, " +
-                "${App.Locations.COLUMN_LOCATION_EXTID}, " +
-                "${App.Locations.COLUMN_LOCATION_NAME} " +
-                "from ${App.Locations.TABLE_NAME}"
-        private const val LOCATION_UPDATE_QUERY = "$LOCATION_INDEX_QUERY where ${App.Locations.COLUMN_LOCATION_UUID} = ?"
-        private const val HIERARCHY_INDEX_QUERY = "select ${App.HierarchyItems.COLUMN_HIERARCHY_UUID}, " +
-                "${App.HierarchyItems.COLUMN_HIERARCHY_LEVEL} as level, " +
-                "${App.HierarchyItems.COLUMN_HIERARCHY_EXTID}, " +
-                "${App.HierarchyItems.COLUMN_HIERARCHY_NAME} " +
-                "from ${App.HierarchyItems.TABLE_NAME}"
-        private const val HIERARCHY_UPDATE_QUERY = "$HIERARCHY_INDEX_QUERY where ${App.HierarchyItems.COLUMN_HIERARCHY_UUID} = ?"
         private const val NOTIFICATION_ID = 13
         private val TAG = IndexingService::class.java.simpleName
         val instance by lazy { Indexer() }

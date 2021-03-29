@@ -3,49 +3,30 @@ package org.cimsbioko.search
 import android.content.Context
 import org.apache.lucene.search.spell.JaroWinklerDistance
 import org.cimsbioko.R
+import org.cimsbioko.navconfig.UsedByJSConfig
 import org.cimsbioko.utilities.ConfigUtils.getSharedPrefs
-import org.json.JSONObject
 import java.util.*
 
-object Utils {
+/**
+ * Utilities for building search indexes from campaign files.
+ */
+object SearchUtils {
 
-    private const val MAX_SIMILARITY = 0.99f
     private val jwd = JaroWinklerDistance()
 
-    // FIXME: Migrate this to some form of campaign configuration
-    private val phoneAttrs = listOf("phone1", "phone2", "contact_phone")
+    @UsedByJSConfig
+    fun joinUnique(values: Collection<String>, separator: String): String = values.toSet().joinToString(separator = separator)
 
-    fun extractUniquePhones(attrs: String): Set<String> = with(JSONObject(attrs)) {
-        phoneAttrs.mapNotNull {
-            if (isNull(it)) null
-            else getString(it)
-        }.toSet()
-    }
+    @UsedByJSConfig
+    fun joinDissimilar(values: Collection<String>, separator: String, maxSimilarity: Float): String =
+        values.fold(mutableSetOf<String>()) { acc, v ->
+            for (dsv in acc) if (jwd.getDistance(dsv, v) > maxSimilarity) return@fold acc
+            acc.apply { add(v) }
+        }.joinToString(separator = separator)
 
-    fun extractDissimilarNames(nameValue: String): Set<String> {
+}
 
-        fun MutableSet<String>.addIfDissimilar(value: String) {
-            for (v in this) {
-                if (jwd.getDistance(v, value) > MAX_SIMILARITY) return
-            }
-            add(value)
-        }
-
-        val names: MutableSet<String> = HashSet()
-        for (name in nameValue.trim { it <= ' ' }.toLowerCase(Locale.getDefault()).split("\\s+".toRegex())) {
-            names.addIfDissimilar(name.replace("\\W+".toRegex(), ""))
-        }
-        return names
-    }
-
-    fun join(values: Set<String>, separator: String) = buildString {
-        for (name in values) {
-            if (isNotEmpty()) {
-                append(separator)
-            }
-            append(name)
-        }
-    }
+object Utils {
 
     /**
      * Returns whether automatic database re-indexing is enabled based on user settings.
