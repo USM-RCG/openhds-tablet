@@ -33,6 +33,7 @@
 -keep class org.mozilla.javascript.jdk15.VMBridge_jdk15 { *; }
 -keep class org.mozilla.javascript.ImporterTopLevel { *; }
 -keep class org.mozilla.javascript.NativeJavaTopPackage { *; }
+-keep class org.mozilla.javascript.regexp.NativeRegExp { *; }
 
 # android plot (graphs)
 -keep class com.androidplot.** { *; }
