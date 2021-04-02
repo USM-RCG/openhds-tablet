@@ -27,20 +27,16 @@ import org.cimsbioko.R
 import org.cimsbioko.data.DataWrapper
 import org.cimsbioko.databinding.SearchResultBinding
 import org.cimsbioko.databinding.SearchResultsBinding
-import org.cimsbioko.navconfig.DefaultQueryHelper
+import org.cimsbioko.navconfig.*
 import org.cimsbioko.navconfig.DefaultQueryHelper.getParent
-import org.cimsbioko.navconfig.Hierarchy
-import org.cimsbioko.navconfig.HierarchyPath
-import org.cimsbioko.navconfig.NavigatorConfig.Companion.instance
-import org.cimsbioko.navconfig.QueryHelper
 import org.cimsbioko.search.SearchJob
 import org.cimsbioko.search.SearchQueue
+import org.cimsbioko.search.translate
 import org.cimsbioko.utilities.ConfigUtils.getActiveModules
 import org.cimsbioko.utilities.MessageUtils.showLongToast
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 import java.io.IOException
 import java.util.*
-import java.util.regex.Pattern
 import kotlin.collections.HashSet
 
 class SearchableActivity : AppCompatActivity() {
@@ -77,7 +73,7 @@ class SearchableActivity : AppCompatActivity() {
 
         basicQuery.addTextChangedListener(BasicQueryTranslator())
 
-        val config = instance
+        val config = NavigatorConfig.instance
         val intent = intent
         enabledLevels = HashSet(intent.getStringExtra(ENABLED_LEVELS_KEY)?.split("[|]".toRegex()) ?: config.levels)
 
@@ -141,7 +137,7 @@ class SearchableActivity : AppCompatActivity() {
     private val selectedLevels: Set<String>
         get() = HashSet<String>().apply {
             if (hierarchyToggle.isChecked) {
-                addAll(instance.adminLevels)
+                addAll(NavigatorConfig.instance.adminLevels)
             }
             if (locationToggle.isChecked) {
                 add(Hierarchy.HOUSEHOLD)
@@ -272,7 +268,7 @@ class SearchableActivity : AppCompatActivity() {
                 }
             }
 
-            val rootLevel = instance.levels[0]
+            val rootLevel = NavigatorConfig.instance.levels[0]
             if (!reversePath.isEmpty() && reversePath.peek().category == rootLevel) {
                 val path = HierarchyPath().apply {
                     while (!reversePath.isEmpty()) reversePath.pop().let { down(it.category, it) }
@@ -298,20 +294,7 @@ class SearchableActivity : AppCompatActivity() {
 
     }
 
-    private fun buildLuceneQuery(query: String): Query {
-        return BooleanQuery().apply {
-            for (part in query.split("\\s+".toRegex()).toTypedArray()) {
-                when {
-                    ID_PATTERN.matcher(part).matches() -> add(WildcardQuery(Term("extId", "$part*")), BooleanClause.Occur.SHOULD)
-                    PHONE_PATTERN.matcher(part).matches() -> add(FuzzyQuery(Term("phone", part), 1), BooleanClause.Occur.SHOULD)
-                    else -> {
-                        add(FuzzyQuery(Term("name", part), 1), BooleanClause.Occur.SHOULD)
-                        add(FuzzyQuery(Term("extId", part), 1), BooleanClause.Occur.SHOULD)
-                    }
-                }
-            }
-        }
-    }
+    private fun buildLuceneQuery(query: String): Query = NavigatorConfig.instance.searchQueryBuilder.build(query).translate()
 
     private fun addLevelClause(orig: Query): Query = BooleanQuery().also { q ->
         q.add(orig, BooleanClause.Occur.MUST)
@@ -397,8 +380,6 @@ class SearchableActivity : AppCompatActivity() {
         private const val ADVANCED_SET_KEY = "advanced_set"
         private const val ALLOW_TOGGLE_KEY = "allow_toggle"
         private const val ENABLED_LEVELS_KEY = "levels"
-        private val ID_PATTERN = Pattern.compile("(?i)m\\d+(s\\d+(e\\d+(p\\d+)?)?)?")
-        private val PHONE_PATTERN = Pattern.compile("\\d{7,}")
         const val ADVANCED_POS = 1
         const val BASIC_POS = 0
     }

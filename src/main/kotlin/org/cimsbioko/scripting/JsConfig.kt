@@ -5,9 +5,7 @@ import org.cimsbioko.model.Individual
 import org.cimsbioko.model.Location
 import org.cimsbioko.model.LocationHierarchy
 import org.cimsbioko.navconfig.*
-import org.cimsbioko.search.SearchField
-import org.cimsbioko.search.SearchSource
-import org.cimsbioko.search.SearchUtils
+import org.cimsbioko.search.*
 import org.cimsbioko.utilities.DateUtils
 import org.cimsbioko.utilities.FormUtils
 import org.cimsbioko.utilities.IdHelper
@@ -34,6 +32,8 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
         private set
     var searchSources: Map<String, SearchSource> = emptyMap()
         private set
+    var searchQueryBuilder: SearchQueryBuilder = StubQueryBuilder()
+        private set
     var adminSecret: String? = null
         private set
 
@@ -50,6 +50,7 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
             navigatorModules = init.getTypedProperty("navmods") ?: emptyArray()
             adminSecret = init.getTypedProperty("adminSecret")
             searchSources = init.getTypedProperty("searchSources") ?: emptyMap()
+            searchQueryBuilder = init.getTypedProperty("searchQueryBuilder") ?: StubQueryBuilder()
             this
         } finally {
             Context.exit()
@@ -147,7 +148,9 @@ class JsConfig(private val loader: ClassLoader = JsConfig::class.java.classLoade
                 FormConsumer::class.java, Binding::class.java, Launcher::class.java, FormFormatter::class.java,
                 FormDisplay::class.java, ItemFormatter::class.java, ItemDetails::class.java,
                 DetailsSection::class.java, HierFormatter::class.java, HierItemDisplay::class.java,
-                SearchSource::class.java, SearchField::class.java
+                SearchSource::class.java, SearchField::class.java, BooleanClause::class.java, BooleanQuery::class.java,
+                TermQuery::class.java, FuzzyQuery::class.java, WildcardQuery::class.java, RegexpQuery::class.java,
+                SearchQueryBuilder::class.java, BooleanClause.Occurs::class.java
             )
         }
 
