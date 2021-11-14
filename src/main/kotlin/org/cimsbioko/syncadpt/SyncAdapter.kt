@@ -45,7 +45,7 @@ class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedS
                 Log.w(TAG, "bad endpoint url", e)
                 syncResult.stats.numParseExceptions += 1
             } catch (e: Exception) {
-                Log.w(TAG, e.message)
+                Log.w(TAG, "unexpected exception on sync", e)
                 syncResult.stats.numParseExceptions += 1
             }
         } else {
