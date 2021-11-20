@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager.NameNotFoundException
 import android.util.Log
+import androidx.core.content.edit
 import org.cimsbioko.App
 import org.cimsbioko.R
 import org.cimsbioko.navconfig.Binding
 import org.cimsbioko.navconfig.NavigatorConfig
 import org.cimsbioko.navconfig.NavigatorModule
-import java.util.*
 
 object ConfigUtils {
 
@@ -51,7 +51,7 @@ object ConfigUtils {
 
     fun clearActiveModules() {
         val ctx: Context = App.instance
-        getSharedPrefs(ctx).edit().remove(ctx.getString(R.string.active_modules_key)).apply()
+        getSharedPrefs(ctx).edit { remove(ctx.getString(R.string.active_modules_key)) }
         Log.i(TAG, "cleared active modules from preferences")
     }
 

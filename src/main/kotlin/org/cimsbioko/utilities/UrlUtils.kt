@@ -1,6 +1,7 @@
 package org.cimsbioko.utilities
 
 import android.content.Context
+import androidx.core.content.edit
 import org.cimsbioko.R
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
@@ -21,10 +22,7 @@ object UrlUtils {
                     ?: "no server url found"
 
     fun setServerUrl(context: Context, url: String?) {
-        ConfigUtils.getSharedPrefs(context)
-                .edit()
-                .putString(context.getString(R.string.server_url_key), url)
-                .apply()
+        ConfigUtils.getSharedPrefs(context).edit { putString(context.getString(R.string.server_url_key), url) }
     }
 
     fun urlDecode(value: String): String {

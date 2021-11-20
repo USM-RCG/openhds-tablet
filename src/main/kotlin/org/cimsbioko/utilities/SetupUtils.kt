@@ -14,6 +14,7 @@ import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import org.cimsbioko.App
 import org.cimsbioko.R
@@ -166,7 +167,7 @@ object SetupUtils {
         get() = getSharedPrefs(App.instance).getString(CampaignUpdateService.CIMS_CAMPAIGN_ID, null)
         set(campaignId) {
             Log.i(TAG, "campaign id set to '$campaignId'")
-            getSharedPrefs(App.instance).edit().putString(CampaignUpdateService.CIMS_CAMPAIGN_ID, campaignId).apply()
+            getSharedPrefs(App.instance).edit { putString(CampaignUpdateService.CIMS_CAMPAIGN_ID, campaignId) }
         }
 
     fun hasCampaignForms(): Boolean = hasFormsWithIds(NavigatorConfig.instance.formIds)
