@@ -49,9 +49,10 @@
         </provider>
 
         <activity
-            android:name=".activity.SplashActivity"
-            android:label="@string/app_name"
-            android:theme="@style/SplashTheme">
+                android:name=".activity.SplashActivity"
+                android:label="@string/app_name"
+                android:theme="@style/SplashTheme"
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -77,24 +78,26 @@
             android:label="@string/app_name"
             android:parentActivityName=".activity.FieldWorkerActivity">
             <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.FieldWorkerActivity" />
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".activity.FieldWorkerActivity"/>
         </activity>
         <activity
-            android:name=".activity.FieldWorkerActivity"
-            android:label="@string/app_name"
-            android:parentActivityName=".activity.FieldWorkerLoginActivity">
+                android:name=".activity.FieldWorkerActivity"
+                android:label="@string/app_name"
+                android:parentActivityName=".activity.FieldWorkerLoginActivity">
             <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.FieldWorkerLoginActivity" />
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".activity.FieldWorkerLoginActivity"/>
         </activity>
-        <activity android:name=".activity.SearchableActivity">
+        <activity
+                android:name=".activity.SearchableActivity"
+                android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="org.cimsbioko.ENTITY_LOOKUP" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="org.cimsbioko.ENTITY_LOOKUP"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
             <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
         </activity>
@@ -117,14 +120,15 @@
             android:name="android.app.default_searchable"
             android:value=".activity.SearchableActivity" />
         <service
-            android:name=".syncadpt.AuthenticatorService"
-            android:permission="org.cimsbioko.permission.AUTH">
+                android:name=".syncadpt.AuthenticatorService"
+                android:permission="org.cimsbioko.permission.AUTH"
+                android:exported="false">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
             <meta-data
-                android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator"/>
+                    android:name="android.accounts.AccountAuthenticator"
+                    android:resource="@xml/authenticator"/>
         </service>
         <service
             android:name=".syncadpt.SyncService"
@@ -150,8 +154,9 @@
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
         <receiver
-            android:name=".syncadpt.SyncCancelReceiver"
-            android:permission="org.cimsbioko.permission.SYNC_CANCEL">
+                android:name=".syncadpt.SyncCancelReceiver"
+                android:permission="org.cimsbioko.permission.SYNC_CANCEL"
+                android:exported="true">
             <intent-filter>
                 <action android:name="org.cimsbioko.SYNC_CANCELLED"/>
             </intent-filter>
