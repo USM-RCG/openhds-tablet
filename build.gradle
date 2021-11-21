@@ -51,12 +51,12 @@ dependencies {
 
 android {
 
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId 'org.cimsbioko'
         minSdkVersion 16
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 104
         versionName '4.3.1'
         vectorDrawables.useSupportLibrary = true
