@@ -3,6 +3,7 @@ package org.cimsbioko.utilities
 import android.Manifest.permission
 import android.accounts.*
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -88,29 +89,40 @@ object SetupUtils {
     }
 
     fun promptFormsAppInstall(activity: Activity) {
-        val clickListener: DialogInterface.OnClickListener = object : DialogInterface.OnClickListener {
-            override fun onClick(dialog: DialogInterface, which: Int) {
-                if (which == DialogInterface.BUTTON_POSITIVE) {
-                    launchFormsAppMarketInstall()
+        val marketIntent = Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse("market://details?id=org.cimsbioko.forms")
+        }
+        if (marketIntent.resolveActivity(activity.packageManager) != null) {
+            val clickListener: DialogInterface.OnClickListener = DialogInterface.OnClickListener { _, which ->
+                try {
+                    if (which == DialogInterface.BUTTON_POSITIVE) {
+                        activity.startActivity(marketIntent)
+                    }
+                    activity.finish()
+                } catch (e: ActivityNotFoundException) {
+                    Log.e(TAG, "failed to launch play app by market uri", e)
                 }
-                activity.finish()
             }
-
-            private fun launchFormsAppMarketInstall() {
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse("market://details?id=org.cimsbioko.forms")
-                activity.startActivity(intent)
+            val cancelListener = DialogInterface.OnCancelListener { activity.finish() }
+            AlertDialog.Builder(activity)
+                    .setTitle(R.string.forms_app_required)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setMessage(R.string.forms_app_install_prompt)
+                    .setNegativeButton(R.string.quit_label, clickListener)
+                    .setPositiveButton(R.string.install_label, clickListener)
+                    .setOnCancelListener(cancelListener)
+                    .show()
+        } else {
+            val webIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=org.cimsbioko.forms")
+            )
+            try {
+                activity.startActivity(webIntent)
+            } catch (e: ActivityNotFoundException) {
+                Log.e(TAG, "failed to launch play store via web uri", e)
             }
         }
-        val cancelListener = DialogInterface.OnCancelListener { activity.finish() }
-        AlertDialog.Builder(activity)
-                .setTitle(R.string.forms_app_required)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setMessage(R.string.forms_app_install_prompt)
-                .setNegativeButton(R.string.quit_label, clickListener)
-                .setPositiveButton(R.string.install_label, clickListener)
-                .setOnCancelListener(cancelListener)
-                .show()
     }
 
     fun getToken(activity: Activity, callback: AccountManagerCallback<Bundle>?) {
