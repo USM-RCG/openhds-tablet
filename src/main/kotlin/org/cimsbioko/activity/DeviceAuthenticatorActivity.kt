@@ -5,21 +5,29 @@ import android.accounts.AccountAuthenticatorResponse
 import android.accounts.AccountManager
 import android.app.Activity
 import android.content.ContentResolver
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.*
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.integration.android.IntentIntegrator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.cimsbioko.App
-import org.cimsbioko.App.Companion.getApp
 import org.cimsbioko.R
 import org.cimsbioko.databinding.AuthenticatorActivityBinding
 import org.cimsbioko.syncadpt.AuthUtils.register
@@ -32,7 +40,53 @@ import org.cimsbioko.utilities.UrlUtils.setServerUrl
 import org.cimsbioko.utilities.UrlUtils.urlDecode
 import java.util.regex.Pattern
 
-class DeviceAuthenticatorActivity : AppCompatActivity(), LoginTaskListener, View.OnKeyListener {
+data class AccountInfo(
+        val username: String,
+        val password: String,
+        val type: String,
+        val token: String
+)
+
+sealed class LoginResult {
+    data class Success(val info: AccountInfo) : LoginResult()
+    data class Error(val message: String) : LoginResult()
+}
+
+class DeviceAuthenticatorViewModel : ViewModel() {
+
+    // Ensure login is processed only once, even if device is rotated
+    private val resultChannel = Channel<LoginResult>()
+    val loginResultFlow = resultChannel.consumeAsFlow()
+
+    fun login(ctx: Context, username: String, password: String, accountType: String) {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                withContext(Dispatchers.IO) { register(ctx.applicationContext, username, password) }
+            }.let { result ->
+                if (result.isSuccess) {
+                    result.getOrNull()?.let { json ->
+                        val token: String? = json.getString("access_token")
+                        val newPassword: String? = json.getString("secret")
+                        if (token != null && newPassword != null) {
+                            LoginResult.Success(
+                                    AccountInfo(
+                                            username = username,
+                                            password = newPassword,
+                                            type = accountType,
+                                            token = token
+                                    )
+                            )
+                        } else LoginResult.Error("JSON result lacks one or more required fields: access_token, secret")
+                    }
+                } else result.exceptionOrNull()?.message?.let { LoginResult.Error(it) }
+            }?.also { resultChannel.send(it) }
+        }
+    }
+}
+
+class DeviceAuthenticatorActivity : AppCompatActivity(), View.OnKeyListener {
+
+    private val viewModel: DeviceAuthenticatorViewModel by viewModels()
 
     private lateinit var accountManager: AccountManager
     private lateinit var usernameEditText: EditText
@@ -40,7 +94,6 @@ class DeviceAuthenticatorActivity : AppCompatActivity(), LoginTaskListener, View
 
     private var authResponse: AccountAuthenticatorResponse? = null
     private var tokenType: String? = null
-    private var task: LoginTask? = null
     private var authResult: Bundle? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,11 +112,13 @@ class DeviceAuthenticatorActivity : AppCompatActivity(), LoginTaskListener, View
         tokenType = intent.getStringExtra(KEY_AUTH_TOKEN_TYPE) ?: Constants.AUTHTOKEN_TYPE_DEVICE
         accountManager = AccountManager.get(baseContext)
         intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)?.also { binding.usernameEditText.setText(it) }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        task?.cancel(true)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.loginResultFlow
+                        .onEach { handleLoginResult(it) }
+                        .collect()
+            }
+        }
     }
 
     private fun scan() {
@@ -82,15 +137,15 @@ class DeviceAuthenticatorActivity : AppCompatActivity(), LoginTaskListener, View
                     passwordEditText.setText(urlDecode(m.group(3)!!))
                     urlDecode(m.group(1)!!).takeIf { buildServerUrl(this, "") != it }?.also { url ->
                         AlertDialog.Builder(this)
-                            .setTitle(R.string.update_server_title)
-                            .setMessage(getString(R.string.update_server_msg, url))
-                            .setPositiveButton(R.string.yes_btn) { _: DialogInterface?, _: Int ->
-                                this@DeviceAuthenticatorActivity.also { ctx ->
-                                    setServerUrl(ctx, url)
-                                    showLongToast(ctx, R.string.server_updated_msg)
+                                .setTitle(R.string.update_server_title)
+                                .setMessage(getString(R.string.update_server_msg, url))
+                                .setPositiveButton(R.string.yes_btn) { _: DialogInterface?, _: Int ->
+                                    this@DeviceAuthenticatorActivity.also { ctx ->
+                                        setServerUrl(ctx, url)
+                                        showLongToast(ctx, R.string.server_updated_msg)
+                                    }
                                 }
-                            }
-                            .setNegativeButton(R.string.no_btn, null)
+                                .setNegativeButton(R.string.no_btn, null)
                                 .show()
                     }
                 }
@@ -99,39 +154,37 @@ class DeviceAuthenticatorActivity : AppCompatActivity(), LoginTaskListener, View
     }
 
     private fun submit() {
-        task = intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE)
-                ?.let { accountType -> LoginTask(usernameEditText.text.toString(), passwordEditText.text.toString(), accountType, this) }
-                ?.also { it.execute() }
+        val username = usernameEditText.text.toString()
+        val type = intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE)
+        val password = passwordEditText.text.toString()
+        if (type != null) viewModel.login(this, username, password, type)
     }
 
-    override fun error(message: String?) {
+    private fun handleLoginResult(result: LoginResult) {
+        when (result) {
+            is LoginResult.Success -> onLoginSuccess(result.info)
+            is LoginResult.Error -> onLoginError(result.message)
+        }
+    }
+
+    private fun onLoginError(message: String?) {
         message?.also { Toast.makeText(baseContext, it, Toast.LENGTH_SHORT).show() }
     }
 
-    override fun success(result: Intent) {
-        val accountName: String? = result.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)
-        val accountPassword: String? = result.getStringExtra(AccountManager.KEY_PASSWORD)
-        val accountType: String? = result.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE)
-        if (accountName != null && accountPassword != null && accountType != null) {
-            Account(accountName, accountType).also { acc ->
-                if (intent.getBooleanExtra(KEY_NEW_ACCOUNT, false)) {
-                    if (accountManager.addAccountExplicitly(acc, accountPassword, null)) {
-                        ContentResolver.setIsSyncable(acc, App.AUTHORITY, 1)
-                        ContentResolver.setSyncAutomatically(acc, App.AUTHORITY, true)
-                        result.getStringExtra(AccountManager.KEY_AUTHTOKEN)?.also { token ->
-                            accountManager.setAuthToken(acc, tokenType, token)
-                        }
-                    } else {
-                        Log.e(TAG, "failed to add account")
-                    }
-                } else {
-                    accountManager.setPassword(acc, accountPassword)
-                }
-            }
-            setAccountAuthenticatorResult(result.extras)
-            setResult(Activity.RESULT_OK, result)
-            finish()
+    private fun onLoginSuccess(info: AccountInfo) {
+        Account(info.username, info.type).also { acc ->
+            if (intent.getBooleanExtra(KEY_NEW_ACCOUNT, false)) {
+                if (accountManager.addAccountExplicitly(acc, info.password, null)) {
+                    ContentResolver.setIsSyncable(acc, App.AUTHORITY, 1)
+                    ContentResolver.setSyncAutomatically(acc, App.AUTHORITY, true)
+                    accountManager.setAuthToken(acc, tokenType, info.token)
+                } else Log.e(TAG, "failed to add account")
+            } else accountManager.setPassword(acc, info.password)
         }
+        val result: Intent = info.toAuthenticatorResult()
+        setAccountAuthenticatorResult(result.extras)
+        setResult(Activity.RESULT_OK, result)
+        finish()
     }
 
     override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
@@ -157,8 +210,7 @@ class DeviceAuthenticatorActivity : AppCompatActivity(), LoginTaskListener, View
      */
     override fun finish() {
         authResponse?.also { response ->
-            authResult?.also { result -> response.onResult(result) }
-                    ?: response.onError(AccountManager.ERROR_CODE_CANCELED, "canceled")
+            authResult?.also { result -> response.onResult(result) } ?: response.onError(AccountManager.ERROR_CODE_CANCELED, "canceled")
             authResponse = null
         }
         super.finish()
@@ -170,40 +222,16 @@ class DeviceAuthenticatorActivity : AppCompatActivity(), LoginTaskListener, View
     }
 }
 
-private interface LoginTaskListener {
-    fun error(message: String?)
-    fun success(result: Intent)
-}
-
-private class LoginTask(
-        private val username: String,
-        private val password: String,
-        private val accountType: String,
-        private var listener: LoginTaskListener?
-) : AsyncTask<Void?, Void?, Intent>() {
-
-    override fun doInBackground(vararg params: Void?): Intent? = Bundle().apply {
-        try {
-            putString(AccountManager.KEY_ACCOUNT_NAME, username)
-            putString(AccountManager.KEY_ACCOUNT_TYPE, accountType)
-            register(getApp().applicationContext, username, password).also { result ->
-                putString(AccountManager.KEY_AUTHTOKEN, result.getString("access_token"))
-                putString(AccountManager.KEY_PASSWORD, result.getString("secret"))
-            }
-        } catch (e: Exception) {
-            putString(AccountManager.KEY_ERROR_MESSAGE, e.message)
-        }
-    }.let { Intent().putExtras(it) }
-
-    override fun onPostExecute(intent: Intent) {
-        listener?.also { listener ->
-            intent.getStringExtra(AccountManager.KEY_ERROR_MESSAGE)?.also { listener.error(it) }
-                    ?: listener.success(intent)
-        }
-    }
-
-    override fun onCancelled(intent: Intent) {
-        listener = null
-        super.onCancelled(intent)
+private fun AccountInfo.toAuthenticatorResult(): Intent {
+    val info = this
+    return Intent().apply {
+        putExtras(
+                Bundle().apply {
+                    putString(AccountManager.KEY_ACCOUNT_NAME, info.username)
+                    putString(AccountManager.KEY_ACCOUNT_TYPE, info.type)
+                    putString(AccountManager.KEY_AUTHTOKEN, info.token)
+                    putString(AccountManager.KEY_PASSWORD, info.password)
+                }
+        )
     }
 }
