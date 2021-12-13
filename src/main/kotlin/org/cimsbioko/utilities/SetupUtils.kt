@@ -1,7 +1,7 @@
 package org.cimsbioko.utilities
 
 import android.Manifest.permission
-import android.accounts.*
+import android.accounts.AccountManager
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -10,20 +10,20 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.cimsbioko.App
 import org.cimsbioko.R
 import org.cimsbioko.campaign.CampaignUpdateService
 import org.cimsbioko.navconfig.NavigatorConfig
 import org.cimsbioko.provider.FormsProviderAPI
 import org.cimsbioko.syncadpt.Constants
-import org.cimsbioko.task.CampaignTask
 import org.cimsbioko.utilities.AccountUtils.firstAccount
 import org.cimsbioko.utilities.CampaignDownloadResult.Success
 import org.cimsbioko.utilities.CampaignUtils.downloadedCampaignExists
@@ -35,7 +35,9 @@ import org.cimsbioko.utilities.IOUtils.store
 import org.cimsbioko.utilities.LoginUtils.launchLogin
 import org.cimsbioko.utilities.MessageUtils.showLongToast
 import org.cimsbioko.utilities.NotificationUtils.createChannels
-import java.io.IOException
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 object SetupUtils {
 
@@ -125,54 +127,49 @@ object SetupUtils {
         }
     }
 
-    fun getToken(activity: Activity, callback: AccountManagerCallback<Bundle>?) {
-        AccountManager
-                .get(activity.applicationContext)
-                .getAuthTokenByFeatures(Constants.ACCOUNT_TYPE, Constants.AUTHTOKEN_TYPE_DEVICE, null, activity, null, null, callback, null)
+    suspend fun getToken(activity: Activity): String? = suspendCoroutine { cont ->
+        runCatching {
+            AccountManager
+                    .get(activity.applicationContext)
+                    .getAuthTokenByFeatures(Constants.ACCOUNT_TYPE, Constants.AUTHTOKEN_TYPE_DEVICE, null, activity, null, null,
+                            { future -> cont.resume(future.result?.getString(AccountManager.KEY_AUTHTOKEN)) }, null)
+        }.getOrElse { t -> cont.resumeWithException(t) }
     }
 
-    fun downloadConfig(activity: Activity) {
-        getToken(activity, AccountManagerCallback { future: AccountManagerFuture<Bundle> ->
+    private suspend fun downloadCampaign(token: String): CampaignDownloadResult {
+        val campaigns = withContext(Dispatchers.IO) { runCatching { CampaignUtils.getCampaigns(token) } }
+                .getOrElse { return@downloadCampaign CampaignDownloadResult.Failure("fetching assigned campaigns failed: $it") }
+        return if (campaigns.length() > 0) {
+            val firstCampaign = campaigns.getJSONObject(0)
+            val campaignId = firstCampaign.getString("uuid")
+            val campaignName = firstCampaign.getString("name")
+            Log.i("CampaignTask", "downloading campaign '$campaignName', uuid: $campaignId")
+            withContext(Dispatchers.IO) { runCatching { CampaignUtils.downloadCampaignFile(token, campaignId, CampaignUtils.downloadedCampaignFile) } }
+                    .getOrElse { CampaignDownloadResult.Failure("Download failed: $it") }
+        } else CampaignDownloadResult.Failure("No campaign assigned to this device")
+    }
 
+    suspend fun downloadConfig(activity: Activity) {
+        val token = getToken(activity)
+        if (token != null) {
             val ctx = activity.applicationContext
-
-            // Extract the auth token for the active account
-            val token = try {
-                future.result.getString(AccountManager.KEY_AUTHTOKEN)
-            } catch (e: AuthenticatorException) {
-                showLongToast(activity, "Failed to get auth token: " + e.message)
-                null
-            } catch (e: IOException) {
-                showLongToast(activity, "Failed to get auth token: " + e.message)
-                null
-            } catch (e: OperationCanceledException) {
-                showLongToast(activity, "Failed to get auth token: " + e.message)
-                null
+            val campaignDownloadResult = downloadCampaign(token)
+            if (campaignDownloadResult is CampaignDownloadResult.Failure) {
+                showLongToast(ctx, campaignDownloadResult.error)
+            } else {
+                val result = campaignDownloadResult as Success
+                val etag = result.etag
+                val campaign = result.campaign
+                store(getFingerprintFile(result.downloadedFile), etag)
+                val intent = Intent(CAMPAIGN_DOWNLOADED_ACTION)
+                clearActiveModules()
+                campaignId = campaign
+                NavigatorConfig.instance.reload()
+                LocalBroadcastManager
+                        .getInstance(ctx)
+                        .sendBroadcast(intent)
             }
-
-            // Download the campaign file and send a local broadcast message when it finishes
-            token?.run {
-                object : CampaignTask() {
-                    override fun onPostExecute(campaignDownloadResult: CampaignDownloadResult) {
-                        if (campaignDownloadResult is CampaignDownloadResult.Failure) {
-                            showLongToast(ctx, campaignDownloadResult.error)
-                        } else {
-                            val result = campaignDownloadResult as Success
-                            val etag = result.etag
-                            val campaign = result.campaign
-                            store(getFingerprintFile(result.downloadedFile), etag)
-                            val intent = Intent(CAMPAIGN_DOWNLOADED_ACTION)
-                            clearActiveModules()
-                            campaignId = campaign
-                            NavigatorConfig.instance.reload()
-                            LocalBroadcastManager
-                                    .getInstance(ctx)
-                                    .sendBroadcast(intent)
-                        }
-                    }
-                }.execute(this@run)
-            }
-        })
+        }
     }
 
     var campaignId: String?

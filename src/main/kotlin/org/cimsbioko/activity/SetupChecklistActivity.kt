@@ -10,8 +10,10 @@ import android.widget.Button
 import android.widget.CheckBox
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.launch
 import org.cimsbioko.R
 import org.cimsbioko.databinding.SetupChecklistBinding
 import org.cimsbioko.utilities.MessageUtils.showShortToast
@@ -119,8 +121,8 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
         when {
             !hasPerms -> setupButton(R.string.fix_permissions) { askForPermissions(this, 1) }
             !hasApps -> setupButton(R.string.install_apps) { promptFormsAppInstall(this) }
-            !isConnected -> setupButton(R.string.attach_to_server) { getToken(this, null) }
-            !hasConfig -> setupButton(R.string.download_campaign) { downloadConfig(this) }
+            !isConnected -> setupButton(R.string.attach_to_server) { lifecycleScope.launch { getToken(this@SetupChecklistActivity) } }
+            !hasConfig -> setupButton(R.string.download_campaign) { lifecycleScope.launch { downloadConfig(this@SetupChecklistActivity) } }
             !hasData -> setupButton(R.string.download_data) { checkForUpdate() }
             !hasForms -> setupButton(R.string.download_forms) { downloadForms(this) }
             else -> setupButton(R.string.next) { startApp(this) }
