@@ -76,7 +76,7 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
                     showShortToast(this@SetupChecklistActivity, R.string.sync_database_updated)
                     updateState()
                 } else if (CAMPAIGN_DOWNLOADED_ACTION == intent.action) {
-                    showShortToast(this@SetupChecklistActivity, "Campaign downloaded")
+                    showShortToast(this@SetupChecklistActivity, R.string.campaign_downloaded_msg)
                     updateState()
                 }
             }
