@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.onEach
 import org.cimsbioko.R
 import org.cimsbioko.databinding.NavigateActivityBinding
 import org.cimsbioko.fragment.*
-import org.cimsbioko.navconfig.*
 import org.cimsbioko.search.Utils.isSearchEnabled
 import org.cimsbioko.utilities.ConfigUtils.getActiveModules
 import org.cimsbioko.utilities.LoginUtils.login
