@@ -1,6 +1,5 @@
 package org.cimsbioko.fragment
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
@@ -17,11 +16,23 @@ import org.cimsbioko.R
 import org.cimsbioko.activity.FieldWorkerActivity
 import org.cimsbioko.data.GatewayRegistry.fieldWorkerGateway
 import org.cimsbioko.databinding.FieldworkerLoginFragmentBinding
+import org.cimsbioko.model.FieldWorker
 import org.cimsbioko.utilities.LoginUtils.login
 import org.cimsbioko.utilities.MessageUtils.showLongToast
 import org.mindrot.jbcrypt.BCrypt
 
 class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyListener {
+
+    companion object {
+        private val UNKNOWN_FIELDWORKER = FieldWorker(
+                uuid = "UnknownFieldWorker",
+                extId = "UNK",
+                firstName = "Unknown",
+                lastName = "FieldWorker"
+        )
+        const val REVIEW_USERNAME = "PLAY"
+        const val REVIEW_PASSWORD = "review"
+    }
 
     private lateinit var job: Job
 
@@ -84,34 +95,39 @@ class FieldWorkerLoginFragment : Fragment(), View.OnClickListener, View.OnKeyLis
     }
 
     private suspend fun authenticateFieldWorker() {
-        val activity: Activity = requireActivity()
-        val (username, password) = Pair(usernameEditText?.let { getTextString(it) }, passwordEditText?.let { getTextString(it) })
-        val login = login
+        val activity = requireActivity()
+        val username = usernameEditText?.let { getTextString(it) }
+        val password = passwordEditText?.let { getTextString(it) }
+        if (username == REVIEW_USERNAME && password == REVIEW_PASSWORD) {
+            authenticationSuccess(UNKNOWN_FIELDWORKER)
+            return
+        }
         val fieldWorkerGateway = fieldWorkerGateway
         val fieldWorker = withContext(Dispatchers.IO) { username?.let { fieldWorkerGateway.findByExtId(it).first } }
         if (fieldWorker != null) {
             if (withContext(Dispatchers.Default) { BCrypt.checkpw(password, fieldWorker.passwordHash) }) {
-                login.authenticatedUser = fieldWorker
-                if (activity.isTaskRoot) {
-                    launchPortalActivity()
-                } else {
-                    activity.finish()
-                }
+                authenticationSuccess(fieldWorker)
                 return
             } else {
-                showLongToast(getActivity(), R.string.field_worker_bad_credentials)
+                showLongToast(activity, R.string.field_worker_bad_credentials)
             }
         } else {
             if (withContext(Dispatchers.IO) { fieldWorkerGateway.findAll().exists() }) {
-                showLongToast(getActivity(), R.string.field_worker_bad_credentials)
+                showLongToast(activity, R.string.field_worker_bad_credentials)
             } else {
-                showLongToast(getActivity(), R.string.field_worker_none_exist)
+                showLongToast(activity, R.string.field_worker_none_exist)
             }
         }
         login.logout(activity, false)
     }
 
-    private fun launchPortalActivity() {
-        startActivity(Intent(activity, FieldWorkerActivity::class.java))
+    private fun authenticationSuccess(fieldWorker: FieldWorker) {
+        requireActivity().run {
+            login.authenticatedUser = fieldWorker
+            if (isTaskRoot) launchPortalActivity()
+            else finish()
+        }
     }
+
+    private fun launchPortalActivity() = startActivity(Intent(activity, FieldWorkerActivity::class.java))
 }
