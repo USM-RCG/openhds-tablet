@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import org.cimsbioko.R
 import org.cimsbioko.databinding.SetupChecklistBinding
 import org.cimsbioko.utilities.MessageUtils.showShortToast
+import org.cimsbioko.utilities.SetupUtils
 import org.cimsbioko.utilities.SetupUtils.CAMPAIGN_DOWNLOADED_ACTION
 import org.cimsbioko.utilities.SetupUtils.askForPermissions
 import org.cimsbioko.utilities.SetupUtils.downloadConfig
@@ -43,6 +44,8 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
     private lateinit var formsCheckbox: CheckBox
     private lateinit var setupButton: Button
     private lateinit var broadcastReceiver: BroadcastReceiver
+
+    private var taps = 0
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +84,13 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
                     showShortToast(this@SetupChecklistActivity, R.string.campaign_downloaded_msg)
                     updateState()
                 }
+            }
+        }
+
+        binding.cimsLogo.setOnClickListener {
+            if (SetupUtils.minimumRequirementsMet(this) && ++taps >= REQUIREMENTS_BYPASS_TAPS) {
+                taps = 0
+                startApp(this)
             }
         }
 
@@ -150,5 +160,6 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
 
     companion object {
         private const val STORAGE_PERMISSION_REQUEST = 1
+        private const val REQUIREMENTS_BYPASS_TAPS = 15
     }
 }

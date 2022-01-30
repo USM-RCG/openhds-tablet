@@ -42,20 +42,19 @@ import kotlin.coroutines.suspendCoroutine
 object SetupUtils {
 
     private val TAG = SetupUtils::class.java.simpleName
-    private val REQUIRED_PERMISSIONS = if (Build.VERSION.SDK_INT >= 19) emptyArray() /**/ else arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE)
+    private val REQUIRED_PERMISSIONS =
+            if (Build.VERSION.SDK_INT >= 19) emptyArray()
+            else arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE)
     const val CAMPAIGN_DOWNLOADED_ACTION = "CAMPAIGN_DOWNLOADED"
     const val CAMPAIGN_FILENAME = "campaign.zip"
 
-    fun setupRequirementsMet(ctx: Context): Boolean {
-        return (hasRequiredPermissions(ctx)
-                && isFormsAppInstalled(ctx.packageManager)
-// FIXME: Allow app reviewers to bypass these steps conditionally
-//                && isAccountInstalled
-//                && isConfigAvailable
-//                && isDataAvailable(ctx)
-//                && hasCampaignForms()
-                )
-    }
+    fun minimumRequirementsMet(ctx: Context): Boolean = hasRequiredPermissions(ctx) && isFormsAppInstalled(ctx.packageManager)
+
+    fun setupRequirementsMet(ctx: Context): Boolean = minimumRequirementsMet(ctx)
+            && isAccountInstalled
+            && isConfigAvailable
+            && isDataAvailable(ctx)
+            && hasCampaignForms()
 
     fun hasRequiredPermissions(ctx: Context?): Boolean {
         for (perm in REQUIRED_PERMISSIONS) {
