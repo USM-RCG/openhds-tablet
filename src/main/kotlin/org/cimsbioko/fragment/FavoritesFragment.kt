@@ -56,22 +56,23 @@ class FavoritesViewModel : ViewModel() {
     private fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
             mutableStateFlow.value = State.Loading
-            NavigatorConfig.instance.modules.firstOrNull()?.let { module ->
+            val data = NavigatorConfig.instance.modules.firstOrNull()?.let { module ->
                 DatabaseAdapter.let { db ->
                     db.favoriteIds
-                        .map { it to getByHierarchyId(it)?.first }
-                        .partition { (_, item) -> item != null }
-                        .let { (found, lost) ->
-                            lost.forEach { (id, _) -> db.removeFavorite(id) }
-                            found.mapNotNull { (_, item) ->
-                                item?.level
-                                    ?.let { module.getHierFormatter(it) }
-                                    ?.formatItem(item)
-                                    ?.let { FavoritesFragment.FormattedHierarchyItem(item, it) }
+                            .map { it to getByHierarchyId(it)?.first }
+                            .partition { (_, item) -> item != null }
+                            .let { (found, lost) ->
+                                lost.forEach { (id, _) -> db.removeFavorite(id) }
+                                found.mapNotNull { (_, item) ->
+                                    item?.level
+                                            ?.let { module.getHierFormatter(it) }
+                                            ?.formatItem(item)
+                                            ?.let { FavoritesFragment.FormattedHierarchyItem(item, it) }
+                                }
                             }
-                        }
                 }
-            }?.also { mutableStateFlow.value = State.Loaded(it) }
+            } ?: emptyList()
+            mutableStateFlow.value = State.Loaded(data)
         }
     }
 
