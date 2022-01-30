@@ -49,10 +49,12 @@ object SetupUtils {
     fun setupRequirementsMet(ctx: Context): Boolean {
         return (hasRequiredPermissions(ctx)
                 && isFormsAppInstalled(ctx.packageManager)
-                && isAccountInstalled
-                && isConfigAvailable
-                && isDataAvailable(ctx)
-                && hasCampaignForms())
+// FIXME: Allow app reviewers to bypass these steps conditionally
+//                && isAccountInstalled
+//                && isConfigAvailable
+//                && isDataAvailable(ctx)
+//                && hasCampaignForms()
+                )
     }
 
     fun hasRequiredPermissions(ctx: Context?): Boolean {
