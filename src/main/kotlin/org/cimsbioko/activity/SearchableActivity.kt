@@ -37,7 +37,6 @@ import org.cimsbioko.utilities.MessageUtils.showLongToast
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 import java.io.IOException
 import java.util.*
-import kotlin.collections.HashSet
 
 class SearchableActivity : AppCompatActivity() {
 
@@ -114,7 +113,7 @@ class SearchableActivity : AppCompatActivity() {
         savedInstanceState?.let { advancedSelected = it.getBoolean(ADVANCED_SET_KEY) }
 
         if (androidSearch) {
-            intent.getStringExtra(SearchManager.QUERY)?.toLowerCase()?.let {
+            intent.getStringExtra(SearchManager.QUERY)?.lowercase(Locale.getDefault())?.let {
                 basicQuery.setText(it)
                 doSearch()
             }
@@ -169,7 +168,9 @@ class SearchableActivity : AppCompatActivity() {
 
     private fun doSearch() {
         try {
-            executeQuery(addLevelClause(parseLuceneQuery(advancedQuery.text.toString())))
+            advancedQuery.text.toString()
+                    .takeIf { it.isNotBlank() }
+                    ?.also { executeQuery(addLevelClause(parseLuceneQuery(it))) }
         } catch (e: QueryNodeException) {
             Log.e(TAG, "bad query", e)
             listView.adapter = ResultsAdapter(this, emptyList())
