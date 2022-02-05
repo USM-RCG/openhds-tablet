@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jdom:jdom2:2.0.6'
+    implementation 'org.jdom:jdom2:2.0.6.1'
     implementation 'org.mindrot:jbcrypt:0.4'
     implementation 'org.mozilla:rhino:1.7.13'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
