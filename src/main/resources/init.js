@@ -6,4 +6,4 @@
  */
 
 exports.hierarchy = require('hierarchy').hierarchy;
-exports.navmods = [];
+exports.navmods = [require('default').module];
