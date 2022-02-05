@@ -22,12 +22,12 @@ class PreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferenceCh
 
         serverUrlPref = findPreference<EditTextPreference>(getText(R.string.server_url_key))!!.apply {
             onPreferenceChangeListener = this@PreferenceFragment
-            updateSummary(text)
+            text?.let { updateSummary(it) }
         }
 
         findPreference<EditTextPreference>(getText(R.string.sync_history_retention_key))?.apply {
             onPreferenceChangeListener = this@PreferenceFragment
-            updateSummary(text)
+            text?.let { updateSummary(it) }
         }
 
         findPreference<MultiSelectListPreference>(getText(R.string.active_modules_key))?.apply {
@@ -38,7 +38,7 @@ class PreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferenceCh
                 entryValues = launchLabels.keys.toTypedArray()
             }
 
-            context?.also { ctx ->
+            context.also { ctx ->
                 getMultiSelectPreference(ctx, getString(R.string.active_modules_key), config.moduleNames).also { activeModules ->
                     values = activeModules
                     updateSummary(activeModules)

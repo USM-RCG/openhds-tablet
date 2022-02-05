@@ -31,7 +31,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.appcompat:appcompat-resources:$appcompat_version"
     implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.preference:preference-ktx:1.1.1'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation 'com.androidplot:androidplot-core:1.5.9'
     implementation 'org.apache.lucene:lucene-core:4.7.2'
     implementation 'org.apache.lucene:lucene-queryparser:4.7.2'
