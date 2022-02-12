@@ -42,7 +42,11 @@ object FormUtils {
      * @throws IOException
      */
     @Throws(JDOMException::class, IOException::class)
-    fun domFromStream(stream: InputStream): Document = stream.use { s -> SAXBuilder().build(s) }
+    fun domFromStream(stream: InputStream): Document = stream.use { s ->
+        SAXBuilder()
+                .apply { setFeature("http://xml.org/sax/features/external-general-entities", false) }
+                .build(s)
+    }
 
     /**
      * Saves the specified [Document] object to the specified file.
