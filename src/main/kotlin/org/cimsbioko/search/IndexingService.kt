@@ -6,13 +6,14 @@ import android.util.Log
 import androidx.core.app.JobIntentService
 import org.cimsbioko.App.*
 import java.io.IOException
+import java.util.*
 
 enum class EntityType(val entityId: String) {
     HIERARCHY(HierarchyItems.COLUMN_HIERARCHY_UUID),
     LOCATION(Locations.COLUMN_LOCATION_UUID),
     INDIVIDUAL(Individuals.COLUMN_INDIVIDUAL_UUID);
 
-    val configName = name.toLowerCase()
+    val configName = name.lowercase(Locale.getDefault())
 }
 
 class IndexingService : JobIntentService() {
@@ -53,10 +54,12 @@ class IndexingService : JobIntentService() {
         }
 
         fun queueFullReindex(ctx: Context) {
+            Log.i(TAG, "queuing full reindexing")
             enqueueWork(ctx.applicationContext, Intent(ctx, IndexingService::class.java))
         }
 
         fun queueReindex(ctx: Context, type: EntityType, uuid: String) {
+            Log.i(TAG, "queuing entity reindexing: type=$type, uuid=$uuid")
             enqueueWork(ctx.applicationContext, Intent(ctx, IndexingService::class.java).apply {
                 putExtra(ENTITY_TYPE, type.toString())
                 putExtra(ENTITY_UUID, uuid)

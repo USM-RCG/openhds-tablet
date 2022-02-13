@@ -104,7 +104,7 @@ class Indexer private constructor() {
                 args = arrayOf(*queryArgs)
             }
             query?.let { CampaignDocumentSource(source, database.rawQuery(query, args)) }
-        }
+        }.also { if (it == null) Log.i(TAG, "failed to find search source for $configName") }
     }
 
     @Throws(IOException::class)
@@ -112,11 +112,11 @@ class Indexer private constructor() {
         val ctx = App.instance.applicationContext
         val notificationManager = getNotificationManager(ctx)
         val notificationBuilder = NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)
-            .setSmallIcon(notificationIcon)
-            .setColor(getNotificationColor(ctx))
-            .setContentTitle(ctx.getString(R.string.updating_index))
-            .setContentText(ctx.getString(label))
-            .setOngoing(true)
+                .setSmallIcon(notificationIcon)
+                .setColor(getNotificationColor(ctx))
+                .setContentTitle(ctx.getString(R.string.updating_index))
+                .setContentText(ctx.getString(label))
+                .setOngoing(true)
         var lastUpdate: Long = 0
         source.use {
             with(it) {
