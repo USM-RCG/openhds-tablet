@@ -23,8 +23,8 @@ import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cimsbioko.App
@@ -56,7 +56,7 @@ class DeviceAuthenticatorViewModel : ViewModel() {
 
     // Ensure login is processed only once, even if device is rotated
     private val resultChannel = Channel<LoginResult>()
-    val loginResultFlow = resultChannel.consumeAsFlow()
+    val loginResultFlow = resultChannel.receiveAsFlow()
 
     fun login(ctx: Context, username: String, password: String, accountType: String) {
         viewModelScope.launch {

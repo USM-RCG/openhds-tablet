@@ -133,7 +133,14 @@ object SetupUtils {
             AccountManager
                     .get(activity.applicationContext)
                     .getAuthTokenByFeatures(Constants.ACCOUNT_TYPE, Constants.AUTHTOKEN_TYPE_DEVICE, null, activity, null, null,
-                            { future -> cont.resume(future.result?.getString(AccountManager.KEY_AUTHTOKEN)) }, null)
+                            { future ->
+                                try {
+                                    val result = future.result
+                                    cont.resume(result?.getString(AccountManager.KEY_AUTHTOKEN))
+                                } catch (e: Exception) {
+                                    cont.resumeWithException(e)
+                                }
+                            }, null)
         }.getOrElse { t -> cont.resumeWithException(t) }
     }
 
@@ -151,7 +158,7 @@ object SetupUtils {
     }
 
     suspend fun downloadConfig(activity: Activity) {
-        val token = getToken(activity)
+        val token = runCatching { getToken(activity) }.getOrNull()
         if (token != null) {
             val ctx = activity.applicationContext
             val campaignDownloadResult = downloadCampaign(token)

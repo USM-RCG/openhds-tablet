@@ -131,7 +131,9 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
         when {
             !hasPerms -> setupButton(R.string.fix_permissions) { askForPermissions(this, 1) }
             !hasApps -> setupButton(R.string.install_apps) { promptFormsAppInstall(this) }
-            !isConnected -> setupButton(R.string.attach_to_server) { lifecycleScope.launch { getToken(this@SetupChecklistActivity) } }
+            !isConnected -> setupButton(R.string.attach_to_server) {
+                lifecycleScope.launch { runCatching { getToken(this@SetupChecklistActivity) } }
+            }
             !hasConfig -> setupButton(R.string.download_campaign) { lifecycleScope.launch { downloadConfig(this@SetupChecklistActivity) } }
             !hasData -> setupButton(R.string.download_data) { checkForUpdate() }
             !hasForms -> setupButton(R.string.download_forms) { downloadForms(this) }
