@@ -13,6 +13,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.navigation.NavigationView
@@ -68,6 +69,16 @@ class FieldWorkerLoginActivity
                             }
                 }
         updatePrompter = UpdatePrompter()
+        addCrashMenuItem()
+    }
+
+    private fun addCrashMenuItem() {
+        navView.menu.let { menu ->
+            menu.add("Crash App").also { item ->
+                item.icon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_adb)
+                item.setOnMenuItemClickListener { throw RuntimeException("App Crash Test") }
+            }
+        }
     }
 
     override fun onPause() {
