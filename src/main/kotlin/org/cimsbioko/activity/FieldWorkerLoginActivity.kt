@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.navigation.NavigationView
+import org.cimsbioko.BuildConfig
 import org.cimsbioko.R
 import org.cimsbioko.campaign.CampaignUpdateService
 import org.cimsbioko.campaign.CampaignUpdateService.Companion.enqueueWork
@@ -69,7 +70,7 @@ class FieldWorkerLoginActivity
                             }
                 }
         updatePrompter = UpdatePrompter()
-        addCrashMenuItem()
+        if (BuildConfig.DEBUG) addCrashMenuItem()
     }
 
     private fun addCrashMenuItem() {
