@@ -23,13 +23,13 @@ class SettingsProvider : ContentProvider() {
 
     override fun onCreate(): Boolean = true
 
-    override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? =
+    override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor =
             when (sUriMatcher.match(uri)) {
                 ODK_API_URI -> MatrixCursor(arrayOf("ODK_API_URI")).apply {
-                    addRow(arrayOf<Any?>(buildServerUrl(context!!, "/api/odk")))
+                    context?.also { addRow(arrayOf<Any?>(buildServerUrl(it, "/api/odk"))) }
                 }
                 CURRENT_CAMPAIGN -> MatrixCursor(arrayOf("CURRENT_CAMPAIGN")).apply {
-                    addRow(arrayOf<Any>(campaignId!!))
+                    campaignId?.also { addRow(arrayOf<Any>(it)) }
                 }
                 else -> throw IllegalArgumentException("Unknown URI $uri")
             }
