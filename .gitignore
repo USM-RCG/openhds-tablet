@@ -24,3 +24,7 @@ release/
 local.properties
 .gradle
 build/
+
+# Firebase
+google-services.json
+
