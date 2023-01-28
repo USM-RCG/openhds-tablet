@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="login_btn">Entrer</string>
+    <string name="login_username">Nom d\'utilisateur</string>
+    <string name="login_password">Mot de passe</string>
+    <string name="fieldworker_login">Se connecter</string>
+    <string name="settings">Paramètres</string>
+    <string name="malformed_url">URL mal formée</string>
+    <string name="malformed_url_msg">La valeur saisie n\'est pas une URL valide.</string>
+    <string name="server_url_title">URL du serveur</string>
+    <string name="send_forms">Envoyer des formulaires</string>
+    <string name="delete_forms">Supprimer des formulaires</string>
+    <string name="field_worker_bad_credentials">Informations d\'identification de l\'agent de terrain non valides</string>
+
+    <!-- Server URLs and Paths -->
+    <string name="no_server_url">Aucune URL de serveur n\'a été définie</string>
+
+    <!-- Details Fragment Values -->
+    <string name="toggle_fragment_button_show_details">Afficher les détails</string>
+    <string name="toggle_fragment_button_hide_details">Cacher les détails</string>
+
+    <!-- Sync Labels-->
+    <string name="sync_database_updated_never">Jamais</string>
+    <string name="sync_database_updated">Base de données mise à jour</string>
+    <string name="sync_database_new_data">Nouvelles données disponibles</string>
+    <string name="sync_database_in_progress">Téléchargement en cours</string>
+    <string name="sync_database_failed">Échec du téléchargement</string>
+    <string name="sync_database_success">Téléchargement complet. Mise à jour prête à installer.</string>
+    <string name="sync_database_button_check">Vérifier</string>
+    <string name="sync_database_button_update">Mettre à jour</string>
+    <string name="sync_database_description">Télécharger les données du serveur</string>
+    <string name="sync_database_column_updated">Dernière mise à jour</string>
+    <string name="sync_database_column_fingerprint">Empreinte digitale</string>
+    <string name="sync_history_retention">Conserver l\'historique de synchronisation (jours)</string>
+    <string name="sync_download_times">Temps de téléchargement</string>
+    <string name="sync_duration_minutes">Durée (minutes)</string>
+
+    <string name="use_zsync">Optimisation du téléchargement synchronisé</string>
+    <string name="use_zsync_enabled">Utiliser zsync lorsqu\'il est disponible</string>
+    <string name="use_zsync_disabled">Téléchargement direct uniquement</string>
+    <string name="sync_stage_searching">Déterminer les similitudes</string>
+    <string name="sync_stage_building">Dossier de construction</string>
+    <string name="sync_downloading">Téléchargement de fichier</string>
+
+    <string name="unsent_forms">Formulaires non envoyés</string>
+    <string name="field_worker_home">Travailleur de terrain Accueil</string>
+    <string name="logout">Se déconnecter</string>
+
+    <string name="launching_form">Formulaire de lancement…</string>
+    <string name="delete_button_label">Supprimer sélectionnée</string>
+    <string name="find_label">Trouver</string>
+    <string name="edit_label">Éditer</string>
+    <string name="delete_label">Supprimer</string>
+    <string name="deleted">Supprimé</string>
+    <string name="delete_forms_dialog_warning">La suppression de formulaires peut entraîner un comportement inattendu. Êtes-vous sûr?
+    </string>
+    <string name="cancel_label">Annuler</string>
+    <string name="delete_dialog_warning_title">Avertissement</string>
+    <string name="form_not_found">Formulaire introuvable</string>
+
+    <string name="forms_app_required">Application Forms requise</string>
+    <string name="forms_app_install_prompt">Cette application nécessite l\'application CIMS Forms. L\'installer maintenant?</string>
+    <string name="quit_label">Arrêter</string>
+    <string name="install_label">Installer</string>
+    <string name="search_label">Rechercher</string>
+    <string name="search_hint">Trouver un lieu ou un individu</string>
+    <string name="updating_index">Mise à jour de l\'index de recherche</string>
+    <string name="indexing_locations">Emplacements d\'indexation</string>
+    <string name="indexing_hierarchy_items">Indexation des éléments de la hiérarchie</string>
+    <string name="indexing_individuals">Indexation des individus</string>
+    <string name="auto_index_on_db_update">Indexation automatique de la recherche dans la base de données</string>
+    <string name="auto_index_on_db_update_enabled">Reconstruire les index après les mises à jour de la base de données</string>
+    <string name="auto_index_on_db_update_disabled">Ne pas reconstruire les index après les mises à jour de la base de données</string>
+
+    <string name="rebuild_search_indices">Reconstruire les index de recherche</string>
+    <string name="searching">Recherche…</string>
+
+    <string name="pref_search_title">Rechercher</string>
+    <string name="use_search_enabled">Recherche activée</string>
+    <string name="use_search_disabled">Recherche désactivée</string>
+    <string name="use_search">Recherche en texte intégral</string>
+
+    <string name="basic_search">Recherche de base</string>
+    <string name="advanced_search">Recherche Avancée</string>
+    <string name="search_type">Type de recherche</string>
+    <string-array name="search_types">
+        <item>@string/basic_search</item>
+        <item>@string/advanced_search</item>
+    </string-array>
+
+    <string name="active_modules">Modules actifs</string>
+    <string name="no_active_modules">Aucun module actif</string>
+    <string name="form_load_failed">Échec du chargement du formulaire</string>
+
+    <string name="pref_sync_title">Synchronisation</string>
+    <string name="auto_sync_enabled">Synchroniser automatiquement</string>
+    <string name="auto_sync_disabled">Synchronisation manuelle des données uniquement</string>
+    <string name="use_auto_sync">Synchronisation automatique de la base de données</string>
+
+    <string name="use_sidecar">Synchronisation du réseau local</string>
+    <string name="use_sidecar_enabled">Synchroniser avec side-car</string>
+    <string name="use_sidecar_disabled">Synchroniser avec le serveur distant</string>
+
+    <string name="favorites">Favoris</string>
+    <string name="forget_favorite_label">Oubliez le favori</string>
+    <string name="save_favorite_label">Enregistrer comme favori</string>
+    <string name="saved_favorite">Favori enregistré</string>
+    <string name="removed_favorite">Favori supprimé</string>
+
+    <string name="form_not_editable">Formulaire non modifiable après finalisation. Il peut être crypté.</string>
+
+    <string name="wifi_sync">Synchroniser sur Wi-Fi</string>
+    <string name="wifi_sync_enabled">Synchronisation sur Wi-Fi uniquement</string>
+    <string name="wifi_sync_disabled">Synchroniser sur n\'importe quel réseau</string>
+    <string name="field_worker_none_exist">Aucun travailleur de terrain, veuillez synchroniser.</string>
+    <string name="sync_notifications_channel_name">Synchronisation</string>
+    <string name="cims_setup">Configuration CIMS</string>
+    <string name="fix_permissions">Autorisations de correctifs</string>
+    <string name="install_apps">Installer des applications</string>
+    <string name="attach_to_server">Attacher au serveur</string>
+    <string name="download_data">Télécharger les données</string>
+    <string name="download_campaign">Télécharger la campagne</string>
+    <string name="next">Suivant</string>
+    <string name="device_login">Connexion à l\'appareil</string>
+    <string name="cims_logo">Logo CIMS</string>
+    <string name="device_name">Nom de l\'appareil</string>
+    <string name="device_secret">Clé secrète de l\'appareil</string>
+    <string name="initial_setup">La configuration initiale</string>
+    <string name="scan_btn">Analyse</string>
+    <string name="update_server_title">Mettre à jour le serveur?</string>
+    <string name="update_server_msg">The scanned configuration uses a different server. Update to %s?</string>
+    <string name="yes_btn">Yes</string>
+    <string name="no_btn">No</string>
+    <string name="server_updated_msg">Server updated</string>
+    <string name="result_invalid_path">Sélection non valide: chemin hiérarchique incorrect</string>
+    <string name="sync_db_title">Télécharger les données</string>
+    <string name="manage_forms">Gérer les formulaires</string>
+
+    <string name="pref_campaign_title">Campagne</string>
+    <string name="campaign_update_title">Mise à jour de la campagne disponible</string>
+    <string name="campaign_update_msg">Une mise à jour de la campagne est disponible. L\'installer maintenant?</string>
+
+    <string name="admin_access">Accès administrateur</string>
+    <string name="invalid_admin_password">Mot de passe administrateur invalide</string>
+    <string name="download_forms">Télécharger les formulaires</string>
+    <string name="campaign_downloaded_msg">Campagne téléchargée</string>
+
+</resources>
