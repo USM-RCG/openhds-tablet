@@ -2,7 +2,7 @@
 <manifest package="org.cimsbioko" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" android:maxSdkVersion="22"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="18"/>
@@ -11,7 +11,11 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.USE_CREDENTIALS" android:maxSdkVersion="22"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <queries>
+        <provider android:authorities="org.cimsbioko.forms.provider.odk.forms"/>
+    </queries>
 
     <permission android:name="org.cimsbioko.permission.READ_SETTINGS" android:protectionLevel="signature"/>
     <permission android:name="org.cimsbioko.permission.AUTH" android:protectionLevel="signature"/>
@@ -19,9 +23,9 @@
     <permission android:name="org.cimsbioko.permission.SYNC_CANCEL" android:protectionLevel="signature"/>
 
     <application
-        android:name="org.cimsbioko.App"
-        android:hardwareAccelerated="true"
-        android:icon="@drawable/ic_launcher"
+            android:name="org.cimsbioko.App"
+            android:hardwareAccelerated="true"
+            android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:allowBackup="false"
