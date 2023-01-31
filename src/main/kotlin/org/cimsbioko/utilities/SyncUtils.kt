@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SyncResult
 import android.net.nsd.NsdServiceInfo
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -56,6 +57,7 @@ import java.net.URL
 import java.security.DigestOutputStream
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.util.*
 
 /**
  * Dumping grounds for miscellaneous sync-related functions.
@@ -95,7 +97,7 @@ object SyncUtils {
      */
     @Throws(MalformedURLException::class)
     fun getLocalSyncEndpoint(ctx: Context, info: NsdServiceInfo): URL =
-            URL("http", info.host.hostName, info.port, ctx.getString(R.string.sync_database_path) + "/" + campaignId)
+        URL("http", info.host.hostName, info.port, ctx.getString(R.string.sync_database_path) + "/" + campaignId)
 
     /**
      * Gets the configured sync history retention in days.
@@ -104,7 +106,7 @@ object SyncUtils {
      * @return the configured sync history retention in days
      */
     private fun getHistoryRetention(ctx: Context): Int =
-            getPreferenceString(ctx, R.string.sync_history_retention_key, "7")!!.toInt()
+        getPreferenceString(ctx, R.string.sync_history_retention_key, "7")!!.toInt()
 
     /**
      * Returns whether there appears to be complete downloaded content to use for updating the app sqlite database.
@@ -119,12 +121,12 @@ object SyncUtils {
      * valid file hash of the content file. Bad values aren't problematic, since the HTTP server will treat mismatches
      * as a cache miss and return the content.
      *
-     * @param ctx the app context to use for determiningg file paths
+     * @param ctx the app context to use for determining file paths
      * @return the content of the fingerprint file for the app sqlite database
      */
     fun getDatabaseFingerprint(ctx: Context): String {
         return loadFirstLine(getFingerprintFile(getDatabaseFile(ctx)))
-                ?: ctx.getString(R.string.sync_database_no_fingerprint)
+            ?: ctx.getString(R.string.sync_database_no_fingerprint)
     }
 
     /**
@@ -205,16 +207,19 @@ object SyncUtils {
             val httpResult = httpConn.responseCode
             val cancelBroadcast = Intent(ctx, SyncCancelReceiver::class.java)
             cancelBroadcast.action = SYNC_CANCELLED_ACTION
-            val pendingCancelBroadcast = PendingIntent.getBroadcast(ctx, 0, cancelBroadcast, 0)
+            val pendingCancelBroadcast = PendingIntent.getBroadcast(
+                ctx, 0, cancelBroadcast,
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_UPDATE_CURRENT else 0
+            )
             val builder = NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)
-                    .setSmallIcon(android.R.drawable.stat_sys_download)
-                    .setTicker("")
-                    .setColor(getNotificationColor(ctx))
-                    .setContentTitle(ctx.getString(R.string.sync_database_new_data))
-                    .setContentText(ctx.getString(R.string.sync_database_in_progress))
-                    .setProgress(0, 0, true)
-                    .setOngoing(true)
-                    .addAction(R.drawable.ic_cancel, ctx.getString(R.string.cancel_label), pendingCancelBroadcast)
+                .setSmallIcon(android.R.drawable.stat_sys_download)
+                .setTicker("")
+                .setColor(getNotificationColor(ctx))
+                .setContentTitle(ctx.getString(R.string.sync_database_new_data))
+                .setContentText(ctx.getString(R.string.sync_database_in_progress))
+                .setProgress(0, 0, true)
+                .setOngoing(true)
+                .addAction(R.drawable.ic_cancel, ctx.getString(R.string.cancel_label), pendingCancelBroadcast)
             when (httpResult) {
                 HttpURLConnection.HTTP_UNAUTHORIZED -> {
                     if (accessToken != null) {
@@ -233,12 +238,12 @@ object SyncUtils {
                     if (fingerprintFile.exists()) {
                         if (!fingerprintFile.delete()) {
                             Log.w(TAG, "failed to clear old fingerprint, user could install partial content!")
-                            ctx.contentResolver.notifyChange(App.CONTENT_BASE_URI, null, false)
+                            notifyContentChange(ctx)
                         }
                     }
                     notificationManager.notify(SYNC_NOTIFICATION_ID, builder.build())
                     val responseBody = httpConn.inputStream
-                    val responseType = httpConn.contentType.split(";".toRegex()).toTypedArray()[0].toLowerCase()
+                    val responseType = httpConn.contentType.split(";".toRegex()).toTypedArray()[0].lowercase(Locale.getDefault())
                     if (useZsync && Metadata.MIME_TYPE == responseType) {
                         val scratch = File(dbTempFile.parentFile, dbTempFile.name + ".syncing")
                         if (scratch.exists()) {
@@ -248,8 +253,10 @@ object SyncUtils {
                                     Log.w(TAG, "resume failed, failed to move $scratch")
                                 }
                             } else {
-                                Log.i(TAG, "ignoring partial content (" + scratch.length() + " bytes):" +
-                                        " smaller than basis (" + dbTempFile.length() + " bytes)")
+                                Log.i(
+                                    TAG, "ignoring partial content (" + scratch.length() + " bytes):" +
+                                            " smaller than basis (" + dbTempFile.length() + " bytes)"
+                                )
                             }
                         }
                         if (!dbTempFile.exists()) {
@@ -293,37 +300,45 @@ object SyncUtils {
                     Log.i(TAG, "database downloaded")
                     db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "success")
                     val intent = Intent(ctx, SyncDbActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    val pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-                    builder.mActions.clear()
-                    notificationManager.notify(SYNC_NOTIFICATION_ID, builder
+                    val flags = PendingIntent.FLAG_UPDATE_CURRENT or
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+                    val pending = PendingIntent.getActivity(ctx, -1, intent, flags)
+                    builder.clearActions()
+                    notificationManager.notify(
+                        SYNC_NOTIFICATION_ID, builder
                             .setSmallIcon(notificationIcon)
                             .setContentIntent(pending)
                             .setContentText(ctx.getString(R.string.sync_database_success))
                             .setProgress(0, 0, false)
                             .setOngoing(false)
-                            .build())
+                            .build()
+                    )
                 } catch (e: IOException) {
                     Log.e(TAG, "sync io failure", e)
                     syncResult.stats.numIoExceptions += 1
                     db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "error: $httpResult")
-                    builder.mActions.clear()
-                    notificationManager.notify(SYNC_NOTIFICATION_ID, builder
+                    builder.clearActions()
+                    notificationManager.notify(
+                        SYNC_NOTIFICATION_ID, builder
                             .setSmallIcon(notificationIcon)
                             .setContentText(ctx.getString(R.string.sync_database_failed))
                             .setProgress(0, 0, false)
                             .setOngoing(false)
-                            .build())
+                            .build()
+                    )
                 } catch (e: NoSuchAlgorithmException) {
                     Log.e(TAG, "sync failure", e)
                     syncResult.stats.numParseExceptions += 1
                     db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "error: $httpResult")
-                    builder.mActions.clear()
-                    notificationManager.notify(SYNC_NOTIFICATION_ID, builder
+                    builder.clearActions()
+                    notificationManager.notify(
+                        SYNC_NOTIFICATION_ID, builder
                             .setSmallIcon(notificationIcon)
                             .setContentText(ctx.getString(R.string.sync_database_failed))
                             .setProgress(0, 0, false)
                             .setOngoing(false)
-                            .build())
+                            .build()
+                    )
                 } catch (e: InterruptedException) {
                     Log.e(TAG, "sync thread canceled", e)
                     db.addSyncResult(fingerprint, startTime, System.currentTimeMillis(), "canceled")
@@ -346,7 +361,7 @@ object SyncUtils {
                 }
             })
         }
-        ctx.contentResolver.notifyChange(App.CONTENT_BASE_URI, null, false)
+        notifyContentChange(ctx)
     }
 
     /**
@@ -385,9 +400,11 @@ object SyncUtils {
      * Performs an incremental sync based on a local existing file.
      */
     @Throws(NoSuchAlgorithmException::class, IOException::class, InterruptedException::class)
-    private fun incrementalSync(responseBody: InputStream, basis: File, target: File, factory: RangeRequestFactory,
-                                builder: NotificationCompat.Builder, manager: NotificationManager,
-                                ctx: Context, syncResult: SyncResult) {
+    private fun incrementalSync(
+        responseBody: InputStream, basis: File, target: File, factory: RangeRequestFactory,
+        builder: NotificationCompat.Builder, manager: NotificationManager,
+        ctx: Context, syncResult: SyncResult
+    ) {
         val metadata = readMetadata(responseBody)
         val tracker: ProgressTracker = object : ProgressTracker {
             var lastUpdate: Long = 0
@@ -450,22 +467,33 @@ object SyncUtils {
             if (!offlineFile.delete()) {
                 Log.w(TAG, "failed to remove offline db file after copy")
             }
-            ctx.contentResolver.notifyChange(App.CONTENT_BASE_URI, null, false)
+            notifyContentChange(ctx)
             val intent = Intent(ctx, SyncDbActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            val pending = PendingIntent.getActivity(ctx, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val flags = PendingIntent.FLAG_UPDATE_CURRENT or
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+            val pending = PendingIntent.getActivity(ctx, -1, intent, flags)
+
             val manager = getNotificationManager(ctx)
-            manager.notify(SYNC_NOTIFICATION_ID, NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)
+            manager.notify(
+                SYNC_NOTIFICATION_ID, NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)
                     .setSmallIcon(notificationIcon)
                     .setContentTitle(ctx.getString(R.string.sync_database_new_data))
                     .setProgress(0, 0, false)
                     .setContentIntent(pending)
                     .setOngoing(false)
-                    .build())
+                    .build()
+            )
         }
     }
 
+    @Suppress("DEPRECATION")
+    private fun notifyContentChange(ctx: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) ctx.contentResolver.notifyChange(App.CONTENT_BASE_URI, null, 0)
+        else ctx.contentResolver.notifyChange(App.CONTENT_BASE_URI, null, false)
+    }
+
     /**
-     * Copies the source file to the destination file along with an accompanying fingerprint (stored along side it). It
+     * Copies the source file to the destination file along with an accompanying fingerprint (stored alongside it). It
      * copies to a scratch file and moves the final result to reduce the possibility of strange filesystem semantics due
      * to concurrent copy attempts.
      *
@@ -520,7 +548,8 @@ object SyncUtils {
     /**
      * Used to create range requests for fetching remote file data.
      */
-    private class RangeRequestFactoryImpl(private val endpoint: URL, private val mimeType: String, private val auth: String?) : RangeRequestFactory {
+    private class RangeRequestFactoryImpl(private val endpoint: URL, private val mimeType: String, private val auth: String?) :
+        RangeRequestFactory {
         @Throws(IOException::class)
         override fun create(): RangeRequest {
             return RangeRequestImpl(get(endpoint, mimeType, auth, null))
