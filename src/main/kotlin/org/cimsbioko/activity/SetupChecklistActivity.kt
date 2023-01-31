@@ -19,12 +19,10 @@ import org.cimsbioko.databinding.SetupChecklistBinding
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 import org.cimsbioko.utilities.SetupUtils
 import org.cimsbioko.utilities.SetupUtils.CAMPAIGN_DOWNLOADED_ACTION
-import org.cimsbioko.utilities.SetupUtils.askForPermissions
 import org.cimsbioko.utilities.SetupUtils.downloadConfig
 import org.cimsbioko.utilities.SetupUtils.downloadForms
 import org.cimsbioko.utilities.SetupUtils.getToken
 import org.cimsbioko.utilities.SetupUtils.hasCampaignForms
-import org.cimsbioko.utilities.SetupUtils.hasRequiredPermissions
 import org.cimsbioko.utilities.SetupUtils.isAccountInstalled
 import org.cimsbioko.utilities.SetupUtils.isConfigAvailable
 import org.cimsbioko.utilities.SetupUtils.isDataAvailable
@@ -36,7 +34,6 @@ import org.cimsbioko.utilities.SyncUtils.checkForUpdate
 
 class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var permissionsCheckbox: CheckBox
     private lateinit var appsCheckbox: CheckBox
     private lateinit var connectCheckbox: CheckBox
     private lateinit var configCheckbox: CheckBox
@@ -67,7 +64,6 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
 
         binding.setupNavigationView.setNavigationItemSelectedListener(this@SetupChecklistActivity)
 
-        permissionsCheckbox = binding.grantPermsCheckbox
         appsCheckbox = binding.installAppsCheckbox
         connectCheckbox = binding.serverConnectCheckbox
         configCheckbox = binding.configDownloadCheckbox
@@ -116,7 +112,6 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
 
     private fun updateState() {
 
-        val hasPerms = hasPermissions().also { permissionsCheckbox.isChecked = it }
         val hasApps = hasApps().also { appsCheckbox.isChecked = it }
         val isConnected: Boolean = isAccountInstalled.also { connectCheckbox.isChecked = it }
         val hasData = hasData().also { dataCheckbox.isChecked = it }
@@ -129,7 +124,6 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
 
         when {
-            !hasPerms -> setupButton(R.string.fix_permissions) { askForPermissions(this, 1) }
             !hasApps -> setupButton(R.string.install_apps) { promptFormsAppInstall(this) }
             !isConnected -> setupButton(R.string.attach_to_server) {
                 lifecycleScope.launch { runCatching { getToken(this@SetupChecklistActivity) } }
@@ -144,7 +138,6 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
     private fun hasData(): Boolean = isDataAvailable(this)
     private fun hasConfig(): Boolean = isConfigAvailable
     private fun hasApps(): Boolean = isFormsAppInstalled(packageManager)
-    private fun hasPermissions(): Boolean = hasRequiredPermissions(this)
     private fun hasForms(): Boolean = hasCampaignForms()
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

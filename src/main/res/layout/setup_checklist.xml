@@ -40,24 +40,15 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
 
-
-                <CheckBox
-                        android:id="@+id/grantPermsCheckbox"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/fix_permissions"
-                        style="@style/ChecklistItem"
-                        app:layout_constraintTop_toBottomOf="@+id/cims_logo"
-                        app:layout_constraintStart_toStartOf="@+id/cims_logo"
-                        android:layout_marginTop="20dp"/>
                 <CheckBox
                         android:id="@+id/installAppsCheckbox"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/install_apps"
                         style="@style/ChecklistItem"
-                        app:layout_constraintTop_toBottomOf="@+id/grantPermsCheckbox"
-                        app:layout_constraintStart_toStartOf="@+id/grantPermsCheckbox"/>
+                        app:layout_constraintTop_toBottomOf="@+id/cims_logo"
+                        app:layout_constraintStart_toStartOf="@+id/cims_logo"
+                        android:layout_marginTop="20dp"/>
                 <CheckBox
                         android:id="@+id/serverConnectCheckbox"
                         android:layout_width="wrap_content"

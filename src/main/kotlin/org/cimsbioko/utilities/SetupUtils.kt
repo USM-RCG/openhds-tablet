@@ -1,6 +1,5 @@
 package org.cimsbioko.utilities
 
-import android.Manifest.permission
 import android.accounts.AccountManager
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -9,11 +8,8 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import kotlinx.coroutines.Dispatchers
@@ -42,13 +38,10 @@ import kotlin.coroutines.suspendCoroutine
 object SetupUtils {
 
     private val TAG = SetupUtils::class.java.simpleName
-    private val REQUIRED_PERMISSIONS =
-            if (Build.VERSION.SDK_INT >= 19) emptyArray()
-            else arrayOf(permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE)
     const val CAMPAIGN_DOWNLOADED_ACTION = "CAMPAIGN_DOWNLOADED"
     const val CAMPAIGN_FILENAME = "campaign.zip"
 
-    fun minimumRequirementsMet(ctx: Context): Boolean = hasRequiredPermissions(ctx) && isFormsAppInstalled(ctx.packageManager)
+    fun minimumRequirementsMet(ctx: Context): Boolean = isFormsAppInstalled(ctx.packageManager)
 
     fun setupRequirementsMet(ctx: Context): Boolean = minimumRequirementsMet(ctx)
             && isAccountInstalled
@@ -56,26 +49,9 @@ object SetupUtils {
             && isDataAvailable(ctx)
             && hasCampaignForms()
 
-    fun hasRequiredPermissions(ctx: Context?): Boolean {
-        for (perm in REQUIRED_PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(ctx!!, perm) != PackageManager.PERMISSION_GRANTED) {
-                return false
-            }
-        }
-        return true
-    }
-
     fun startApp(source: Activity) = launchLogin(source)
 
     fun createNotificationChannels(ctx: Context) = createChannels(ctx.applicationContext)
-
-    fun askForPermissions(activity: Activity, requestCode: Int) {
-        if (needsPermissions(activity)) {
-            ActivityCompat.requestPermissions(activity, REQUIRED_PERMISSIONS, requestCode)
-        }
-    }
-
-    private fun needsPermissions(ctx: Context): Boolean = !hasRequiredPermissions(ctx)
 
     val isConfigAvailable: Boolean
         get() = downloadedCampaignExists()
