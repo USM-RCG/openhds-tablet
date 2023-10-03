@@ -90,19 +90,26 @@ object FormsHelper {
         }
     }
 
+    // This could be increased based on the sqlite version: use the lesser anyway to be safe
+    private const val SQLITE_MAX_HOST_PARAMETERS = 999
+
     fun getByIds(ids: Collection<Long>): List<FormInstance> {
         val formInstances = ArrayList<FormInstance>()
         if (!ids.isEmpty()) {
-            val where = String.format("%s IN (%s)", BaseColumns._ID, makePlaceholders(ids.size))
-            val idStrings: MutableList<String> = ArrayList(ids.size)
-            for (id in ids) {
-                idStrings.add(id.toString())
-            }
-            contentResolver.query(
-                InstanceColumns.CONTENT_URI, INSTANCE_COLUMNS, where, idStrings.toTypedArray(), null
-            )?.use { c ->
-                while (c.moveToNext()) {
-                    formInstances.add(instanceFromCursor(c))
+            if (ids.size > SQLITE_MAX_HOST_PARAMETERS) {
+                return ids.chunked(SQLITE_MAX_HOST_PARAMETERS).flatMap { getByIds(it) }
+            } else {
+                val where = String.format("%s IN (%s)", BaseColumns._ID, makePlaceholders(ids.size))
+                val idStrings: MutableList<String> = ArrayList(ids.size)
+                for (id in ids) {
+                    idStrings.add(id.toString())
+                }
+                contentResolver.query(
+                    InstanceColumns.CONTENT_URI, INSTANCE_COLUMNS, where, idStrings.toTypedArray(), null
+                )?.use { c ->
+                    while (c.moveToNext()) {
+                        formInstances.add(instanceFromCursor(c))
+                    }
                 }
             }
         }
