@@ -13,8 +13,8 @@ import org.cimsbioko.App
 import org.cimsbioko.data.DataWrapper
 import org.cimsbioko.model.FormInstance
 import org.cimsbioko.utilities.FormsHelper
+import org.cimsbioko.utilities.SQLITE_MAX_HOST_PARAMETERS
 import org.cimsbioko.utilities.SQLUtils.makePlaceholders
-import java.util.*
 
 object DatabaseAdapter {
 
@@ -74,13 +74,15 @@ object DatabaseAdapter {
             with(helper.writableDatabase) {
                 beginTransaction()
                 try {
-                    val where = "$KEY_FORM_ID in (${makePlaceholders(formIds.size)})"
-                    val idStrings = arrayOfNulls<String>(formIds.size)
-                    for (i in formIds.indices) {
-                        val id = formIds[i]
-                        idStrings[i] = id.toString()
+                    formIds.chunked(SQLITE_MAX_HOST_PARAMETERS).forEach { chunk ->
+                        val where = "$KEY_FORM_ID in (${makePlaceholders(chunk.size)})"
+                        val idStrings = arrayOfNulls<String>(chunk.size)
+                        for (i in chunk.indices) {
+                            val id = chunk[i]
+                            idStrings[i] = id.toString()
+                        }
+                        delete(FORM_PATH_TABLE_NAME, where, idStrings)
                     }
-                    delete(FORM_PATH_TABLE_NAME, where, idStrings)
                     setTransactionSuccessful()
                 } finally {
                     endTransaction()

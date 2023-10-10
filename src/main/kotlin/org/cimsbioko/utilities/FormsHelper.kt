@@ -15,7 +15,9 @@ import org.cimsbioko.provider.FormsProviderAPI
 import org.cimsbioko.provider.InstanceProviderAPI
 import org.cimsbioko.provider.InstanceProviderAPI.InstanceColumns
 import org.cimsbioko.utilities.SQLUtils.makePlaceholders
-import java.util.*
+
+// This could be increased based on the sqlite version: use the lesser anyway to be safe
+const val SQLITE_MAX_HOST_PARAMETERS = 999
 
 object FormsHelper {
 
@@ -47,11 +49,11 @@ object FormsHelper {
     private fun instanceFromCursor(cursor: Cursor): FormInstance {
         return FormInstance(
             cursor.getLong(cursor.getColumnIndex(BaseColumns._ID)),
-                cursor.getString(cursor.getColumnIndex(InstanceColumns.JR_FORM_ID)),
-                cursor.getString(cursor.getColumnIndex(InstanceColumns.DISPLAY_NAME)),
-                cursor.getString(cursor.getColumnIndex(InstanceColumns.JR_VERSION)),
-                cursor.getString(cursor.getColumnIndex(InstanceColumns.STATUS)),
-                java.lang.Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(InstanceColumns.CAN_EDIT_WHEN_COMPLETE)))
+            cursor.getString(cursor.getColumnIndex(InstanceColumns.JR_FORM_ID)),
+            cursor.getString(cursor.getColumnIndex(InstanceColumns.DISPLAY_NAME)),
+            cursor.getString(cursor.getColumnIndex(InstanceColumns.JR_VERSION)),
+            cursor.getString(cursor.getColumnIndex(InstanceColumns.STATUS)),
+            java.lang.Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(InstanceColumns.CAN_EDIT_WHEN_COMPLETE)))
         )
     }
 
@@ -65,10 +67,10 @@ object FormsHelper {
     fun getForm(formId: String): Form? {
         var metadata: Form? = null
         val columns = arrayOf(
-                BaseColumns._ID,
-                FormsProviderAPI.FormsColumns.JR_FORM_ID,
-                FormsProviderAPI.FormsColumns.JR_VERSION,
-                FormsProviderAPI.FormsColumns.DISPLAY_NAME
+            BaseColumns._ID,
+            FormsProviderAPI.FormsColumns.JR_FORM_ID,
+            FormsProviderAPI.FormsColumns.JR_VERSION,
+            FormsProviderAPI.FormsColumns.DISPLAY_NAME
         )
         val where = FormsProviderAPI.FormsColumns.JR_FORM_ID + " = ?"
         val whereArgs = arrayOf(formId)
@@ -89,9 +91,6 @@ object FormsHelper {
             } else null
         }
     }
-
-    // This could be increased based on the sqlite version: use the lesser anyway to be safe
-    private const val SQLITE_MAX_HOST_PARAMETERS = 999
 
     fun getByIds(ids: Collection<Long>): List<FormInstance> {
         val formInstances = ArrayList<FormInstance>()
@@ -150,22 +149,30 @@ object FormsHelper {
      * @return the number of forms removed
      */
     fun deleteFormInstances(forms: Collection<FormInstance>): Int {
-        val where = String.format("%s IN (%s)", BaseColumns._ID, makePlaceholders(forms.size))
-        return contentResolver.delete(InstanceColumns.CONTENT_URI, where, formIds(forms))
+        return if (forms.size > SQLITE_MAX_HOST_PARAMETERS) {
+            forms.chunked(SQLITE_MAX_HOST_PARAMETERS).map { chunk -> deleteFormInstances(chunk) }.reduce { acc, v -> acc + v }
+        } else {
+            val where = String.format("%s IN (%s)", BaseColumns._ID, makePlaceholders(forms.size))
+            contentResolver.delete(InstanceColumns.CONTENT_URI, where, formIds(forms))
+        }
     }
 
     fun hasFormsWithIds(formIds: Set<String>): Boolean {
-        val projection = arrayOf(FormsProviderAPI.FormsColumns.JR_FORM_ID)
-        val where = String.format("%s IN (%s)", FormsProviderAPI.FormsColumns.JR_FORM_ID, makePlaceholders(formIds.size))
-        val whereArgs: Array<String> = formIds.toTypedArray()
-        val found: MutableSet<String> = HashSet()
-        contentResolver.query(FormsProviderAPI.FormsColumns.CONTENT_URI, projection, where, whereArgs, null).use { c ->
-            if (c != null) {
-                while (c.moveToNext()) {
-                    found.add(c.getString(0))
+        return if (formIds.size > SQLITE_MAX_HOST_PARAMETERS) {
+            false !in formIds.chunked(SQLITE_MAX_HOST_PARAMETERS).map { chunk -> hasFormsWithIds(chunk.toSet()) }.toSet()
+        } else {
+            val projection = arrayOf(FormsProviderAPI.FormsColumns.JR_FORM_ID)
+            val where = String.format("%s IN (%s)", FormsProviderAPI.FormsColumns.JR_FORM_ID, makePlaceholders(formIds.size))
+            val whereArgs: Array<String> = formIds.toTypedArray()
+            val found: MutableSet<String> = HashSet()
+            contentResolver.query(FormsProviderAPI.FormsColumns.CONTENT_URI, projection, where, whereArgs, null).use { c ->
+                if (c != null) {
+                    while (c.moveToNext()) {
+                        found.add(c.getString(0))
+                    }
                 }
             }
+            found.containsAll(formIds)
         }
-        return found.containsAll(formIds)
     }
 }
