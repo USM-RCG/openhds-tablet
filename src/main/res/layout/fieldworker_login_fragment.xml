@@ -17,7 +17,6 @@
             android:id="@+id/usernameEditText"
             style="@style/LoginText"
             android:hint="@string/login_username"
-            android:nextFocusForward="@+id/passwordEditText"
             android:inputType="textNoSuggestions"
             android:autofillHints="username"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +29,6 @@
             style="@style/LoginText"
             android:hint="@string/login_password"
             android:inputType="textPassword"
-            android:nextFocusForward="@+id/loginButton"
             android:autofillHints="password" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/usernameEditText"/>
 
