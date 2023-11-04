@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "497962867516",
+    "project_id": "cims-mobile-cf9d4",
+    "storage_bucket": "cims-mobile-cf9d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497962867516:android:97b999efcfdb760f831c39",
+        "android_client_info": {
+          "package_name": "org.cimsbioko"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "497962867516-gsjc0sn54r8mjqtce1j1dh9im120hbo3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfP44ozr0V_k9e-OKvLFrJU431OkMG_Ws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "497962867516-gsjc0sn54r8mjqtce1j1dh9im120hbo3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
