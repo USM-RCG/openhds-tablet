@@ -62,7 +62,7 @@ class Indexer private constructor() {
             writer.use {
                 with(it) {
                     try {
-                        updateIndex(docSource, uuid)
+                        updateIndex(docSource, entityId)
                     } finally {
                         commit()
                     }
