@@ -64,8 +64,8 @@ android {
         applicationId 'org.cimsbioko'
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 107
-        versionName '4.5.1'
+        versionCode 108
+        versionName '4.5.2'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
     }
