@@ -100,7 +100,7 @@ class Indexer private constructor() {
             var query: String? = source.query
             var args = emptyArray<String>()
             if (!isBulk) {
-                query = source.fields.firstOrNull { it.name == entityId }?.let { "${source.query} where $it = ?" }
+                query = if (source.fields.find { it.name == entityId } != null) "${source.query} where $entityId = ?" else null
                 args = arrayOf(*queryArgs)
             }
             query?.let { CampaignDocumentSource(source, database.rawQuery(query, args)) }
