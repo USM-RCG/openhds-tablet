@@ -207,10 +207,10 @@ object SyncUtils {
             val httpResult = httpConn.responseCode
             val cancelBroadcast = Intent(ctx, SyncCancelReceiver::class.java)
             cancelBroadcast.action = SYNC_CANCELLED_ACTION
-            val pendingCancelBroadcast = PendingIntent.getBroadcast(
-                ctx, 0, cancelBroadcast,
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_UPDATE_CURRENT else 0
-            )
+            val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            } else 0
+            val pendingCancelBroadcast = PendingIntent.getBroadcast(ctx, 0, cancelBroadcast, flags)
             val builder = NotificationCompat.Builder(ctx, SYNC_CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setTicker("")
