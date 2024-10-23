@@ -32,6 +32,7 @@ import org.cimsbioko.utilities.CampaignUtils.updateCampaign
 import org.cimsbioko.utilities.ConfigUtils.getAppFullName
 import org.cimsbioko.utilities.MessageUtils.showShortToast
 import org.cimsbioko.utilities.SetupUtils.downloadForms
+import org.cimsbioko.utilities.requestNotificationPermissions
 
 class FieldWorkerLoginActivity
     : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, AdminSecretFragment.Listener {
@@ -71,6 +72,7 @@ class FieldWorkerLoginActivity
                 }
         updatePrompter = UpdatePrompter()
         if (BuildConfig.DEBUG) addCrashMenuItem()
+        requestNotificationPermissions()
     }
 
     private fun addCrashMenuItem() {

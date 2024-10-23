@@ -31,6 +31,7 @@ import org.cimsbioko.utilities.SetupUtils.promptFormsAppInstall
 import org.cimsbioko.utilities.SetupUtils.startApp
 import org.cimsbioko.utilities.SyncUtils.DATA_INSTALLED_ACTION
 import org.cimsbioko.utilities.SyncUtils.checkForUpdate
+import org.cimsbioko.utilities.requestNotificationPermissions
 
 class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -94,6 +95,8 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
             setDisplayHomeAsUpEnabled(false)
             setHomeButtonEnabled(true)
         }
+
+        requestNotificationPermissions()
     }
 
     override fun onPause() {
