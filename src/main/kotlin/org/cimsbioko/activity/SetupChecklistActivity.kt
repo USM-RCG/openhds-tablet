@@ -140,11 +140,6 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
     private fun hasApps(): Boolean = isFormsAppInstalled(packageManager)
     private fun hasForms(): Boolean = hasCampaignForms()
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == STORAGE_PERMISSION_REQUEST) updateState()
-    }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.configure_settings) {
             startActivity(Intent(this, PreferenceActivity::class.java))
@@ -154,7 +149,6 @@ class SetupChecklistActivity : AppCompatActivity(), NavigationView.OnNavigationI
     }
 
     companion object {
-        private const val STORAGE_PERMISSION_REQUEST = 1
         private const val REQUIREMENTS_BYPASS_TAPS = 15
     }
 }
