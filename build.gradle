@@ -1,7 +1,7 @@
 buildscript {
 
     ext.appcompat_version = '1.4.1'
-    ext.kotlin_version = '1.6.10'
+    ext.kotlin_version = '1.6.21'
     ext.coroutines_android_version = '1.6.0'
 
     repositories {
