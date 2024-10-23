@@ -26,14 +26,10 @@
 -dontwarn org.jdom2.output.StAXEventOutputter
 -dontwarn org.jdom2.output.StAXStreamOutputter
 -dontwarn org.jdom2.output.support.**
+-dontwarn javax.xml.stream.XMLStreamWriter
 
 # mozilla rhino (scripting engine)
--dontwarn org.mozilla.javascript.tools.debugger.**
--dontwarn org.mozilla.javascript.tools.shell.**
--keep class org.mozilla.javascript.jdk15.VMBridge_jdk15 { *; }
--keep class org.mozilla.javascript.ImporterTopLevel { *; }
--keep class org.mozilla.javascript.NativeJavaTopPackage { *; }
--keep class org.mozilla.javascript.regexp.NativeRegExp { *; }
+-keep class org.mozilla.javascript.** { *; }
 
 # android plot (graphs)
 -keep class com.androidplot.** { *; }
