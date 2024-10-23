@@ -109,8 +109,8 @@ class HierarchyButtonFragment : Fragment(), View.OnClickListener {
             }
             setTextAppearance(
                     primaryText,
-                    if (highlighted) R.style.TextAppearance_AppCompat_Large
-                    else R.style.TextAppearance_AppCompat_Large_Inverse
+                    if (highlighted) androidx.appcompat.R.style.TextAppearance_AppCompat_Large
+                    else androidx.appcompat.R.style.TextAppearance_AppCompat_Large_Inverse
             )
         }
     }
