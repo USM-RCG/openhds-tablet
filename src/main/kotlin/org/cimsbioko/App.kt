@@ -1,11 +1,11 @@
 package org.cimsbioko
 
+import android.app.Application
 import android.net.Uri
 import android.provider.BaseColumns
-import androidx.multidex.MultiDexApplication
 import org.cimsbioko.scripting.ContextFactory
 
-class App : MultiDexApplication() {
+class App : Application() {
 
     override fun onCreate() {
         instance = this
