@@ -64,7 +64,7 @@ android {
 
     defaultConfig {
         applicationId 'org.cimsbioko'
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 34
         versionCode 109
         versionName '4.5.3'

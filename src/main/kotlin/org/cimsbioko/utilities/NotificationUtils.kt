@@ -14,7 +14,7 @@ object NotificationUtils {
     const val SYNC_CHANNEL_ID = "Sync"
 
     val notificationIcon: Int
-        get() = if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) R.drawable.ic_silhouette else R.drawable.ic_launcher
+        get() = R.drawable.ic_silhouette
 
     fun getNotificationColor(ctx: Context?): Int {
         return ContextCompat.getColor(ctx!!, R.color.Blue)
